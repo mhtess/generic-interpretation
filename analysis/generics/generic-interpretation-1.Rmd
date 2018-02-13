@@ -1,0 +1,99 @@
+---
+title: "Generic interpretation"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+library(ggpirate)
+library(knitr)
+library(viridis)
+```
+
+```{r}
+readData = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readSubjInfo = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-subject_information.csv", sep = "")
+    )
+}
+```
+
+
+```{r}
+df.1 <- read_csv("data/asymmetry/asymmetry-1-trials.csv")
+
+df.1.bs <- df.1 %>%
+  filter(trial_type == 'implied_prevalence') %>%
+  mutate(response = as.numeric(response)) %>%
+  group_by(stim_property) %>%
+  tidyboot_mean(column = response)
+```
+
+
+```{r}
+df.1.bs %>%
+  mutate(stim_property = factor(stim_property, levels =  stim_property[order(mean)])) %>%
+  ggplot(aes( x= stim_property, y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_linerange()+
+  geom_point()+
+  coord_flip()+
+  ylim(0, 100)
+```
+
+
+
+# Interpretation-1
+
+```{r}
+df.int.1 <- readData("interpretation-1")
+df.int.1.subj <- readSubjInfo("interpretation-1")
+df.int.1.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+
+
+```{r fig.width = 10, fig.height = 4}
+df.int.1 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property)
+```
+```{r fig.height = 4}
+df.int.1.bs <- df.int.1 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.1.bs %>%
+  mutate(property = factor(property, levels =  property[order(mean)])) %>%
+  ggplot(aes( x= property, y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_linerange()+
+  geom_point()+
+  coord_flip()+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-1-n18-95ci.pdf", height = 4)
+```
+```{r fig.height = 4}
+df.int.1 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.1.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-1-n18-pirates.pdf", height = 7)
+```
+
