@@ -100,7 +100,7 @@ function make_slides(f) {
       $("#text_response").val('')
 
       this.stim = stim
-      console.log(this.stim)
+      // console.log(this.stim)
 
       var query_prompt = "How many "  + this.stim.category + " do you think " + this.stim.property + "?\n";
 
