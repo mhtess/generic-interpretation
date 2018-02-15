@@ -1,8 +1,8 @@
 var stim_properties = [
   { property: "have spots", type: "physical" },
   { property: "have brown fur", type: "physical" },
-  { property: "have white fur", type: "physical" },
-  { property: "have an excellent sense of smell", type: "physical" },
+  { property: "have very long wings", type: "physical" },
+  { property: "have an exquisite sense of smell", type: "physical" },
   { property: "have beautiful feathers", type: "physical" },
   { property: "live to be a 100 years old", type: "physical" },
 
@@ -21,7 +21,7 @@ var stim_properties = [
   { property: "sleep during the day", type: "behavior"},
   { property: "sing beautiful songs", type: "behavior"},
   { property: "swim in shallow pools", type: "behavior"},
-  { property: "fly into buildings", type: "behavior"},
+  { property: "fly into building windows", type: "behavior"},
   { property: "torture other animals", type: "behavior"},
   { property: "do handstands to scare off predators", type: "behavior"},
   { property: "attack hikers", type: "behavior"},
@@ -33,6 +33,8 @@ var stim_properties = [
   { property: "steal farmers' crops", type: "behavior"},
   { property: "get in fights with other animals", type: "behavior"},
   { property: "like to cuddle", type: "behavior"},
+  { property: "capture other animals' territory", type: "behavior"},
+  { property: "drink alcohol left behind by tourists", type: "behavior"},
 
   { property: "eat garbage", type: "diet" },
   { property: "eat human food", type: "diet" },
@@ -43,6 +45,7 @@ var stim_properties = [
 
   { property: "live in trees", type: "habitat" },
   { property: "live in zoos", type: "habitat" },
+  { property: "live in the hulls of sea vessels", type: "habitat" },
   { property: "live in urban areas", type: "habitat" },
 
   { property: "carry Lyme disease", type: "disease"},
@@ -55,14 +58,14 @@ var stim_properties = [
   { property: "get cancer", type: "disease"},
   { property: "lose their teeth", type: "disease"},
   { property: "go bald", type: "disease"},
-  // { property: "have asthma", type: "disease"},
 
   { property: "give birth underwater", type: "reproduction"},
   { property: "lay eggs in other birds' nests", type: "reproduction"},
   { property: "lay eggs without needing fertilization", type: "reproduction"},
   { property: "attract mates by secreting pheromones", type: "reproduction"},
   { property: "get erections", type: "reproduction"},
-  { property: "have a menstrual cycle", type: "reproduction"}
+  { property: "have a menstrual cycle", type: "reproduction"},
+  { property: "have dozens of sexual partners", type: "reproduction"}
 
 ]
 
