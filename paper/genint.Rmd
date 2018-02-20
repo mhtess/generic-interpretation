@@ -1,0 +1,152 @@
+---
+title             : "Context-sensitive interpretations of generic statements"
+shorttitle        : "Context-sensitive generic interpretations"
+
+author: 
+  - name          : "Michael Henry Tessler"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "450 Serra Mall, Bldg. 420, Rm. 316, Stanford, CA 94305"
+    email         : "mhtessler@stanford.edu"
+  - name          : "Noah D. Goodman"
+    affiliation   : "1"
+
+affiliation:
+  - id            : "1"
+    institution   : "Department of Psychology, Stanford University"
+    
+header-includes:
+  - \usepackage{tabularx}
+  - \usepackage{multicol}
+  - \usepackage{wrapfig}
+  - \usepackage{caption}
+  - \usepackage{booktabs}
+  - \usepackage{amsmath}
+  - \usepackage{graphicx}
+  - \usepackage{subcaption}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  
+author_note: >
+  This manuscript is currently in prep. Comments or suggestions should be directed to MH Tessler.
+
+abstract: |
+  Enter abstract here. Each new line herein must be indented, like this line.
+  
+keywords          : "keywords"
+wordcount         : "X"
+
+bibliography      : ["generics.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+mask              : no
+
+class             : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r load_packages, include = FALSE}
+library("papaja")
+```
+
+```{r analysis_preferences}
+# Seed for random number generation
+set.seed(42)
+```
+
+# Introduction
+
+
+Despite these variable truth conditions, generic sentences are thought to have charasterically "strong implications" [@Gelman2002; @Cimpian2010; @Brandone2014].
+It is these strong interpretations that make generics lead to stereotypes [@Rhodes2012].
+
+We recently proposed that generics communicate in an underspecified way about the prevalence of the feature.
+That is, our model predicted that "Mosquitos carry malaria" is a felicitious utterance because listeners expect *carrying malaria* to not be widespread within a category, even when it is present in some of the category. 
+
+@Cimpian2010 too found that generics predicating biological properties of kinds carry strong interpretations. 
+The properties used in those studies were all related to body parts of animals (e.g., "Lorches have purple feathers" $\rightarrow$ *almost all lorches have purple feathers*). 
+Bare plural nouns predicated with *accidental* properties (e.g., "Lorches have broken legs") had significantly weaker interpretations in terms of how many of the kind were expected to have the property. 
+However, these accidental properties do not lend themselves to generic interpretation and sound infelicitous. 
+At the same time, the average implied prevalence for the *accidental property* generics was close to 70\%, leaving open the question as to whether or not generics can have truly weak (i.e., minority-based) interpretations.
+
+We design our studies with these goals in mind.
+First, we test whether or not weak interpretations of generics are possible by testing interpretations of generics about a wide range of properties (Expt. 1a). 
+Then, we measure interlocutors' prior beliefs about the prevalence of the property (Expt. 1b) using the prior elicitation paradigm in @TesslerGenerics. 
+We compare our interpretation model's predictions, which use the empirically measured priors, to the implied prevalence data and find that our model is able to predict, with high quantitative accuracy, the context-sensitive interpretations of generics. 
+Finally, we show that, rather than being merely correlationa in nature, the prevalence prior is causally related to generic interpretation by manipulating the prevalence prior and measuring participants interpretaions of novel generics (Expt. 2). 
+
+# Computational model
+
+# Experiment 1
+
+## Experiment 1a: Generic interpretation
+
+### Methods
+
+#### Participants
+
+We recruited N participants from Amazon's crowd-sourcing platform Mechanical Turk (MTurk). 
+This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
+Participants were restricted to those with U.S. IP addresses and with at least a 95\% MTurk work approval rating (these same criteria apply to all experiments reported).
+The experiment took on average `r round(d.expt1.time.summary[[1, "aveTime"]], 1)` minutes and participants were compensated \$K.
+
+#### Procedure and materials
+
+Participants were told that scientists had recently discovered a new island with lots of new animals on it, and that they would be told facts about the new animals and be asked to translate it into the how many (what percentage) of that animal it applies to.
+On each trial, participants read a bare plural statement about a familiar property $F$ (e.g., *attack hikers*) applying to a novel animal category $K$ (e.g., *Javs*).
+They were then asked "How many *Ks* do you think *F*?" (e.g., "How many javs do you think attack hikers?").
+Participants responded using a slider bar with endpoints labeled 0\% and 100\%. 
+The percentage corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
+Judgments were obtained for 61 items, of which each participant saw a random selection of 30. 
+Items were generated by the first author by considering six different kinds of properties: physical characteristics (e.g., *have brown spots*), psychological characteristics (e.g., *experience emotions*), diet (e.g., *eat human food*), habitat (e.g., *live in zoos*), disease (e.g., *get cancer*, *carry malaria*), reproductive behavior (e.g., *have a menstrual cycle*), and other miscellaneous behaviors (e.g., *pound their chests to display dominance*, *perform in the circus*); online sources about strange animal behaviors were consulted in order to find more obscure properties. 
+Novel animal category names were mostly taken from @Cimpian2010, as well as a few other studies on generic language. 
+
+As an attention check, at the end of the generic interpertation trials, participants were asked to select (from a list of 10) all of the properties they could remember being tested on. 
+The list included 5 properties that they had been tested on and 5 distractors. 
+
+### Results
+
+## Experiment 1b: Prevalence prior elicitation
+
+### Methods
+
+#### Participants
+
+#### Material
+
+#### Procedure
+
+### Data analysis
+
+### Results
+
+## Cognitive modeling results
+
+# Experiment 2
+
+## Methods
+
+### Participants
+
+### Material
+
+### Procedure
+
+## Data analysis
+
+## Results
+
+# References
+
+
+```{r create_r-references}
+r_refs(file = "generics.bib")
+```
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
