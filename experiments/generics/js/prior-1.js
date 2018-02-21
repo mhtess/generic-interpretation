@@ -234,7 +234,7 @@ function init() {
       }
   })();
 
-  exp.numTrials = 10;//creatureNames.length;
+  exp.numTrials = 12;//creatureNames.length;
 
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}
