@@ -7,12 +7,14 @@ function make_slides(f) {
      name : "i0",
      start: function() {
       exp.startT = Date.now();
-      $("#total-num").html(exp.numTrials);
      }
   });
 
   slides.instructions = slide({
     name : "instructions",
+    start: function(){
+      $("#total-num").html(exp.numTrials);
+    },
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -129,20 +131,14 @@ function make_slides(f) {
 
       this.stim = stim
 
-
       var sliderIds = _.range(1, 6);
-      // console.log(this.stim)
+
       sliderIds.forEach(function(i){
         query_text = "How many "  + exp.categories[i-1] + " do you think " + stim.property + "?\n"
         $("#query" + i).html(query_text);
       })
 
-      // this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + ".\n"
-
-      // $(".evidence").html(this.evidence_prompt);
-
       this.init_sliders(sliderIds);
-      // exp.sliderPost = [];
       exp.sliderPost = [];
       $(".slider_number").html("---")
 
@@ -161,7 +157,7 @@ function make_slides(f) {
     },
 
     button : function() {
-      if (exp.sliderPost<0) {
+      if (exp.sliderPost.includes(undefined) || exp.sliderPost.length == 0) {
         $(".err").show();
       } else {
         this.rt = Date.now() - this.startTime;
@@ -170,15 +166,18 @@ function make_slides(f) {
       }
     },
    log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "prevalence_elicitation",
-        "trial_num": this.trial_num,
-        "response" : exp.sliderPost,
-        "rt":this.rt,
-        "property_type": this.stim.type,
-        "property": this.stim.property,
-        "category": this.stim.category
-      });
+     _.range(1, 6).forEach(function(i){
+       exp.data_trials.push({
+         "trial_type" : "prevalence_elicitation",
+         "trial_num": _s.trial_num,
+         "slider_num": i,
+         "category": exp.categories[i-1],
+         "response" : exp.sliderPost[i-1],
+         "rt":_s.rt,
+         "property_type": _s.stim.type,
+         "property": _s.stim.property
+       });
+     })
       this.trial_num++;
     }
   });
@@ -235,7 +234,7 @@ function init() {
       }
   })();
 
-  exp.numTrials = creatureNames.length;
+  exp.numTrials = 10;//creatureNames.length;
 
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}
@@ -249,7 +248,7 @@ function init() {
     })
 
   exp.stimscopy = exp.stims.slice(0);
-  exp.categories = ["dogs","Cats","sheep","mosquitos","giraffes"];
+  // exp.categories = ["dogs","Cats","sheep","mosquitos","giraffes"];
   exp.trials = [];
   exp.catch_trials = [];
   exp.data_trials = [];
@@ -257,10 +256,10 @@ function init() {
   exp.condition = "prior_elicitation";
 
   exp.structure=[
-    "prevalence_elicitation",
-    "category_elicitation",
     "i0",
     "instructions",
+    "category_elicitation",
+    "prevalence_elicitation",
     "memory_check",
     'subj_info',
     'thanks'

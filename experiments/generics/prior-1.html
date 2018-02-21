@@ -35,7 +35,7 @@
 
     <!-- experiment file -->
     <script src="js/prior-1.js"></script>
-    <script src="js/stims-3.js"></script>
+    <script src="js/stims-4.js"></script>
   </head>
 
 <body onload="init();">
@@ -44,7 +44,7 @@
   <div class="slide" id="i0" >
     <img src="_shared/images/cocologo.png" alt="Stanford CoCoLab" id="cocologo"></img>
     <p id="cocolab">Stanford CoCoLab</p>
-    <p id="instruct-text">You will read <span id="total-num">{{}}</span> prompts about animals and be asked some questions about them. The HIT should take approximately 5 minutes. Please pay attention, thanks!</p>
+    <p id="instruct-text">Test your knowledge of animals! Answer short questions about your favorite animals. The HIT should take approximately 5 minutes. Please pay attention, thanks!</p>
     <button id="start_button" type="button">Start Experiment</button>
 
     <p style="font-family:courier; font-size:14px; text-align: justify;">Please note: There will be multiple posted versions of this HIT (name: <strong>Language Study - Animals 12</strong>) throughout today and possibly tomorrow. You will not be allowed to complete multiple HITs in this series. Please attempt only one.</p>
@@ -55,14 +55,14 @@
 
   <div class="slide" id="instructions">
     <h3>Instructions</h3>
-    <p>Recently, a team of scientists discovered a remote island with many animals that we did not know existed. On each trial, you will learn a fact about a new animal and be asked to translate it into the <em>how many</em> (what percentage) of that animal it applies to. There is no right answer. Just use your common sense.</p>
+    <p>This study has two phases. In the first phase, you will list your 5 favorite kinds of animals. In the second phase, you will answer simple questions about the animals. There are <span id="total-num">{{}}</span> questions in the second phase. Press Continue to begin.</p>
     <button onclick="_s.button()">Continue</button>
   </div>
 
 
   <div class="slide" id="category_elicitation">
     <br>
-    <p class="category_elicitation_text">List 5 kinds of animals in the boxes below. <br>(Please use plurals. For example: "humans" instead of "human")</p>
+    <p class="category_elicitation_text">List your 5 favorite kinds of animals in the boxes below. <br>(Please use plurals. For example: "humans" instead of "human")</p>
     <div class='animal_list'>
     <label>Animal 1: <input type="text" id="text_response1"></input></label><br><br>
     <label>Animal 2: <input type="text" id="text_response2"></input></label><br><br>
@@ -75,7 +75,6 @@
   </div>
 
   <div class="slide" id="prevalence_elicitation">
-    <br>
 
     <p class="query" id="query1"></p>
     <p class="slider_number" id="slider_number1"></p>
@@ -98,8 +97,19 @@
       <tr><td colspan="2"><div id="single_slider3" class="slider"></div></td></tr>
     </table>
 
+    <p class="query" id="query4"></p>
+    <p class="slider_number" id="slider_number4"></p>
+    <table id="slider_table4" class="slider_table">
+      <tr><td class="left">0%</td><td class="right">100%</td></tr>
+      <tr><td colspan="2"><div id="single_slider4" class="slider"></div></td></tr>
+    </table>
 
-
+    <p class="query" id="query5"></p>
+    <p class="slider_number" id="slider_number5"></p>
+    <table id="slider_table5" class="slider_table">
+      <tr><td class="left">0%</td><td class="right">100%</td></tr>
+      <tr><td colspan="2"><div id="single_slider5" class="slider"></div></td></tr>
+    </table>
 
 
     <button onclick="_s.button()">Continue</button>

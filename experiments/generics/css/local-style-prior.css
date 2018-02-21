@@ -9,15 +9,20 @@
     font-size: 20px;
 }
 
-/* .query{
+.query{
 	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 20px;
-} */
+    font-size: 16px;
+}
 
 .err{
 	color: red;
+	font-size: 16px;
+	margin-left: 0px
 }
 
+.slider_number{
+	font-size:16px;
+}
 .kind{
 	font-size: 16px;
 	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
@@ -70,4 +75,8 @@ input[type="text"] {
 .right{
 	margin-top: 0px;
 	margin-bottom: 0px;
+}
+
+table {
+   border-bottom: 2px solid black;
 }
