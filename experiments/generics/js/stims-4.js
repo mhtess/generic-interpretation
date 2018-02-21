@@ -6,7 +6,7 @@ var stim_properties = [
   { property: "have intensely beautiful feathers", type: "physical" },
   { property: "live to be twenty years old", type: "physical" },
   { property: "live to be a hundred years old", type: "physical" },
-  { property: "live to be a thousand years old", type: "physical" },
+  { property: "live to be five hundred years old", type: "physical" },
 
   { property: "are afraid of loud noises", type: "psychological" },
   { property: "are afraid of dogs", type: "psychological" },
