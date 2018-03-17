@@ -26,9 +26,9 @@
 
 - [pending]
 - 74 items (stims-5), subjects rate 36 items
-- after memeory check, low responses were asked a follow-up questions (explain)
-- $0.60
-- n = 36 --> 21.60 + 4.32 = 25.92
+- after memory check, low responses were asked a follow-up questions (explain)
+- $0.80
+- n = 36 --> 28.8 + 5.76 = 34.56
 
 # Prior experiments
 
@@ -41,9 +41,10 @@
 
 ## Prior-2
 
-- [pending]
+- 3/17/18
 - 74 items (stims-5), subjects rate 12 items
 - $0.80
 - n = 36 --> 28.8 + 5.76 = 34.56
++ n = 36 --> 28.8 + 5.76 = 34.56
 
 # Manipulated prior experiments

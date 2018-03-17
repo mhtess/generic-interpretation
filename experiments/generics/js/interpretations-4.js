@@ -112,7 +112,7 @@ function make_slides(f) {
       this.stim = stim
       // console.log(this.stim)
 
-      var query_prompt = "How many "  + this.stim.category + " do you think " + this.stim.property + "?\n";
+      var query_prompt = "Out of 100 "  + this.stim.category + ", how many do you think " + this.stim.property + "?\n";
 
       this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + ".\n"
 
@@ -135,7 +135,7 @@ function make_slides(f) {
     make_slider_callback : function() {
       return function(event, ui) {
         exp.sliderPost = ui.value;
-        $(".slider_number").html(Math.round(exp.sliderPost*100)+"%")
+        $(".slider_number").html(Math.round(exp.sliderPost*100))
       };
     },
 
@@ -193,17 +193,17 @@ function make_slides(f) {
 
       this.stim = stim
 
-      var query_prompt = "How many "  + this.stim.category + " do you think " + this.stim.property + "?";
+      var query_prompt = "Out of 100 "  + this.stim.category + ", how many do you think " + this.stim.property + "?\n";
 
       this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + "."
 
       $(".evidence").html("Earlier you learned: " + this.evidence_prompt);
-      $(".query").html("and gave the following response to the question of how many " + this.stim.category + " you thought " + this.stim.property + "." );
+      $(".query").html("and gave the following response to the question of how many " + this.stim.category + " (out of 100) you thought " + this.stim.property + "." );
 
       this.init_sliders();
       exp.sliderPost = -1;
 
-      $(".slider_number").html(Math.round(stim.response*100)+"%")
+      $(".slider_number").html(Math.round(stim.response*100))
 
 
       var label = "#single_slider1";
@@ -291,7 +291,7 @@ function init() {
 
   repeatWorker = false;
   (function(){
-      var ut_id = "mht-genint-20180221";
+      var ut_id = "mht-genint-20180317";
       if (UTWorkerLimitReached(ut_id)) {
         $('.slide').empty();
         repeatWorker = true;
@@ -299,8 +299,8 @@ function init() {
       }
   })();
 
-exp.numTrials = 4//creatureNames.length;
-
+exp.numTrials = creatureNames.length;
+// console.log(stim_properties.length)
 var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
   function(x){return {category: x.category, exemplar: x.exemplar}}
   )
