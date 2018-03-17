@@ -1,0 +1,200 @@
+---
+title: "Generics BDA"
+output: html_notebook
+---
+
+
+```{r}
+library(rwebppl)
+library(tidyverse)
+```
+
+```{r}
+readData = function(folder, proj){
+  read_csv(
+    paste("../data/",folder, proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(folder, proj){
+  read_csv(
+    paste("../data/",folder, proj,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
+priorDataLabel = "prior-1"
+interpretationDataLabel = "interpretation-3"
+```
+
+## Load data
+Prior data
+
+```{r}
+df.prior <- readData("prior/", priorDataLabel)
+df.prior.catch <- readCatchInfo("prior/", priorDataLabel)
+
+df.prior.catch.summary <- df.prior.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.prior <- left_join(df.prior, df.prior.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.prior.filtered <- df.prior %>% 
+  filter(pass == 1, trial_type == "prevalence_elicitation") %>%
+  mutate(response = as.numeric(response))
+
+```
+
+
+Interpretation (posterior) data
+```{r}
+df.int.catch <- readCatchInfo("interpretation/", interpretationDataLabel)
+
+df.int.catch.summary <- df.int.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int <- readData("interpretation/", interpretationDataLabel) %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+df.int <- left_join(df.int, df.int.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.int.filtered <- df.int %>% filter(pass == 1) %>%
+  mutate(response = as.numeric(response))
+```
+
+## RSA/BDA Model
+
+```{r}
+rsa.bda.model <- '
+var priorData = map(avoidEnds, data.prior)
+var interpretationData = map(
+  function(d){ return utils.closest( midBins.slice(1), d) }, 
+  data.interpretation
+)
+
+display(priorData)
+display(interpretationData)
+var meaning = function(utt,state, theta) {
+  return utt=="generic"? state > theta :
+         true
+}
+
+var model = function(){
+
+  var numberOfComponents = poisson(1) + 1;
+
+  var weights = normalize(repeat(numberOfComponents,
+    function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+  ))
+
+  var componentParameters = repeat(numberOfComponents,
+   function(){
+    return betaShape({
+        g: uniformDrift({a: 0, b: 1, width: 0.2}),
+        d: uniformDrift({a: 0, b: 100, width: 5})
+      })
+  })
+
+	mapData({data: priorData}, function(d){
+    var componentLogLikelihood = map2(function(w, params){
+      Math.log(w) + Beta(params).score(d)
+    }, weights, componentParameters)
+    var scr = util.logsumexp(componentLogLikelihood)
+    // console.log(scr)
+		factor(scr)
+	})
+
+	var statePrior = Infer({model: function(){
+    sample(DiscretizedBeta(componentParameters[discrete(weights)]))
+	}});
+
+	/// RSA model
+	var listener0 = cache(function(utterance) {
+	  Infer({model: function(){
+	    var state = sample(statePrior), theta = sample(thetaPrior);
+	    var m = meaning(utterance, state, theta)
+	    condition(m)
+	    return state
+	 }})}, 10000)
+
+   var interpretationPrediction = listener0("generic")
+
+   mapData({data:interpretationData}, function(d){
+     // display(d)
+      var scr = interpretationPrediction.score(d)
+      scr == -Infinity ? displayObj(d) : null
+     // display(scr)
+     // observe(interpretationPrediction, d)
+   })
+
+   // RECORD PARAMETERS AND PREDICTIVES
+   query.add(["numberOfComponents", -99, -99, -99], numberOfComponents)
+
+   foreach(_.range(numberOfComponents), function(i){
+
+     query.add(["componentParameters", i, weights[i], componentParameters[i]["a"]],
+       componentParameters[i]["b"]
+     )
+
+   })
+
+  query.add(["prediction", -99, -99, expectation(statePrior)], expectation(interpretationPrediction))
+
+	return query
+}
+'
+```
+
+
+
+
+```{r}
+all.properties <- unique(df.int.filtered$property)
+n_samples <- 100
+n_burn <- n_samples / 2
+
+for (p in all.properties[1:2]){
+  
+  priorData <- filter(df.prior.filtered, property == p)$response
+  interpretationData <- filter(df.int.filtered, property == p)$response
+
+  dataToPass = list(prior = priorData, interpretation = interpretationData)
+  
+  wp.rs <- webppl(program_code = rsa.bda.model,
+                packages = c("node_modules/utils"),
+                data_var = "data", data = dataToPass,
+                model_var = "model", 
+                inference_opts = list(method = "MCMC",
+                                      samples = n_samples,
+                                      burn = n_burn,
+                                      verbose = TRUE))
+  print(p)
+}
+
+
+
+```
+
+```{r}
+wp.rs %>%
+  separate(Parameter, sep = ",", into = c('a','b','c', 'd'))
+```
+
