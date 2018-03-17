@@ -30,7 +30,7 @@ function make_slides(f) {
         "Mammals", "Fish", "Birds", "Insects/Bugs", "Reptiles/Amphibeans"
       ])
 
-      _.range(1, 6).forEach(function(i){
+      _.range(1, exp.n_classes + 1).forEach(function(i){
         $("#class_list"+i).html("<strong><u>"+_s.animalClasses[i-1]+"</strong></u>")
       })
 
@@ -39,8 +39,8 @@ function make_slides(f) {
     },
     button : function() {
 
-      responses = _.object(_.map(_.range(1, 6), function(i){
-        return [_s.animalClasses[i-1], _.map(_.range(1, 6), function(j){
+      responses = _.object(_.map(_.range(1, exp.n_classes+1), function(i){
+        return [_s.animalClasses[i-1], _.map(_.range(1, exp.n_exemplars_per_class+1), function(j){
           // $("#text_response" + i + "_" + j).val("r" +i + j); // for testing purposes
           return $("#text_response" + i + "_" + j).val()
         })]
@@ -172,7 +172,7 @@ function make_slides(f) {
       var sliderIds = _.range(1, 6);
 
       sliderIds.forEach(function(i){
-        query_text = "How many "  + _s.categories[i-1]["category"] + " do you think " + stim.property + "?\n"
+        query_text = "Out of 100 "  + _s.categories[i-1]["category"] + ", how many do you think " + stim.property + "?\n"
         $("#query" + i).html(query_text);
       })
 
@@ -190,7 +190,7 @@ function make_slides(f) {
     make_slider_callback : function(i) {
       return function(event, ui) {
         exp.sliderPost[i - 1] = ui.value;
-        $("#slider_number" + i).html(Math.round(ui.value*100)+"%")
+        $("#slider_number" + i).html(Math.round(ui.value*100))
       };
     },
 
@@ -273,7 +273,8 @@ function init() {
       }
   })();
 
-  // exp.n_exemplars_per_class = 2;
+  exp.n_exemplars_per_class = 3;
+  exp.n_classes = 5;
   exp.numTrials = 12;//creatureNames.length;
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}

@@ -52,6 +52,7 @@ var stim_properties = [
   { property: "drink soda", type: "diet" },
   { property: "drink alcohol left behind by tourists", type: "diet" },
   { property: "eat cannabis", type: "diet" },
+  { property: "fish in the Hudson River", type: "diet" },
 
   { property: "live in trees", type: "habitat" },
   { property: "live in zoos", type: "habitat" },

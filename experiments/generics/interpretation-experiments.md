@@ -18,6 +18,15 @@
 
 - 2/21/18
 - 72 items (stims-4), subjects rate 36 items
+- low responses were asked a follow-up questions (explain)
+- $0.60
+- n = 36 --> 21.60 + 4.32 = 25.92
+
+## Interpretation-4
+
+- [pending]
+- 74 items (stims-5), subjects rate 36 items
+- after memeory check, low responses were asked a follow-up questions (explain)
 - $0.60
 - n = 36 --> 21.60 + 4.32 = 25.92
 
@@ -29,3 +38,12 @@
 - 72 items (stims-4), subjects rate 12 items
 - $0.60
 - n = 36 --> 21.60 + 4.32 = 25.92
+
+## Prior-2
+
+- [pending]
+- 74 items (stims-5), subjects rate 12 items
+- $0.80
+- n = 36 --> 28.8 + 5.76 = 34.56
+
+# Manipulated prior experiments
