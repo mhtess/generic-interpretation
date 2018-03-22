@@ -69,29 +69,23 @@ Language, however, is uniquely powerful in its ability to convey information tha
 The premier example of language's ability to transmit abstract knowledge comes in the form of statements that convey generalizations, otherwise known as *generic language* [e.g., "Birds fly"; @Carlson1977]. 
 One of the most important roles for generic language is to provide learners with information about new or poorly understood categories.
 As such, generics are ubiquitous in everyday conversation and child-directed speech [@Gelman1998].
-But unlike statements about concrete events or exemplars  (e.g., "This bird flys"), generics are not directly observable and are, in fact, resilient to counterexamples (e.g., penguins do not fly). 
+But unlike statements about concrete events or exemplars  (e.g., "This bird flys"), generics convey information that is not directly observable and, in fact, resilient to counterexamples (e.g., penguins do not fly). 
 
 Understanding how generic language gets interpreted is an open question in cognitive science.
 Intuitively, interpretations of generics map best onto the quantifier *most* (e.g., "Most birds fly").
 But interpreting all generic statements as meaning *most* is too strong: "Mosquitos carry malaria" really should be taken to mean *some* (i.e., "Some mosquitos carry malaria").
-Interpreting a generic as *most* can also be too weak: The correct interpretation of "Triangles have three sides" is *all*; if a shape does not have three sides, it is not a triangle. 
-Accordingly, 3-year-olds endorse novel generics differently from quantifier statements [@Gelman2015genericsQuantifiers].
+Interpreting a generic as *most* can also be too weak: "Triangles have three sides" is a statement about *all triangles*; if a shape does not have three sides, it is not a triangle. 
+Indeed, the differences between quantified statements and generic statements are appreciated by children as yougn as three years [@Gelman2015genericsQuantifiers].
 
 The flexibility of generic language can be in part attributed to beliefs about the property [@Nisbett1983].
 Properties that are biological in nature (e.g., "Wugs have wings") are interpreted as applying to most or all of the category [@Gelman2002; @Brandone2014], while features that could be construed as incidental (e.g., "Crullets have fungus-covered claws") are interpreted as applying to relatively fewer members of the category [@Cimpian2010].
 These context-sensitive interpretation have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but such notions have not been made sufficiently precise to make a quantative predictive account.
 
-@TesslerLangGenUnderReview proposed a quantitative model of generic interpretation, which uses a threshold function to update a listener's beliefs from a generic statement.
-This threshold function operates on the prevalence $p$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{p > \theta\}$.
-The literal meaning of quantifiers can also be described by a threshold-function (e.g., $\denote{some} = \{p > 0\}$, $\denote{most} = \{p > 0.5\}$, $\denote{all} = \{p = 1\}$).
-@TesslerLangGenUnderReview posit that the corresponding threshold for the generic $\theta$ is *a priori* uncertain and resolved by context. 
-To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels. ^[
-  Though not the direct focus of this work, the prevalence prior distribution can be seen as a shallow formalization of theory-based considerations. 
-  That is, different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
-  The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
-].
-Truth judgments about a wide range of linguistic stimuli including generics about animals, habituals about actions (e.g., "John runs"), and causal language (e.g., "This herb makes animals sleepy") can be accounted for well by a "speaker model" that can transmit information to the generic listener model. 
-The predictions of the generic listener model, however, have not been tested.
+@TesslerLangGenUnderReview proposed a quantitative model of generic endorsement, which uses a threshold function to update a listener's prior beliefs from a generic statement.
+This model accounted for truth judgments (e.g., is "Mosquitos cary malaria" true or false?) about a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal language (e.g., "This herb makes animals sleepy").
+Their endorsement model is cast a speaker deciding whether or not to assert a generic statement to a naive listener.
+<!-- can be accounted for well by a "speaker model" that can transmit information to the generic listener model.  -->
+The predictions of the generic listener model, which provides a mapping from a generic statement to the prevalence implied by that statement, have not been tested.
 
 The paper is organized as follows.
 First, we review @TesslerLangGenUnderReview's computational model of generic interpretation. 
@@ -122,10 +116,45 @@ Together, these results provide strong evidence for an quantitative account of g
 
 # Computational model
 
+Generic language conveys generalizations about categories [@Carlson1977; @Leslie2008].
+Given that probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], it makes sense that probability would be at the core meaning of generalizations from language. 
+@TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics is simple but underspecified or vague. 
 
+Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $p$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{p > \theta\}$.
+The literal meaning of quantifiers can also be described by a threshold-function (e.g., $\denote{some} = \{p > 0\}$, $\denote{most} = \{p > 0.5\}$, $\denote{all} = \{p = 1\}$).
+@TesslerLangGenUnderReview posit that the corresponding threshold for the generic $\theta$ is *a priori* uncertain---formally, is drawn from a context-invariant, uniform prior distribution thresholds $P(\theta)$---and is resolved by context. 
 
+In order for a statement to update beliefs about prevalence, a listener must have prior beliefs about prevalence.
+To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(p)$. ^[
+  Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively shallow formalization of theory-based expectations. 
+  That is, different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
+  The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
+].
+Thus the quantitative model for generic interpretation is given by:
 
+\begin{eqnarray}
+L(p, \theta \mid u) &\propto& {\delta_{\denote{u}(p, \theta)} \cdot P(p) \cdot P(\theta)} \label{eq:L0}
+\end{eqnarray}
 
+Formally, the truth-functional meaning is represented by the Kronecker delta function  $\delta_{\denote{u}(p, \theta)}$ that returns probabilities proportional to $1$ when the utterance is true (i.e., when $p > \theta$) and $0$ otherwise.
+
+\begin{eqnarray}
+\delta_{\denote{u_{gen}}(p, \theta)} &\propto  & \begin{cases}
+1 & \text{if } p > \theta \\
+0 & \text{otherwise}
+\end{cases}\label{eq:delta}
+\end{eqnarray}
+
+Schematic model predictions are shown in Figure X. 
+
+<!-- 
+- Figure:
+  - 3 schematic priors, different fixed thresholds, generic interpretation 
+  - possibly with bar plot summarizing means
+  
+- Figure:
+  - comparison to a fixed threshold ("some") model, fixed threshold ("most") model, and L1 model (?)
+-->
 
 # Experiment 1
 
