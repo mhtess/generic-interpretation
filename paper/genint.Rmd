@@ -241,53 +241,56 @@ Additionally, when present, the property is only expected in about 50\% of the c
 
 ### Data analysis and results
 
-Question 1 elicits the potential for a property to be present in a kind (the mixture parameter of a mixture of 2 Betas model). 
-We assume responses are generated from a Beta distribution: $d_{1} \sim \text{Beta}(\gamma_1, \xi_1)$. 
+Question 1 elicits the potential for a property to be present in a kind (the mixture parameter of a 2-Betas mixture model). 
 Question 2 elicits the prevalence in a kind where the property is present.
-We also model these responses are coming frmo a Betas distribution: $d_{2} \sim \text{Beta}(\gamma_2, \xi_2)$.
-Each item was modeled independently for each gender.
-We learned about the credible values of the parameters by running MCMC for 100,000 iterations, discarding the first 50,000 for burn-in.
+We assume participants' responses to both questions ($i \in \{\text{Question 1}, \text{Question 2}\}$) are generated from Beta distributions: $d_{i} \sim \text{Beta}(\gamma_i, \xi_i)$. 
+Each item was modeled independently.
+We implemented the model in the probabilistic programming language WebPPL [@dippl].
+We learned about the credible values of the parameters of the model by running MCMC for 100,000 iterations, discarding the first 50,000 for burn-in.
 
-The priors elicited cover a range of possible parameter values as intended (Figure \@ref(fig:priorScatter), scatter):
+The priors elicited cover a range of possible parameter values as intended Figure\ \@ref(fig:expt1-prior)A:
+<!-- Figure \ref{fig:prior2}a shows a summary of the elicited priors, in terms of the diversity of $d_{potential}$ and $d_{expected}$. -->
+Biological properties are expected to be \emph{a priori} more prevalent within a kind when present than accidental properties, with additional fine-grained differences within biological and accidental properties.
 \red{describe scatter plot}.
 
-To generate prevalence prior distributions, we built a Bayesian mixture-model for this prior elicitation task, analogous to that used in Case Study 1 (Expt. 1b).
-The only difference is that we estimate the mixture component $\phi$ directly from responses to Question 1. 
-We assume that those who have not done the action before will probably not do the action in the future. 
-With these assumptions, the prevalence distribution is given by:
+To construct prevalence prior distributions, we built a Bayesian mixture-model for this prior elicitation task.
+We assume that kinds for which the property is absent have prevalence levels sampled from a Beta distribution that heavily favors numbers close to 0: $\text{Beta}(\gamma = 0.01; \xi = 100)$.^[
+  Note that we use the noncanonical mean $\gamma$ and concentration $\xi$ (or, inverse-variance) parameterization of the Beta distribution rather than the canonical shape (or pseudocount) parameterization for ease of posterior inference. The shape parameterization can be recovered using: $\alpha = \gamma \cdot \xi; \beta = (1 - \gamma) \cdot \xi$.
+]
+With that assumption, the prevalence distribution is given by:
 
 \begin{align}
-\phi & \sim \text{Beta}(\gamma_{Q1}, \xi_{Q1}) \nonumber \\ 
-\ln h & \sim \begin{cases}
-		\text{Gaussian}(\mu_{Q2}, \sigma_{Q2}) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{T} \label{eq:priorModel}  \\
-				\text{Delta}(h=0.01) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{F} \\
+\phi & \sim \text{Beta}(\gamma_{1}, \xi_{1}) \nonumber \\ 
+p & \sim \begin{cases}
+		\text{Beta}(\gamma_{2}, \xi_{2}) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{T} \label{eq:priorModel}  \\
+		\text{Beta}(\gamma = 0.01; \xi = 100)} &\mbox{if } \text{Bernoulli}(\phi) = \textsc{F} \\
 		\end{cases}
 \end{align}
 
-Figure \@ref(fig:habituals-prior-figure) (right) shows example reconstructed priors.
-In addition to specifying the correct way to combine our two prior-elicitation questions, using this inferred prior resolves two technical difficulties.
-First, it smooths effects that are clearly results of the response format. 
-For example, a very common rating for certain events is \emph{1 time per year}.
-Presumably participants would be just as happy reporting \emph{approximately} 1 time per year (e.g., on average, 1.2 times per year); the raw data does not reflect this due to demands of the dependent measure.
-Second, this methodology better captures the tails of the prior distribution (i.e., very frequent or very infrequent rates) which have relatively little data and need to be regularized by the analysis.
+This mixture model specifies the correct way to combine our two prior-elicitation questions.
+Figure\ \@ref(fig:expt1-prior)B shows example reconstructed priors.
+Biological properties (*biological*, *vague*, and *color* body parts) have prevalence distributions that are bimodal with peaks at 0\% and near-100\% prevalence. 
+\mht{will you plot prevalence posteriors as well? probably...}
+Interpretations of generics about these properties ($L$ model, Eq. \ref{eq:L0}) update these distributions to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}a; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category.
+By contrast, accidental properties (both *rare* and *common*) follow unimodal prior distributions and update to convex posterior distributions, predicting weaker and more variable interpretations of novel generics for these properties. 
+
+
+<!-- In addition to specifying the correct way to combine our two prior-elicitation questions, using this inferred prior resolves two technical difficulties. -->
+<!-- First, it smooths effects that are clearly results of the response format.  -->
+<!-- For example, a very common rating for certain events is \emph{1 time per year}. -->
+<!-- Presumably participants would be just as happy reporting \emph{approximately} 1 time per year (e.g., on average, 1.2 times per year); the raw data does not reflect this due to demands of the dependent measure. -->
+<!-- Second, this methodology better captures the tails of the prior distribution (i.e., very frequent or very infrequent rates) which have relatively little data and need to be regularized by the analysis. -->
 
 
 
+<!-- We used the same structured, statistical model for the prior data from Expt.~1. -->
+<!-- The only difference from Expt.~1a. is that our experimental data comes from inquiring about the parameters of the priors directly, as opposed to asking about particular samples from the prior (i.e. particular kinds) as was done in Expt.~1a.  -->
+<!-- <!-- %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}). --> -->
+<!-- We assume these two measurements follow Beta distributions ($d_{potential} \sim \text{Beta}(\gamma_{1}, \xi_{1})$; $ -->
+<!-- d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before: $P(x) = \int [ \phi\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \phi) \cdot \delta_{x=0} ] \cdot \text{Beta}(\phi \mid \gamma_{1}, \xi_{1}) d\phi$. -->
+<!-- We used the same uninformative priors over parameters $\phi, \gamma_{i}, \xi_{i}$ as in Expt.~1a. -->
 
 
-We used the same structured, statistical model for the prior data from Expt.~1.
-The only difference from Expt.~1a. is that our experimental data comes from inquiring about the parameters of the priors directly, as opposed to asking about particular samples from the prior (i.e. particular kinds) as was done in Expt.~1a. 
-<!-- %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}). -->
-We assume these two measurements follow Beta distributions ($d_{potential} \sim \text{Beta}(\gamma_{1}, \xi_{1})$; $
-d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before: $P(x) = \int [ \phi\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \phi) \cdot \delta_{x=0} ] \cdot \text{Beta}(\phi \mid \gamma_{1}, \xi_{1}) d\phi$.
-We used the same uninformative priors over parameters $\phi, \gamma_{i}, \xi_{i}$ as in Expt.~1a.
-
-Figure \ref{fig:prior2}a shows a summary of the elicited priors, in terms of the diversity of $d_{potential}$ and $d_{expected}$.
-Biological properties are expected to be \emph{a priori} more prevalent within a kind when present than accidental properties, with additional fine-grained differences within biological and accidental properties.
-Like the priors elicited using familiar categories, these priors elicited using unfamiliar categories have diverse shapes (see insets). 
-Biological properties (``biological'', ``vague'', and ``color'' body parts) have prevalence distributions that are bimodal with peaks at 0\% and near-100\% prevalence. 
-Interpretations of generics about these properties ($L_1$ model, Eq.~\ref{eq:L1}) update these distributions to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}a; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category.
-By contrast, accidental properties (both ``rare'' and ``common'') follow unimodal prior distributions and update to convex posterior distributions, predicting weaker and more variable interpretations of novel generics for these properties. 
 <!-- %These convex posteriors show that generics about accidental or temporary properties come with highly uncertain interpretations, plausibly as a consequence of theory-driven considerations \cite{Cimpian2010c}.  -->
 
 
@@ -305,11 +308,6 @@ By contrast, accidental properties (both ``rare'' and ``common'') follow unimoda
 <!--   } -->
 <!--   \label{fig:prior2} -->
 <!-- \end{figure*} -->
-
-
-
-
-
 
 
 ## Experiment 1b: Generic interpretation
