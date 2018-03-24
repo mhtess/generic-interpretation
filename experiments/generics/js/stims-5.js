@@ -125,3 +125,108 @@ var creatureNames =
     {list:3, category: "ludinos", exemplar:"ludino"},
 
     ]
+
+
+    var preamble = "The results are shown below:"
+
+    var tasks = {
+      speaker: {
+        frequencies: [20, 70],
+        prompt: "The results of the experiment with SPECIAL were found.",
+        utterance: "SPECIAL TARGET.",
+        question: "Does SPECIAL QUERY?",
+        frequencyStatement: "Your team treated 100 CATEGORY with SPECIAL."
+        //" The number of CATEGORY that were successfully PAST (out of 100) with SPECIAL was:"
+      },
+      listener: {
+        prompt: "The results of the experiment with SPECIAL were found.",
+        utterance: "SPECIAL TARGET.",
+        question: "How many out of 100 UNIT do you think PAST?"
+      }
+    }
+
+    var rarity = 3; // (how many out of 10 will have it?)
+
+    var zeroDist = gaussian(0, 1.2);
+    var sampleNull = function(){
+      var s = zeroDist.ppf(Math.random())
+      var si = s > 0 ? s : 0
+      return Math.round(si)
+    }
+
+    var deterministic = gaussian(100, 3);
+    var sampleDeterministic = function(){
+      var s = deterministic.ppf(Math.random())
+      var si = s < 100 ? s : 100
+      return Math.round(si)
+    }
+
+    var weak = gaussian(20, 2);
+    var strong = gaussian(80, 5);
+
+    var rare_weak_samples = [], common_weak_samples = [];
+    var rare_strong_samples = [], common_strong_samples = [];
+    var rare_deterministic_samples = [], common_deterministic_samples = [];
+
+    // rare weak distribution
+    for (var i=0; i<10; i++){
+      if (i < rarity) {
+        var s = weak.ppf(Math.random())
+        rare_weak_samples.push(Math.round(s));
+      } else {
+        rare_weak_samples.push(sampleNull());
+      }
+    }
+
+    // common weak
+    for (var i=0; i<10; i++){
+      var s = weak.ppf(Math.random())
+      common_weak_samples.push(Math.round(s));
+    }
+
+
+    // common determinsitic
+    for (var i=0; i<10; i++){
+      common_deterministic_samples.push(sampleDeterministic());
+    }
+    for (var i=0; i<10; i++){
+      if (i < rarity) {
+        rare_deterministic_samples.push(sampleDeterministic());
+      } else {
+        rare_deterministic_samples.push(sampleNull());
+      }
+    }
+
+
+    // console.log(rare_weak_samples)
+
+    var distributions = [
+      {
+        distribution: "rare_weak",
+        data: _.shuffle(rare_weak_samples)
+      },
+      {
+        distribution: "common_weak",
+        data: _.shuffle(common_weak_samples)
+      },
+      // {
+      //   distribution: "rare_strong",
+      //   data: [75, 0, 65, 0, 80, 90, 0, 0, 80, 90]
+      // },
+      // {
+      //   distribution: "common_strong",
+      //   data: [75, 65, 65, 75, 80, 90, 80, 75, 80, 90]
+      // },
+      {
+        distribution: "rare_deterministic",
+        data: _.shuffle(rare_deterministic_samples)
+      },
+      {
+        distribution: "common_deterministic",
+        data: _.shuffle(common_deterministic_samples)
+      },
+      // {
+      //   distribution: "weak_or_strong",
+      //   data: [85, 75, 15, 75, 10, 90, 90, 80, 10, 20]
+      // }
+    ]
