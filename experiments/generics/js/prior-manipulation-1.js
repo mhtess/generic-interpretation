@@ -45,7 +45,7 @@ function make_slides(f) {
     //this gets run only at the beginning of the block
     present_handle : function(stim) {
       var prompt, utt;
-      // console.log(stim)
+      console.log(stim)
       // show prior questions and responses
       $(".question0").hide();
       $("#slider_table0").hide();
@@ -96,7 +96,9 @@ function make_slides(f) {
       // story = (exp.n_data == 0) ? story : story + " " +
       // replaceTerms(_.extend(stim, {preamble}), "preamble")
 
-      $(".data").html("You are an astronaut-scientist exploring a distant planet. ");
+      $(".property").html(stim.property);
+
+
       //
       // $(".data").html(story + " " +
       // replaceTerms(_.extend(stim, {preamble}), "preamble"));
@@ -105,6 +107,7 @@ function make_slides(f) {
       // this.missing = _.sample([1,2,3,4,5,6,7,8,9]);
 
       this.missing = exp.n_data == 0 ? "A" : _.sample(_.range(1, stim.data.length - 1));
+      // console.log(_.range(stim.data.length - 1))
       this.experimentNames = stim.categories.slice(0, stim.data.length);
 
       stim.data.splice(this.missing, 0, "?");
@@ -117,12 +120,12 @@ function make_slides(f) {
       $("#d-1").hide()
       $("#d-1a").hide()
       $("#d-1").css({"border":"1px solid black","font-size":"14px", "font-weight":"bold", "width":"20%"});
-      $("#d-1").html(" sentence 1 ");
+      $("#d-1").html("number who " + stim.property);
       // $("#d-1a").html(stim.unit + " treated")
-      $("#d-1a").html(" sentence 2 ")
+      $("#d-1a").html("number studied")
       $("#d-1a").css({"border":"1px dotted black"});
 
-      stim.targetTreatment = "stim.treatment " + this.experimentNames[this.missing]
+      // stim.targetTreatment = "stim.treatment " + this.experimentNames[this.missing]
 
       exp.sliderPost = -99;//utils.fillArray(-1,this.n_sliders);
       exp.sliderPrior =[];//utils.fillArray(-1,this.n_sliders);
@@ -141,7 +144,7 @@ function make_slides(f) {
       $("#d" + i + "a").show()
       $("#d" + i).show()
 
-      $("#h" + i).html("this.stim.treatment" + " " + this.experimentNames[i].category)
+      $("#h" + i).html(this.experimentNames[i].category)
       $("#h" + i).css({"font-size":"13px", "border":"1px dotted black"})
       $("#d" + i).css({"padding":"10px", "font-weight":"bold", "border":"1px solid black"});
       $("#d" + i).html(this.stim.data[i]);
@@ -150,17 +153,17 @@ function make_slides(f) {
 
       $("#evidenceDescription").show();
 
-      var experimentEvent = 'this.stim.experiment';
+      var experimentEvent = 'The scientists studied 100 ' + this.stim.categories[i].category + " over the course of the past year.";
       // experimentEvent = experimentEvent.replace("SPECIAL", this.stim.treatment + " " +  this.experimentNames[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar);
 
-      var experimentResults = 'this.stim.experimentResults';
+      var experimentResults = 'The scientists concluded that ' +this.stim.data[i] + ' out of those 100 ' + this.stim.categories[i].category + ' ' + this.stim.property +'.';
       // experimentResults = experimentResults.replace("N", this.stim.data[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar)
 
       if (this.stim.data[i] == "?") {
 
         // $("#evidenceDescription").html("Your team "+ experimentEvent + isAnother + " 100 " + this.stim.category + "<br>The results of this experiment have been misplaced so <strong>we don't know</strong> how many " + this.stim.category + " " + this.stim.evidence +".");
 
-        $("#evidenceDescription").html(experimentEvent + "<br>" + 'this.stim.lostResults.replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar)')
+        $("#evidenceDescription").html("Unfortunately, we have misplaced these data so we don't yet know how many "+ ' out of those 100 ' + this.stim.categories[i].category + ' ' + this.stim.property +'.')
 
         //
         // $("#evidenceDescription").html("Your team treated "+isAnother+"100 " + this.stim.category + " with " + this.stim.treatment + " " + this.experimentNames[i] + ". <br>The results of this experiment have been misplaced so <strong>we don't know</strong> how many " + this.stim.category + " " + this.stim.evidence +".");
@@ -206,15 +209,14 @@ function make_slides(f) {
           if (exp.condition == "prior"){
             // utils.make_slider("#single_slider0", this.make_slider_callback(0))
             // prior questions and sliders
-            $(".question0").html("There were "+exp.nSliders+" other experiments conducted that day.<br>For each one, "+
-            replaceTerms(this.stim, "otherExperiments") + "<br>" + replaceTerms(this.stim, "priorQuestion") )
-            this.nextExperimentNames = ["M", "N", "P", "Q", "R", "S"].slice(0, exp.nSliders);
+            $(".question0").html("There were "+exp.nSliders+" other species of animals studied over the past year. For each species, 100 individuals were studied.<br>How many of each species do you think " + this.stim.property + "?")
+            // exp.nextExperimentNames =;
 
 
             $(".slider_row").remove();
-            for (var i=0; i<this.nextExperimentNames.length; i++) {
-              var sentence_type = this.nextExperimentNames[i];
-              var sentence = this.stim.treatment + " " + this.nextExperimentNames[i];
+            for (var i=0; i<exp.nextExperimentNames.length; i++) {
+              // var sentence_type = exp.nextExperimentNames[i].category;
+              var sentence = exp.nextExperimentNames[i].category;
               $("#multi_slider_table").append('<tr class="slider_row"><td class="slider_target" id="sentence' + i + '">' + sentence + '</td><td colspan="2"><div id="single_slider' + i + '" class="slider">-------[ ]--------</div></td></tr>');
               utils.match_row_height("#multi_slider_table", ".slider_target");
               this.init_sliders(i)
@@ -256,31 +258,31 @@ function make_slides(f) {
             // console.log(this.stim)
             // this.init_sliders(2)
 
+            // debugger;
 
-            $(".question2").html(replaceTerms(this.stim, "prompt"));
+            $(".task_prompt").html('The scientists found the misplaced data from the ' + this.stim.categories[this.missing].category + ".");
             $(".task_prompt").show();
             $(".question2").show();
 
             utils.make_slider("#single_slider2", this.make_slider_callback(2))
 
-            prompt = replaceTerms(this.stim, "prompt") + "<br>" + replaceTerms(this.stim, "experiment");
+            // prompt = replaceTerms(this.stim, "prompt") + "<br>" + replaceTerms(this.stim, "experiment");
 
-            utt = 'Your colleague tells you: <strong>"' + jsUcfirst(replaceTerms(this.stim, "utterance")).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar) + '"</strong><br>' + replaceTerms(this.stim, "listenerQuestion");
+            utt = 'They say: <strong>"' + jsUcfirst(this.stim.categories[this.missing].category) + " " + this.stim.property +'."' + '</strong><br>How many out of the 100 ' + this.stim.categories[this.missing].category + ' studied do you think ' + this.stim.property + "?";
 
-
+            $("#listener_number").html("---");
+            $("#listener_number").show();
+            $("#slider_table2").show();
+            // $(".task_prompt").html(prompt);
+            $(".question2").html(utt);
+            $(".left").show()
+            $(".right").show()
 
             // prompt = replaceTerms(this.stim, "prompt") + "<br>" + 'Your colleague tells you: <strong>"' + jsUcfirst(replaceTerms(this.stim, "utterance")).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar) + '"</strong>'
             //
             //
             // utt = replaceTerms(this.stim, "experiment") + '"<br>' + replaceTerms(this.stim, "listenerQuestion");
 
-            $("#listener_number").html("---");
-            $("#listener_number").show();
-            $("#slider_table2").show();
-            $(".task_prompt").html(prompt);
-            $(".question2").html(utt);
-            $(".left").show()
-            $(".right").show()
 
           }
 
@@ -462,15 +464,19 @@ function init() {
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
   // exp.condition = _.sample(["prior","speaker"])
-  exp.condition = "listener"
+  exp.condition = "prior"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
 
-  exp.n_data = 10
+  exp.n_data = 3;
 
+  var shuffledCreatures = _.shuffle(creatureNames);
+  var creatures = _.map(shuffledCreatures.slice(0,exp.n_data),
+    function(x){return {category: x.category, exemplar: x.exemplar}}
+    )
 
-  var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.n_data),
+  exp.nextExperimentNames = _.map(shuffledCreatures.slice(exp.n_data, exp.n_data + 5),
     function(x){return {category: x.category, exemplar: x.exemplar}}
     )
 
