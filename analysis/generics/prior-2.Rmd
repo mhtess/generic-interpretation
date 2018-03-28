@@ -1,0 +1,198 @@
+---
+title: "Prior elicitation"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+library(ggpirate)
+library(knitr)
+library(viridis)
+library(tidytext)
+readData = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
+readSubjInfo = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-subject_information.csv", sep = "")
+    )
+}
+```
+
+# Prior 2
+
+## Subject information
+
+```{r}
+df.prior.2 <- readData("prior-2")
+ 
+df.prior.2.subj <- readSubjInfo("prior-2")
+df.prior.2.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+## Catch trials
+
+```{r}
+df.prior.2.catch <- readCatchInfo("prior-2")
+
+df.prior.2.catch.summary <- df.prior.2.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.prior.2.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+remove catch trial failures
+
+```{r}
+df.prior.2 <- left_join(df.prior.2, df.prior.2.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.prior.2.filtered <- df.prior.2 %>% filter(pass == 1)
+
+```
+
+
+
+## What categories do people produce?
+
+```{r}
+df.prior.categories.2 <- df.prior.2.filtered %>%
+  filter(trial_type == "category_elicitation") %>%
+  mutate(response = gsub("&quotechar", "", response)) %>%
+  tidytext::unnest_tokens(word, response) %>%
+  tidytext::anti_join(stop_words)
+
+df.prior.categories.2 %>%
+  group_by(response) %>%
+  count() %>%
+  kable()
+
+d.tidy.wordCounts <- df.prior.categories.2 %>%
+  count(animal_class,word)
+
+d.tidy.wordCounts[with(d.tidy.wordCounts, order(animal_class, -n)),] %>%
+  kable()
+```
+
+
+## Prevalence priors
+
+```{r}
+df.prior.prevalence.2 <- df.prior.2.filtered %>%
+  filter(trial_type == "prevalence_elicitation", !(is.na(response))) %>%
+  mutate(response = as.numeric(response))
+```
+
+
+Histogram of number of responses per item
+
+```{r}
+df.prior.prevalence.2 %>%
+  group_by(property) %>%
+  count() %>%
+  ggplot(., aes(x = n / 5))+
+  geom_bar()+
+  ylab("number of items")+
+  xlab("number of participants rated item")
+```
+
+Distribution of all responses (collapse item)
+
+```{r}
+df.prior.prevalence.2 %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram()
+```
+
+Item distributions (prevalence priors)
+
+```{r fig.width = 18, fig.height = 8}
+df.prior.prevalence.2 %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( bins = 20)+
+  facet_wrap(~property, scales = 'free') +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+
+ggsave("figs/prior-2-prevpriors-n72.pdf", width = 20, height = 14)
+```
+
+Distribution of expected values
+
+```{r}
+df.prior.2.ev <- df.prior.prevalence.2 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.2.ev, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+
+ggsave("figs/prior-2-expvals-n72.pdf", width = 4, height = 4)
+
+```
+
+
+Distribution of expected values conditional on non-zero prevalence
+
+```{r}
+df.prior.2.conditional.ev <- df.prior.prevalence.2 %>%
+  filter(response > 0) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.2.conditional.ev, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+
+ggsave("figs/prior-2-nonZeroExpvals-n72.pdf", width = 4, height = 4)
+
+```
+
+
+
+
+Copy interpretation df over from `generic-interpretation-1.Rmd`
+
+```{r}
+df.prior.2.ev.wInt <- left_join(
+  df.prior.2.ev,
+  #df.prior.2.conditional.ev,
+  df.int.3.filtered.bs %>%
+    rename(int_mean = mean, int_upper = ci_upper, int_lower = ci_lower) %>%
+    select(property, int_mean, int_upper, int_lower)
+) %>%
+  mutate(sq_err = (mean - int_mean)^2)
+
+ggplot(df.prior.2.ev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
+                     y = int_mean, ymin = int_lower, ymax = int_upper))+
+  geom_point()+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  scale_x_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  coord_fixed()
+```
+
+

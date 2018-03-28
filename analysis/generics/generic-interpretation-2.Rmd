@@ -1,0 +1,113 @@
+---
+title: "Generic interpretation 2"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+library(ggpirate)
+library(knitr)
+library(viridis)
+```
+
+```{r}
+readData = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readSubjInfo = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-subject_information.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-catch_trials", sep = "")
+    )
+}
+```
+
+
+# Interpretation-2
+
+```{r}
+df.int.1 <- readData("interpretation-1") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+ 
+df.int.1.subj <- readSubjInfo("interpretation-1")
+df.int.1.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+### by item histogram
+
+```{r fig.width = 10, fig.height = 4}
+df.int.1 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property)
+```
+```{r fig.height = 4}
+df.int.1.bs <- df.int.1 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.1.bs %>%
+  mutate(property = factor(property, levels =  property[order(mean)])) %>%
+  ggplot(aes( x= property, y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_linerange()+
+  geom_point()+
+  coord_flip()+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-1-n18-95ci.pdf", height = 4)
+```
+```{r fig.height = 4}
+df.int.1 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.1.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-1-n18-pirates.pdf", height = 7)
+```
+
+
+### by subject hists
+
+```{r fig.width = 10, fig.height = 4}
+df.int.1 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~workerid)
+```
+
+
+```{r}
+df.int.norm.bs.1 <- df.int.1 %>%
+ group_by(property) %>%
+  tidyboot_mean(column = normalizedResponse)
+
+df.int.1 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.norm.bs.1, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = normalizedResponse, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)
+
+#ggsave("figs/interpretation-1-normalized-n18-pirates.pdf", height = 7)
+```
+

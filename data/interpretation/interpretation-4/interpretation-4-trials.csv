@@ -1,0 +1,1429 @@
+"workerid","rt","trial_type","property_type","trial_num","category","explanation","property","response"
+0,5378,"implied_prevalence","disease_other",1,"grinks",NA,"transmit rabies",0.14
+0,5887,"implied_prevalence","physical",2,"sapers",NA,"have an exquisite sense of smell",1
+0,4390,"implied_prevalence","reproduction",3,"crullets",NA,"attract mates by secreting pheromones",0.5
+0,3808,"implied_prevalence","physical",4,"kweps",NA,"have brown fur",0.87
+0,4901,"implied_prevalence","behavior_aggressive",5,"trufts",NA,"pound their chests to display dominance",0.47
+0,3269,"implied_prevalence","psychological",6,"zorbs",NA,"are intelligent",0.89
+0,4054,"implied_prevalence","psychological",7,"lorches",NA,"know when earthquakes are about to happen",0.87
+0,3498,"implied_prevalence","behavior_aggressive",8,"fendles",NA,"capture other animals&quotechar territory",0.53
+0,2881,"implied_prevalence","reproduction",9,"plovs",NA,"give birth underwater",0.5
+0,3580,"implied_prevalence","disease_self",10,"elleps",NA,"get addicted to nicotine",0.72
+0,3725,"implied_prevalence","diet",11,"krivels",NA,"eat candy wrappers",0.24
+0,2725,"implied_prevalence","physical",12,"moxes",NA,"have very long wings",0.52
+0,2885,"implied_prevalence","psychological",13,"frams",NA,"know how to open doors",0.56
+0,2346,"implied_prevalence","behavior",14,"ludinos",NA,"chase their tails",0.76
+0,3481,"implied_prevalence","reproduction",15,"dunkels",NA,"lay eggs without needing fertilization",0.73
+0,3530,"implied_prevalence","disease_self",16,"taifels",NA,"have seizures",0.45
+0,4721,"implied_prevalence","habitat",17,"daiths",NA,"live in urban areas",0.59
+0,4288,"implied_prevalence","behavior",18,"thups",NA,"perform in the circus",0.16
+0,2251,"implied_prevalence","diet",19,"wugs",NA,"eat cannabis",0.67
+0,1915,"implied_prevalence","psychological",20,"cheebas",NA,"mourn their dead",0.83
+0,2531,"implied_prevalence","diet",21,"pangolins",NA,"eat insects",1
+0,3086,"implied_prevalence","behavior",22,"blins",NA,"fly into building windows",0.28
+0,2472,"implied_prevalence","behavior",23,"ollers",NA,"like to cuddle",0.77
+0,2775,"implied_prevalence","diet",24,"feps",NA,"fish in the Hudson River",0.6
+0,2497,"implied_prevalence","diet",25,"dobles",NA,"eat human food",0.85
+0,1441,"implied_prevalence","diet",26,"stups",NA,"eat grass",0.74
+0,3077,"implied_prevalence","disease_self",27,"zoovs",NA,"have strange genetic mutations",0.31
+0,1795,"implied_prevalence","diet",28,"kazzes",NA,"drink alcohol left behind by tourists",0.64
+0,2606,"implied_prevalence","disease_self",29,"reesles",NA,"lose their teeth",0.58
+0,16960,"implied_prevalence","diet",30,"javs",NA,"eat garbage",0.62
+0,3578,"implied_prevalence","physical",31,"luzaks",NA,"live to be a hundred years old",0.52
+0,3164,"implied_prevalence","behavior",32,"mooks",NA,"play with bottlecaps",0.31
+0,1844,"implied_prevalence","reproduction",33,"glippets",NA,"lay eggs in other birds&quotechar nests",0.36
+0,1977,"implied_prevalence","psychological",34,"dorbs",NA,"develop phobias",0.52
+0,4645,"implied_prevalence","behavior_aggressive",35,"ackles",NA,"carry out premeditated murder",0.27
+0,3577,"implied_prevalence","disease_self",36,"morseths",NA,"get cancer",0.1
+0,14738,"explain_responses","behavior",1,"thups","it is likely that not all of them are in the circus, only a few","perform in the circus",0.16
+0,10388,"explain_responses","diet",2,"krivels","they won&quotechart be around candy wrappers all the time","eat candy wrappers",0.24
+0,10557,"explain_responses","behavior_aggressive",3,"ackles","not all of them will be angry","carry out premeditated murder",0.27
+0,11370,"explain_responses","behavior",4,"blins","I imagine only some would be near houses","fly into building windows",0.28
+0,6261,"explain_responses","disease_self",5,"zoovs","I don&quotechart think all would be mutated","have strange genetic mutations",0.31
+1,7437,"implied_prevalence","physical",1,"kweps",NA,"have spots",0.64
+1,5727,"implied_prevalence","diet",2,"blins",NA,"eat garbage",0.93
+1,3585,"implied_prevalence","disease_other",3,"glippets",NA,"transmit HIV",0.12
+1,6132,"implied_prevalence","physical",4,"pangolins",NA,"live to be five hundred years old",0
+1,8215,"implied_prevalence","diet",5,"ackles",NA,"fish in the Hudson River",0.15
+1,4826,"implied_prevalence","psychological",6,"elleps",NA,"develop phobias",0.55
+1,5792,"implied_prevalence","psychological",7,"dorbs",NA,"are intelligent",0.02
+1,2666,"implied_prevalence","disease_self",8,"reesles",NA,"get cancer",0.26
+1,7043,"implied_prevalence","diet",9,"krivels",NA,"drink alcohol left behind by tourists",0.54
+1,4064,"implied_prevalence","behavior_aggressive",10,"cheebas",NA,"attack hikers",0.1
+1,4058,"implied_prevalence","diet",11,"zoovs",NA,"eat insects",1
+1,3953,"implied_prevalence","disease_self",12,"wugs",NA,"get dandruff",0.47
+1,4401,"implied_prevalence","behavior_aggressive",13,"plovs",NA,"hunt other animals",1
+1,3267,"implied_prevalence","disease_self",14,"dunkels",NA,"get addicted to nicotine",0.34
+1,7474,"implied_prevalence","behavior_aggressive",15,"javs",NA,"carry out premeditated murder",0
+1,4521,"implied_prevalence","physical",16,"sapers",NA,"have very long wings",0.87
+1,2814,"implied_prevalence","physical",17,"zorbs",NA,"have brown fur",0.8
+1,8949,"implied_prevalence","reproduction",18,"ludinos",NA,"lay eggs without needing fertilization",0
+1,3439,"implied_prevalence","behavior",19,"feps",NA,"sing beautiful songs",0.35
+1,4672,"implied_prevalence","reproduction",20,"morseths",NA,"give birth underwater",0.91
+1,4593,"implied_prevalence","habitat",21,"ollers",NA,"live in urban areas",0.9
+1,4409,"implied_prevalence","physical",22,"dobles",NA,"live to be a hundred years old",0.07
+1,3414,"implied_prevalence","diet",23,"crullets",NA,"eat grass",1
+1,8033,"implied_prevalence","reproduction",24,"grinks",NA,"attract mates by secreting pheromones",0.96
+1,4513,"implied_prevalence","reproduction",25,"stups",NA,"get erections",1
+1,2879,"implied_prevalence","behavior",26,"lorches",NA,"use tools",0.66
+1,6875,"implied_prevalence","psychological",27,"mooks",NA,"experience emotions",1
+1,2703,"implied_prevalence","behavior_aggressive",28,"kazzes",NA,"steal farmers&quotechar crops",0.66
+1,3733,"implied_prevalence","habitat",29,"trufts",NA,"live in zoos",0.07
+1,4605,"implied_prevalence","behavior",30,"taifels",NA,"perform in the circus",0.02
+1,3925,"implied_prevalence","psychological",31,"daiths",NA,"know how to ride bicycles",0.18
+1,3238,"implied_prevalence","diet",32,"luzaks",NA,"eat people",0
+1,6048,"implied_prevalence","behavior",33,"frams",NA,"ride the subway",0
+1,2518,"implied_prevalence","physical",34,"moxes",NA,"live to be twenty years old",0.64
+1,3109,"implied_prevalence","diet",35,"thups",NA,"eat cannabis",0.81
+1,4589,"implied_prevalence","psychological",36,"fendles",NA,"know how to open doors",0.17
+1,24872,"explain_responses","diet",1,"ackles","Others probably live elsewhere","fish in the Hudson River",0.15
+1,19898,"explain_responses","reproduction",2,"ludinos","They all need to be fertilized","lay eggs without needing fertilization",0
+1,7596,"explain_responses","disease_self",3,"reesles","Cancer is rare","get cancer",0.26
+1,11424,"explain_responses","diet",4,"luzaks","People are not prey","eat people",0
+1,11824,"explain_responses","behavior",5,"frams","Animals don&quotechart ride subway","ride the subway",0
+2,9644,"implied_prevalence","behavior",1,"morseths",NA,"use tools",0.5
+2,5506,"implied_prevalence","disease_self",2,"dobles",NA,"develop back problems",0.75
+2,4597,"implied_prevalence","reproduction",3,"feps",NA,"get erections",0.5
+2,5333,"implied_prevalence","habitat",4,"plovs",NA,"live in the hulls of sea vessels",1
+2,6338,"implied_prevalence","behavior_aggressive",5,"moxes",NA,"attack hikers",0.15
+2,5827,"implied_prevalence","habitat",6,"javs",NA,"live in trees",1
+2,5572,"implied_prevalence","behavior",7,"glippets",NA,"sleep during the day",1
+2,6531,"implied_prevalence","physical",8,"fendles",NA,"have brown fur",1
+2,11026,"implied_prevalence","diet",9,"cheebas",NA,"drink alcohol left behind by tourists",0.33
+2,7380,"implied_prevalence","disease_self",10,"frams",NA,"have seizures",0.75
+2,6316,"implied_prevalence","behavior",11,"trufts",NA,"like to cuddle",0.9
+2,5115,"implied_prevalence","psychological",12,"dorbs",NA,"are afraid of loud noises",0.95
+2,7845,"implied_prevalence","reproduction",13,"pangolins",NA,"attract mates by secreting pheromones",1
+2,8340,"implied_prevalence","diet",14,"kweps",NA,"eat grass",1
+2,5655,"implied_prevalence","psychological",15,"taifels",NA,"have personalities",1
+2,4388,"implied_prevalence","reproduction",16,"crullets",NA,"give birth underwater",1
+2,7162,"implied_prevalence","disease_self",17,"grinks",NA,"get addicted to nicotine",1
+2,6699,"implied_prevalence","diet",18,"elleps",NA,"cannibalize each other",0.4
+2,6532,"implied_prevalence","diet",19,"daiths",NA,"fish in the Hudson River",1
+2,7080,"implied_prevalence","diet",20,"dunkels",NA,"eat human food",0.4
+2,7748,"implied_prevalence","physical",21,"blins",NA,"live to be five hundred years old",0.1
+2,5407,"implied_prevalence","diet",22,"stups",NA,"eat candy wrappers",0.67
+2,5753,"implied_prevalence","disease_other",23,"sapers",NA,"transmit HIV",1
+2,3997,"implied_prevalence","behavior_aggressive",24,"luzaks",NA,"hunt other animals",1
+2,5304,"implied_prevalence","psychological",25,"wugs",NA,"develop phobias",0.8
+2,5204,"implied_prevalence","disease_other",26,"reesles",NA,"transmit rabies",1
+2,5114,"implied_prevalence","disease_self",27,"zoovs",NA,"lose their teeth",1
+2,7703,"implied_prevalence","behavior_aggressive",28,"ackles",NA,"get in fights with other animals",0.75
+2,6120,"implied_prevalence","disease_self",29,"thups",NA,"get cancer",0.4
+2,6285,"implied_prevalence","habitat",30,"zorbs",NA,"live in high-rise buildings",0.9
+2,19650,"implied_prevalence","habitat",31,"ollers",NA,"live in urban areas",0.95
+2,7852,"implied_prevalence","physical",32,"lorches",NA,"live to be twenty years old",0.3
+2,3907,"implied_prevalence","diet",33,"kazzes",NA,"eat cannabis",1
+2,3931,"implied_prevalence","disease_self",34,"krivels",NA,"have strange genetic mutations",0.77
+2,4740,"implied_prevalence","behavior",35,"ludinos",NA,"sing beautiful songs",0.89
+2,6450,"implied_prevalence","psychological",36,"mooks",NA,"know how to open doors",0.75
+2,20872,"explain_responses","behavior_aggressive",1,"moxes","I assumed that the encounter would be rare, even if the propensity to attack would be high.","attack hikers",0.15
+2,27382,"explain_responses","physical",2,"blins","Even if they can live that long, I assumed that it would be unusual for 100 years of favorable circumstances to allow them to live that long.","live to be five hundred years old",0.1
+2,25396,"explain_responses","diet",3,"elleps","I presume that it&quotechars something of a minority behavior of the species, so that the species is able to survive.","cannibalize each other",0.4
+2,23738,"explain_responses","physical",4,"lorches","If 20 is how old they can live, I would not expect that to be the norm.","live to be twenty years old",0.3
+2,20812,"explain_responses","diet",5,"cheebas","I assumed that this would be a rare encounter, even if it was consistent behavior.","drink alcohol left behind by tourists",0.33
+3,11972,"implied_prevalence","psychological",1,"mooks",NA,"mourn their dead",0.1
+3,6905,"implied_prevalence","behavior_aggressive",2,"luzaks",NA,"torture other animals",0.3
+3,11524,"implied_prevalence","behavior",3,"pangolins",NA,"sleep during the day",0.9
+3,6519,"implied_prevalence","behavior_aggressive",4,"stups",NA,"attack hikers",0.5
+3,5520,"implied_prevalence","reproduction",5,"ackles",NA,"lay eggs without needing fertilization",1
+3,105765,"implied_prevalence","diet",6,"morseths",NA,"eat cannabis",0
+3,5060,"implied_prevalence","behavior",7,"feps",NA,"sing beautiful songs",0.37
+3,8672,"implied_prevalence","habitat",8,"sapers",NA,"live in zoos",0.15
+3,5298,"implied_prevalence","behavior",9,"dorbs",NA,"perform in the circus",0.2
+3,32487,"implied_prevalence","disease_self",10,"crullets",NA,"develop back problems",0.13
+3,5740,"implied_prevalence","behavior",11,"reesles",NA,"do handstands to scare off predators",1
+3,5443,"implied_prevalence","disease_other",12,"ludinos",NA,"carry malaria",0.43
+3,4742,"implied_prevalence","habitat",13,"grinks",NA,"live in urban areas",1
+3,4257,"implied_prevalence","physical",14,"frams",NA,"have brown fur",0.87
+3,5837,"implied_prevalence","behavior_aggressive",15,"trufts",NA,"carry out premeditated murder",0.07
+3,3623,"implied_prevalence","physical",16,"dunkels",NA,"have intensely beautiful feathers",1
+3,5219,"implied_prevalence","diet",17,"kweps",NA,"eat garbage",1
+3,4303,"implied_prevalence","diet",18,"fendles",NA,"eat insects",1
+3,4002,"implied_prevalence","diet",19,"wugs",NA,"eat grass",1
+3,4286,"implied_prevalence","reproduction",20,"dobles",NA,"have dozens of sexual partners",0.32
+3,9144,"implied_prevalence","habitat",21,"glippets",NA,"live in the hulls of sea vessels",1
+3,5297,"implied_prevalence","physical",22,"krivels",NA,"live to be a hundred years old",0.78
+3,4410,"implied_prevalence","disease_self",23,"daiths",NA,"get cancer",0.14
+3,3852,"implied_prevalence","psychological",24,"taifels",NA,"experience empathy",1
+3,7052,"implied_prevalence","reproduction",25,"ollers",NA,"get erections",0.5
+3,7065,"implied_prevalence","physical",26,"kazzes",NA,"live to be twenty years old",0.77
+3,6001,"implied_prevalence","physical",27,"moxes",NA,"have very long wings",0.83
+3,4178,"implied_prevalence","diet",28,"plovs",NA,"eat human food",1
+3,5869,"implied_prevalence","psychological",29,"zoovs",NA,"experience emotions",0.85
+3,4595,"implied_prevalence","behavior_aggressive",30,"elleps",NA,"steal farmers&quotechar crops",1
+3,3915,"implied_prevalence","psychological",31,"blins",NA,"develop phobias",0.11
+3,3962,"implied_prevalence","behavior_aggressive",32,"thups",NA,"pound their chests to display dominance",1
+3,5599,"implied_prevalence","disease_self",33,"zorbs",NA,"get addicted to nicotine",0
+3,6827,"implied_prevalence","diet",34,"lorches",NA,"fish in the Hudson River",0.24
+3,3336,"implied_prevalence","psychological",35,"javs",NA,"are intelligent",1
+3,3444,"implied_prevalence","reproduction",36,"cheebas",NA,"give birth underwater",1
+3,35596,"explain_responses","disease_other",1,"ludinos","I don&quotechart believe that all would carry malaria so I decided o less than half.","carry malaria",0.43
+3,27420,"explain_responses","behavior_aggressive",2,"luzaks","I don&quotechart belive that many animals have the ability to torture other animals.","torture other animals",0.3
+3,27183,"explain_responses","psychological",3,"blins","Animals don&quotechart reason so why would they have phobias.","develop phobias",0.11
+3,19002,"explain_responses","reproduction",4,"dobles","Just figured the amount was right.","have dozens of sexual partners",0.32
+3,28160,"explain_responses","psychological",5,"mooks","Animals do not have emotions like human so they really wouldn&quotechart feel much loss.","mourn their dead",0.1
+4,18207,"implied_prevalence","physical",1,"sapers",NA,"live to be five hundred years old",0.68
+4,9455,"implied_prevalence","diet",2,"krivels",NA,"drink soda",0.97
+4,6577,"implied_prevalence","physical",3,"ludinos",NA,"have brown fur",1
+4,7528,"implied_prevalence","behavior_aggressive",4,"wugs",NA,"carry out premeditated murder",0.94
+4,4711,"implied_prevalence","behavior",5,"glippets",NA,"sing beautiful songs",0.89
+4,5449,"implied_prevalence","diet",6,"morseths",NA,"cannibalize each other",0.9
+4,7688,"implied_prevalence","psychological",7,"trufts",NA,"develop phobias",0.95
+4,5656,"implied_prevalence","behavior",8,"reesles",NA,"sleep during the day",0.93
+4,6167,"implied_prevalence","psychological",9,"frams",NA,"know how to open doors",0.89
+4,5601,"implied_prevalence","physical",10,"elleps",NA,"have very long wings",0.97
+4,5096,"implied_prevalence","reproduction",11,"kweps",NA,"have a menstrual cycle",1
+4,4199,"implied_prevalence","diet",12,"dorbs",NA,"eat candy wrappers",0.93
+4,4873,"implied_prevalence","behavior",13,"dunkels",NA,"swim in shallow pools",0.78
+4,4767,"implied_prevalence","physical",14,"zoovs",NA,"have spots",0.97
+4,7015,"implied_prevalence","reproduction",15,"lorches",NA,"attract mates by secreting pheromones",0.98
+4,5575,"implied_prevalence","diet",16,"moxes",NA,"eat cannabis",0.96
+4,6096,"implied_prevalence","habitat",17,"blins",NA,"live in zoos",1
+4,5472,"implied_prevalence","reproduction",18,"kazzes",NA,"lay eggs without needing fertilization",0.85
+4,6047,"implied_prevalence","disease_other",19,"javs",NA,"transmit HIV",0.83
+4,4585,"implied_prevalence","behavior_aggressive",20,"pangolins",NA,"attack hikers",0.74
+4,4471,"implied_prevalence","physical",21,"stups",NA,"have an exquisite sense of smell",0.89
+4,4193,"implied_prevalence","psychological",22,"grinks",NA,"are afraid of dogs",0.73
+4,5127,"implied_prevalence","behavior",23,"ollers",NA,"like to cuddle",0.85
+4,6024,"implied_prevalence","physical",24,"crullets",NA,"live to be a hundred years old",0.69
+4,5368,"implied_prevalence","disease_self",25,"cheebas",NA,"develop back problems",0.77
+4,4544,"implied_prevalence","habitat",26,"thups",NA,"live in urban areas",0.91
+4,4672,"implied_prevalence","diet",27,"zorbs",NA,"eat people",0.95
+4,4336,"implied_prevalence","behavior",28,"mooks",NA,"use tools",0.82
+4,3504,"implied_prevalence","habitat",29,"feps",NA,"live in trees",0.96
+4,3416,"implied_prevalence","disease_self",30,"luzaks",NA,"have seizures",0.87
+4,4664,"implied_prevalence","habitat",31,"daiths",NA,"live in high-rise buildings",0.79
+4,3088,"implied_prevalence","diet",32,"dobles",NA,"eat garbage",0.87
+4,5998,"implied_prevalence","disease_self",33,"taifels",NA,"have strange genetic mutations",0.74
+4,4185,"implied_prevalence","diet",34,"fendles",NA,"eat grass",0.97
+4,4534,"implied_prevalence","psychological",35,"plovs",NA,"experience emotions",0.97
+4,4904,"implied_prevalence","behavior",36,"ackles",NA,"do handstands to scare off predators",0.85
+5,12763,"implied_prevalence","disease_self",1,"javs",NA,"get dandruff",0.66
+5,8586,"implied_prevalence","disease_other",2,"cheebas",NA,"transmit rabies",0.26
+5,6719,"implied_prevalence","behavior",3,"kazzes",NA,"sleep during the day",1
+5,7848,"implied_prevalence","disease_self",4,"dunkels",NA,"have seizures",0.11
+5,13635,"implied_prevalence","psychological",5,"plovs",NA,"know how to ride bicycles",1
+5,12139,"implied_prevalence","psychological",6,"daiths",NA,"know when earthquakes are about to happen",1
+5,8846,"implied_prevalence","physical",7,"elleps",NA,"have intensely beautiful feathers",1
+5,12995,"implied_prevalence","disease_self",8,"blins",NA,"go bald",1
+5,12281,"implied_prevalence","behavior",9,"crullets",NA,"swim in shallow pools",1
+5,8398,"implied_prevalence","habitat",10,"wugs",NA,"live in high-rise buildings",0.27
+5,7456,"implied_prevalence","behavior",11,"pangolins",NA,"chase their tails",0.39
+5,11997,"implied_prevalence","disease_other",12,"glippets",NA,"carry malaria",0.9
+5,15343,"implied_prevalence","diet",13,"moxes",NA,"eat grass",1
+5,8918,"implied_prevalence","physical",14,"frams",NA,"have brown fur",0.6
+5,6593,"implied_prevalence","behavior",15,"fendles",NA,"fly into building windows",0.22
+5,6979,"implied_prevalence","physical",16,"thups",NA,"have very long wings",1
+5,6756,"implied_prevalence","reproduction",17,"feps",NA,"give birth underwater",1
+5,14774,"implied_prevalence","reproduction",18,"sapers",NA,"lay eggs without needing fertilization",1
+5,12270,"implied_prevalence","diet",19,"trufts",NA,"drink alcohol left behind by tourists",0.23
+5,7216,"implied_prevalence","psychological",20,"kweps",NA,"experience empathy",1
+5,13666,"implied_prevalence","behavior",21,"dorbs",NA,"do handstands to scare off predators",1
+5,7361,"implied_prevalence","behavior_aggressive",22,"ackles",NA,"get in fights with other animals",0.47
+5,12044,"implied_prevalence","reproduction",23,"stups",NA,"lay eggs in other birds&quotechar nests",1
+5,24151,"implied_prevalence","reproduction",24,"reesles",NA,"have a menstrual cycle",1
+5,6121,"implied_prevalence","habitat",25,"lorches",NA,"live in zoos",0.19
+5,7852,"implied_prevalence","disease_other",26,"morseths",NA,"transmit HIV",0.19
+5,6810,"implied_prevalence","diet",27,"zoovs",NA,"cannibalize each other",0.91
+5,7434,"implied_prevalence","behavior_aggressive",28,"mooks",NA,"carry out premeditated murder",0.08
+5,17379,"implied_prevalence","behavior_aggressive",29,"luzaks",NA,"pound their chests to display dominance",0.66
+5,8397,"implied_prevalence","diet",30,"dobles",NA,"eat human food",1
+5,17715,"implied_prevalence","physical",31,"taifels",NA,"have an exquisite sense of smell",1
+5,9360,"implied_prevalence","psychological",32,"zorbs",NA,"have personalities",1
+5,12565,"implied_prevalence","behavior_aggressive",33,"ollers",NA,"capture other animals&quotechar territory",0.64
+5,12282,"implied_prevalence","psychological",34,"grinks",NA,"mourn their dead",1
+5,15884,"implied_prevalence","behavior_aggressive",35,"krivels",NA,"attack hikers",0.11
+5,27121,"implied_prevalence","diet",36,"ludinos",NA,"eat candy wrappers",0.33
+5,50013,"explain_responses","behavior",1,"pangolins","Some cats chase their tails, some dont. This is the same ","chase their tails",0.39
+5,61106,"explain_responses","diet",2,"trufts","In all other societies not everyone drinks. This is no different","drink alcohol left behind by tourists",0.23
+5,58821,"explain_responses","habitat",3,"wugs","Not every single person lives in a high rise, this is no different","live in high-rise buildings",0.27
+5,27106,"explain_responses","behavior_aggressive",4,"ackles","I think only the males fight ","get in fights with other animals",0.47
+5,31459,"explain_responses","disease_self",5,"dunkels","Very few of any specie has seizures","have seizures",0.11
+6,13839,"implied_prevalence","physical",1,"kweps",NA,"have intensely beautiful feathers",0.86
+6,6032,"implied_prevalence","reproduction",2,"dunkels",NA,"give birth underwater",0.5
+6,3992,"implied_prevalence","disease_self",3,"sapers",NA,"develop back problems",0.31
+6,4439,"implied_prevalence","behavior",4,"pangolins",NA,"fly into building windows",0.2
+6,4825,"implied_prevalence","diet",5,"mooks",NA,"fish in the Hudson River",0.88
+6,2528,"implied_prevalence","disease_self",6,"moxes",NA,"lose their teeth",0.91
+6,4928,"implied_prevalence","physical",7,"lorches",NA,"have spots",0.95
+6,3560,"implied_prevalence","diet",8,"plovs",NA,"eat people",0.14
+6,5296,"implied_prevalence","reproduction",9,"zoovs",NA,"attract mates by secreting pheromones",0.5
+6,3384,"implied_prevalence","diet",10,"trufts",NA,"drink soda",0.37
+6,4024,"implied_prevalence","psychological",11,"reesles",NA,"are intelligent",0.65
+6,4137,"implied_prevalence","diet",12,"dobles",NA,"eat insects",0.96
+6,4318,"implied_prevalence","diet",13,"blins",NA,"drink alcohol left behind by tourists",0.35
+6,1927,"implied_prevalence","diet",14,"morseths",NA,"eat human food",0.71
+6,2297,"implied_prevalence","behavior",15,"ackles",NA,"use tools",0.24
+6,4096,"implied_prevalence","behavior_aggressive",16,"krivels",NA,"torture other animals",0.75
+6,3264,"implied_prevalence","disease_other",17,"cheebas",NA,"transmit rabies",0.39
+6,4432,"implied_prevalence","behavior_aggressive",18,"taifels",NA,"pound their chests to display dominance",0.5
+6,3208,"implied_prevalence","reproduction",19,"dorbs",NA,"have a menstrual cycle",0.49
+6,3864,"implied_prevalence","psychological",20,"frams",NA,"know when earthquakes are about to happen",0.84
+6,2368,"implied_prevalence","physical",21,"grinks",NA,"have brown fur",0.92
+6,2631,"implied_prevalence","behavior_aggressive",22,"zorbs",NA,"get in fights with other animals",0.7
+6,2920,"implied_prevalence","behavior",23,"stups",NA,"swim in shallow pools",0.29
+6,2560,"implied_prevalence","disease_self",24,"fendles",NA,"have seizures",0.18
+6,3144,"implied_prevalence","reproduction",25,"wugs",NA,"lay eggs in other birds&quotechar nests",0.43
+6,2688,"implied_prevalence","disease_other",26,"thups",NA,"carry malaria",0.24
+6,2864,"implied_prevalence","psychological",27,"javs",NA,"are afraid of dogs",0.92
+6,2704,"implied_prevalence","psychological",28,"luzaks",NA,"mourn their dead",0.74
+6,3520,"implied_prevalence","psychological",29,"ludinos",NA,"experience empathy",0.35
+6,2175,"implied_prevalence","behavior",30,"ollers",NA,"like to cuddle",0.44
+6,2320,"implied_prevalence","physical",31,"glippets",NA,"have very long wings",0.86
+6,4600,"implied_prevalence","behavior_aggressive",32,"kazzes",NA,"carry out premeditated murder",0.12
+6,4488,"implied_prevalence","physical",33,"daiths",NA,"live to be five hundred years old",0.28
+6,2455,"implied_prevalence","psychological",34,"crullets",NA,"have personalities",0.59
+6,2409,"implied_prevalence","disease_self",35,"feps",NA,"go bald",0.28
+6,1880,"implied_prevalence","behavior_aggressive",36,"elleps",NA,"hunt other animals",0.82
+6,22791,"explain_responses","disease_self",1,"sapers","Seemed while it would be uncommon but not rare","develop back problems",0.31
+6,22879,"explain_responses","behavior",2,"pangolins","Seems like while it might happen wouldn&quotechart be very common","fly into building windows",0.2
+6,21864,"explain_responses","diet",3,"blins","Seems like they would need to have access to the alcohol, which would keep the number lower","drink alcohol left behind by tourists",0.35
+6,22912,"explain_responses","behavior",4,"ackles","A quarter seemed like a reasonable amount","use tools",0.24
+6,17536,"explain_responses","reproduction",5,"dorbs","I&quotecharm assuming the gender rate of the species is 50/50","have a menstrual cycle",0.49
+7,12816,"implied_prevalence","physical",1,"daiths",NA,"have intensely beautiful feathers",1
+7,3827,"implied_prevalence","habitat",2,"luzaks",NA,"live in urban areas",1
+7,6943,"implied_prevalence","physical",3,"cheebas",NA,"have very long wings",1
+7,13916,"implied_prevalence","physical",4,"frams",NA,"have an exquisite sense of smell",0.99
+7,6687,"implied_prevalence","psychological",5,"trufts",NA,"experience empathy",0.98
+7,6060,"implied_prevalence","diet",6,"elleps",NA,"feed on the carcasses of dead animals",1
+7,27472,"implied_prevalence","disease_self",7,"taifels",NA,"go bald",0.99
+7,6156,"implied_prevalence","disease_other",8,"ackles",NA,"carry malaria",0.99
+7,11540,"implied_prevalence","behavior_aggressive",9,"fendles",NA,"get in fights with other animals",0.99
+7,6064,"implied_prevalence","psychological",10,"zorbs",NA,"know when earthquakes are about to happen",0.97
+7,3992,"implied_prevalence","psychological",11,"grinks",NA,"are intelligent",0.98
+7,24563,"implied_prevalence","reproduction",12,"krivels",NA,"lay eggs without needing fertilization",0.9
+7,7740,"implied_prevalence","behavior_aggressive",13,"glippets",NA,"pound their chests to display dominance",0.75
+7,3911,"implied_prevalence","behavior_aggressive",14,"blins",NA,"hunt other animals",0.99
+7,11549,"implied_prevalence","psychological",15,"ludinos",NA,"know how to open doors",0.65
+7,3535,"implied_prevalence","physical",16,"plovs",NA,"have brown fur",0.99
+7,8497,"implied_prevalence","reproduction",17,"stups",NA,"give birth underwater",0.51
+7,7107,"implied_prevalence","disease_other",18,"ollers",NA,"transmit rabies",0.95
+7,8472,"implied_prevalence","reproduction",19,"kazzes",NA,"have dozens of sexual partners",0.98
+7,11739,"implied_prevalence","behavior",20,"morseths",NA,"fly into building windows",0.25
+7,4996,"implied_prevalence","psychological",21,"thups",NA,"are afraid of loud noises",0.8
+7,4092,"implied_prevalence","behavior",22,"dobles",NA,"sleep during the day",1
+7,3656,"implied_prevalence","disease_self",23,"javs",NA,"lose their teeth",0.99
+7,8564,"implied_prevalence","psychological",24,"zoovs",NA,"are afraid of dogs",0.99
+7,9636,"implied_prevalence","reproduction",25,"reesles",NA,"attract mates by secreting pheromones",1
+7,6823,"implied_prevalence","behavior",26,"dunkels",NA,"use tools",0.86
+7,5185,"implied_prevalence","behavior",27,"dorbs",NA,"do handstands to scare off predators",0.96
+7,5972,"implied_prevalence","reproduction",28,"moxes",NA,"lay eggs in other birds&quotechar nests",0.56
+7,3287,"implied_prevalence","behavior",29,"pangolins",NA,"like to cuddle",1
+7,7268,"implied_prevalence","physical",30,"sapers",NA,"live to be a hundred years old",0.75
+7,19060,"implied_prevalence","disease_self",31,"mooks",NA,"develop back problems",0.87
+7,6452,"implied_prevalence","behavior_aggressive",32,"feps",NA,"steal farmers&quotechar crops",0.89
+7,4444,"implied_prevalence","behavior_aggressive",33,"kweps",NA,"attack hikers",0.7
+7,6552,"implied_prevalence","diet",34,"crullets",NA,"fish in the Hudson River",0.98
+7,9272,"implied_prevalence","psychological",35,"lorches",NA,"have personalities",1
+7,4348,"implied_prevalence","behavior_aggressive",36,"wugs",NA,"capture other animals&quotechar territory",0.83
+7,39360,"explain_responses","behavior",1,"morseths","Because if a larger percentage of them flew into building windows, the species would not survive for long. And there are only so many windows.","fly into building windows",0.25
+8,16535,"implied_prevalence","physical",1,"frams",NA,"have very long wings",1
+8,13724,"implied_prevalence","diet",2,"reesles",NA,"eat human food",0.8
+8,5853,"implied_prevalence","behavior",3,"fendles",NA,"play with bottlecaps",0.2
+8,6772,"implied_prevalence","physical",4,"dorbs",NA,"live to be five hundred years old",0.21
+8,6600,"implied_prevalence","psychological",5,"dunkels",NA,"develop phobias",0.06
+8,5547,"implied_prevalence","behavior",6,"kazzes",NA,"sleep during the day",0.84
+8,5167,"implied_prevalence","disease_self",7,"ludinos",NA,"get cancer",0.16
+8,5510,"implied_prevalence","behavior",8,"stups",NA,"fly into building windows",0.06
+8,4999,"implied_prevalence","psychological",9,"daiths",NA,"experience empathy",0.78
+8,12175,"implied_prevalence","disease_other",10,"pangolins",NA,"transmit rabies",0.02
+8,6175,"implied_prevalence","disease_self",11,"mooks",NA,"get addicted to nicotine",0.35
+8,5393,"implied_prevalence","disease_self",12,"javs",NA,"lose their teeth",0.66
+8,6220,"implied_prevalence","habitat",13,"moxes",NA,"live in urban areas",0.43
+8,4044,"implied_prevalence","behavior",14,"elleps",NA,"like to cuddle",0.9
+8,5832,"implied_prevalence","behavior_aggressive",15,"kweps",NA,"torture other animals",0.06
+8,6568,"implied_prevalence","reproduction",16,"wugs",NA,"lay eggs without needing fertilization",0.75
+8,4765,"implied_prevalence","behavior_aggressive",17,"plovs",NA,"carry out premeditated murder",0.03
+8,5659,"implied_prevalence","diet",18,"lorches",NA,"eat people",0.1
+8,5863,"implied_prevalence","physical",19,"ackles",NA,"live to be a hundred years old",0.22
+8,5085,"implied_prevalence","habitat",20,"krivels",NA,"live in zoos",0.04
+8,5480,"implied_prevalence","disease_other",21,"trufts",NA,"transmit HIV",0.07
+8,4586,"implied_prevalence","psychological",22,"taifels",NA,"are afraid of loud noises",0.94
+8,6874,"implied_prevalence","habitat",23,"crullets",NA,"live in high-rise buildings",0.66
+8,4600,"implied_prevalence","behavior",24,"luzaks",NA,"sing beautiful songs",0.47
+8,6089,"implied_prevalence","behavior_aggressive",25,"sapers",NA,"pound their chests to display dominance",0.47
+8,4788,"implied_prevalence","reproduction",26,"dobles",NA,"have a menstrual cycle",0.34
+8,4734,"implied_prevalence","psychological",27,"thups",NA,"are afraid of dogs",0.82
+8,5330,"implied_prevalence","diet",28,"zoovs",NA,"fish in the Hudson River",0.06
+8,5454,"implied_prevalence","behavior_aggressive",29,"ollers",NA,"steal farmers&quotechar crops",0.22
+8,4185,"implied_prevalence","diet",30,"grinks",NA,"eat garbage",0.16
+8,3754,"implied_prevalence","diet",31,"morseths",NA,"eat grass",0.85
+8,5942,"implied_prevalence","habitat",32,"feps",NA,"live in trees",0.92
+8,4320,"implied_prevalence","disease_other",33,"zorbs",NA,"carry Lyme disease",0.06
+8,4798,"implied_prevalence","psychological",34,"blins",NA,"mourn their dead",0.97
+8,5816,"implied_prevalence","physical",35,"glippets",NA,"live to be twenty years old",0.28
+8,4492,"implied_prevalence","diet",36,"cheebas",NA,"eat candy wrappers",0.1
+8,43609,"explain_responses","behavior",1,"luzaks","Because usually it is the male of the species that sings to court its mate, and I predicted just less than half of the luzaks would be males, the remaining being female.","sing beautiful songs",0.47
+8,75778,"explain_responses","diet",2,"grinks","Because I didn&quotechart think they would eat garbage unless their natural prey were scarce, and they became extremely hungry.  If there are 100 of them, then they are thriving and haven&quotechart depleted their environment of food, so it would be the weaker or older ones that would have to resort to eating garbage.","eat garbage",0.16
+8,74211,"explain_responses","behavior_aggressive",3,"ollers","They would only resort to stealing crops if crops were readily available in their environment, and I don&quotechart see that amount of land being more than a fifth of the oller&quotechars natural habitat.  They would normally eat what was readily available and not need to travel farther to get to farmland for food.","steal farmers&quotechar crops",0.22
+8,78761,"explain_responses","physical",4,"dorbs","I surmised that only in about a fifth of the dorbs would there be the environmental and genetic conditions present to reach such a milestone in age, and the rest would die of natural causes or succumb to predators.","live to be five hundred years old",0.21
+8,63307,"explain_responses","psychological",5,"dunkels","Because I believe the development of phobias would require a unique set of circumstances, similar to the development of phobias in humans, and that this set of circumstances would only present itself in a very small number, similar to the prevalence of phobias in humans.","develop phobias",0.06
+9,4988,"implied_prevalence","disease_other",1,"ludinos",NA,"carry Lyme disease",0.05
+9,5982,"implied_prevalence","diet",2,"grinks",NA,"eat grass",1
+9,3593,"implied_prevalence","psychological",3,"lorches",NA,"develop phobias",0.37
+9,5840,"implied_prevalence","reproduction",4,"plovs",NA,"lay eggs without needing fertilization",1
+9,3183,"implied_prevalence","physical",5,"zorbs",NA,"have very long wings",1
+9,3410,"implied_prevalence","behavior",6,"fendles",NA,"play with bottlecaps",0.62
+9,3644,"implied_prevalence","behavior",7,"javs",NA,"perform in the circus",0.22
+9,4602,"implied_prevalence","diet",8,"pangolins",NA,"fish in the Hudson River",1
+9,2909,"implied_prevalence","behavior",9,"ollers",NA,"fly into building windows",0.11
+9,3504,"implied_prevalence","behavior",10,"reesles",NA,"sing beautiful songs",1
+9,3006,"implied_prevalence","psychological",11,"ackles",NA,"experience empathy",0.45
+9,2392,"implied_prevalence","diet",12,"taifels",NA,"drink soda",0.25
+9,2269,"implied_prevalence","disease_other",13,"feps",NA,"transmit HIV",0.11
+9,3156,"implied_prevalence","behavior_aggressive",14,"dorbs",NA,"pound their chests to display dominance",1
+9,3032,"implied_prevalence","diet",15,"elleps",NA,"eat human food",1
+9,2875,"implied_prevalence","diet",16,"thups",NA,"feed on the carcasses of dead animals",1
+9,2949,"implied_prevalence","diet",17,"wugs",NA,"eat cannabis",1
+9,4575,"implied_prevalence","behavior",18,"crullets",NA,"chase their tails",0.91
+9,2703,"implied_prevalence","disease_self",19,"morseths",NA,"have strange genetic mutations",0.31
+9,2590,"implied_prevalence","physical",20,"moxes",NA,"have brown fur",0.71
+9,2494,"implied_prevalence","psychological",21,"mooks",NA,"know how to ride bicycles",0.06
+9,2487,"implied_prevalence","diet",22,"sapers",NA,"eat insects",1
+9,4970,"implied_prevalence","disease_self",23,"trufts",NA,"go bald",0.55
+9,3581,"implied_prevalence","physical",24,"stups",NA,"live to be a hundred years old",0.37
+9,2605,"implied_prevalence","reproduction",25,"zoovs",NA,"attract mates by secreting pheromones",1
+9,3122,"implied_prevalence","disease_self",26,"daiths",NA,"get cancer",0.15
+9,2019,"implied_prevalence","behavior",27,"krivels",NA,"ride the subway",0.12
+9,2305,"implied_prevalence","physical",28,"kazzes",NA,"have spots",0.65
+9,2255,"implied_prevalence","behavior",29,"glippets",NA,"use tools",0.87
+9,2552,"implied_prevalence","behavior",30,"dobles",NA,"sleep during the day",1
+9,2651,"implied_prevalence","psychological",31,"kweps",NA,"have personalities",1
+9,2156,"implied_prevalence","psychological",32,"cheebas",NA,"are intelligent",1
+9,1900,"implied_prevalence","habitat",33,"dunkels",NA,"live in zoos",0.07
+9,2958,"implied_prevalence","behavior",34,"frams",NA,"do handstands to scare off predators",1
+9,3106,"implied_prevalence","habitat",35,"blins",NA,"live in urban areas",0.51
+9,3210,"implied_prevalence","behavior_aggressive",36,"luzaks",NA,"torture other animals",0.06
+9,19605,"explain_responses","habitat",1,"dunkels","I would assume only a small population actually live in zoos.","live in zoos",0.07
+9,31229,"explain_responses","psychological",2,"lorches","I figured not all lorches would develop phobias, but maybe they are highly susceptible to phobias as a species.","develop phobias",0.37
+9,43725,"explain_responses","disease_self",3,"morseths","The fact that strange genetic mutation was mentioned led me to believe a sizable percentage must experience this, for it to be mentioned.. since all species have weird genetic mutations.","have strange genetic mutations",0.31
+9,22447,"explain_responses","disease_other",4,"ludinos","Lyme disease is fairly rare, so I figure the carriers must also be rare.","carry Lyme disease",0.05
+9,20996,"explain_responses","disease_other",5,"feps","HIV transmission seems like it would be a rare phenomenon.","transmit HIV",0.11
+10,7723,"implied_prevalence","diet",1,"stups",NA,"drink alcohol left behind by tourists",0.75
+10,4533,"implied_prevalence","behavior",2,"krivels",NA,"sing beautiful songs",1
+10,5774,"implied_prevalence","reproduction",3,"frams",NA,"get erections",0.5
+10,2634,"implied_prevalence","psychological",4,"glippets",NA,"are intelligent",1
+10,8669,"implied_prevalence","behavior",5,"moxes",NA,"perform in the circus",0.66
+10,4277,"implied_prevalence","behavior",6,"wugs",NA,"like to cuddle",0.8
+10,4020,"implied_prevalence","behavior",7,"thups",NA,"do handstands to scare off predators",1
+10,4657,"implied_prevalence","physical",8,"luzaks",NA,"have brown fur",0.86
+10,2979,"implied_prevalence","diet",9,"zorbs",NA,"eat grass",1
+10,2818,"implied_prevalence","reproduction",10,"crullets",NA,"lay eggs in other birds&quotechar nests",1
+10,4548,"implied_prevalence","psychological",11,"mooks",NA,"know how to ride bicycles",0.2
+10,3357,"implied_prevalence","disease_self",12,"cheebas",NA,"go bald",1
+10,3955,"implied_prevalence","psychological",13,"grinks",NA,"are afraid of loud noises",0.93
+10,4512,"implied_prevalence","diet",14,"feps",NA,"eat candy wrappers",0.67
+10,3773,"implied_prevalence","disease_self",15,"ludinos",NA,"have strange genetic mutations",0.31
+10,2784,"implied_prevalence","reproduction",16,"blins",NA,"have dozens of sexual partners",1
+10,3738,"implied_prevalence","disease_other",17,"daiths",NA,"transmit HIV",0.25
+10,5386,"implied_prevalence","behavior",18,"reesles",NA,"fly into building windows",0.42
+10,5673,"implied_prevalence","psychological",19,"trufts",NA,"know when earthquakes are about to happen",0.84
+10,3042,"implied_prevalence","disease_self",20,"zoovs",NA,"lose their teeth",1
+10,4310,"implied_prevalence","physical",21,"plovs",NA,"have an exquisite sense of smell",0.99
+10,5369,"implied_prevalence","disease_self",22,"ollers",NA,"develop back problems",0.85
+10,4980,"implied_prevalence","diet",23,"sapers",NA,"drink soda",0.65
+10,4502,"implied_prevalence","reproduction",24,"dunkels",NA,"lay eggs without needing fertilization",1
+10,4246,"implied_prevalence","disease_other",25,"ackles",NA,"transmit rabies",0.16
+10,8875,"implied_prevalence","reproduction",26,"kazzes",NA,"have a menstrual cycle",0.5
+10,3743,"implied_prevalence","physical",27,"lorches",NA,"have very long wings",0.84
+10,3336,"implied_prevalence","behavior_aggressive",28,"dorbs",NA,"get in fights with other animals",0.9
+10,2595,"implied_prevalence","psychological",29,"pangolins",NA,"experience emotions",1
+10,4060,"implied_prevalence","habitat",30,"taifels",NA,"live in trees",1
+10,2032,"implied_prevalence","behavior",31,"elleps",NA,"sleep during the day",1
+10,2111,"implied_prevalence","diet",32,"javs",NA,"feed on the carcasses of dead animals",1
+10,2642,"implied_prevalence","disease_self",33,"dobles",NA,"get addicted to nicotine",0.67
+10,2190,"implied_prevalence","behavior_aggressive",34,"kweps",NA,"hunt other animals",1
+10,2379,"implied_prevalence","habitat",35,"fendles",NA,"live in high-rise buildings",0.51
+10,2832,"implied_prevalence","disease_other",36,"morseths",NA,"carry Lyme disease",0.3
+10,10492,"explain_responses","psychological",1,"mooks","This is something that has to be taught.","know how to ride bicycles",0.2
+10,13665,"explain_responses","disease_other",2,"morseths","Not every member of a population carries a disease.","carry Lyme disease",0.3
+10,8561,"explain_responses","disease_other",3,"daiths","Not every member of a population carries a disease","transmit HIV",0.25
+10,11607,"explain_responses","disease_other",4,"ackles","Rabies is a rare disease and not every member of a population carries a disease","transmit rabies",0.16
+10,14496,"explain_responses","disease_self",5,"ludinos","Strange genetic mutations by their nature are at least somewhat rare","have strange genetic mutations",0.31
+11,10560,"implied_prevalence","disease_other",1,"elleps",NA,"transmit HIV",0.26
+11,8670,"implied_prevalence","reproduction",2,"reesles",NA,"give birth underwater",0.92
+11,6282,"implied_prevalence","disease_other",3,"kweps",NA,"carry Lyme disease",0.36
+11,5410,"implied_prevalence","habitat",4,"blins",NA,"live in trees",0.95
+11,6894,"implied_prevalence","reproduction",5,"ollers",NA,"get erections",0.98
+11,5948,"implied_prevalence","behavior",6,"grinks",NA,"ride the subway",0.26
+11,4258,"implied_prevalence","disease_self",7,"trufts",NA,"have seizures",0.22
+11,6738,"implied_prevalence","psychological",8,"wugs",NA,"know when earthquakes are about to happen",0.85
+11,7224,"implied_prevalence","disease_self",9,"pangolins",NA,"get addicted to nicotine",0.17
+11,4538,"implied_prevalence","disease_self",10,"cheebas",NA,"have strange genetic mutations",0.24
+11,3782,"implied_prevalence","behavior_aggressive",11,"taifels",NA,"torture other animals",0.37
+11,4438,"implied_prevalence","habitat",12,"morseths",NA,"live in the hulls of sea vessels",0.9
+11,8118,"implied_prevalence","reproduction",13,"kazzes",NA,"attract mates by secreting pheromones",0.93
+11,5932,"implied_prevalence","diet",14,"lorches",NA,"eat insects",0.95
+11,5894,"implied_prevalence","behavior",15,"frams",NA,"play with bottlecaps",0.28
+11,5636,"implied_prevalence","behavior_aggressive",16,"crullets",NA,"pound their chests to display dominance",0.43
+11,5382,"implied_prevalence","disease_self",17,"ludinos",NA,"go bald",0.79
+11,10532,"implied_prevalence","physical",18,"plovs",NA,"have spots",0.71
+11,4154,"implied_prevalence","diet",19,"moxes",NA,"feed on the carcasses of dead animals",0.86
+11,3682,"implied_prevalence","psychological",20,"dobles",NA,"know how to ride bicycles",0.25
+11,6084,"implied_prevalence","psychological",21,"luzaks",NA,"know how to open doors",0.34
+11,5460,"implied_prevalence","disease_other",22,"glippets",NA,"carry malaria",0.58
+11,8142,"implied_prevalence","psychological",23,"daiths",NA,"mourn their dead",0.84
+11,5780,"implied_prevalence","behavior",24,"zoovs",NA,"do handstands to scare off predators",0.68
+11,5958,"implied_prevalence","physical",25,"thups",NA,"have intensely beautiful feathers",0.98
+11,3516,"implied_prevalence","diet",26,"sapers",NA,"eat people",0.39
+11,4090,"implied_prevalence","psychological",27,"fendles",NA,"develop phobias",0.51
+11,4000,"implied_prevalence","habitat",28,"dunkels",NA,"live in zoos",0.3
+11,6658,"implied_prevalence","behavior",29,"mooks",NA,"fly into building windows",0.31
+11,4602,"implied_prevalence","behavior",30,"zorbs",NA,"sleep during the day",0.98
+11,4244,"implied_prevalence","behavior_aggressive",31,"feps",NA,"get in fights with other animals",0.59
+11,4144,"implied_prevalence","physical",32,"ackles",NA,"have an exquisite sense of smell",0.77
+11,3472,"implied_prevalence","psychological",33,"stups",NA,"experience empathy",0.79
+11,4614,"implied_prevalence","reproduction",34,"krivels",NA,"lay eggs in other birds&quotechar nests",0.32
+11,3848,"implied_prevalence","disease_self",35,"javs",NA,"develop back problems",0.39
+11,5050,"implied_prevalence","diet",36,"dorbs",NA,"eat grass",0.83
+11,21816,"explain_responses","psychological",1,"dobles","Because it is unnecessary to ride a bicycle so not all of them do it","know how to ride bicycles",0.25
+11,17876,"explain_responses","reproduction",2,"krivels","Femals might do this, but it is not definite so not half","lay eggs in other birds&quotechar nests",0.32
+11,35474,"explain_responses","behavior",3,"grinks","There is no reason to ride a subway to get around so I dont think they are necessary","ride the subway",0.26
+11,33028,"explain_responses","disease_self",4,"trufts","Not all of them have seizures otherwise Trufts would not exist anymore","have seizures",0.22
+11,25818,"explain_responses","behavior_aggressive",5,"crullets","I wanted to get close to half and half as males seem to do this more than females - half of the population","pound their chests to display dominance",0.43
+12,8552,"implied_prevalence","diet",1,"fendles",NA,"feed on the carcasses of dead animals",1
+12,8012,"implied_prevalence","disease_self",2,"sapers",NA,"have seizures",0.1
+12,11162,"implied_prevalence","reproduction",3,"daiths",NA,"have dozens of sexual partners",0.95
+12,15678,"implied_prevalence","diet",4,"reesles",NA,"cannibalize each other",0.8
+12,13099,"implied_prevalence","physical",5,"cheebas",NA,"live to be five hundred years old",0.2
+12,5950,"implied_prevalence","disease_self",6,"dobles",NA,"get dandruff",0.85
+12,12539,"implied_prevalence","habitat",7,"luzaks",NA,"live in the hulls of sea vessels",0.95
+12,5622,"implied_prevalence","psychological",8,"javs",NA,"are afraid of dogs",0.8
+12,7218,"implied_prevalence","disease_self",9,"elleps",NA,"lose their teeth",0.95
+12,7845,"implied_prevalence","behavior_aggressive",10,"crullets",NA,"torture other animals",0.6
+12,6028,"implied_prevalence","reproduction",11,"stups",NA,"lay eggs without needing fertilization",1
+12,10345,"implied_prevalence","psychological",12,"mooks",NA,"know how to ride bicycles",0.75
+12,9599,"implied_prevalence","disease_self",13,"ollers",NA,"get cancer",0.4
+12,12386,"implied_prevalence","behavior_aggressive",14,"krivels",NA,"steal farmers&quotechar crops",0.7
+12,8148,"implied_prevalence","behavior",15,"zorbs",NA,"play with bottlecaps",0.5
+12,8747,"implied_prevalence","diet",16,"plovs",NA,"fish in the Hudson River",0.7
+12,7157,"implied_prevalence","behavior",17,"pangolins",NA,"fly into building windows",0.35
+12,9250,"implied_prevalence","physical",18,"dorbs",NA,"have an exquisite sense of smell",0.95
+12,6492,"implied_prevalence","reproduction",19,"frams",NA,"lay eggs in other birds&quotechar nests",0.4
+12,4731,"implied_prevalence","reproduction",20,"grinks",NA,"have a menstrual cycle",1
+12,6055,"implied_prevalence","behavior",21,"ackles",NA,"sleep during the day",0.85
+12,8553,"implied_prevalence","habitat",22,"blins",NA,"live in high-rise buildings",0.4
+12,16948,"implied_prevalence","reproduction",23,"feps",NA,"get erections",0.97
+12,4985,"implied_prevalence","habitat",24,"dunkels",NA,"live in zoos",0.2
+12,31096,"implied_prevalence","psychological",25,"moxes",NA,"experience empathy",0.5
+12,6872,"implied_prevalence","physical",26,"glippets",NA,"have spots",0.85
+12,12846,"implied_prevalence","physical",27,"zoovs",NA,"live to be a hundred years old",0.6
+12,5572,"implied_prevalence","diet",28,"thups",NA,"eat garbage",0.6
+12,8987,"implied_prevalence","diet",29,"kweps",NA,"eat people",0.35
+12,7898,"implied_prevalence","diet",30,"taifels",NA,"eat candy wrappers",0.2
+12,6270,"implied_prevalence","disease_self",31,"lorches",NA,"have strange genetic mutations",0.35
+12,5658,"implied_prevalence","habitat",32,"ludinos",NA,"live in urban areas",0.75
+12,8724,"implied_prevalence","diet",33,"wugs",NA,"eat grass",0.95
+12,6455,"implied_prevalence","disease_self",34,"trufts",NA,"get addicted to nicotine",0.4
+12,7537,"implied_prevalence","habitat",35,"kazzes",NA,"live in trees",0.85
+12,7936,"implied_prevalence","behavior",36,"morseths",NA,"ride the subway",0.5
+12,45517,"explain_responses","behavior",1,"pangolins","Flying into building windows seems like a trait that would not be universal.","fly into building windows",0.35
+12,25240,"explain_responses","habitat",2,"dunkels","It would be highly unlikely for a high portion of a species to be living in zoos.","live in zoos",0.2
+12,81953,"explain_responses","diet",3,"kweps","If there was an animal that had humans as its primary diet that animal would not be around for long, now that I think about it, 35% is probably too high.","eat people",0.35
+12,91056,"explain_responses","disease_self",4,"ollers","Evolution doesn&quotechart produce species that get cancer at a very high rate. With more time to think about this one I believe 40% is a little high.","get cancer",0.4
+12,21373,"explain_responses","reproduction",5,"frams","This seems like a trait that only a few of a species would posses. ","lay eggs in other birds&quotechar nests",0.4
+13,7302,"implied_prevalence","psychological",1,"crullets",NA,"have personalities",1
+13,14046,"implied_prevalence","diet",2,"pangolins",NA,"eat people",0.02
+13,9067,"implied_prevalence","physical",3,"fendles",NA,"have very long wings",0.95
+13,6938,"implied_prevalence","behavior",4,"zorbs",NA,"do handstands to scare off predators",0.99
+13,8077,"implied_prevalence","disease_other",5,"taifels",NA,"transmit HIV",0.05
+13,15108,"implied_prevalence","physical",6,"elleps",NA,"live to be a hundred years old",0.5
+13,10434,"implied_prevalence","habitat",7,"ollers",NA,"live in high-rise buildings",0.15
+13,10310,"implied_prevalence","diet",8,"dorbs",NA,"fish in the Hudson River",0.2
+13,7598,"implied_prevalence","physical",9,"lorches",NA,"have brown fur",0.9
+13,10294,"implied_prevalence","diet",10,"krivels",NA,"cannibalize each other",0.1
+13,6460,"implied_prevalence","behavior",11,"thups",NA,"sing beautiful songs",0.95
+13,3688,"implied_prevalence","behavior",12,"ludinos",NA,"sleep during the day",0.99
+13,6388,"implied_prevalence","psychological",13,"kazzes",NA,"experience empathy",1
+13,5728,"implied_prevalence","behavior",14,"moxes",NA,"like to cuddle",0.85
+13,5996,"implied_prevalence","psychological",15,"cheebas",NA,"know how to open doors",0.35
+13,5884,"implied_prevalence","disease_self",16,"dunkels",NA,"get dandruff",0.2
+13,8342,"implied_prevalence","disease_self",17,"javs",NA,"have strange genetic mutations",0.6
+13,10300,"implied_prevalence","behavior_aggressive",18,"stups",NA,"carry out premeditated murder",0.25
+13,4542,"implied_prevalence","psychological",19,"mooks",NA,"are intelligent",0.9
+13,5735,"implied_prevalence","diet",20,"sapers",NA,"eat garbage",0.25
+13,6975,"implied_prevalence","diet",21,"dobles",NA,"drink soda",0.1
+13,5719,"implied_prevalence","behavior",22,"trufts",NA,"play with bottlecaps",0.04
+13,7545,"implied_prevalence","disease_self",23,"feps",NA,"get addicted to nicotine",0.01
+13,7105,"implied_prevalence","disease_self",24,"luzaks",NA,"get cancer",0.02
+13,5694,"implied_prevalence","diet",25,"reesles",NA,"eat grass",0.99
+13,6444,"implied_prevalence","disease_self",26,"kweps",NA,"go bald",0.6
+13,3846,"implied_prevalence","psychological",27,"glippets",NA,"experience emotions",1
+13,8378,"implied_prevalence","physical",28,"plovs",NA,"have intensely beautiful feathers",0.99
+13,7485,"implied_prevalence","behavior",29,"morseths",NA,"ride the subway",0.1
+13,7279,"implied_prevalence","reproduction",30,"zoovs",NA,"give birth underwater",0.98
+13,4368,"implied_prevalence","disease_self",31,"blins",NA,"lose their teeth",1
+13,5770,"implied_prevalence","diet",32,"grinks",NA,"eat human food",0.06
+13,6818,"implied_prevalence","behavior_aggressive",33,"frams",NA,"get in fights with other animals",0.75
+13,6716,"implied_prevalence","behavior_aggressive",34,"wugs",NA,"steal farmers&quotechar crops",0.4
+13,5654,"implied_prevalence","reproduction",35,"daiths",NA,"attract mates by secreting pheromones",1
+13,6890,"implied_prevalence","physical",36,"ackles",NA,"live to be twenty years old",0.15
+13,30864,"explain_responses","behavior",1,"trufts","Bottlecaps aren&quotechart common, so not a lot of trufts would have access to them","play with bottlecaps",0.04
+13,34112,"explain_responses","diet",2,"sapers","There is a lot of garbage around, I figured some might live around residential neighborhoods or trash heaps for scavenging, but not all","eat garbage",0.25
+13,44050,"explain_responses","psychological",3,"cheebas","Opening a door requires a certain amount of intelligence, which is inherited, so I figured a fair amount would be able to do so","know how to open doors",0.35
+13,27344,"explain_responses","diet",4,"grinks","I didn&quotechart think the grinks would have a lot of access to human food so the number is low","eat human food",0.06
+13,24219,"explain_responses","disease_self",5,"luzaks","Cancer is rare and if a lot of them got cancer the species might just die off","get cancer",0.02
+14,6858,"implied_prevalence","disease_other",1,"sapers",NA,"carry Lyme disease",0.59
+14,5495,"implied_prevalence","behavior",2,"crullets",NA,"like to cuddle",0.17
+14,3240,"implied_prevalence","reproduction",3,"plovs",NA,"lay eggs in other birds&quotechar nests",0.47
+14,2080,"implied_prevalence","behavior",4,"taifels",NA,"play with bottlecaps",0.39
+14,4136,"implied_prevalence","reproduction",5,"fendles",NA,"lay eggs without needing fertilization",0.66
+14,2389,"implied_prevalence","reproduction",6,"kazzes",NA,"have dozens of sexual partners",0.8
+14,2971,"implied_prevalence","psychological",7,"moxes",NA,"develop phobias",0.6
+14,5434,"implied_prevalence","behavior_aggressive",8,"zorbs",NA,"steal farmers&quotechar crops",0.28
+14,1390,"implied_prevalence","diet",9,"reesles",NA,"eat candy wrappers",0.53
+14,3304,"implied_prevalence","disease_other",10,"blins",NA,"transmit HIV",1
+14,5796,"implied_prevalence","physical",11,"luzaks",NA,"have spots",0.94
+14,2318,"implied_prevalence","diet",12,"stups",NA,"feed on the carcasses of dead animals",0.54
+14,3280,"implied_prevalence","psychological",13,"zoovs",NA,"are intelligent",1
+14,1342,"implied_prevalence","behavior_aggressive",14,"cheebas",NA,"pound their chests to display dominance",0.79
+14,1334,"implied_prevalence","diet",15,"daiths",NA,"drink alcohol left behind by tourists",0.76
+14,3120,"implied_prevalence","diet",16,"grinks",NA,"eat human food",1
+14,2014,"implied_prevalence","behavior",17,"lorches",NA,"chase their tails",0.79
+14,958,"implied_prevalence","psychological",18,"glippets",NA,"have personalities",0.51
+14,1210,"implied_prevalence","diet",19,"dobles",NA,"fish in the Hudson River",0.63
+14,658,"implied_prevalence","psychological",20,"javs",NA,"know how to ride bicycles",0.73
+14,2388,"implied_prevalence","diet",21,"elleps",NA,"eat grass",0.85
+14,918,"implied_prevalence","psychological",22,"krivels",NA,"experience emotions",0.8
+14,804,"implied_prevalence","behavior_aggressive",23,"dorbs",NA,"carry out premeditated murder",0.96
+14,966,"implied_prevalence","diet",24,"pangolins",NA,"eat insects",0.78
+14,1278,"implied_prevalence","psychological",25,"mooks",NA,"are afraid of loud noises",0.77
+14,1306,"implied_prevalence","reproduction",26,"trufts",NA,"have a menstrual cycle",0.58
+14,958,"implied_prevalence","habitat",27,"ludinos",NA,"live in zoos",0.63
+14,1059,"implied_prevalence","behavior",28,"feps",NA,"use tools",0.78
+14,1236,"implied_prevalence","disease_self",29,"thups",NA,"have strange genetic mutations",0.63
+14,1688,"implied_prevalence","behavior",30,"morseths",NA,"swim in shallow pools",0.68
+14,2564,"implied_prevalence","behavior_aggressive",31,"wugs",NA,"torture other animals",0.92
+14,854,"implied_prevalence","behavior_aggressive",32,"dunkels",NA,"get in fights with other animals",0.7
+14,1032,"implied_prevalence","disease_self",33,"ollers",NA,"get addicted to nicotine",0.65
+14,4362,"implied_prevalence","reproduction",34,"frams",NA,"get erections",0.63
+14,3322,"implied_prevalence","physical",35,"ackles",NA,"have an exquisite sense of smell",0.76
+14,914,"implied_prevalence","psychological",36,"kweps",NA,"mourn their dead",0.72
+14,27968,"explain_responses","behavior_aggressive",1,"zorbs","Zorbs seem like they only steal crops if there is an owner.","steal farmers&quotechar crops",0.28
+14,15602,"explain_responses","behavior",2,"taifels","They can play with bottlecaps if they are some bottlecaps.","play with bottlecaps",0.39
+14,16636,"explain_responses","behavior",3,"crullets","I feel like a few of these Crullets actually like to cuddle.","like to cuddle",0.17
+14,12974,"explain_responses","reproduction",4,"plovs","Half of a 100 that lay eggs seem reasonable.","lay eggs in other birds&quotechar nests",0.47
+15,21702,"implied_prevalence","physical",1,"kazzes",NA,"live to be twenty years old",0.62
+15,10840,"implied_prevalence","reproduction",2,"pangolins",NA,"have a menstrual cycle",0.73
+15,7832,"implied_prevalence","diet",3,"taifels",NA,"eat people",0.9
+15,8042,"implied_prevalence","reproduction",4,"stups",NA,"have dozens of sexual partners",0.63
+15,7762,"implied_prevalence","reproduction",5,"zoovs",NA,"lay eggs without needing fertilization",0.55
+15,11872,"implied_prevalence","diet",6,"blins",NA,"drink alcohol left behind by tourists",0.74
+15,6219,"implied_prevalence","behavior",7,"daiths",NA,"sleep during the day",0.94
+15,18006,"implied_prevalence","behavior_aggressive",8,"morseths",NA,"attack hikers",0.83
+15,6233,"implied_prevalence","disease_self",9,"crullets",NA,"get cancer",0.47
+15,6307,"implied_prevalence","psychological",10,"dorbs",NA,"experience emotions",0.88
+15,4885,"implied_prevalence","reproduction",11,"krivels",NA,"give birth underwater",0.49
+15,6785,"implied_prevalence","habitat",12,"grinks",NA,"live in zoos",0.9
+15,5854,"implied_prevalence","diet",13,"fendles",NA,"eat insects",0.98
+15,7817,"implied_prevalence","disease_other",14,"lorches",NA,"transmit HIV",0.98
+15,5747,"implied_prevalence","behavior",15,"ackles",NA,"like to cuddle",0.92
+15,5979,"implied_prevalence","reproduction",16,"thups",NA,"lay eggs in other birds&quotechar nests",0.56
+15,5102,"implied_prevalence","disease_self",17,"luzaks",NA,"get dandruff",0.59
+15,4760,"implied_prevalence","diet",18,"javs",NA,"cannibalize each other",0.64
+15,9501,"implied_prevalence","psychological",19,"moxes",NA,"know when earthquakes are about to happen",0.7
+15,3358,"implied_prevalence","physical",20,"kweps",NA,"have brown fur",0.67
+15,2505,"implied_prevalence","psychological",21,"glippets",NA,"experience empathy",0.74
+15,2667,"implied_prevalence","behavior",22,"cheebas",NA,"ride the subway",0.74
+15,4677,"implied_prevalence","reproduction",23,"trufts",NA,"attract mates by secreting pheromones",0.56
+15,2683,"implied_prevalence","physical",24,"frams",NA,"live to be five hundred years old",0.52
+15,3505,"implied_prevalence","behavior_aggressive",25,"feps",NA,"capture other animals&quotechar territory",0.72
+15,2916,"implied_prevalence","physical",26,"reesles",NA,"live to be a hundred years old",0.84
+15,2568,"implied_prevalence","behavior",27,"ollers",NA,"do handstands to scare off predators",0.51
+15,2690,"implied_prevalence","disease_self",28,"ludinos",NA,"have seizures",0.59
+15,2668,"implied_prevalence","psychological",29,"mooks",NA,"know how to open doors",0.5
+15,2924,"implied_prevalence","disease_other",30,"dunkels",NA,"carry Lyme disease",0.7
+15,2023,"implied_prevalence","disease_other",31,"sapers",NA,"transmit rabies",0.53
+15,2491,"implied_prevalence","behavior_aggressive",32,"plovs",NA,"hunt other animals",0.79
+15,2930,"implied_prevalence","behavior_aggressive",33,"zorbs",NA,"carry out premeditated murder",0.87
+15,2258,"implied_prevalence","psychological",34,"elleps",NA,"mourn their dead",0.6
+15,2272,"implied_prevalence","diet",35,"wugs",NA,"eat candy wrappers",0.53
+15,2536,"implied_prevalence","behavior_aggressive",36,"dobles",NA,"torture other animals",0.78
+15,20077,"explain_responses","disease_self",1,"crullets","not sure","get cancer",0.47
+15,62541,"explain_responses","reproduction",2,"krivels","generally female gives birth so out of 100 there may be 50 are felmale","give birth underwater",0.49
+16,5130,"implied_prevalence","psychological",1,"javs",NA,"experience empathy",0.81
+16,5524,"implied_prevalence","behavior",2,"pangolins",NA,"perform in the circus",0.01
+16,7301,"implied_prevalence","habitat",3,"frams",NA,"live in the hulls of sea vessels",0.7
+16,6844,"implied_prevalence","behavior",4,"crullets",NA,"do handstands to scare off predators",0.92
+16,6419,"implied_prevalence","habitat",5,"dunkels",NA,"live in high-rise buildings",0.14
+16,3336,"implied_prevalence","psychological",6,"morseths",NA,"have personalities",1
+16,9961,"implied_prevalence","behavior",7,"elleps",NA,"use tools",0.95
+16,2944,"implied_prevalence","disease_self",8,"dorbs",NA,"get addicted to nicotine",1
+16,7657,"implied_prevalence","disease_self",9,"reesles",NA,"get cancer",0.48
+16,3716,"implied_prevalence","diet",10,"wugs",NA,"eat grass",1
+16,3320,"implied_prevalence","diet",11,"ludinos",NA,"eat human food",1
+16,3438,"implied_prevalence","disease_other",12,"taifels",NA,"carry Lyme disease",0.77
+16,11521,"implied_prevalence","behavior",13,"ollers",NA,"fly into building windows",0.09
+16,5525,"implied_prevalence","behavior_aggressive",14,"stups",NA,"steal farmers&quotechar crops",0.38
+16,3903,"implied_prevalence","diet",15,"fendles",NA,"eat candy wrappers",0.18
+16,4508,"implied_prevalence","physical",16,"trufts",NA,"live to be twenty years old",0.25
+16,9247,"implied_prevalence","psychological",17,"kweps",NA,"know how to open doors",0.45
+16,2501,"implied_prevalence","diet",18,"krivels",NA,"eat garbage",0.78
+16,4941,"implied_prevalence","diet",19,"luzaks",NA,"feed on the carcasses of dead animals",1
+16,9962,"implied_prevalence","habitat",20,"thups",NA,"live in trees",1
+16,7151,"implied_prevalence","diet",21,"glippets",NA,"eat cannabis",0.91
+16,3640,"implied_prevalence","psychological",22,"daiths",NA,"develop phobias",0.36
+16,9691,"implied_prevalence","reproduction",23,"blins",NA,"lay eggs in other birds&quotechar nests",0.79
+16,3591,"implied_prevalence","behavior",24,"feps",NA,"sing beautiful songs",1
+16,5659,"implied_prevalence","behavior",25,"grinks",NA,"play with bottlecaps",0.11
+16,5089,"implied_prevalence","diet",26,"ackles",NA,"eat insects",1
+16,4034,"implied_prevalence","disease_other",27,"lorches",NA,"transmit rabies",0.72
+16,2754,"implied_prevalence","behavior",28,"zorbs",NA,"swim in shallow pools",0.38
+16,4541,"implied_prevalence","disease_self",29,"zoovs",NA,"lose their teeth",0.95
+16,11497,"implied_prevalence","reproduction",30,"sapers",NA,"lay eggs without needing fertilization",1
+16,10042,"implied_prevalence","disease_self",31,"kazzes",NA,"get dandruff",0.94
+16,3594,"implied_prevalence","physical",32,"plovs",NA,"have an exquisite sense of smell",1
+16,4063,"implied_prevalence","physical",33,"mooks",NA,"have intensely beautiful feathers",1
+16,4719,"implied_prevalence","diet",34,"moxes",NA,"fish in the Hudson River",0.05
+16,3972,"implied_prevalence","behavior",35,"cheebas",NA,"ride the subway",0.05
+16,4066,"implied_prevalence","behavior",36,"dobles",NA,"like to cuddle",0.95
+16,24369,"explain_responses","diet",1,"fendles","It seemed unlikely that they ALL eat candy wrappers, or would even have access to candy wrappers.","eat candy wrappers",0.18
+16,27465,"explain_responses","behavior",2,"grinks","It seemed unlikely that most of them would have the opportunity to play with bottlecaps, or that all would if they had the opportunity.","play with bottlecaps",0.11
+16,25133,"explain_responses","habitat",3,"dunkels","High-rise&quotechars seems like only one out of many possible habitats they might live ine","live in high-rise buildings",0.14
+16,16181,"explain_responses","behavior",4,"ollers","Not all of them would fly into building windows","fly into building windows",0.09
+16,35102,"explain_responses","psychological",5,"daiths","People develop phobias too, but not all people have phobias so i figure only some daiths would have phobias.","develop phobias",0.36
+17,8187,"implied_prevalence","diet",1,"elleps",NA,"eat garbage",0.71
+17,6931,"implied_prevalence","psychological",2,"kweps",NA,"know when earthquakes are about to happen",0.35
+17,12701,"implied_prevalence","habitat",3,"ollers",NA,"live in high-rise buildings",0.68
+17,7129,"implied_prevalence","behavior_aggressive",4,"blins",NA,"pound their chests to display dominance",0.95
+17,4184,"implied_prevalence","psychological",5,"glippets",NA,"are afraid of dogs",0.86
+17,6823,"implied_prevalence","reproduction",6,"javs",NA,"lay eggs without needing fertilization",1
+17,7227,"implied_prevalence","diet",7,"ackles",NA,"eat candy wrappers",0.15
+17,7631,"implied_prevalence","diet",8,"morseths",NA,"eat cannabis",0.58
+17,12218,"implied_prevalence","physical",9,"fendles",NA,"live to be five hundred years old",0.39
+17,6364,"implied_prevalence","diet",10,"krivels",NA,"eat grass",0.99
+17,6901,"implied_prevalence","psychological",11,"zoovs",NA,"know how to open doors",0.18
+17,6647,"implied_prevalence","behavior",12,"wugs",NA,"play with bottlecaps",0.08
+17,6122,"implied_prevalence","diet",13,"grinks",NA,"drink soda",0.07
+17,8063,"implied_prevalence","disease_other",14,"plovs",NA,"transmit rabies",0.27
+17,8156,"implied_prevalence","habitat",15,"pangolins",NA,"live in zoos",0.09
+17,5377,"implied_prevalence","disease_other",16,"trufts",NA,"carry Lyme disease",0.36
+17,6532,"implied_prevalence","physical",17,"frams",NA,"have intensely beautiful feathers",0.88
+17,6118,"implied_prevalence","physical",18,"crullets",NA,"have very long wings",0.95
+17,8833,"implied_prevalence","behavior_aggressive",19,"mooks",NA,"carry out premeditated murder",0.07
+17,4499,"implied_prevalence","disease_self",20,"luzaks",NA,"get dandruff",0.14
+17,7733,"implied_prevalence","habitat",21,"taifels",NA,"live in the hulls of sea vessels",0.82
+17,7967,"implied_prevalence","psychological",22,"sapers",NA,"develop phobias",0.17
+17,4264,"implied_prevalence","behavior_aggressive",23,"moxes",NA,"torture other animals",0.08
+17,4835,"implied_prevalence","psychological",24,"reesles",NA,"are intelligent",0.85
+17,17716,"implied_prevalence","physical",25,"kazzes",NA,"live to be a hundred years old",0.21
+17,4699,"implied_prevalence","behavior",26,"dobles",NA,"like to cuddle",0.55
+17,4398,"implied_prevalence","disease_self",27,"dorbs",NA,"develop back problems",0.19
+17,4500,"implied_prevalence","psychological",28,"zorbs",NA,"are afraid of loud noises",0.87
+17,9419,"implied_prevalence","behavior",29,"stups",NA,"do handstands to scare off predators",0.79
+17,6833,"implied_prevalence","behavior_aggressive",30,"thups",NA,"steal farmers&quotechar crops",0.42
+17,4593,"implied_prevalence","psychological",31,"cheebas",NA,"mourn their dead",0.87
+17,5316,"implied_prevalence","physical",32,"feps",NA,"have an exquisite sense of smell",0.91
+17,7139,"implied_prevalence","behavior",33,"ludinos",NA,"sing beautiful songs",0.79
+17,6301,"implied_prevalence","physical",34,"daiths",NA,"have brown fur",0.93
+17,4835,"implied_prevalence","physical",35,"dunkels",NA,"have spots",0.94
+17,5885,"implied_prevalence","behavior_aggressive",36,"lorches",NA,"get in fights with other animals",0.63
+17,40555,"explain_responses","psychological",1,"sapers","I based it off of people and what I thought would be a similar number. ","develop phobias",0.17
+17,26517,"explain_responses","disease_other",2,"plovs","I thought of bats and how probably a quarter of them could transmit something like rabies. ","transmit rabies",0.27
+17,18600,"explain_responses","disease_self",3,"dorbs","Back problems aren&quotechart that common, so I based it off of that. ","develop back problems",0.19
+17,27433,"explain_responses","behavior_aggressive",4,"moxes","They may, but it is probably rare. So I based it just off of that. ","torture other animals",0.08
+17,32478,"explain_responses","habitat",5,"pangolins","I thought of how many zoos there are compared to animals and figured not many would be in a zoo. ","live in zoos",0.09
+18,6874,"implied_prevalence","behavior_aggressive",1,"zoovs",NA,"steal farmers&quotechar crops",0.35
+18,7322,"implied_prevalence","reproduction",2,"ollers",NA,"give birth underwater",0.93
+18,3175,"implied_prevalence","habitat",3,"frams",NA,"live in urban areas",0.75
+18,4108,"implied_prevalence","reproduction",4,"wugs",NA,"attract mates by secreting pheromones",0.97
+18,3428,"implied_prevalence","physical",5,"grinks",NA,"live to be a hundred years old",0.65
+18,3052,"implied_prevalence","behavior",6,"plovs",NA,"swim in shallow pools",0.87
+18,2656,"implied_prevalence","diet",7,"mooks",NA,"eat grass",0.95
+18,2135,"implied_prevalence","diet",8,"dobles",NA,"eat insects",0.94
+18,2516,"implied_prevalence","behavior",9,"glippets",NA,"chase their tails",0.71
+18,3076,"implied_prevalence","reproduction",10,"crullets",NA,"have dozens of sexual partners",0.82
+18,1980,"implied_prevalence","disease_other",11,"javs",NA,"transmit HIV",0.69
+18,2820,"implied_prevalence","diet",12,"moxes",NA,"cannibalize each other",0.73
+18,2952,"implied_prevalence","behavior",13,"daiths",NA,"sleep during the day",0.93
+18,2604,"implied_prevalence","diet",14,"dunkels",NA,"feed on the carcasses of dead animals",0.91
+18,3636,"implied_prevalence","psychological",15,"cheebas",NA,"are afraid of dogs",0.68
+18,3335,"implied_prevalence","behavior_aggressive",16,"luzaks",NA,"carry out premeditated murder",0.59
+18,3041,"implied_prevalence","disease_self",17,"zorbs",NA,"get addicted to nicotine",0.49
+18,2420,"implied_prevalence","behavior_aggressive",18,"ackles",NA,"get in fights with other animals",0.7
+18,2443,"implied_prevalence","disease_other",19,"krivels",NA,"carry malaria",0.77
+18,2888,"implied_prevalence","behavior",20,"morseths",NA,"use tools",0.87
+18,1873,"implied_prevalence","habitat",21,"taifels",NA,"live in trees",0.92
+18,2295,"implied_prevalence","physical",22,"fendles",NA,"have spots",0.95
+18,2228,"implied_prevalence","habitat",23,"kweps",NA,"live in high-rise buildings",0.8
+18,3536,"implied_prevalence","reproduction",24,"pangolins",NA,"lay eggs without needing fertilization",0.94
+18,1960,"implied_prevalence","physical",25,"thups",NA,"have brown fur",0.86
+18,2672,"implied_prevalence","psychological",26,"elleps",NA,"are intelligent",0.81
+18,2283,"implied_prevalence","physical",27,"dorbs",NA,"live to be twenty years old",0.64
+18,2296,"implied_prevalence","behavior_aggressive",28,"lorches",NA,"attack hikers",0.72
+18,1852,"implied_prevalence","behavior",29,"ludinos",NA,"ride the subway",0.6
+18,2792,"implied_prevalence","physical",30,"reesles",NA,"have intensely beautiful feathers",0.84
+18,2904,"implied_prevalence","reproduction",31,"kazzes",NA,"get erections",0.98
+18,2243,"implied_prevalence","psychological",32,"sapers",NA,"are afraid of loud noises",0.63
+18,2120,"implied_prevalence","diet",33,"blins",NA,"fish in the Hudson River",0.69
+18,1948,"implied_prevalence","behavior_aggressive",34,"trufts",NA,"capture other animals&quotechar territory",0.81
+18,2796,"implied_prevalence","habitat",35,"stups",NA,"live in the hulls of sea vessels",0.87
+18,2320,"implied_prevalence","disease_other",36,"feps",NA,"transmit rabies",0.6
+18,11207,"explain_responses","behavior_aggressive",1,"zoovs","Doesnt seem like a majority would","steal farmers&quotechar crops",0.35
+18,14267,"explain_responses","disease_self",2,"zorbs","If everyone did they probably wouldnt live long","get addicted to nicotine",0.49
+19,13557,"implied_prevalence","disease_self",1,"kazzes",NA,"get dandruff",0.8
+19,8116,"implied_prevalence","psychological",2,"dobles",NA,"know how to open doors",0.96
+19,4578,"implied_prevalence","behavior",3,"dunkels",NA,"play with bottlecaps",0.78
+19,5433,"implied_prevalence","behavior_aggressive",4,"plovs",NA,"hunt other animals",1
+19,2938,"implied_prevalence","diet",5,"feps",NA,"eat grass",1
+19,5703,"implied_prevalence","psychological",6,"pangolins",NA,"develop phobias",0.66
+19,3878,"implied_prevalence","disease_self",7,"morseths",NA,"have seizures",0.54
+19,9193,"implied_prevalence","reproduction",8,"trufts",NA,"lay eggs in other birds&quotechar nests",0.92
+19,5998,"implied_prevalence","habitat",9,"wugs",NA,"live in the hulls of sea vessels",0.96
+19,5777,"implied_prevalence","reproduction",10,"thups",NA,"get erections",1
+19,4091,"implied_prevalence","disease_other",11,"ludinos",NA,"carry malaria",0.71
+19,3946,"implied_prevalence","disease_other",12,"krivels",NA,"transmit HIV",0.65
+19,5449,"implied_prevalence","diet",13,"elleps",NA,"drink alcohol left behind by tourists",0.54
+19,7213,"implied_prevalence","behavior",14,"moxes",NA,"ride the subway",0.5
+19,5096,"implied_prevalence","psychological",15,"stups",NA,"are afraid of dogs",0.81
+19,4306,"implied_prevalence","behavior_aggressive",16,"daiths",NA,"torture other animals",0.55
+19,3590,"implied_prevalence","psychological",17,"javs",NA,"are afraid of loud noises",0.88
+19,3622,"implied_prevalence","reproduction",18,"ackles",NA,"have a menstrual cycle",1
+19,3451,"implied_prevalence","habitat",19,"kweps",NA,"live in trees",1
+19,4694,"implied_prevalence","diet",20,"cheebas",NA,"eat cannabis",0.88
+19,5678,"implied_prevalence","behavior",21,"frams",NA,"perform in the circus",0.5
+19,8277,"implied_prevalence","disease_self",22,"reesles",NA,"get addicted to nicotine",0.58
+19,5900,"implied_prevalence","behavior_aggressive",23,"taifels",NA,"steal farmers&quotechar crops",0.56
+19,6124,"implied_prevalence","behavior_aggressive",24,"ollers",NA,"carry out premeditated murder",0.51
+19,9402,"implied_prevalence","physical",25,"grinks",NA,"have very long wings",1
+19,4670,"implied_prevalence","disease_self",26,"sapers",NA,"have strange genetic mutations",0.94
+19,4336,"implied_prevalence","behavior_aggressive",27,"zorbs",NA,"get in fights with other animals",0.87
+19,3299,"implied_prevalence","diet",28,"crullets",NA,"eat candy wrappers",0.69
+19,4201,"implied_prevalence","behavior_aggressive",29,"blins",NA,"pound their chests to display dominance",0.84
+19,5529,"implied_prevalence","behavior_aggressive",30,"lorches",NA,"attack hikers",0.52
+19,3106,"implied_prevalence","disease_other",31,"fendles",NA,"transmit rabies",0.68
+19,3695,"implied_prevalence","disease_other",32,"zoovs",NA,"carry Lyme disease",0.8
+19,3176,"implied_prevalence","psychological",33,"mooks",NA,"are intelligent",1
+19,3039,"implied_prevalence","behavior",34,"dorbs",NA,"use tools",0.91
+19,5517,"implied_prevalence","physical",35,"glippets",NA,"live to be a hundred years old",0.71
+19,4808,"implied_prevalence","disease_self",36,"luzaks",NA,"lose their teeth",0.79
+20,8186,"implied_prevalence","disease_other",1,"lorches",NA,"carry malaria",0.05
+20,7185,"implied_prevalence","psychological",2,"reesles",NA,"experience emotions",1
+20,5660,"implied_prevalence","disease_other",3,"frams",NA,"transmit rabies",0.03
+20,6484,"implied_prevalence","physical",4,"zoovs",NA,"have spots",0.65
+20,7682,"implied_prevalence","behavior_aggressive",5,"dobles",NA,"capture other animals&quotechar territory",0.8
+20,7225,"implied_prevalence","habitat",6,"elleps",NA,"live in zoos",0.1
+20,4616,"implied_prevalence","diet",7,"fendles",NA,"eat garbage",1
+20,6979,"implied_prevalence","psychological",8,"daiths",NA,"know how to open doors",0.15
+20,8357,"implied_prevalence","habitat",9,"krivels",NA,"live in the hulls of sea vessels",0.02
+20,6345,"implied_prevalence","disease_self",10,"ludinos",NA,"go bald",0.25
+20,2847,"implied_prevalence","reproduction",11,"luzaks",NA,"lay eggs in other birds&quotechar nests",1
+20,4572,"implied_prevalence","disease_other",12,"thups",NA,"carry Lyme disease",0.05
+20,4688,"implied_prevalence","disease_other",13,"mooks",NA,"transmit HIV",0.03
+20,4859,"implied_prevalence","reproduction",14,"feps",NA,"have a menstrual cycle",0.5
+20,4846,"implied_prevalence","physical",15,"dunkels",NA,"have brown fur",0.33
+20,3276,"implied_prevalence","reproduction",16,"glippets",NA,"have dozens of sexual partners",1
+20,3077,"implied_prevalence","physical",17,"sapers",NA,"have an exquisite sense of smell",1
+20,2723,"implied_prevalence","physical",18,"ollers",NA,"have very long wings",1
+20,5492,"implied_prevalence","diet",19,"grinks",NA,"fish in the Hudson River",0.1
+20,2684,"implied_prevalence","disease_self",20,"cheebas",NA,"get addicted to nicotine",1
+20,3991,"implied_prevalence","behavior",21,"kweps",NA,"do handstands to scare off predators",1
+20,1868,"implied_prevalence","behavior",22,"blins",NA,"sleep during the day",1
+20,4016,"implied_prevalence","psychological",23,"pangolins",NA,"know how to ride bicycles",0.1
+20,3976,"implied_prevalence","behavior_aggressive",24,"dorbs",NA,"steal farmers&quotechar crops",1
+20,4911,"implied_prevalence","diet",25,"ackles",NA,"drink alcohol left behind by tourists",0.7
+20,2645,"implied_prevalence","habitat",26,"morseths",NA,"live in urban areas",0.8
+20,7717,"implied_prevalence","habitat",27,"moxes",NA,"live in high-rise buildings",0.8
+20,5156,"implied_prevalence","psychological",28,"stups",NA,"mourn their dead",1
+20,5297,"implied_prevalence","disease_self",29,"kazzes",NA,"have strange genetic mutations",0.15
+20,2108,"implied_prevalence","diet",30,"javs",NA,"cannibalize each other",1
+20,4924,"implied_prevalence","psychological",31,"crullets",NA,"are afraid of dogs",0.9
+20,3243,"implied_prevalence","psychological",32,"zorbs",NA,"develop phobias",1
+20,3832,"implied_prevalence","reproduction",33,"taifels",NA,"get erections",0.5
+20,3967,"implied_prevalence","behavior",34,"trufts",NA,"fly into building windows",0.1
+20,5028,"implied_prevalence","physical",35,"plovs",NA,"live to be twenty years old",0.3
+20,4844,"implied_prevalence","behavior",36,"wugs",NA,"play with bottlecaps",0.15
+20,17254,"explain_responses","physical",1,"dunkels","I felt that there could be other colors fur so I went conservative and said about a third would have brown fur.","have brown fur",0.33
+20,19808,"explain_responses","behavior",2,"wugs","I felt like not many wugs would have bottlecaps nearby so I put down a relatively small number.","play with bottlecaps",0.15
+20,24112,"explain_responses","psychological",3,"daiths","I think opening doors is a pretty complex task for animals, and not all animals live in doors or have access to doors, so I put a lower number down.","know how to open doors",0.15
+20,17660,"explain_responses","diet",4,"grinks","I felt that not all grinks lived near the Hudson River, so I put down 10 rather than a higher number.","fish in the Hudson River",0.1
+20,21840,"explain_responses","physical",5,"plovs","I felt that maybe 20 years old is the maximum life span for plovs and that most of them die younger.","live to be twenty years old",0.3
+21,4444,"implied_prevalence","psychological",1,"moxes",NA,"know how to open doors",0.43
+21,2768,"implied_prevalence","behavior_aggressive",2,"trufts",NA,"get in fights with other animals",0.48
+21,2711,"implied_prevalence","physical",3,"taifels",NA,"have very long wings",0.45
+21,2152,"implied_prevalence","reproduction",4,"dobles",NA,"lay eggs in other birds&quotechar nests",0.6
+21,1921,"implied_prevalence","behavior_aggressive",5,"cheebas",NA,"capture other animals&quotechar territory",0.65
+21,2303,"implied_prevalence","psychological",6,"frams",NA,"experience emotions",0.51
+21,2984,"implied_prevalence","diet",7,"krivels",NA,"drink soda",0.16
+21,3096,"implied_prevalence","diet",8,"crullets",NA,"cannibalize each other",0.39
+21,2952,"implied_prevalence","diet",9,"daiths",NA,"feed on the carcasses of dead animals",0.71
+21,4257,"implied_prevalence","behavior",10,"wugs",NA,"use tools",0.87
+21,3959,"implied_prevalence","behavior",11,"luzaks",NA,"perform in the circus",0.27
+21,2841,"implied_prevalence","disease_other",12,"sapers",NA,"transmit HIV",0.18
+21,4976,"implied_prevalence","physical",13,"reesles",NA,"live to be twenty years old",0.07
+21,4127,"implied_prevalence","disease_self",14,"feps",NA,"have strange genetic mutations",0.49
+21,3208,"implied_prevalence","disease_other",15,"dunkels",NA,"transmit rabies",0.39
+21,2776,"implied_prevalence","habitat",16,"ackles",NA,"live in trees",0.66
+21,3144,"implied_prevalence","psychological",17,"grinks",NA,"know how to ride bicycles",0.05
+21,3664,"implied_prevalence","physical",18,"morseths",NA,"have an exquisite sense of smell",0.84
+21,3064,"implied_prevalence","reproduction",19,"zoovs",NA,"lay eggs without needing fertilization",0.81
+21,2779,"implied_prevalence","behavior_aggressive",20,"dorbs",NA,"torture other animals",0.27
+21,2413,"implied_prevalence","diet",21,"elleps",NA,"eat insects",0.41
+21,3439,"implied_prevalence","reproduction",22,"javs",NA,"have a menstrual cycle",0.49
+21,3040,"implied_prevalence","disease_other",23,"glippets",NA,"carry malaria",0.42
+21,4271,"implied_prevalence","behavior",24,"blins",NA,"ride the subway",0.1
+21,4240,"implied_prevalence","reproduction",25,"kweps",NA,"get erections",0.51
+21,1816,"implied_prevalence","disease_other",26,"fendles",NA,"carry Lyme disease",0.41
+21,1496,"implied_prevalence","physical",27,"mooks",NA,"live to be a hundred years old",0.44
+21,1360,"implied_prevalence","psychological",28,"lorches",NA,"experience empathy",0.54
+21,2415,"implied_prevalence","habitat",29,"kazzes",NA,"live in zoos",0.27
+21,2536,"implied_prevalence","disease_self",30,"plovs",NA,"go bald",0.7
+21,1985,"implied_prevalence","disease_self",31,"stups",NA,"get dandruff",0.76
+21,1639,"implied_prevalence","psychological",32,"ludinos",NA,"are afraid of loud noises",0.61
+21,2096,"implied_prevalence","reproduction",33,"ollers",NA,"give birth underwater",0.35
+21,2056,"implied_prevalence","psychological",34,"pangolins",NA,"are intelligent",0.62
+21,1569,"implied_prevalence","physical",35,"thups",NA,"have brown fur",0.51
+21,3735,"implied_prevalence","disease_self",36,"zorbs",NA,"get addicted to nicotine",0.41
+21,41039,"explain_responses","physical",1,"reesles","probably most of them live to be a different age, statistically it makes sense","live to be twenty years old",0.07
+21,21256,"explain_responses","disease_other",2,"sapers","in animals that spread disease, most actually do not carry it","transmit HIV",0.18
+21,24568,"explain_responses","behavior",3,"luzaks","this was a random guess, its a strange question I didnt know how to answer","perform in the circus",0.27
+21,15360,"explain_responses","physical",4,"mooks","about half seems right","live to be a hundred years old",0.44
+21,26200,"explain_responses","disease_other",5,"fendles","again, in desease carriers, most dont have it","carry Lyme disease",0.41
+22,5396,"implied_prevalence","physical",1,"crullets",NA,"have brown fur",1
+22,4220,"implied_prevalence","psychological",2,"dunkels",NA,"are afraid of dogs",1
+22,5532,"implied_prevalence","behavior",3,"luzaks",NA,"do handstands to scare off predators",1
+22,5437,"implied_prevalence","behavior_aggressive",4,"glippets",NA,"carry out premeditated murder",0.5
+22,7943,"implied_prevalence","behavior",5,"mooks",NA,"ride the subway",0.4
+22,5734,"implied_prevalence","habitat",6,"javs",NA,"live in zoos",0.05
+22,4387,"implied_prevalence","physical",7,"wugs",NA,"have very long wings",1
+22,5480,"implied_prevalence","diet",8,"kazzes",NA,"drink soda",0.05
+22,3537,"implied_prevalence","behavior_aggressive",9,"taifels",NA,"hunt other animals",1
+22,3481,"implied_prevalence","psychological",10,"moxes",NA,"are afraid of loud noises",0.9
+22,5814,"implied_prevalence","reproduction",11,"elleps",NA,"have a menstrual cycle",0.5
+22,4395,"implied_prevalence","diet",12,"sapers",NA,"eat candy wrappers",0.1
+22,5412,"implied_prevalence","habitat",13,"dorbs",NA,"live in high-rise buildings",0.25
+22,4832,"implied_prevalence","physical",14,"zorbs",NA,"have intensely beautiful feathers",1
+22,4037,"implied_prevalence","disease_self",15,"ollers",NA,"get addicted to nicotine",0.03
+22,5232,"implied_prevalence","disease_other",16,"reesles",NA,"transmit rabies",0.04
+22,3031,"implied_prevalence","behavior",17,"krivels",NA,"sleep during the day",1
+22,11178,"implied_prevalence","behavior_aggressive",18,"thups",NA,"get in fights with other animals",0.5
+22,4000,"implied_prevalence","disease_self",19,"zoovs",NA,"develop back problems",0.13
+22,4284,"implied_prevalence","diet",20,"blins",NA,"eat insects",1
+22,3716,"implied_prevalence","behavior",21,"ludinos",NA,"sing beautiful songs",1
+22,4619,"implied_prevalence","diet",22,"plovs",NA,"eat human food",0.79
+22,4232,"implied_prevalence","diet",23,"daiths",NA,"eat people",0.01
+22,4839,"implied_prevalence","reproduction",24,"feps",NA,"lay eggs in other birds&quotechar nests",0.5
+22,4775,"implied_prevalence","diet",25,"fendles",NA,"feed on the carcasses of dead animals",1
+22,5267,"implied_prevalence","behavior_aggressive",26,"stups",NA,"capture other animals&quotechar territory",0.8
+22,6819,"implied_prevalence","behavior_aggressive",27,"frams",NA,"steal farmers&quotechar crops",0.4
+22,4130,"implied_prevalence","disease_other",28,"cheebas",NA,"carry Lyme disease",0.01
+22,4614,"implied_prevalence","psychological",29,"morseths",NA,"have personalities",0.7
+22,5726,"implied_prevalence","diet",30,"dobles",NA,"fish in the Hudson River",0.7
+22,3696,"implied_prevalence","behavior",31,"grinks",NA,"use tools",0.9
+22,8320,"implied_prevalence","diet",32,"pangolins",NA,"eat cannabis",0.35
+22,5290,"implied_prevalence","behavior_aggressive",33,"lorches",NA,"pound their chests to display dominance",0.5
+22,5580,"implied_prevalence","behavior",34,"ackles",NA,"chase their tails",0.94
+22,4371,"implied_prevalence","physical",35,"trufts",NA,"live to be a hundred years old",0.04
+22,6623,"implied_prevalence","reproduction",36,"kweps",NA,"attract mates by secreting pheromones",1
+22,24787,"explain_responses","diet",1,"daiths","I was thinking of animals I&quotecharve heard of that eat people, like tigers, and how rare it still is.","eat people",0.01
+22,20426,"explain_responses","disease_self",2,"zoovs","I was thinking about dogs that are prone to back problems, but it still isn&quotechart a majority","develop back problems",0.13
+22,31442,"explain_responses","diet",3,"sapers","They would have to have candy wrappers available to eat them, and it wouldn&quotechart be the case for all of them","eat candy wrappers",0.1
+22,20833,"explain_responses","diet",4,"pangolins","Cannabis would have to be available, and I don&quotechart know that every pangolin would have access.","eat cannabis",0.35
+22,32166,"explain_responses","habitat",5,"dorbs","It doesn&quotechart seem like even a city animal would always have access to high rise buildings, but they&quotecharre pretty common so I guessed a decent amount","live in high-rise buildings",0.25
+23,19406,"implied_prevalence","behavior",1,"luzaks",NA,"sleep during the day",1
+23,13850,"implied_prevalence","psychological",2,"grinks",NA,"mourn their dead",1
+23,18122,"implied_prevalence","reproduction",3,"crullets",NA,"have dozens of sexual partners",1
+23,8362,"implied_prevalence","diet",4,"dunkels",NA,"eat human food",1
+23,11328,"implied_prevalence","disease_other",5,"kweps",NA,"carry malaria",1
+23,8010,"implied_prevalence","psychological",6,"blins",NA,"are intelligent",1
+23,7308,"implied_prevalence","behavior",7,"ollers",NA,"use tools",1
+23,6726,"implied_prevalence","physical",8,"glippets",NA,"have brown fur",1
+23,6738,"implied_prevalence","psychological",9,"frams",NA,"have personalities",1
+23,10010,"implied_prevalence","psychological",10,"zoovs",NA,"know how to open doors",1
+23,8290,"implied_prevalence","disease_self",11,"thups",NA,"develop back problems",1
+23,10448,"implied_prevalence","behavior",12,"zorbs",NA,"perform in the circus",1
+23,11296,"implied_prevalence","diet",13,"trufts",NA,"drink alcohol left behind by tourists",1
+23,8946,"implied_prevalence","reproduction",14,"dorbs",NA,"lay eggs in other birds&quotechar nests",1
+23,7314,"implied_prevalence","diet",15,"moxes",NA,"eat people",1
+23,8660,"implied_prevalence","psychological",16,"dobles",NA,"are afraid of loud noises",1
+23,17184,"implied_prevalence","diet",17,"kazzes",NA,"cannibalize each other",0.5
+23,9302,"implied_prevalence","physical",18,"elleps",NA,"have an exquisite sense of smell",1
+23,6436,"implied_prevalence","physical",19,"javs",NA,"live to be a hundred years old",1
+23,8058,"implied_prevalence","physical",20,"pangolins",NA,"live to be twenty years old",1
+23,6070,"implied_prevalence","behavior_aggressive",21,"plovs",NA,"get in fights with other animals",1
+23,7948,"implied_prevalence","diet",22,"lorches",NA,"feed on the carcasses of dead animals",1
+23,6106,"implied_prevalence","physical",23,"reesles",NA,"have spots",1
+23,10388,"implied_prevalence","behavior_aggressive",24,"mooks",NA,"carry out premeditated murder",1
+23,9398,"implied_prevalence","reproduction",25,"sapers",NA,"lay eggs without needing fertilization",1
+23,7518,"implied_prevalence","reproduction",26,"ludinos",NA,"have a menstrual cycle",1
+23,7366,"implied_prevalence","behavior_aggressive",27,"taifels",NA,"torture other animals",1
+23,5666,"implied_prevalence","disease_self",28,"ackles",NA,"go bald",1
+23,7344,"implied_prevalence","psychological",29,"morseths",NA,"know when earthquakes are about to happen",1
+23,7876,"implied_prevalence","physical",30,"stups",NA,"live to be five hundred years old",1
+23,5660,"implied_prevalence","disease_self",31,"krivels",NA,"lose their teeth",1
+23,9542,"implied_prevalence","diet",32,"daiths",NA,"eat cannabis",1
+23,10596,"implied_prevalence","disease_other",33,"feps",NA,"transmit HIV",1
+23,6734,"implied_prevalence","disease_other",34,"cheebas",NA,"carry Lyme disease",1
+23,7378,"implied_prevalence","psychological",35,"wugs",NA,"are afraid of dogs",1
+23,5994,"implied_prevalence","behavior_aggressive",36,"fendles",NA,"steal farmers&quotechar crops",1
+24,14959,"implied_prevalence","habitat",1,"frams",NA,"live in the hulls of sea vessels",0.44
+24,9159,"implied_prevalence","behavior",2,"plovs",NA,"perform in the circus",0.17
+24,10104,"implied_prevalence","reproduction",3,"fendles",NA,"have a menstrual cycle",0.87
+24,14593,"implied_prevalence","psychological",4,"moxes",NA,"know when earthquakes are about to happen",0.94
+24,6280,"implied_prevalence","reproduction",5,"ollers",NA,"lay eggs without needing fertilization",0.98
+24,7760,"implied_prevalence","disease_other",6,"dobles",NA,"transmit HIV",0.76
+24,4951,"implied_prevalence","behavior_aggressive",7,"luzaks",NA,"torture other animals",0.83
+24,4504,"implied_prevalence","behavior_aggressive",8,"glippets",NA,"capture other animals&quotechar territory",0.79
+24,4576,"implied_prevalence","habitat",9,"sapers",NA,"live in zoos",0.51
+24,3704,"implied_prevalence","behavior_aggressive",10,"zorbs",NA,"hunt other animals",0.88
+24,4688,"implied_prevalence","behavior_aggressive",11,"javs",NA,"steal farmers&quotechar crops",0.63
+24,5080,"implied_prevalence","diet",12,"feps",NA,"fish in the Hudson River",0.76
+24,12584,"implied_prevalence","diet",13,"crullets",NA,"cannibalize each other",0.93
+24,6025,"implied_prevalence","psychological",14,"dunkels",NA,"experience empathy",0.59
+24,4072,"implied_prevalence","behavior",15,"lorches",NA,"sleep during the day",0.96
+24,6232,"implied_prevalence","diet",16,"taifels",NA,"eat candy wrappers",0.19
+24,7824,"implied_prevalence","physical",17,"ackles",NA,"live to be five hundred years old",0.27
+24,4272,"implied_prevalence","psychological",18,"krivels",NA,"experience emotions",0.46
+24,5848,"implied_prevalence","disease_self",19,"cheebas",NA,"go bald",0.58
+24,6504,"implied_prevalence","diet",20,"pangolins",NA,"drink soda",0.09
+24,3401,"implied_prevalence","behavior",21,"stups",NA,"chase their tails",0.44
+24,7487,"implied_prevalence","behavior_aggressive",22,"wugs",NA,"carry out premeditated murder",0.46
+24,4904,"implied_prevalence","diet",23,"daiths",NA,"eat garbage",0.33
+24,4103,"implied_prevalence","physical",24,"grinks",NA,"live to be twenty years old",0.45
+24,5721,"implied_prevalence","physical",25,"morseths",NA,"have intensely beautiful feathers",0.86
+24,4152,"implied_prevalence","behavior",26,"ludinos",NA,"swim in shallow pools",0.49
+24,4808,"implied_prevalence","physical",27,"kazzes",NA,"have brown fur",0.65
+24,4304,"implied_prevalence","reproduction",28,"kweps",NA,"give birth underwater",0.77
+24,5528,"implied_prevalence","habitat",29,"blins",NA,"live in high-rise buildings",0.45
+24,3312,"implied_prevalence","diet",30,"reesles",NA,"eat insects",0.92
+24,3552,"implied_prevalence","behavior_aggressive",31,"mooks",NA,"attack hikers",0.76
+24,4257,"implied_prevalence","behavior",32,"elleps",NA,"play with bottlecaps",0.1
+24,3215,"implied_prevalence","behavior",33,"dorbs",NA,"like to cuddle",0.6
+24,3552,"implied_prevalence","physical",34,"trufts",NA,"have very long wings",0.82
+24,4072,"implied_prevalence","disease_self",35,"thups",NA,"get cancer",0.3
+24,2776,"implied_prevalence","diet",36,"zoovs",NA,"eat human food",0.76
+24,86186,"explain_responses","habitat",1,"blins","I just guess","live in high-rise buildings",0.45
+24,52969,"explain_responses","habitat",2,"frams","This is very common for an animal to live in the hull of sea vessels","live in the hulls of sea vessels",0.44
+24,85585,"explain_responses","behavior",3,"plovs","there are not that many circus","perform in the circus",0.17
+24,12872,"explain_responses","behavior",4,"ludinos","I just guess","swim in shallow pools",0.49
+24,50874,"explain_responses","disease_self",5,"thups","there are some animals get cancer ","get cancer",0.3
+25,6319,"implied_prevalence","physical",1,"cheebas",NA,"have brown fur",0.9
+25,8791,"implied_prevalence","physical",2,"mooks",NA,"live to be a hundred years old",0.95
+25,4655,"implied_prevalence","physical",3,"zoovs",NA,"have very long wings",0.9
+25,6919,"implied_prevalence","disease_self",4,"reesles",NA,"have seizures",0.6
+25,8255,"implied_prevalence","behavior_aggressive",5,"dunkels",NA,"pound their chests to display dominance",0.9
+25,4777,"implied_prevalence","psychological",6,"pangolins",NA,"are intelligent",0.95
+25,6071,"implied_prevalence","behavior",7,"kweps",NA,"chase their tails",0.9
+25,4144,"implied_prevalence","disease_self",8,"grinks",NA,"lose their teeth",0.85
+25,3944,"implied_prevalence","behavior",9,"lorches",NA,"sing beautiful songs",0.95
+25,6895,"implied_prevalence","physical",10,"taifels",NA,"have an exquisite sense of smell",0.98
+25,4015,"implied_prevalence","behavior",11,"ackles",NA,"use tools",0.8
+25,7664,"implied_prevalence","psychological",12,"krivels",NA,"experience empathy",0.9
+25,7072,"implied_prevalence","psychological",13,"daiths",NA,"know when earthquakes are about to happen",0.95
+25,5529,"implied_prevalence","diet",14,"kazzes",NA,"eat candy wrappers",0.95
+25,4880,"implied_prevalence","psychological",15,"dorbs",NA,"know how to ride bicycles",0.8
+25,5543,"implied_prevalence","habitat",16,"dobles",NA,"live in the hulls of sea vessels",0.9
+25,6312,"implied_prevalence","physical",17,"luzaks",NA,"have spots",0.95
+25,3992,"implied_prevalence","psychological",18,"plovs",NA,"mourn their dead",0.9
+25,5824,"implied_prevalence","behavior",19,"trufts",NA,"like to cuddle",0.95
+25,3672,"implied_prevalence","behavior_aggressive",20,"morseths",NA,"attack hikers",0.95
+25,4136,"implied_prevalence","physical",21,"blins",NA,"live to be twenty years old",0.9
+25,5823,"implied_prevalence","habitat",22,"frams",NA,"live in urban areas",0.95
+25,6968,"implied_prevalence","disease_self",23,"ludinos",NA,"get dandruff",0.9
+25,7543,"implied_prevalence","behavior",24,"stups",NA,"do handstands to scare off predators",0.8
+25,5752,"implied_prevalence","behavior",25,"glippets",NA,"perform in the circus",0.75
+25,5527,"implied_prevalence","diet",26,"ollers",NA,"eat garbage",0.9
+25,5584,"implied_prevalence","reproduction",27,"javs",NA,"give birth underwater",0.99
+25,8528,"implied_prevalence","behavior_aggressive",28,"crullets",NA,"capture other animals&quotechar territory",0.9
+25,6031,"implied_prevalence","behavior",29,"sapers",NA,"play with bottlecaps",0.95
+25,6008,"implied_prevalence","physical",30,"elleps",NA,"have intensely beautiful feathers",0.9
+25,5543,"implied_prevalence","habitat",31,"moxes",NA,"live in high-rise buildings",0.95
+25,6073,"implied_prevalence","reproduction",32,"wugs",NA,"get erections",0.9
+25,3455,"implied_prevalence","habitat",33,"thups",NA,"live in trees",0.9
+25,5024,"implied_prevalence","behavior_aggressive",34,"feps",NA,"get in fights with other animals",0.8
+25,5009,"implied_prevalence","behavior",35,"zorbs",NA,"swim in shallow pools",0.85
+25,6847,"implied_prevalence","disease_self",36,"fendles",NA,"go bald",0.75
+26,27653,"implied_prevalence","behavior",1,"lorches",NA,"sleep during the day",1
+26,11772,"implied_prevalence","diet",2,"zoovs",NA,"cannibalize each other",0.99
+26,15774,"implied_prevalence","psychological",3,"dunkels",NA,"know when earthquakes are about to happen",0.99
+26,11430,"implied_prevalence","behavior_aggressive",4,"glippets",NA,"steal farmers&quotechar crops",0.99
+26,8906,"implied_prevalence","psychological",5,"taifels",NA,"are afraid of dogs",1
+26,17727,"implied_prevalence","reproduction",6,"cheebas",NA,"lay eggs in other birds&quotechar nests",1
+26,86921,"implied_prevalence","behavior",7,"trufts",NA,"like to cuddle",0.99
+26,13673,"implied_prevalence","behavior",8,"kazzes",NA,"sing beautiful songs",0.95
+26,13698,"implied_prevalence","psychological",9,"zorbs",NA,"develop phobias",0.99
+26,32588,"implied_prevalence","disease_self",10,"stups",NA,"go bald",1
+26,13750,"implied_prevalence","physical",11,"mooks",NA,"live to be twenty years old",0.99
+26,10612,"implied_prevalence","physical",12,"luzaks",NA,"have very long wings",0.99
+26,9172,"implied_prevalence","behavior",13,"plovs",NA,"do handstands to scare off predators",0.99
+26,17325,"implied_prevalence","disease_self",14,"reesles",NA,"have strange genetic mutations",0.99
+26,13295,"implied_prevalence","physical",15,"ollers",NA,"have intensely beautiful feathers",0.99
+26,5623,"implied_prevalence","reproduction",16,"frams",NA,"lay eggs without needing fertilization",0.99
+26,11018,"implied_prevalence","physical",17,"grinks",NA,"live to be five hundred years old",1
+26,61439,"implied_prevalence","disease_other",18,"crullets",NA,"carry malaria",1
+26,4989,"implied_prevalence","behavior",19,"elleps",NA,"fly into building windows",1
+26,3562,"implied_prevalence","physical",20,"fendles",NA,"have spots",1
+26,5395,"implied_prevalence","disease_other",21,"blins",NA,"transmit rabies",1
+26,3523,"implied_prevalence","reproduction",22,"kweps",NA,"attract mates by secreting pheromones",1
+26,3855,"implied_prevalence","disease_self",23,"dorbs",NA,"lose their teeth",1
+26,8005,"implied_prevalence","disease_self",24,"javs",NA,"get cancer",1
+26,6279,"implied_prevalence","behavior",25,"ackles",NA,"play with bottlecaps",1
+26,8798,"implied_prevalence","diet",26,"thups",NA,"eat candy wrappers",0.99
+26,12710,"implied_prevalence","habitat",27,"sapers",NA,"live in the hulls of sea vessels",1
+26,12153,"implied_prevalence","behavior_aggressive",28,"morseths",NA,"pound their chests to display dominance",1
+26,11454,"implied_prevalence","habitat",29,"moxes",NA,"live in high-rise buildings",0.99
+26,11095,"implied_prevalence","disease_self",30,"pangolins",NA,"develop back problems",0.99
+26,10168,"implied_prevalence","disease_other",31,"krivels",NA,"carry Lyme disease",0.97
+26,5760,"implied_prevalence","behavior",32,"wugs",NA,"use tools",0.99
+26,4220,"implied_prevalence","behavior_aggressive",33,"ludinos",NA,"attack hikers",1
+26,3426,"implied_prevalence","psychological",34,"feps",NA,"know how to open doors",0.98
+26,2892,"implied_prevalence","behavior",35,"dobles",NA,"swim in shallow pools",0.99
+26,4049,"implied_prevalence","diet",36,"daiths",NA,"eat cannabis",1
+27,18715,"implied_prevalence","psychological",1,"grinks",NA,"know how to open doors",0.6
+27,16978,"implied_prevalence","behavior",2,"sapers",NA,"fly into building windows",0.4
+27,72982,"implied_prevalence","physical",3,"lorches",NA,"live to be a hundred years old",1
+27,14500,"implied_prevalence","behavior_aggressive",4,"reesles",NA,"carry out premeditated murder",1
+27,11543,"implied_prevalence","psychological",5,"plovs",NA,"are afraid of loud noises",1
+27,9152,"implied_prevalence","physical",6,"dorbs",NA,"have brown fur",1
+27,8137,"implied_prevalence","diet",7,"kazzes",NA,"eat insects",1
+27,13958,"implied_prevalence","reproduction",8,"fendles",NA,"have dozens of sexual partners",1
+27,7690,"implied_prevalence","diet",9,"elleps",NA,"eat cannabis",1
+27,12561,"implied_prevalence","disease_self",10,"ollers",NA,"lose their teeth",1
+27,5537,"implied_prevalence","disease_self",11,"daiths",NA,"get addicted to nicotine",1
+27,6435,"implied_prevalence","disease_self",12,"ackles",NA,"have strange genetic mutations",1
+27,5009,"implied_prevalence","diet",13,"crullets",NA,"cannibalize each other",1
+27,3944,"implied_prevalence","psychological",14,"kweps",NA,"know how to ride bicycles",1
+27,4841,"implied_prevalence","reproduction",15,"blins",NA,"get erections",1
+27,4777,"implied_prevalence","psychological",16,"trufts",NA,"experience emotions",1
+27,3474,"implied_prevalence","diet",17,"ludinos",NA,"eat grass",1
+27,11370,"implied_prevalence","behavior",18,"thups",NA,"play with bottlecaps",1
+27,6491,"implied_prevalence","behavior_aggressive",19,"dobles",NA,"pound their chests to display dominance",1
+27,5990,"implied_prevalence","physical",20,"cheebas",NA,"live to be twenty years old",1
+27,5417,"implied_prevalence","psychological",21,"feps",NA,"experience empathy",1
+27,12982,"implied_prevalence","behavior",22,"krivels",NA,"ride the subway",1
+27,16916,"implied_prevalence","reproduction",23,"mooks",NA,"have a menstrual cycle",1
+27,3390,"implied_prevalence","psychological",24,"javs",NA,"mourn their dead",1
+27,3895,"implied_prevalence","disease_other",25,"zorbs",NA,"carry Lyme disease",1
+27,2721,"implied_prevalence","physical",26,"dunkels",NA,"have very long wings",1
+27,5652,"implied_prevalence","behavior",27,"frams",NA,"perform in the circus",1
+27,2427,"implied_prevalence","habitat",28,"glippets",NA,"live in zoos",1
+27,3710,"implied_prevalence","diet",29,"taifels",NA,"eat garbage",1
+27,4669,"implied_prevalence","psychological",30,"zoovs",NA,"are intelligent",1
+27,4604,"implied_prevalence","physical",31,"morseths",NA,"have an exquisite sense of smell",1
+27,2420,"implied_prevalence","physical",32,"pangolins",NA,"have intensely beautiful feathers",1
+27,4343,"implied_prevalence","behavior_aggressive",33,"stups",NA,"capture other animals&quotechar territory",1
+27,3305,"implied_prevalence","psychological",34,"wugs",NA,"know when earthquakes are about to happen",1
+27,3815,"implied_prevalence","behavior",35,"moxes",NA,"use tools",1
+27,4105,"implied_prevalence","behavior_aggressive",36,"luzaks",NA,"attack hikers",1
+27,111277,"explain_responses","behavior",1,"sapers","My response should&quotecharve been 100. Initially I though there would be more variety in the answers however, the information provided didn&quotechart have any exclusions, which means that all of those animals did all of those things.","fly into building windows",0.4
+28,17545,"implied_prevalence","physical",1,"lorches",NA,"live to be a hundred years old",0.94
+28,14488,"implied_prevalence","behavior_aggressive",2,"dunkels",NA,"carry out premeditated murder",0.59
+28,9257,"implied_prevalence","psychological",3,"morseths",NA,"know how to ride bicycles",0.9
+28,9090,"implied_prevalence","behavior",4,"dorbs",NA,"perform in the circus",0.1
+28,6585,"implied_prevalence","physical",5,"moxes",NA,"have spots",0.98
+28,8601,"implied_prevalence","behavior_aggressive",6,"frams",NA,"hunt other animals",0.97
+28,5649,"implied_prevalence","behavior_aggressive",7,"ludinos",NA,"torture other animals",0.49
+28,5329,"implied_prevalence","disease_other",8,"cheebas",NA,"transmit HIV",0.19
+28,10297,"implied_prevalence","physical",9,"krivels",NA,"have intensely beautiful feathers",0.96
+28,5801,"implied_prevalence","reproduction",10,"plovs",NA,"give birth underwater",0.98
+28,5776,"implied_prevalence","disease_self",11,"crullets",NA,"have seizures",0.18
+28,4689,"implied_prevalence","diet",12,"stups",NA,"eat insects",0.97
+28,7953,"implied_prevalence","psychological",13,"grinks",NA,"know when earthquakes are about to happen",0.9
+28,6297,"implied_prevalence","reproduction",14,"thups",NA,"have dozens of sexual partners",0.99
+28,10730,"implied_prevalence","behavior_aggressive",15,"fendles",NA,"pound their chests to display dominance",0.89
+28,6049,"implied_prevalence","diet",16,"zorbs",NA,"eat garbage",0.37
+28,7497,"implied_prevalence","behavior",17,"reesles",NA,"do handstands to scare off predators",0.79
+28,5041,"implied_prevalence","psychological",18,"javs",NA,"are afraid of loud noises",0.94
+28,5681,"implied_prevalence","disease_self",19,"zoovs",NA,"lose their teeth",0.61
+28,9642,"implied_prevalence","behavior_aggressive",20,"luzaks",NA,"steal farmers&quotechar crops",0.29
+28,4799,"implied_prevalence","diet",21,"wugs",NA,"eat human food",0.28
+28,7809,"implied_prevalence","reproduction",22,"elleps",NA,"lay eggs in other birds&quotechar nests",0.18
+28,5624,"implied_prevalence","disease_self",23,"daiths",NA,"have strange genetic mutations",0.31
+28,7409,"implied_prevalence","habitat",24,"ackles",NA,"live in the hulls of sea vessels",0.58
+28,7153,"implied_prevalence","habitat",25,"glippets",NA,"live in zoos",0.1
+28,8338,"implied_prevalence","reproduction",26,"taifels",NA,"have a menstrual cycle",0.49
+28,6665,"implied_prevalence","diet",27,"pangolins",NA,"eat people",0.15
+28,6537,"implied_prevalence","disease_other",28,"trufts",NA,"transmit rabies",0.04
+28,6329,"implied_prevalence","physical",29,"feps",NA,"live to be twenty years old",0.84
+28,6216,"implied_prevalence","behavior",30,"blins",NA,"play with bottlecaps",0.07
+28,4954,"implied_prevalence","psychological",31,"sapers",NA,"experience emotions",0.98
+28,6440,"implied_prevalence","diet",32,"dobles",NA,"feed on the carcasses of dead animals",0.87
+28,4791,"implied_prevalence","psychological",33,"kweps",NA,"know how to open doors",0.22
+28,5706,"implied_prevalence","diet",34,"kazzes",NA,"drink alcohol left behind by tourists",0.04
+28,5792,"implied_prevalence","diet",35,"ollers",NA,"eat grass",0.9
+28,6505,"implied_prevalence","psychological",36,"mooks",NA,"mourn their dead",0.29
+28,36892,"explain_responses","diet",1,"zorbs","because not all 100 would have access to garbage.","eat garbage",0.37
+28,30052,"explain_responses","behavior_aggressive",2,"luzaks","Because not all would be near a farm","steal farmers&quotechar crops",0.29
+28,28274,"explain_responses","disease_other",3,"cheebas","because not all would have HIV","transmit HIV",0.19
+28,54023,"explain_responses","psychological",4,"kweps","Probably not all would have access to a door to learn how to open a door","know how to open doors",0.22
+28,58314,"explain_responses","disease_self",5,"daiths","I didn&quotechart think all would have strange genetic mutations.","have strange genetic mutations",0.31
+29,20436,"implied_prevalence","physical",1,"elleps",NA,"live to be a hundred years old",0.87
+29,10707,"implied_prevalence","psychological",2,"frams",NA,"are intelligent",0.8
+29,11378,"implied_prevalence","behavior_aggressive",3,"grinks",NA,"get in fights with other animals",0.98
+29,6431,"implied_prevalence","disease_other",4,"feps",NA,"carry malaria",0.52
+29,8864,"implied_prevalence","psychological",5,"reesles",NA,"know when earthquakes are about to happen",0.97
+29,8261,"implied_prevalence","diet",6,"dorbs",NA,"fish in the Hudson River",1
+29,11276,"implied_prevalence","disease_self",7,"glippets",NA,"go bald",0.86
+29,8543,"implied_prevalence","behavior",8,"sapers",NA,"perform in the circus",0.13
+29,9926,"implied_prevalence","disease_self",9,"mooks",NA,"get cancer",0.6
+29,4617,"implied_prevalence","behavior",10,"ackles",NA,"ride the subway",0.06
+29,4807,"implied_prevalence","psychological",11,"krivels",NA,"experience emotions",1
+29,5009,"implied_prevalence","diet",12,"kazzes",NA,"drink soda",0.12
+29,4494,"implied_prevalence","diet",13,"ollers",NA,"eat human food",0.08
+29,4778,"implied_prevalence","disease_self",14,"trufts",NA,"develop back problems",0.68
+29,5125,"implied_prevalence","disease_other",15,"daiths",NA,"transmit rabies",0.23
+29,3245,"implied_prevalence","disease_self",16,"taifels",NA,"get dandruff",0.65
+29,4456,"implied_prevalence","diet",17,"thups",NA,"cannibalize each other",0.27
+29,11475,"implied_prevalence","physical",18,"blins",NA,"have spots",0.94
+29,7632,"implied_prevalence","diet",19,"moxes",NA,"eat cannabis",0.96
+29,4354,"implied_prevalence","psychological",20,"javs",NA,"develop phobias",0.27
+29,5679,"implied_prevalence","behavior",21,"plovs",NA,"do handstands to scare off predators",0.98
+29,3904,"implied_prevalence","behavior",22,"dobles",NA,"sing beautiful songs",1
+29,8102,"implied_prevalence","physical",23,"crullets",NA,"live to be five hundred years old",0.57
+29,6581,"implied_prevalence","behavior_aggressive",24,"stups",NA,"capture other animals&quotechar territory",0.88
+29,9190,"implied_prevalence","diet",25,"pangolins",NA,"drink alcohol left behind by tourists",0.03
+29,5246,"implied_prevalence","psychological",26,"lorches",NA,"have personalities",1
+29,4115,"implied_prevalence","diet",27,"zorbs",NA,"eat insects",1
+29,5998,"implied_prevalence","physical",28,"kweps",NA,"have intensely beautiful feathers",0.97
+29,8250,"implied_prevalence","reproduction",29,"wugs",NA,"attract mates by secreting pheromones",1
+29,4817,"implied_prevalence","psychological",30,"luzaks",NA,"are afraid of loud noises",0.99
+29,6669,"implied_prevalence","diet",31,"dunkels",NA,"eat candy wrappers",0.06
+29,3534,"implied_prevalence","reproduction",32,"fendles",NA,"give birth underwater",1
+29,8342,"implied_prevalence","disease_self",33,"morseths",NA,"lose their teeth",0.96
+29,4255,"implied_prevalence","physical",34,"zoovs",NA,"live to be twenty years old",0.86
+29,9492,"implied_prevalence","reproduction",35,"cheebas",NA,"lay eggs without needing fertilization",1
+29,3945,"implied_prevalence","habitat",36,"ludinos",NA,"live in trees",0.99
+29,42771,"explain_responses","diet",1,"pangolins","Probably the vast majority would live where there are no tourists, and even where there are tourists, how many would abandon their alcohol rather than drink it themselves?","drink alcohol left behind by tourists",0.03
+29,33501,"explain_responses","behavior",2,"sapers","It&quotechars probably like elephants.  Many perform in circuses, but many more are in zoos or in the wild.","perform in the circus",0.13
+29,98961,"explain_responses","disease_other",3,"daiths","If most daiths get rabies, they&quotechard probably have died out, so it has to be a minority who have rabies.  I have no idea what percentage of any animal that can transmit rabies ever does, so just a wild stab in the dark, there.","transmit rabies",0.23
+29,49450,"explain_responses","diet",4,"kazzes","Most kazzes probably live in the wild and have no access to soda, but I think tourists are more likely to abandon soda rather than drink it themselves than would abandon alcohol, if only because soda is cheaper.","drink soda",0.12
+29,19288,"explain_responses","behavior",5,"ackles","How many ackles would have access to the subway, even if most of them are pets?","ride the subway",0.06
+30,11147,"implied_prevalence","behavior",1,"crullets",NA,"chase their tails",0.88
+30,9454,"implied_prevalence","reproduction",2,"feps",NA,"attract mates by secreting pheromones",0.99
+30,22718,"implied_prevalence","behavior",3,"fendles",NA,"ride the subway",0.5
+30,10029,"implied_prevalence","diet",4,"dobles",NA,"eat grass",1
+30,15331,"implied_prevalence","disease_other",5,"cheebas",NA,"carry Lyme disease",0.7
+30,17971,"implied_prevalence","behavior_aggressive",6,"krivels",NA,"get in fights with other animals",0.93
+30,8332,"implied_prevalence","reproduction",7,"moxes",NA,"give birth underwater",1
+30,8907,"implied_prevalence","behavior",8,"ollers",NA,"sing beautiful songs",0.95
+30,7076,"implied_prevalence","behavior",9,"daiths",NA,"sleep during the day",0.98
+30,12412,"implied_prevalence","disease_self",10,"luzaks",NA,"develop back problems",0.6
+30,11917,"implied_prevalence","behavior_aggressive",11,"zorbs",NA,"torture other animals",0.95
+30,12612,"implied_prevalence","disease_other",12,"blins",NA,"transmit HIV",0.9
+30,10475,"implied_prevalence","physical",13,"kazzes",NA,"have spots",0.98
+30,10300,"implied_prevalence","behavior_aggressive",14,"taifels",NA,"capture other animals&quotechar territory",0.9
+30,9496,"implied_prevalence","diet",15,"thups",NA,"eat human food",1
+30,13247,"implied_prevalence","diet",16,"frams",NA,"eat cannabis",1
+30,9182,"implied_prevalence","diet",17,"mooks",NA,"eat candy wrappers",0.98
+30,9351,"implied_prevalence","disease_self",18,"plovs",NA,"get addicted to nicotine",0.23
+30,17596,"implied_prevalence","habitat",19,"reesles",NA,"live in zoos",0.01
+30,15101,"implied_prevalence","behavior_aggressive",20,"morseths",NA,"pound their chests to display dominance",0.5
+30,10924,"implied_prevalence","physical",21,"ludinos",NA,"live to be twenty years old",0.67
+30,24198,"implied_prevalence","diet",22,"wugs",NA,"drink alcohol left behind by tourists",0.33
+30,6717,"implied_prevalence","habitat",23,"trufts",NA,"live in trees",1
+30,17084,"implied_prevalence","habitat",24,"sapers",NA,"live in the hulls of sea vessels",0.4
+30,13784,"implied_prevalence","physical",25,"dunkels",NA,"live to be a hundred years old",0.65
+30,11888,"implied_prevalence","reproduction",26,"javs",NA,"have dozens of sexual partners",0.98
+30,7149,"implied_prevalence","psychological",27,"elleps",NA,"are afraid of dogs",0.99
+30,9000,"implied_prevalence","behavior",28,"zoovs",NA,"swim in shallow pools",1
+30,23824,"implied_prevalence","diet",29,"pangolins",NA,"eat people",0.2
+30,7195,"implied_prevalence","physical",30,"stups",NA,"have very long wings",0.99
+30,9917,"implied_prevalence","behavior_aggressive",31,"kweps",NA,"steal farmers&quotechar crops",0.68
+30,15415,"implied_prevalence","behavior",32,"ackles",NA,"play with bottlecaps",0.31
+30,7747,"implied_prevalence","diet",33,"dorbs",NA,"eat insects",1
+30,13581,"implied_prevalence","psychological",34,"lorches",NA,"are intelligent",0.9
+30,14283,"implied_prevalence","behavior",35,"glippets",NA,"perform in the circus",0.01
+30,11997,"implied_prevalence","behavior",36,"grinks",NA,"fly into building windows",0.01
+30,70644,"explain_responses","behavior",1,"ackles","Many Ackles might not live near or have access to bottle caps.","play with bottlecaps",0.31
+30,80114,"explain_responses","behavior",2,"glippets","There are very few circuses and it is likely that only a few of the whole population perform in circuses.","perform in the circus",0.01
+30,71660,"explain_responses","diet",3,"wugs","Wugs might not live near tourists, but more might try to given the nature of alcohol.","drink alcohol left behind by tourists",0.33
+30,57505,"explain_responses","diet",4,"pangolins","Many pangolins might not live near people, and if they do, people would be wary of them.","eat people",0.2
+30,102140,"explain_responses","disease_self",5,"plovs","Many Plovs may not have access to a consistent supply of nicotine in order to become addicted.","get addicted to nicotine",0.23
+31,16330,"implied_prevalence","psychological",1,"dunkels",NA,"are afraid of loud noises",0.9
+31,12386,"implied_prevalence","physical",2,"krivels",NA,"have brown fur",0.4
+31,7002,"implied_prevalence","physical",3,"zorbs",NA,"have an exquisite sense of smell",0.95
+31,5443,"implied_prevalence","diet",4,"luzaks",NA,"eat insects",0.5
+31,9267,"implied_prevalence","behavior",5,"ackles",NA,"sing beautiful songs",0.6
+31,8231,"implied_prevalence","disease_self",6,"lorches",NA,"have strange genetic mutations",0.3
+31,5318,"implied_prevalence","psychological",7,"kazzes",NA,"are afraid of dogs",0.4
+31,7446,"implied_prevalence","disease_self",8,"pangolins",NA,"get addicted to nicotine",0.55
+31,7041,"implied_prevalence","behavior",9,"frams",NA,"play with bottlecaps",0.33
+31,7667,"implied_prevalence","physical",10,"elleps",NA,"have spots",0.25
+31,6374,"implied_prevalence","psychological",11,"feps",NA,"know how to ride bicycles",0.35
+31,10432,"implied_prevalence","physical",12,"ollers",NA,"live to be twenty years old",0.85
+31,8979,"implied_prevalence","diet",13,"plovs",NA,"fish in the Hudson River",0.35
+31,7399,"implied_prevalence","reproduction",14,"zoovs",NA,"lay eggs in other birds&quotechar nests",0.9
+31,31321,"implied_prevalence","behavior",15,"kweps",NA,"perform in the circus",0.15
+31,7710,"implied_prevalence","behavior_aggressive",16,"grinks",NA,"carry out premeditated murder",0.3
+31,7028,"implied_prevalence","psychological",17,"morseths",NA,"mourn their dead",0.75
+31,7951,"implied_prevalence","behavior",18,"crullets",NA,"sleep during the day",0.95
+31,22833,"implied_prevalence","behavior",19,"wugs",NA,"fly into building windows",0.33
+31,6245,"implied_prevalence","diet",20,"javs",NA,"eat candy wrappers",0.25
+31,32075,"implied_prevalence","behavior_aggressive",21,"blins",NA,"pound their chests to display dominance",0.5
+31,5482,"implied_prevalence","diet",22,"moxes",NA,"eat grass",0.9
+31,10373,"implied_prevalence","habitat",23,"cheebas",NA,"live in zoos",0.3
+31,6282,"implied_prevalence","disease_self",24,"ludinos",NA,"get cancer",0.2
+31,8407,"implied_prevalence","reproduction",25,"glippets",NA,"have dozens of sexual partners",0.8
+31,13170,"implied_prevalence","behavior_aggressive",26,"trufts",NA,"capture other animals&quotechar territory",0.65
+31,7552,"implied_prevalence","behavior_aggressive",27,"taifels",NA,"torture other animals",0.4
+31,6052,"implied_prevalence","behavior",28,"sapers",NA,"swim in shallow pools",0.44
+31,162216,"implied_prevalence","diet",29,"daiths",NA,"drink soda",0.17
+31,5416,"implied_prevalence","reproduction",30,"dorbs",NA,"give birth underwater",0.96
+31,9776,"implied_prevalence","diet",31,"thups",NA,"eat people",0.75
+31,7745,"implied_prevalence","behavior",32,"mooks",NA,"chase their tails",0.5
+31,12412,"implied_prevalence","physical",33,"dobles",NA,"have intensely beautiful feathers",0.65
+31,9739,"implied_prevalence","disease_other",34,"reesles",NA,"transmit HIV",0.4
+31,8681,"implied_prevalence","behavior",35,"stups",NA,"use tools",0.7
+31,12184,"implied_prevalence","disease_self",36,"fendles",NA,"go bald",0.55
+31,48784,"explain_responses","disease_self",1,"lorches","It sounded like something that would only affect a portion of the population, so I figured 1 out of 3. ","have strange genetic mutations",0.3
+31,29090,"explain_responses","disease_self",2,"ludinos","I was thinking in terms of people, there is a chance, but a small chance. ","get cancer",0.2
+31,60435,"explain_responses","behavior",3,"kweps","I would only expect a small amount actually are used for performing.","perform in the circus",0.15
+31,29813,"explain_responses","behavior_aggressive",4,"grinks","I thought this was a strange question for an animal and I really had no idea how many. ","carry out premeditated murder",0.3
+31,43905,"explain_responses","behavior",5,"frams","I was thinking young Frams probably play with bottlecaps, so I estimated a child population. ","play with bottlecaps",0.33
+32,8783,"implied_prevalence","physical",1,"ollers",NA,"live to be five hundred years old",0.72
+32,4904,"implied_prevalence","physical",2,"luzaks",NA,"live to be a hundred years old",0.38
+32,4338,"implied_prevalence","diet",3,"javs",NA,"eat candy wrappers",0.86
+32,3142,"implied_prevalence","psychological",4,"morseths",NA,"experience emotions",1
+32,5704,"implied_prevalence","disease_self",5,"thups",NA,"have strange genetic mutations",0.37
+32,4190,"implied_prevalence","psychological",6,"kazzes",NA,"know when earthquakes are about to happen",1
+32,4818,"implied_prevalence","psychological",7,"taifels",NA,"mourn their dead",0.7
+32,6138,"implied_prevalence","physical",8,"frams",NA,"have an exquisite sense of smell",0.83
+32,5912,"implied_prevalence","diet",9,"ludinos",NA,"eat cannabis",1
+32,8660,"implied_prevalence","reproduction",10,"blins",NA,"get erections",1
+32,6752,"implied_prevalence","behavior",11,"stups",NA,"like to cuddle",0.79
+32,4724,"implied_prevalence","reproduction",12,"crullets",NA,"give birth underwater",0.87
+32,3678,"implied_prevalence","disease_self",13,"reesles",NA,"get addicted to nicotine",1
+32,3408,"implied_prevalence","disease_other",14,"zoovs",NA,"carry malaria",0.24
+32,2606,"implied_prevalence","disease_self",15,"wugs",NA,"get cancer",0.32
+32,3174,"implied_prevalence","psychological",16,"dorbs",NA,"know how to open doors",0.77
+32,4137,"implied_prevalence","behavior_aggressive",17,"ackles",NA,"capture other animals&quotechar territory",0.93
+32,3979,"implied_prevalence","diet",18,"plovs",NA,"eat grass",1
+32,5432,"implied_prevalence","habitat",19,"grinks",NA,"live in the hulls of sea vessels",1
+32,3818,"implied_prevalence","disease_self",20,"pangolins",NA,"go bald",0.63
+32,3377,"implied_prevalence","psychological",21,"sapers",NA,"experience empathy",0.85
+32,2993,"implied_prevalence","disease_self",22,"trufts",NA,"lose their teeth",0.32
+32,6432,"implied_prevalence","reproduction",23,"glippets",NA,"lay eggs in other birds&quotechar nests",1
+32,3570,"implied_prevalence","behavior",24,"krivels",NA,"play with bottlecaps",0.7
+32,4656,"implied_prevalence","physical",25,"kweps",NA,"have brown fur",0.79
+32,3654,"implied_prevalence","diet",26,"daiths",NA,"eat human food",0.71
+32,3064,"implied_prevalence","habitat",27,"cheebas",NA,"live in high-rise buildings",0.79
+32,3802,"implied_prevalence","psychological",28,"elleps",NA,"develop phobias",0.86
+32,4532,"implied_prevalence","disease_other",29,"dobles",NA,"transmit rabies",0.47
+32,3446,"implied_prevalence","behavior",30,"mooks",NA,"swim in shallow pools",1
+32,3368,"implied_prevalence","behavior_aggressive",31,"dunkels",NA,"attack hikers",1
+32,4570,"implied_prevalence","behavior",32,"moxes",NA,"do handstands to scare off predators",0.58
+32,4779,"implied_prevalence","behavior",33,"fendles",NA,"sleep during the day",0.94
+32,3343,"implied_prevalence","disease_self",34,"lorches",NA,"develop back problems",0.88
+32,3088,"implied_prevalence","behavior",35,"zorbs",NA,"chase their tails",0.96
+32,2320,"implied_prevalence","habitat",36,"feps",NA,"live in zoos",0.64
+32,19861,"explain_responses","disease_self",1,"thups","because genetic mutations are not that common among any species","have strange genetic mutations",0.37
+32,17452,"explain_responses","disease_other",2,"dobles","Because while most might, a healthy Doble doesn&quotechart have rabies","transmit rabies",0.47
+32,10096,"explain_responses","disease_other",3,"zoovs","malaria is an uncommon disease","carry malaria",0.24
+32,16075,"explain_responses","disease_self",4,"trufts","because animals only lose teeth when they get older","lose their teeth",0.32
+32,9761,"explain_responses","physical",5,"luzaks","only half live to be that old","live to be a hundred years old",0.38
+33,8045,"implied_prevalence","habitat",1,"crullets",NA,"live in zoos",0.85
+33,6580,"implied_prevalence","psychological",2,"morseths",NA,"mourn their dead",0.92
+33,7944,"implied_prevalence","behavior",3,"reesles",NA,"chase their tails",0.96
+33,5407,"implied_prevalence","diet",4,"glippets",NA,"eat people",0.99
+33,11619,"implied_prevalence","behavior_aggressive",5,"taifels",NA,"torture other animals",0.94
+33,5405,"implied_prevalence","psychological",6,"dunkels",NA,"have personalities",0.97
+33,6225,"implied_prevalence","behavior",7,"ackles",NA,"perform in the circus",0.6
+33,6698,"implied_prevalence","psychological",8,"javs",NA,"know how to ride bicycles",0.87
+33,4063,"implied_prevalence","behavior",9,"cheebas",NA,"swim in shallow pools",0.95
+33,4977,"implied_prevalence","reproduction",10,"frams",NA,"lay eggs without needing fertilization",0.98
+33,4779,"implied_prevalence","behavior",11,"kweps",NA,"play with bottlecaps",0.93
+33,6041,"implied_prevalence","disease_other",12,"lorches",NA,"transmit rabies",0.79
+33,4555,"implied_prevalence","disease_other",13,"moxes",NA,"carry Lyme disease",0.8
+33,14527,"implied_prevalence","reproduction",14,"zorbs",NA,"attract mates by secreting pheromones",0.98
+33,2633,"implied_prevalence","psychological",15,"ollers",NA,"know how to open doors",0.89
+33,2712,"implied_prevalence","reproduction",16,"wugs",NA,"have a menstrual cycle",0.85
+33,3441,"implied_prevalence","physical",17,"pangolins",NA,"have spots",0.95
+33,10410,"implied_prevalence","behavior",18,"feps",NA,"ride the subway",0.85
+33,3224,"implied_prevalence","diet",19,"blins",NA,"eat garbage",0.96
+33,2844,"implied_prevalence","behavior_aggressive",20,"trufts",NA,"attack hikers",0.91
+33,4693,"implied_prevalence","behavior",21,"zoovs",NA,"sleep during the day",0.98
+33,3858,"implied_prevalence","behavior",22,"krivels",NA,"sing beautiful songs",0.97
+33,2953,"implied_prevalence","disease_self",23,"sapers",NA,"have seizures",0.9
+33,3218,"implied_prevalence","physical",24,"thups",NA,"live to be twenty years old",0.84
+33,3028,"implied_prevalence","diet",25,"plovs",NA,"fish in the Hudson River",0.88
+33,4947,"implied_prevalence","physical",26,"stups",NA,"live to be a hundred years old",0.94
+33,3556,"implied_prevalence","psychological",27,"ludinos",NA,"are intelligent",0.87
+33,4507,"implied_prevalence","diet",28,"luzaks",NA,"feed on the carcasses of dead animals",0.98
+33,7871,"implied_prevalence","disease_self",29,"daiths",NA,"get cancer",0.87
+33,4205,"implied_prevalence","habitat",30,"kazzes",NA,"live in high-rise buildings",0.74
+33,3781,"implied_prevalence","physical",31,"dorbs",NA,"have intensely beautiful feathers",0.91
+33,14033,"implied_prevalence","diet",32,"fendles",NA,"eat grass",0.96
+33,3292,"implied_prevalence","habitat",33,"grinks",NA,"live in the hulls of sea vessels",0.85
+33,4454,"implied_prevalence","reproduction",34,"mooks",NA,"get erections",0.8
+33,3376,"implied_prevalence","psychological",35,"dobles",NA,"are afraid of loud noises",0.88
+33,4114,"implied_prevalence","diet",36,"elleps",NA,"drink soda",0.77
+34,5960,"implied_prevalence","diet",1,"morseths",NA,"eat human food",0.41
+34,4359,"implied_prevalence","behavior_aggressive",2,"thups",NA,"steal farmers&quotechar crops",0.56
+34,2776,"implied_prevalence","psychological",3,"zorbs",NA,"experience emotions",0.18
+34,3872,"implied_prevalence","disease_self",4,"luzaks",NA,"go bald",0
+34,5050,"implied_prevalence","diet",5,"lorches",NA,"fish in the Hudson River",0.43
+34,14879,"implied_prevalence","diet",6,"stups",NA,"drink alcohol left behind by tourists",0.46
+34,4344,"implied_prevalence","psychological",7,"plovs",NA,"have personalities",1
+34,2920,"implied_prevalence","physical",8,"dorbs",NA,"have very long wings",0.47
+34,12961,"implied_prevalence","habitat",9,"dobles",NA,"live in high-rise buildings",0.63
+34,6952,"implied_prevalence","physical",10,"mooks",NA,"have an exquisite sense of smell",0.39
+34,2647,"implied_prevalence","psychological",11,"ackles",NA,"are afraid of loud noises",0.59
+34,4321,"implied_prevalence","behavior",12,"krivels",NA,"sing beautiful songs",0.67
+34,3671,"implied_prevalence","reproduction",13,"trufts",NA,"lay eggs in other birds&quotechar nests",0.83
+34,4376,"implied_prevalence","disease_self",14,"sapers",NA,"get addicted to nicotine",0.19
+34,3599,"implied_prevalence","psychological",15,"daiths",NA,"are intelligent",0.75
+34,5689,"implied_prevalence","diet",16,"elleps",NA,"cannibalize each other",0.22
+34,7360,"implied_prevalence","behavior_aggressive",17,"reesles",NA,"pound their chests to display dominance",0.67
+34,4256,"implied_prevalence","physical",18,"kazzes",NA,"live to be twenty years old",0.76
+34,4257,"implied_prevalence","behavior",19,"glippets",NA,"swim in shallow pools",1
+34,2759,"implied_prevalence","disease_other",20,"blins",NA,"carry malaria",0.16
+34,3521,"implied_prevalence","behavior_aggressive",21,"crullets",NA,"capture other animals&quotechar territory",0.22
+34,3776,"implied_prevalence","behavior_aggressive",22,"grinks",NA,"carry out premeditated murder",0.63
+34,2488,"implied_prevalence","behavior",23,"ollers",NA,"use tools",1
+34,3536,"implied_prevalence","behavior",24,"javs",NA,"perform in the circus",0.02
+34,4183,"implied_prevalence","psychological",25,"zoovs",NA,"mourn their dead",0.99
+34,5489,"implied_prevalence","behavior",26,"cheebas",NA,"sleep during the day",1
+34,7550,"implied_prevalence","behavior",27,"wugs",NA,"ride the subway",0.32
+34,12833,"implied_prevalence","diet",28,"pangolins",NA,"drink soda",0.23
+34,2696,"implied_prevalence","habitat",29,"kweps",NA,"live in trees",0.85
+34,3832,"implied_prevalence","behavior",30,"feps",NA,"like to cuddle",0.88
+34,3712,"implied_prevalence","diet",31,"ludinos",NA,"eat grass",0.78
+34,3823,"implied_prevalence","behavior_aggressive",32,"dunkels",NA,"attack hikers",0.1
+34,4048,"implied_prevalence","psychological",33,"fendles",NA,"know how to open doors",0.27
+34,3104,"implied_prevalence","disease_self",34,"moxes",NA,"have strange genetic mutations",0.62
+34,14344,"implied_prevalence","diet",35,"taifels",NA,"eat insects",0.56
+34,4664,"implied_prevalence","reproduction",36,"frams",NA,"give birth underwater",1
+34,52607,"explain_responses","diet",1,"stups","Well, it&quotechars possible that they do consume some alcohol left behind while not every organism of the population will have access to such alcohol","drink alcohol left behind by tourists",0.46
+34,37376,"explain_responses","behavior_aggressive",2,"crullets","It is not everyday that a given creature is able to capture another&quotechars territory. My answer is meant to reflect this.","capture other animals&quotechar territory",0.22
+34,23168,"explain_responses","behavior",3,"javs","I&quotecharve never heard of this species performing in the circus","perform in the circus",0.02
+34,36679,"explain_responses","physical",4,"mooks","Mooks might have different adaptations that enable them to have different senses of smell","have an exquisite sense of smell",0.39
+34,28562,"explain_responses","behavior_aggressive",5,"dunkels","It&quotechars unlikely that an huge population of dunkels will attack hikers by the masses.","attack hikers",0.1
+35,9720,"implied_prevalence","psychological",1,"mooks",NA,"are afraid of loud noises",0.96
+35,12745,"implied_prevalence","behavior_aggressive",2,"sapers",NA,"carry out premeditated murder",1
+35,10262,"implied_prevalence","physical",3,"plovs",NA,"live to be twenty years old",0.7
+35,8941,"implied_prevalence","diet",4,"grinks",NA,"fish in the Hudson River",0.79
+35,8889,"implied_prevalence","psychological",5,"ludinos",NA,"are intelligent",0.9
+35,9014,"implied_prevalence","psychological",6,"daiths",NA,"experience empathy",1
+35,8939,"implied_prevalence","diet",7,"javs",NA,"cannibalize each other",1
+35,7922,"implied_prevalence","habitat",8,"dunkels",NA,"live in high-rise buildings",1
+35,6066,"implied_prevalence","disease_self",9,"zorbs",NA,"have seizures",0.75
+35,5112,"implied_prevalence","psychological",10,"dorbs",NA,"know how to open doors",1
+35,5178,"implied_prevalence","behavior",11,"blins",NA,"chase their tails",1
+35,3948,"implied_prevalence","diet",12,"trufts",NA,"eat grass",1
+35,7552,"implied_prevalence","physical",13,"cheebas",NA,"live to be five hundred years old",0.9
+35,3882,"implied_prevalence","habitat",14,"ollers",NA,"live in urban areas",1
+35,8419,"implied_prevalence","diet",15,"wugs",NA,"drink alcohol left behind by tourists",0.79
+35,6246,"implied_prevalence","physical",16,"lorches",NA,"have intensely beautiful feathers",1
+35,8622,"implied_prevalence","psychological",17,"glippets",NA,"know how to ride bicycles",0.8
+35,4032,"implied_prevalence","physical",18,"frams",NA,"have brown fur",1
+35,4625,"implied_prevalence","behavior",19,"kazzes",NA,"ride the subway",0.52
+35,4091,"implied_prevalence","psychological",20,"fendles",NA,"are afraid of dogs",1
+35,4396,"implied_prevalence","behavior",21,"reesles",NA,"sing beautiful songs",1
+35,3720,"implied_prevalence","habitat",22,"dobles",NA,"live in trees",1
+35,11432,"implied_prevalence","behavior_aggressive",23,"kweps",NA,"capture other animals&quotechar territory",0.85
+35,6560,"implied_prevalence","diet",24,"krivels",NA,"feed on the carcasses of dead animals",1
+35,8458,"implied_prevalence","reproduction",25,"luzaks",NA,"have a menstrual cycle",0.5
+35,5970,"implied_prevalence","habitat",26,"zoovs",NA,"live in the hulls of sea vessels",1
+35,6627,"implied_prevalence","reproduction",27,"feps",NA,"give birth underwater",0.5
+35,33136,"implied_prevalence","disease_other",28,"stups",NA,"carry Lyme disease",1
+35,4974,"implied_prevalence","behavior",29,"moxes",NA,"swim in shallow pools",1
+35,6295,"implied_prevalence","behavior_aggressive",30,"elleps",NA,"attack hikers",0.65
+35,4187,"implied_prevalence","psychological",31,"thups",NA,"know when earthquakes are about to happen",1
+35,4759,"implied_prevalence","behavior",32,"pangolins",NA,"play with bottlecaps",0.22
+35,3409,"implied_prevalence","disease_self",33,"ackles",NA,"get cancer",1
+35,5557,"implied_prevalence","behavior_aggressive",34,"morseths",NA,"get in fights with other animals",1
+35,3786,"implied_prevalence","physical",35,"taifels",NA,"have very long wings",1
+35,7983,"implied_prevalence","diet",36,"crullets",NA,"eat people",0.05
+35,51247,"explain_responses","diet",1,"crullets","Because people will be cautious when they visit the animals environment & there won&quotechart be major incident.","eat people",0.05
+35,21072,"explain_responses","behavior",2,"pangolins","Bottlecaps are not found on a regular basis","play with bottlecaps",0.22

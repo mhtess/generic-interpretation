@@ -1,0 +1,178 @@
+---
+title: "Prior elicitation"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+library(ggpirate)
+library(knitr)
+library(viridis)
+
+readData = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
+readSubjInfo = function(proj){
+  read_csv(
+    paste("../../data/prior/",proj,"/",
+          proj,"-subject_information.csv", sep = "")
+    )
+}
+```
+
+# Prior-1
+
+## Subject information
+
+```{r}
+df.prior.1 <- readData("prior-1")
+ 
+df.prior.1.subj <- readSubjInfo("prior-1")
+df.prior.1.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+## Catch trials
+
+```{r}
+df.prior.1.catch <- readCatchInfo("prior-1")
+
+df.prior.1.catch.summary <- df.prior.1.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.prior.1.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+remove catch trial failures
+
+```{r}
+df.prior.1 <- left_join(df.prior.1, df.prior.1.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.prior.1.filtered <- df.prior.1 %>% filter(pass == 1)
+
+```
+
+
+
+## What categories do people produce?
+
+```{r}
+df.prior.categories.1 <- df.prior.1.filtered %>%
+  filter(trial_type == "category_elicitation")
+
+df.prior.categories.1 %>%
+  group_by(response) %>%
+  count() %>%
+  kable()
+```
+
+## Prevalence priors
+
+```{r}
+df.prior.prevalence.1 <- df.prior.1.filtered %>%
+  filter(trial_type == "prevalence_elicitation", !(is.na(response))) %>%
+  mutate(response = as.numeric(response))
+```
+
+
+Histogram of number of responses per item
+
+```{r}
+df.prior.prevalence.1 %>%
+  group_by(property) %>%
+  count() %>%
+  ggplot(., aes(x = n))+
+  geom_bar()
+```
+
+Distribution of all responses (collapse item)
+
+```{r}
+df.prior.prevalence.1 %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram()
+```
+
+Item distributions (prevalence priors)
+
+```{r fig.width = 18, fig.height = 8}
+df.prior.prevalence.1 %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( bins = 20)+
+  facet_wrap(~property, scales = 'free') +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+```
+
+Distribution of expected values
+
+```{r}
+df.prior.1.ev <- df.prior.prevalence.1 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.1.ev, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+```
+
+
+Distribution of expected values conditional on non-zero prevalence
+
+```{r}
+df.prior.1.conditional.ev <- df.prior.prevalence.1 %>%
+  filter(response > 0) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.1.conditional.ev, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+```
+
+
+
+
+Copy interpretation df over from `generic-interpretation-1.Rmd`
+
+```{r}
+df.prior.1.ev.wInt <- left_join(
+  df.prior.1.ev,
+  #df.prior.1.conditional.ev,
+  df.int.3.filtered.bs %>%
+    rename(int_mean = mean, int_upper = ci_upper, int_lower = ci_lower) %>%
+    select(property, int_mean, int_upper, int_lower)
+) %>%
+  mutate(sq_err = (mean - int_mean)^2)
+
+ggplot(df.prior.1.ev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
+                     y = int_mean, ymin = int_lower, ymax = int_upper))+
+  geom_point()+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  scale_x_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  coord_fixed()
+```
+
+
