@@ -1,0 +1,221 @@
+// time ~/webppl-github/webppl generics-bda-L1-hmc.wppl --require utils 1
+
+var chain = last(process.argv) // load index as last command line index
+
+// penultimate argument is the semantics
+// causal = uncertain threshold
+// some = fixed threshold at lowest threshold value
+// var targetUtterance = process.argv[process.argv.length - 2]
+
+var dataPath = "../data/",
+    priorFilePrefix = "prior-1",
+    interpretationFilePrefix = "interpretation-3"
+
+var priorFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-trials.csv",
+    priorCatchFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-catch_trials.csv",
+    interpretationFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-trials.csv",
+    interpretationCatchFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-catch_trials.csv";
+
+var d_prior = dataFrame(utils.readCSV(priorFile).data, ["workerid","response"]),
+    d_prior_catch = dataFrame(utils.readCSV(priorCatchFile).data, ["workerid",  "correct"]),
+		d_interpretation = dataFrame(utils.readCSV(interpretationFile).data, ["workerid", "response"]),
+    d_interpretation_catch=dataFrame(utils.readCSV(interpretationCatchFile).data, ["workerid", "correct"]);
+
+var priorWorkerids = levels(d_prior_catch, "workerid")
+var interpretationWorkerids = levels(d_interpretation_catch, "workerid")
+
+var priorWorkeridsPassed = filter(function(workerid){
+  sum(_.map(_.filter(d_prior_catch, {workerid: workerid}), "correct")) >= 8
+}, priorWorkerids)
+
+var interpretationWorkeridsPassed = filter(function(workerid){
+  sum(_.map(_.filter(d_prior_catch, {workerid: workerid}), "correct")) >= 8
+}, interpretationWorkerids)
+
+var data = {
+	prior: filter(function(di){
+    return (priorWorkeridsPassed.indexOf(di.workerid) > -1) && (utils.isNumber(di.response))
+  }, map(function(d){ return extend(d, {
+		avoided_endval: avoidEnds(d.response)
+  })}, d_prior)),
+	interpretation: filter(function(di){
+    return (interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && (utils.isNumber(di.response))
+  }, map(function(d){ return extend(d, {
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	})}, d_interpretation))
+};
+
+// // test that removing Ss who failed catch trial works properly
+assert.ok(levels(data.interpretation, "workerid").length == interpretationWorkeridsPassed.length)
+
+assert.ok(levels(data.prior, "workerid").length == priorWorkeridsPassed.length)
+
+
+var utterancePrior = Infer({model: function(){
+	return uniformDraw(["generic", "silence"])
+}});
+
+var meaning = function(utt,state, theta) {
+  return utt=="generic"? state > theta :
+         utt=="generic is false"? state<=theta :
+         utt=='silence'? true :
+         utt=='some'? state > 0 :
+         true
+}
+//
+var properties = levels(data.interpretation, "property");
+var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
+// properties
+
+var model = function(){
+
+  var numberOfComponents = 3;//poisson(1) + 1;
+  var speakerOptimality = uniformDrift({a: 0, b: 20, width: 0.2})
+
+  var allItemResults = map(function(item){
+
+    var propertyData = {
+        prior: _.filter(data.prior, {property: item}),
+        interpretation: _.filter(data.interpretation, {property: item})
+    };
+
+    var weights = normalize(repeat(numberOfComponents,
+      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    ))
+
+    var componentParameters = repeat(numberOfComponents,
+     function(){
+      return betaShape({
+          g: uniformDrift({a: 0, b: 1, width: 0.2}),
+          d: uniformDrift({a: 0, b: 100, width: 5})
+        })
+    })
+
+  	mapData({data: propertyData.prior}, function(d){
+      var componentLikelihoods = map2(function(w, params){
+        w * Math.exp(Beta(params).score(d.avoided_endval))
+      }, weights, componentParameters)
+      var scr = sum(componentLikelihoods)
+      scr == -Infinity ? displayObj(d) : null
+  		factor(scr)
+  	})
+
+  	var statePrior = Infer({model: function(){
+      var params = componentParameters[discrete(weights)];
+      sample(DiscretizedBeta({a:params.a.x,b:params.b.x}))
+  	}});
+
+  	/// RSA model
+  	var listener0 = cache(function(utterance, theta) {
+  	  Infer({model: function(){
+  	    var state = sample(statePrior);
+  	    var m = meaning(utterance, state, theta)
+  	    condition(m)
+  	    return state
+  	 }})}, 10000)
+
+     var speaker1 = cache(function(state, theta) {
+      Infer({model: function(){
+        var utterance = sample(utterancePrior);
+        var L0 = listener0(utterance, theta);
+        factor(speakerOptimality * L0.score(state))
+        return utterance
+      }})}, 10000)
+
+    var listener1 = cache(function(utterance) {
+      Infer({model: function(){
+        var state = sample(statePrior);
+        var theta = sample(thetaPrior);
+        var S1 = speaker1(state, theta)
+        observe(S1, utterance)
+        return state
+      }})}, 10000)
+
+    var interpretationPrediction = listener1("generic")
+
+   mapData({data:propertyData.interpretation}, function(d){
+     // display(d)
+     var scr = interpretationPrediction.score(d.binnedResponse)
+     scr == -Infinity ? displayObj(d) : null
+     // display(scr)
+     observe(interpretationPrediction, d.binnedResponse)
+   })
+
+    return [
+      map(function(component){
+        return [
+          {
+            property: item,
+            component: component,
+            parameter: "weight",
+            value: weights[component]
+          },
+          {
+            property: item,
+            component: component,
+            parameter: "alpha",
+            value: componentParameters[component]["a"]
+          },
+          {
+            property: item,
+            component: component,
+            parameter: "beta",
+            value: componentParameters[component]["b"]
+          }
+        ]
+      }, _.range(numberOfComponents)),
+      {
+        property: item,
+        component: "NA",
+        parameter: "prior",
+        value: expectation(statePrior)
+      },
+      {
+        property: item,
+        component: "NA",
+        parameter: "posterior",
+        value: expectation(interpretationPrediction)
+      }
+    ]
+
+ }, properties)
+
+
+ return _.flattenDeep([
+   {
+     property: "global",
+     component: "NA",
+     parameter: "speakerOptimality",
+     val: speakerOptimality
+   },
+   allItemResults])
+
+}
+
+
+var all_stepSizes = [
+  0.001, 0.0005, 0.0001, 0.00005
+]
+
+var all_steps = [
+  1, 2, 5, 10, 15
+]
+
+var steps = all_steps[2], stepSize = all_stepSizes[2];
+var samples = 12
+var burn = samples / 2;
+
+var outfile = 'pilot-results-genint-L1-3Components_hmc'+ samples+'_burn'+burn+'_chain'+chain+'.csv'
+
+var posterior = Infer({
+  method: 'MCMC',
+  samples, burn,
+  kernel: {HMC: {steps, stepSize}},
+  model, verbose: true
+})
+
+// posterior
+
+utils.writeLstOfObjectSupport(posterior, outfile, ["property","component","parameter","val"])
+
+outfile + " written";

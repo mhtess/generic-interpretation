@@ -54,8 +54,8 @@ df.prior.filtered <- df.prior %>%
 
 ```
 
-
 Interpretation (posterior) data
+
 ```{r}
 df.int.catch <- readCatchInfo("interpretation/", interpretationDataLabel)
 
@@ -82,6 +82,10 @@ df.int.filtered <- df.int %>% filter(pass == 1) %>%
 
 ## RSA/BDA Model
 
+### RWebPPL model (not working)
+
+rwebppl doesn't like returning supports with variable elements (this is because I'm inferring the number of components)
+
 ```{r}
 rsa.bda.model <- '
 var priorData = map(avoidEnds, data.prior)
@@ -90,8 +94,8 @@ var interpretationData = map(
   data.interpretation
 )
 
-display(priorData)
-display(interpretationData)
+// display(priorData)
+// display(interpretationData)
 var meaning = function(utt,state, theta) {
   return utt=="generic"? state > theta :
          true
@@ -99,7 +103,7 @@ var meaning = function(utt,state, theta) {
 
 var model = function(){
 
-  var numberOfComponents = poisson(1) + 1;
+  var numberOfComponents = 3// poisson(1) + 1;
 
   var weights = normalize(repeat(numberOfComponents,
     function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
@@ -146,32 +150,40 @@ var model = function(){
    })
 
    // RECORD PARAMETERS AND PREDICTIVES
-   query.add(["numberOfComponents", -99, -99, -99], numberOfComponents)
+   // query.add(["numberOfComponents", -99, -99, -99], numberOfComponents)
 
-   foreach(_.range(numberOfComponents), function(i){
+   // foreach(_.range(numberOfComponents), function(i){
+  //    query.add(["componentParameters", i, weights[i], componentParameters[i]["a"]], componentParameters[i]["b"]
+     //)
+   // })
 
-     query.add(["componentParameters", i, weights[i], componentParameters[i]["a"]],
-       componentParameters[i]["b"]
-     )
+  // query.add(["prediction", -99, -99, expectation(statePrior)], expectation(interpretationPrediction))
 
-   })
+   var componentParams_obj = _.fromPairs(_.flatten(map(function(i){
+   return [
+      ["weight_"+ i, weights[i]],
+      ["a_"+ i, componentParameters[i]["a"]],
+      ["b_"+ i, componentParameters[i]["b"]]
+    ]
+   },_.range(numberOfComponents))))
+  
+  return extend({
+    priorMean: expectation(statePrior), 
+    posteriorMean: expectation(interpretationPrediction),
+  }, componentParams_obj)
 
-  query.add(["prediction", -99, -99, expectation(statePrior)], expectation(interpretationPrediction))
-
-	return query
 }
 '
 ```
 
-
-
-
 ```{r}
 all.properties <- unique(df.int.filtered$property)
-n_samples <- 100
+n_samples <- 5000
 n_burn <- n_samples / 2
+wp.rs.predictives <- data.frame()
+wp.rs.prior.parameters <- data.frame()
 
-for (p in all.properties[1:2]){
+for (p in all.properties[1:10]){
   
   priorData <- filter(df.prior.filtered, property == p)$response
   interpretationData <- filter(df.int.filtered, property == p)$response
@@ -186,15 +198,203 @@ for (p in all.properties[1:2]){
                                       samples = n_samples,
                                       burn = n_burn,
                                       verbose = TRUE))
+  
+
+  wp.rs.predictives <- bind_rows(
+    wp.rs.predictives,
+    wp.rs %>% filter(Parameter %in% c("priorMean", "posteriorMean"))  %>%
+      mutate(property = p)
+  )
+  
+  wp.rs.prior.parameters <- bind_rows(
+    wp.rs.prior.parameters,
+    wp.rs %>% filter(!(Parameter %in% c("priorMean", "posteriorMean"))) %>%
+      #separate(Parameter, sep = "_", into = c("parameter", "component")) %>%
+      mutate(property = p) 
+  )
+
   print(p)
 }
+```
+
+#### Forward sample prevalence priors
+
+```{r}
+wp.rs.prior.parameters <- wp.rs.prior.parameters %>% 
+  spread(Parameter, value) %>%
+  rowwise() %>%
+  mutate(component = LaplacesDemon::rcat(1, c(`weight_0`, `weight_1`, `weight_2`)) - 1,
+         shape1_param = ifelse(component == 0, a_0, ifelse(component == 1, a_1, a_2)),
+         shape2_param = ifelse(component == 0, b_0, ifelse(component == 1, b_1, b_2)),
+         prev = rbeta(shape1 = shape1_param, shape2 = shape2_param, n = 1))
+```
 
 
+##### Marginal distributions on prevalence
+
+```{r gen-prevprior-marginals, fig.width = 8, fig.height = 5}
+md.prevpriors <- bind_rows(
+  df.prior.filtered %>% 
+    filter(property %in% levels(factor(wp.rs.prior.parameters$property))) %>%
+    select(property, response) %>%
+    rename(prev = response) %>% 
+    mutate(src = 'data'),
+  wp.rs.prior.parameters %>% 
+    select(property, prev) %>%
+    mutate(src = 'model') 
+  )
+
+
+ggplot(md.prevpriors , aes( x = prev, color = src))+
+  geom_density(size = 1, aes( y = ..scaled.. ), adjust = 0.5)+
+  facet_wrap( ~ property)+
+  scale_color_solarized()+
+  scale_x_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  theme(strip.text.y = element_text(angle = 0))
+```
+
+
+##### Cumulative Density Functions
+
+
+```{r gen-prevprior-cdf, fig.width = 8, fig.height = 5}
+ggplot(md.prevpriors, aes( x = prev, color = src))+
+    stat_ecdf()+
+    facet_wrap(~property, nrow = 3)+
+    scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+```
+
+
+
+### Implied prevalence
+
+```{r}
+
+md.impprev <- left_join(
+  wp.rs.predictives %>%
+    group_by(property, Parameter) %>%
+    summarize(model_MAP = estimate_mode(value),
+            model_upper = hdi_upper(value),
+            model_lower = hdi_lower(value)),
+  df.int.filtered %>%
+    filter(property %in% levels(factor(wp.rs.predictives$property))) %>%
+    group_by(property) %>%
+    tidyboot::tidyboot_mean(column = response)
+)
 
 ```
 
 ```{r}
-wp.rs %>%
-  separate(Parameter, sep = ",", into = c('a','b','c', 'd'))
+ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  facet_wrap(~Parameter)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()
 ```
+
+
+
+## Load model results
+
+```{r}
+model.path <- "../models/results/"
+model.prefix <- "pilot-results-genint-L0-inferNComponents_"
+n_samples <- 100
+n_burn <- n_samples / 2
+lg <- 2
+chain <- 1
+
+model.files <- list.files(
+  path = model.path, 
+  pattern = paste(model.prefix, n_samples, "_burn", n_burn, 
+                  "_lag", lg, "_chain", chain, sep = "")
+  )
+m.samp <- data.frame()
+for (modfile in model.files){
+  m.item <- read_csv(paste(model.path , modfile, sep = ""))
+  
+  m.samp <- bind_rows(
+    m.samp,
+    rwebppl::get_samples(m.item, n_samples)
+  )
+    
+}
+```
+
+
+### Prevalence prior parameters
+
+#### Number of components
+
+```{r}
+m.samp %>%
+  filter(parameter == "numberOfComponents") %>%
+  group_by(property, val) %>%
+  count()
+```
+
+#### Forward sample prevalence priors
+
+Add iteration number back in.
+
+```{r}
+m.samp.iter <- m.samp %>%
+  filter(parameter %in% c("componentParameters", "numberOfComponents")) %>%
+  mutate(parameter = paste(parameter, property, componentID, componentParam, sep = "_")) %>%
+  select(-property, -componentID, -componentParam) %>%
+  group_by(parameter) %>%
+  mutate(iteration = ave(parameter==parameter, parameter, FUN=cumsum)) %>%
+  ungroup() %>%
+  separate(parameter, into = c("parameter", "property", "componentID", "componentParam"), sep= "_")
+```
+
+
+
+```{r}
+m.samp.iter.weight <- m.samp.iter %>%
+  filter((componentParam == "weight") | (parameter == "numberOfComponents")) %>%
+  mutate(componentID = paste("component", componentID, sep = "")) %>%
+  spread(componentID, val)
+
+m.samp.iter.param <- m.samp.iter %>%
+  filter(componentParam %in% c("alpha", "beta")) %>%
+  spread(componentParam, val)
+
+# for (p in levels(factor(m.samp.iter$property))){
+#   for (i in seq(1, n_samples){
+#     
+#   }
+# }
+# 
+# m.samp.iter.weight.i <- m.samp.iter.weight %>% 
+  filter(iteration == 10, property == 'develop phobias')
+
+indices <- paste("component", 
+                 seq(0, 
+                     filter(m.samp.iter.weight.i, 
+                            parameter == 'numberOfComponents')[[1, "component-99"]]), 
+                 sep ="")
+
+ps <- as.numeric(as.vector(
+  filter(m.samp.iter.weight.i, 
+         componentParam == 'weight')[1,indices]
+  ))
+
+componentId <- LaplacesDemon::rcat(1, ps)
+
+m.samp.iter.param %>%
+  filter(property == p, iteration == i, componentID == componentId) %>%
+  mutate(prev = rbeta(shape1 = alpha, shape2 = beta, n = 1))
+
+```
+
+
+
 

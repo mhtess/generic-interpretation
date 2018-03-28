@@ -2,10 +2,10 @@
 
 var chain = last(process.argv) // load index as last command line index
 
-// // penultimate argument is the semantics
-// // causal = uncertain threshold
-// // some = fixed threshold at lowest threshold value
-// var targetUtterance = process.argv[process.argv.length - 2]
+// penultimate argument is the semantics
+// causal = uncertain threshold
+// some = fixed threshold at lowest threshold value
+var targetUtterance = process.argv[process.argv.length - 2]
 
 var dataPath = "../data/",
     priorFilePrefix = "prior-1",
@@ -41,7 +41,7 @@ var data = {
 	interpretation: filter(function(di){
     return interpretationWorkeridsPassed.indexOf(di.workerid) > -1
   }, map(function(d){ return extend(d, {
-		binnedResponse:  utils.closest( midBins, d.response)
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
 	})}, d_interpretation))
 };
 
@@ -67,9 +67,9 @@ var properties = levels(data.interpretation, "property");
 var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
 // properties
 
-var model = function(priorData, interpretationData){
+var model = function(priorData, interpretationData, item){
 
-  var numberOfComponents = poisson(1) + 1;
+  var numberOfComponents = 3;//poisson(1) + 1;
 
   var weights = normalize(repeat(numberOfComponents,
     function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
@@ -117,54 +117,69 @@ var model = function(priorData, interpretationData){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   query.add(["numberOfComponents", -99, -99, -99], numberOfComponents)
+   query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
 
    foreach(_.range(numberOfComponents), function(i){
 
-     query.add(["componentParameters", i, weights[i], componentParameters[i]["a"]],
+     query.add(["componentParameters", item, i, "weight"],
+       weights[i]
+     )
+     query.add(["componentParameters", item, i, "alpha"],
+       componentParameters[i]["a"]
+     )
+
+     query.add(["componentParameters", item, i, "beta"],
        componentParameters[i]["b"]
      )
 
    })
 
   // query.add("prediction", [-99, -99, expectation(statePrior), expectation(interpretationPrediction)])
-  query.add(["prediction", -99, -99, expectation(statePrior)], expectation(interpretationPrediction))
+  query.add(["prediction", item, -99, "prior"], expectation(interpretationPrediction))
+  query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
 
 	return query
 }
 
-// model()
-var propertyData = {
-    prior: _.filter(data.prior, {property: properties[0]}),
-    interpretation: _.filter(data.interpretation, {property: properties[0]})
-};
+var totalIterations = 100, lag = 2;
+var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var samples = 100;
-var burn = samples / 2;
-
-Infer({
-  model: function(){
-    model(propertyData.prior, propertyData.interpretation)
-  },
-  method: "MCMC", samples, burn, verbose: true
-})
-
-// var totalIterations = 5000, lag = 5;
-// var mhiter = totalIterations/lag, burn = totalIterations / 2;
-// var outfile = 'pilot-results-causals-jointModel-S1-smntcs_'+
-// targetUtterance + '-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
-
+// var item = properties[0]
+//
+// var outfile = 'pilot-results-genint-L0-inferNComponents_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'_' + item.split(' ').join('_') +'.csv'
+//
+// var propertyData = {
+//     prior: _.filter(data.prior, {property: item}),
+//     interpretation: _.filter(data.interpretation, {property: item})
+// };
+//
 // var posterior = Infer({
-//   model: model,
-//   method: "incrementalMH",
-//   samples: mhiter, burn: burn, lag: lag,
-//   verbose: T, verboseLag: totalIterations / 20,
-// 	stream: {
-// 		path: "results/" + outfile,
-// 		header: [
-// 			"type", "item", "dist", "roundedFreq", "frequency", "val"
-// 		]
-// 	}
+//   model: function(){
+//     model(propertyData.prior, propertyData.interpretation, item)
+//   },
+//   method: "MCMC", samples, burn, verbose: true
 // })
+//
+// display("wrote " + outfile)
 
-// "written to " + outfile;
+foreach(properties.slice(0, 3), function(item){
+
+  var outfile = 'pilot-results-genint-L0- 3Components_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'_' + item.split(' ').join('_') +'.csv'
+
+  var propertyData = {
+      prior: _.filter(data.prior, {property: item}),
+      interpretation: _.filter(data.interpretation, {property: item})
+  };
+
+  var posterior = Infer({
+    model: function(){
+      model(propertyData.prior, propertyData.interpretation, item)
+    },
+    method: "MCMC", samples, burn, verbose: true
+  })
+
+  utils.writeQueryERP(posterior, "results/" + outfile,
+  ["parameter","property","componentID","componentParam","val"])
+
+  display("wrote " + outfile)
+})
