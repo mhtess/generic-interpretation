@@ -1,4 +1,4 @@
-// time ~/webppl-github/webppl generics-bda-L1-hmc.wppl --require utils 1
+// time ~/webppl-fork/webppl generics-bda-L1.wppl --require utils 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -45,6 +45,7 @@ var data = {
 	})}, d_interpretation))
 };
 
+
 // // test that removing Ss who failed catch trial works properly
 assert.ok(levels(data.interpretation, "workerid").length == interpretationWorkeridsPassed.length)
 
@@ -70,10 +71,9 @@ var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
 var model = function(){
 
   var numberOfComponents = 3;//poisson(1) + 1;
-  var speakerOptimality = uniformDrift({a: 0, b: 20, width: 0.2})
 
-  var allItemResults = map(function(item){
-
+  foreach(properties, function(item){
+    // display(item)
     var propertyData = {
         prior: _.filter(data.prior, {property: item}),
         interpretation: _.filter(data.interpretation, {property: item})
@@ -92,46 +92,44 @@ var model = function(){
     })
 
   	mapData({data: propertyData.prior}, function(d){
-      var componentLikelihoods = map2(function(w, params){
-        w * Math.exp(Beta(params).score(d.avoided_endval))
+      var componentLogLikelihood = map2(function(w, params){
+        Math.log(w) + Beta(params).score(d.avoided_endval)
       }, weights, componentParameters)
-      var scr = sum(componentLikelihoods)
+      var scr = util.logsumexp(componentLogLikelihood)
       scr == -Infinity ? displayObj(d) : null
   		factor(scr)
   	})
 
+    foreach(_.range(numberOfComponents), function(i){
+
+      query.add(["componentParameters", item, i, "weight"],
+        weights[i]
+      )
+      query.add(["componentParameters", item, i, "alpha"],
+        componentParameters[i]["a"]
+      )
+
+      query.add(["componentParameters", item, i, "beta"],
+        componentParameters[i]["b"]
+      )
+
+    })
+
   	var statePrior = Infer({model: function(){
-      var params = componentParameters[discrete(weights)];
-      sample(DiscretizedBeta({a:params.a.x,b:params.b.x}))
+      sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
 
   	/// RSA model
-  	var listener0 = cache(function(utterance, theta) {
+  	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
   	    var state = sample(statePrior);
+        var theta = sample(thetaPrior);
   	    var m = meaning(utterance, state, theta)
   	    condition(m)
   	    return state
   	 }})}, 10000)
 
-     var speaker1 = cache(function(state, theta) {
-      Infer({model: function(){
-        var utterance = sample(utterancePrior);
-        var L0 = listener0(utterance, theta);
-        factor(speakerOptimality * L0.score(state))
-        return utterance
-      }})}, 10000)
-
-    var listener1 = cache(function(utterance) {
-      Infer({model: function(){
-        var state = sample(statePrior);
-        var theta = sample(thetaPrior);
-        var S1 = speaker1(state, theta)
-        observe(S1, utterance)
-        return state
-      }})}, 10000)
-
-    var interpretationPrediction = listener1("generic")
+    var interpretationPrediction = listener0("generic")
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -141,85 +139,32 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-    return [
-      map(function(component){
-        return [
-          {
-            property: item,
-            component: component,
-            parameter: "weight",
-            value: weights[component]
-          },
-          {
-            property: item,
-            component: component,
-            parameter: "alpha",
-            value: componentParameters[component]["a"]
-          },
-          {
-            property: item,
-            component: component,
-            parameter: "beta",
-            value: componentParameters[component]["b"]
-          }
-        ]
-      }, _.range(numberOfComponents)),
-      {
-        property: item,
-        component: "NA",
-        parameter: "prior",
-        value: expectation(statePrior)
-      },
-      {
-        property: item,
-        component: "NA",
-        parameter: "posterior",
-        value: expectation(interpretationPrediction)
-      }
-    ]
+   query.add(["prediction", item, -99, "prior"], expectation(statePrior))
+   query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+ })
 
- }, properties)
+   // RECORD PARAMETERS AND PREDICTIVES
+   // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
+   // query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
 
-
- return _.flattenDeep([
-   {
-     property: "global",
-     component: "NA",
-     parameter: "speakerOptimality",
-     val: speakerOptimality
-   },
-   allItemResults])
-
+	return query
 }
 
+var totalIterations = 250000, lag = 75;
+var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var all_stepSizes = [
-  0.001, 0.0005, 0.0001, 0.00005
-]
-
-var all_steps = [
-  1, 2, 5, 10
-]
-
-var stepSize = all_stepSizes[chain % all_stepSizes.length];
-var steps = all_steps[chain % all_steps.length];
-display("<---- chain = " + chain)
-display("stepSize = " + stepSize)
-display("steps = " + steps)
-
-var steps = all_steps[2], stepSize = all_stepSizes[2];
-var samples = 1000;
-var burn = samples / 2;
-
-var outfile = 'pilot-results-genint-L1-3Components_hmc'+ samples+'_burn'+burn+'_chain'+chain+'.csv'
+var outfile = 'pilot-results-genint-L0-3Components_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
-  method: 'MCMC',
-  samples, burn,
-  kernel: {HMC: {steps, stepSize}},
-  model, verbose: true
+  model: model,
+	method: "incrementalMH",
+  samples: samples, burn: burn, //lag: lag,
+  verbose: T,
+  verboseLag: totalIterations / 20,
+	stream: {
+		path: "results/" + outfile,
+		header: ["type", "param", "property", "category", "val"]
+	}
 })
 
-utils.writeLstOfObjectSupport(posterior, outfile, ["property","component","parameter","val"])
-
-outfile + " written";
+"written to " + outfile;

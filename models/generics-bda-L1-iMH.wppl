@@ -8,8 +8,8 @@ var chain = last(process.argv) // load index as last command line index
 // var targetUtterance = process.argv[process.argv.length - 2]
 
 var dataPath = "../data/",
-    priorFilePrefix = "prior-1",
-    interpretationFilePrefix = "interpretation-3"
+    priorFilePrefix = "prior-2",
+    interpretationFilePrefix = "interpretation-4"
 
 var priorFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-trials.csv",
     priorCatchFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-catch_trials.csv",
@@ -44,7 +44,6 @@ var data = {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
 	})}, d_interpretation))
 };
-
 
 // // test that removing Ss who failed catch trial works properly
 assert.ok(levels(data.interpretation, "workerid").length == interpretationWorkeridsPassed.length)
@@ -168,7 +167,7 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 10000, lag = 1;
+var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 var outfile = 'pilot-results-genint-L1-3Components_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
