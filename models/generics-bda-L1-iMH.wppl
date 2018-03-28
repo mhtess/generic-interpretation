@@ -1,4 +1,4 @@
-// time ~/webppl-fork/webppl generics-bda-L1.wppl --require utils 1
+// time ~/webppl-fork/webppl generics-bda-L1-iMH.wppl --require utils uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -6,6 +6,7 @@ var chain = last(process.argv) // load index as last command line index
 // causal = uncertain threshold
 // some = fixed threshold at lowest threshold value
 // var targetUtterance = process.argv[process.argv.length - 2]
+var semantics = process.argv[process.argv.length - 2]
 
 var dataPath = "../data/",
     priorFilePrefix = "prior-2",
@@ -139,7 +140,7 @@ var model = function(){
     var listener1 = cache(function(utterance) {
       Infer({model: function(){
         var state = sample(statePrior);
-        var theta = sample(thetaPrior);
+        var theta = (semantics == "uncertain") ? sample(thetaPrior) : _.min(thetaBins);
         var S1 = speaker1(state, theta)
         observe(S1, utterance)
         return state
@@ -170,7 +171,7 @@ var model = function(){
 var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'pilot-results-genint-L1-3Components_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'pilot-results-genint-L1-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,
