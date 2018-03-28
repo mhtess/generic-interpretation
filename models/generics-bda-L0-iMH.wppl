@@ -158,7 +158,7 @@ var outfile = 'pilot-results-genint-L0-3Components_'+semantics+'-semantics_'+ to
 var posterior = Infer({
   model: model,
 	method: "incrementalMH",
-  samples: samples, burn: burn, //lag: lag,
+  samples: samples, burn: burn, lag: lag,
   verbose: T,
   verboseLag: totalIterations / 20,
 	stream: {
