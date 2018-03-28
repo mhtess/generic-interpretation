@@ -39,11 +39,11 @@ wordcount         : "X"
 
 bibliography      : ["generics.bib"]
 
-figsintext        : no
+figsintext        : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-lineno            : yes
+lineno            : no
 mask              : no
 
 class             : "man"
@@ -225,20 +225,6 @@ Participants completed a practice trial using the property *are female* to make 
 For example, it is very likely that there is a fep that is female because almost all animals have female members (high potential to be present).
 Additionally, when present, the property is only expected in about 50\% of the category.
 
-<!-- potential of the property to be present in a kind and  -->
-
-<!-- In order to integrate the results of this prior measurement task into our model of endorsement, we must accurately model the prior elicitation data. -->
-<!-- We approximate the prevalence distribution for each property (e.g., \textsc{lay eggs}) with a Mixture of Betas model, which assumes that the data generated for each kind comes from one of two underlying Beta distributions. -->
-<!-- ] -->
-<!-- The *Mixture of Betas* distribution has a third free parameter (for each property), the relative contribution of the "null distribution" (for example: we expect the "null distribution" to not contribute at all to properties like *being female*, for which almost all categories have at least some members with the property). -->
-<!-- To ensure the *Mixture of Betas* model of the prior is not overly complex, we fit an additional model that represents only a single underlying distribution (*Single Beta*) for a comparison. -->
-<!-- <!-- is flexible and can represent different shapes for different properties (e.g., the differences in prevalence judgments for \textsc{lay eggs} vs. \text{has wings}). --> -->
-<!-- For more details about model implementation and inference, see Appendix C.  -->
-
-
-<!-- %responded using slider bars for each question. -->
-<!-- % -->
-<!-- %$P(x)$ was measured empirically ($n=40$, {\it Experiment 2a}), and the most likely priors were inferred using the same structured, statistical approach used for the familiar generics experiment. -->
 
 ### Data analysis and results
 
@@ -261,10 +247,10 @@ We assume that kinds for which the property is absent have prevalence levels sam
 With that assumption, the prevalence distribution is given by:
 
 \begin{align}
-\phi & \sim \text{Beta}(\gamma_{1}, \xi_{1}) \nonumber \\ 
+\phi & \sim \text{Beta}(\gamma_1, \xi_1) \nonumber \\ 
 p & \sim \begin{cases}
-		\text{Beta}(\gamma_{2}, \xi_{2}) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{T} \label{eq:priorModel}  \\
-		\text{Beta}(\gamma = 0.01; \xi = 100)} &\mbox{if } \text{Bernoulli}(\phi) = \textsc{F} \\
+		\text{Beta}(\gamma_2, \xi_2) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{T} \label{eq:priorModel}  \\
+		\text{Beta}(\gamma = 0.01; \xi = 100) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{F} \\
 		\end{cases}
 \end{align}
 
@@ -365,7 +351,7 @@ Consisntent with this qualitative prediction, a mixed-effects linear model with 
 We recruited 180 participants from MTurk.
 This number was arrived at with the intention of getting approximately 40 independent sets of ratings for each unique item in the experiment.
 Participants were restricted to those with U.S. IP addresses and with at least a 95\% MTurk work approval rating (these same criteria apply to all experiments reported).
-The experiment took on average `r round(d.prior.time.summary[[1, "aveTime"]], 1)` minutes and participants were compensated \$K.
+The experiment took on average X minutes and participants were compensated \$K.
 
 #### Materials
 
@@ -401,7 +387,7 @@ As intended, items covered a wide range of probabilities and expected values (se
 
 We recruited N participants from MTurk. 
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
-The experiment took on average `r round(d.int.time.summary[[1, "aveTime"]], 1)` minutes and participants were compensated \$K.
+The experiment took on average X minutes and participants were compensated \$K.
 
 #### Procedure and materials
 
@@ -430,7 +416,7 @@ We do this by manipulating the prevalence prior and measuring the resulting infl
 
 We recruited N participants from MTurk. 
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
-The experiment took on average `r round(d.int.time.summary[[1, "aveTime"]], 1)` minutes and participants were compensated \$K.
+The experiment took on average X minutes and participants were compensated \$K.
 
 ### Materials
 
