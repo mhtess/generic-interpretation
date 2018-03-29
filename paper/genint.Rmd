@@ -62,6 +62,10 @@ output            : papaja::apa6_pdf
 
 ```{r load_packages, include = FALSE}
 library("papaja")
+library(tidyverse)
+library(cowplot)
+library(ggthemes)
+theme_set(theme_few())
 ```
 
 ```{r analysis_preferences}
@@ -78,7 +82,7 @@ Language is uniquely powerful in its ability to convey information that is abstr
 
 The premier example of language's ability to transmit abstract knowledge comes in the form of statements that convey generalizations, otherwise known as *generic language* [e.g., "Birds fly"; @Carlson1977]. 
 One of the most important roles for generic language is to provide learners with information about new or poorly understood categories.
-As such, generics are ubiquitous in everyday conversation and child-directed speech [@Gelman1998; @Gelman2008; @GelmanEtAl2004], and learning from generics is believed to be central to conceptual development [@Gelman2004; @Cimpian2009].
+As such, generics are ubiquitous in everyday conversation and child-directed speech [@Gelman1998; @Gelman2008; @GelmanEtAl2004], and learning from generics is thought to be central to conceptual development [@Gelman2004; @Cimpian2009:explanations].
 Understanding how beliefs are updated from generic language is thus a central question in cognitive science.
 
 <!-- But unlike statements about concrete events or exemplars  (e.g., "This bird flys"), generics convey information that is not directly observable and, in fact, resilient to counterexamples (e.g., penguins do not fly). -->
@@ -95,7 +99,7 @@ Do all generics carry strong implications?
 He points to examples such as: "Birds lay eggs. Mammals also lay eggs.", where the second sentence can be interpreted as true because of the existence of platypuses and echidnas, both of which reproduce by laying eggs.
 Empirically, @Cimpian2010 (Expt. 3) found somewhat weaker interpretations for features that could be construed as accidental [e.g., "Crullets have fungus-covered claws"; see also @Khemlani2009; @Khemlani2012 for evidence for weak inferences from generics].
 Such context-sensitive interpretations have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how generics update beliefs.
-In addition, in these previous studies, the actual implied prevalence from "weak" generics is still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can actually have weak interpretations (e.g. $< 50\%$).
+In addition, in these previous studies, the actual implied prevalence from "weak" generics is still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can actually have weak interpretations (e.g., $< 50\%$).
 
 <!-- Interpreting a generic as *most* can also be too weak: "Triangles have three sides" is a statement about *all triangles*; if a shape does not have three sides, it is not a triangle.  -->
 <!-- Indeed, the differences between quantified statements and generic statements are appreciated by children as young as three years [@Gelman2015genericsQuantifiers]. -->
@@ -112,10 +116,10 @@ This paper tests the predictions of this model.
 The paper is organized as follows.
 First, we review @TesslerLangGenUnderReview's computational model of generic interpretation. 
 In Expt. 1, we replicate and extend the findings of @Cimpian2010 that biological and accidental properties receive differential interpretations. 
-In Expt. 2, we extend these findings using a larger and more diverse stimulus set better able to test the quantitative predictions of our model.
+In Expt. 2, we extend these findings using a larger and more diverse stimulus set better able to test the quantitative predictions of our model and explore the existence of "weak generics".
 In Expt. 3, we experimentally manipulate the background knowledge (the prevalence prior) and test its effect on interpretations of novel generics.
-In each experiment, we compare our model's predictions to alternative models, finding that our quantitative model is better able to acconut for context-sensitive generic interpretations. 
-Together, these results provide strong evidence for an quantitative account of generic language.
+In each experiment, we compare our model's predictions to alternative models, finding that our quantitative model is best able to account for context-sensitive generic interpretations. 
+Together, these results provide strong evidence for an quantitative understanding of generic language.
 
 <!-- First, we test whether or not weak interpretations of generics are possible by testing interpretations of generics about a wide range of properties (Expt. 1a).  -->
 <!-- Then, we measure interlocutors' prior beliefs about the prevalence of the property (Expt. 1b) using the prior elicitation paradigm in @TesslerGenerics.  -->
@@ -139,8 +143,8 @@ Together, these results provide strong evidence for an quantitative account of g
 # Computational model
 
 Generic language conveys generalizations about categories [@Carlson1977; @Leslie2008].
-Given that probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], it makes sense that probability would be at the core meaning of generalizations from language. 
-@TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics is simple but underspecified or vague. 
+Probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], and so it makes sense that probability would be at the core of the meaning of generalizations from language. 
+@TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics has to do with probability but in an underspecified or vague way.
 
 Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $p$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{p > \theta\}$.
 The literal meaning of quantifiers can also be described by a threshold-function (e.g., $\denote{some} = \{p > 0\}$, $\denote{most} = \{p > 0.5\}$, $\denote{all} = \{p = 1\}$).
@@ -151,12 +155,13 @@ To interpret a generic sentence, a listener draws upon abstract knowledge about 
   Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively shallow formalization of theory-based expectations. 
   That is, different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
   The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
-].
+]
 Thus the quantitative model for generic interpretation is given by:
 
 \begin{eqnarray}
 L(p, \theta \mid u) &\propto& {\delta_{\denote{u}(p, \theta)} \cdot P(p) \cdot P(\theta)} \label{eq:L0}
 \end{eqnarray}
+
 
 Formally, the truth-functional meaning is represented by the Kronecker delta function  $\delta_{\denote{u}(p, \theta)}$ that returns probabilities proportional to $1$ when the utterance is true (i.e., when $p > \theta$) and $0$ otherwise.
 
@@ -166,6 +171,109 @@ Formally, the truth-functional meaning is represented by the Kronecker delta fun
 0 & \text{otherwise}
 \end{cases}\label{eq:delta}
 \end{eqnarray}
+
+
+```{r modelSimulations, fig.width = 10, fig.asp = 0.6, fig.cap="There is a figure caption. A: Stuff. B: More stuff. C: Even more stuff."}
+load(file = "cached_results/modelSims-priors_fixedT_uncertainT.RData")
+
+fig.sims.priors <- ggplot(sims.combined %>%
+         filter(
+           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+           src %in% c("priors")
+           ) %>%
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
+                                    labels = c("Xs Y (uniform)", "Xs fly (biological)", "Xs carry malaria (accidental)")),
+                src = factor(src, levels = c( "priors"),
+                             labels = c(
+                               '\n prevalence prior'
+                                        ))), 
+       aes(x = state))+
+    geom_density(aes(y = ..scaled..), fill= 'black', size = 0.6, alpha = 0.7, adjust = 1.1)+
+    theme_few() +
+    scale_x_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    ylab("Probability density (scaled)") +
+    xlab("Prior Prevalence")+
+    scale_color_solarized()+
+    scale_fill_solarized()+
+    facet_grid(PriorShape~src, scales = 'free')+
+    theme(strip.text.y = element_blank(),
+          legend.position = "none"
+          )
+
+
+fig.sims.distributions <- ggplot(sims.combined %>%
+         filter(
+           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+           src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+           ) %>%
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
+                                    labels = c("Xs Y    \n[uniform]", "Xs fly      \n[biological]", "Xs carry malaria \n [accidental]         ")),
+                src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", "posteriors"),
+                             labels = c(
+                           #    'prevalence prior',
+                               '"some"\n(threshold = 0.01)',
+                              '"most"\n(threshold = 0.5)',
+                               'generic\n(uncertain threshold)'
+                                        ))), 
+       aes(x = state, fill = src, color = src))+
+    geom_density(aes(y = ..scaled..), size = 0.6, alpha = 0.7, adjust = 1.1)+
+    theme_few() +
+    scale_x_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    ylab("Scaled posterior density") +
+    xlab("Implied Prevalence")+
+    scale_color_solarized()+
+    scale_fill_solarized()+
+    facet_grid(PriorShape~src, scales = 'free')+
+    theme(strip.text.y = element_text(angle = 0, hjust =0, size = 12),
+          legend.position = "none",
+          axis.title.y = element_blank())
+
+sims.combined.summary <- sims.combined %>%
+         filter(
+           PriorShape %in% c("uniform","biological_rare", "accidental_rare"),
+           src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+           ) %>%
+         mutate(PriorShape = factor(PriorShape, 
+                                    levels = c( "accidental_rare", "biological_rare", "uniform"),
+                                    labels = c("uniform", "Xs carry malaria\n[accidental]", 
+                                               "Xs fly\n[biological]")),
+                src = factor(src, 
+                             levels = c( 
+                               "fixed_0.1", "fixed_0.5", "posteriors"),
+                             labels = c(
+                               '"some" (threshold = 0.01)',
+                              '"most" (threshold = 0.5)',
+                               'generic (uncertain threshold)'
+                                        ))) %>%
+    group_by(PriorShape, src) %>%
+    summarize(expval = mean(state))
+  
+  
+fig.sims.bars <- ggplot(sims.combined.summary %>% mutate(blank = '\n'), 
+       aes(x = PriorShape, y = expval, fill = src))+
+    geom_col(color = 'black', position = position_dodge(), alpha = 0.8, width = 0.7)+
+    theme_few() +
+    scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    ylab("Average implied prevalence")+
+    scale_color_solarized()+
+    scale_fill_solarized()+
+    facet_wrap(~blank)+
+    coord_flip()+
+    guides(fill = F)+
+    theme(axis.title.y = element_blank(),
+          axis.text.y = element_blank())
+
+cowplot::plot_grid(
+  fig.sims.priors, 
+  fig.sims.distributions,
+  fig.sims.bars,
+  nrow = 1,
+  labels = c("A", "B", "C"),
+  rel_widths = c(0.33, 1, 0.33)
+)
+```
 
 \red{Schematic model predictions are shown in Figure X. }
 
