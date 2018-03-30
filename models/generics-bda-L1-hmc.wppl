@@ -194,11 +194,11 @@ var model = function(){
 
 
 var all_stepSizes = [
-  0.001, 0.0005, 0.0001, 0.00005
+  0.0001, 0.00005, 0.000025, 0.00001
 ]
 
 var all_steps = [
-  1, 2, 5, 10
+  2, 5, 10
 ]
 
 var stepSize = all_stepSizes[chain % all_stepSizes.length];
@@ -207,11 +207,12 @@ display("<---- chain = " + chain)
 display("stepSize = " + stepSize)
 display("steps = " + steps)
 
-var steps = all_steps[2], stepSize = all_stepSizes[2];
+// var steps = all_steps[2], stepSize = all_stepSizes[2];
 var samples = 1000;
 var burn = samples / 2;
 
-var outfile = 'pilot-results-genint-L1-3Components_hmc'+ samples+'_burn'+burn+'_chain'+chain+'.csv'
+var outfile = 'pilot-results-genint-L1-3Components_hmc'+ samples+'_burn'+burn+
+    "_stepSize" + stepSize + "_steps" + steps + '_chain'+chain+'.csv'
 
 var posterior = Infer({
   method: 'MCMC',
