@@ -238,20 +238,23 @@ for (p in priorNames){
   print(p)
 }
 
-#save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
-```
 
-```{r}
-#load(file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 sims.combined <- bind_rows(
     sims.priors %>% mutate(src = 'priors'),
     sims.uncertain.thresholds %>% mutate(src = 'posteriors'),
-    sims.fixed.thresholds %>% 
+    sims.fixed.thresholds %>%
       mutate(src = paste('fixed', threshold, sep = "_")) %>%
       select(-threshold)
     )
 
 save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+
+
+#save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+```
+
+```{r}
+load(file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 
 
 fig.sims.priors <- ggplot(sims.combined %>%
