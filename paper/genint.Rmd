@@ -65,6 +65,7 @@ library("papaja")
 library(tidyverse)
 library(cowplot)
 library(ggthemes)
+library(RColorBrewer)
 theme_set(theme_few())
 ```
 
@@ -153,7 +154,7 @@ The literal meaning of quantifiers can also be described by a threshold-function
 In order for a statement to update beliefs about prevalence, a listener must have prior beliefs about prevalence.
 To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(p)$. ^[
   Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively shallow formalization of theory-based expectations. 
-  That is, different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
+  Different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
   The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
 ]
 Thus the quantitative model for generic interpretation is given by:
@@ -161,7 +162,6 @@ Thus the quantitative model for generic interpretation is given by:
 \begin{eqnarray}
 L(p, \theta \mid u) &\propto& {\delta_{\denote{u}(p, \theta)} \cdot P(p) \cdot P(\theta)} \label{eq:L0}
 \end{eqnarray}
-
 
 Formally, the truth-functional meaning is represented by the Kronecker delta function  $\delta_{\denote{u}(p, \theta)}$ that returns probabilities proportional to $1$ when the utterance is true (i.e., when $p > \theta$) and $0$ otherwise.
 
@@ -172,9 +172,50 @@ Formally, the truth-functional meaning is represented by the Kronecker delta fun
 \end{cases}\label{eq:delta}
 \end{eqnarray}
 
+The interpretation model computes a posterior distribution on prevalence by considering different possible thresholds $\theta$.
+Given a particular value of $\theta$, the semantics rules out all prevalences $p$ below $\theta$.
+With a uniform prior over prevalence($P(p) = \text{Uniform}(0, 1)$), the posterior on prevalence will be uniform over all prevalence levels above $\theta$ (Figure\ \@ref(fig:modelSimulations)B; top row).
+Higher prevalence levels are consistent with more thresholds.
+Thus, the generic interpretation model, which has uncertainty over the threshold and marginalizes over different possible thresholds, returns a posterior that favors higher prevalence levels (Figure\ \@ref(fig:modelSimulations)B; top row, right-most column).
+This behavior is consistent with the intuition that, without strong background knowledge, generics imply that most or all of the category have the feature.
 
-```{r modelSimulations, fig.width = 10, fig.asp = 0.6, fig.cap="There is a figure caption. A: Stuff. B: More stuff. C: Even more stuff."}
+Context-sensitive interpretations come from different prior distributions over prevalence $P(p)$, which can be thought of as levels of prevalence given different categories within a comparison class.
+For simplicity, we assume the comparison class relevant for interpreting generics about novel animal categories is *other animals*.
+The prevalence prior for a purely abstract property may be given by a uniform distribution, while prevalence priors for familiar properties may display interesting structure.
+Figure\ \@ref(fig:modelSimulations)A shows hypothetical prevalence priors for the features *fly* and *carry malaria* as well as an abstract property *Y* without structured background knowledge. 
+The distribution over a biological property like *fly* (which would give rise to interpreting generics like "Ducks fly") is bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
+The distribution over prevalence for a somewhat accidental property like *carry malaria* (as in "Mosquitos carry malaria") also has substantial probability mass at or near 0\%, since most categories do not have the property present at all. 
+However, among categories with at least a few members who carry malaria, it is very unlikely that all or even many carry malaria; the second mode of this distribution is near 10\%. 
+
+Generic interpretation manifests as similar to different quantified statements depending on the context (Figure\ \@ref(fig:modelSimulations)B). 
+For the biological property prior, "Xs fly" is interpreted most similarly to "Most Xs fly" and not "Some Xs fly".
+For the accidental property prior, "Xs carry malaria" is most similar to "Some Xs carry malaria" and not "Most Xs carry malaria". 
+The generic interpretation model balances the prior probability of different prevalence levels with the overall preference for higher prevalence levels (as described above), producing subtle context-sensitive interpretations.
+We test these context-sensitive interpretations in the following experiments. 
+
+<!-- Considering different fixed-thresholds in conjunction with structured background knowledge also illuminates the unique behavior of the uncertain threshold model. -->
+
+<!-- The literal interpretation of the quantifier "some" (threshold = 0.01) rules out only the lowest prevalence levels, returning an intuitively compelling interpretation for "Xs carry malaria" (*very few Xs carry malaria*); however, even given strong prior knowledge about the distribution of the property *fly*, "Some Xs fly" leaves open the possibility that very few Xs fly -->
+
+<!-- A threshold that is slightly higher (threshold = 0.33; "more than a third"), when coupled with strong prior knowledge (e.g., for "Xs fly") can give  -->
+<!-- The quantifier "most" would correspond to a threshold at 0.5, which like "more than a third", can result in intuitive interpretations for "Xs fly" (the posterior over prevalence suggests *almost all Xs fly*); -->
+
+<!-- Different prevalence priors give rise to different interpretations. -->
+<!-- Figure\ \@ref(fig:modelSimulations)B shows different interpretations (posterior distributions over prevalence) given different fixed thresholds (corresponding to different quantifiers) as well as the uncertain threshold, corresponding to the generic. -->
+
+<!-- The interpretation model computes a posterior distribution on prevalence by considering different possible thresholds $\theta$. -->
+<!-- Figure\ \@ref(fig:modelSimulations)B (top-row) shows what the model would believe given different thresholds (columns). -->
+<!-- If the threshold were to be very high (e.g., $\theta = 0.75$), only the highest prevalence levels would be consistent with the utterance. -->
+<!-- As the threshold decreases, more and more prevalence levels would be true. -->
+<!-- Roughly speaking, the uncertain-threshold interpretation model averages over these possibilities, resulting in a posterior distribution that favors higher prevalence levels because they are consistent with more thresholds. -->
+<!-- The endorsement model inverts the interpretation model and predicts higher rates of endorsement as the speaker's belief about the prevalence (referent-prevalence) increases. -->
+
+
+```{r modelSimulations, fig.width = 10, fig.asp = 0.6, fig.cap="Model simulations. A: Prevalence priors reflect knowledge about properties. An abstract property could be given a uniform distribution, while familiar properties display more complex structure. B: Posterior distributions over prevalence (interpretations) given different fixed-threshold quantifiers and the uncertain threshold generic."}
 load(file = "cached_results/modelSims-priors_fixedT_uncertainT.RData")
+get.colors <- function(pal) brewer.pal(brewer.pal.info[pal, "maxcolors"], pal)
+spectrum.color.palette <- get.colors("Blues")
+
 
 fig.sims.priors <- ggplot(sims.combined %>%
          filter(
@@ -205,26 +246,31 @@ fig.sims.priors <- ggplot(sims.combined %>%
 fig.sims.distributions <- ggplot(sims.combined %>%
          filter(
            PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
-           src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+           src %in% c("fixed_0.1", "fixed_0.33", "fixed_0.5", "posteriors")
            ) %>%
          mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
                                     labels = c("Xs Y\n[uniform]", "Xs fly\n[biological]", "Xs carry malaria \n [accidental]")),
-                src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", "posteriors"),
+                src = factor(src, levels = c( "fixed_0.1", "fixed_0.33",
+                                              "fixed_0.5", "posteriors"),
                              labels = c(
                            #    'prevalence prior',
                                '"some"\n(threshold = 0.01)',
+                               '"more than a third"\n(threshold = 0.33)',
                               '"most"\n(threshold = 0.5)',
                                'generic\n(uncertain threshold)'
                                         ))), 
        aes(x = state, fill = src, color = src))+
-    geom_density(aes(y = ..scaled..), size = 0.6, alpha = 0.7, adjust = 1.1)+
+    geom_density(aes(y = ..scaled..), 
+                 color ='black', size = 0.6, alpha = 0.7, adjust = 1.1)+
     theme_few() +
     scale_x_continuous(breaks = c(0, 1), limits= c(0, 1))+
     scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
     ylab("Scaled posterior density") +
     xlab("Implied Prevalence")+
-    scale_color_solarized()+
-    scale_fill_solarized()+
+    # scale_fill_brewer(palette=2, type = "seq", direction = -1)+
+    # scale_color_brewer(palette=2, type = "seq", direction = -1)+
+    scale_color_manual( values =  c(spectrum.color.palette[c(8,5,2)], "#238b45"))+
+    scale_fill_manual( values = c(spectrum.color.palette[c(8,5,2)], "#238b45") )+
     facet_grid(PriorShape~src, scales = 'free')+
     theme(strip.text.y = element_text(angle = 0, size = 12),
           legend.position = "none",
@@ -253,12 +299,15 @@ sims.combined.summary <- sims.combined %>%
   
 fig.sims.bars <- ggplot(sims.combined.summary %>% mutate(blank = '\n'), 
        aes(x = PriorShape, y = expval, fill = src))+
-    geom_col(color = 'black', position = position_dodge(), alpha = 0.8, width = 0.5)+
+    geom_col(color = 'black', 
+             position = position_dodge(), alpha = 0.8, width = 0.5)+
     theme_few() +
     scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
     ylab("Average\nimplied prevalence")+
-    scale_color_solarized()+
-    scale_fill_solarized()+
+    scale_color_manual( values = spectrum.color.palette )+
+    scale_fill_manual( values = spectrum.color.palette )+
+    #scale_color_solarized()+
+    #scale_fill_solarized()+
     facet_wrap(~blank)+
     coord_flip()+
     guides(fill = F)+
@@ -268,16 +317,12 @@ fig.sims.bars <- ggplot(sims.combined.summary %>% mutate(blank = '\n'),
 cowplot::plot_grid(
   fig.sims.priors + theme(plot.margin = unit(c(6, 3, 6, 0), "pt")), 
   fig.sims.distributions + theme(plot.margin = unit(c(6, 0, 6, 0), "pt")),
-  fig.sims.bars+ theme(plot.margin = unit(c(6, 0, 0, 0), "pt")),
+  #fig.sims.bars+ theme(plot.margin = unit(c(6, 0, 0, 0), "pt")),
   nrow = 1,
-  labels = c("A", "B", "C"),
-  rel_widths = c(0.33, 1, 0.25)
+  labels = c("A", "B"),
+  rel_widths = c(0.25, 1)
 )
 ```
-
-\red{Schematic model predictions are shown in Figure X. }
-
-\red{Explain priors as a distribution over animals.}
 
 <!-- 
 - Figure:
