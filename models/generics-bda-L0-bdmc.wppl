@@ -3,16 +3,17 @@
 var chain = last(process.argv) // load index as last command line index
 
 // 5 min for 1000
-var iterationTests = [
-  50000,
-  60000,
-  70000,
-  80000,
-  90000,
-  100000
+
+var all_samples = [
+  2, 5, 10, 20
 ]
 
-var steps = iterationTests[chain % iterationTests.length];
+var all_steps = [
+  10000, 20000, 30000, 50000
+]
+
+var samples = all_samples[(chain-1) % all_samples.length];
+var steps = all_steps[Math.floor((chain-1) / all_samples.length)];
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
@@ -144,9 +145,8 @@ var model = function(){
 
 }
 
-// var steps = 100;
-var resultsOutFile = 'results/pilot-bdmc-genint-L0-3Components_'+semantics+'-semantics_'+"-steps"+steps +'_chain'+chain+'.json'
+var resultsOutFile = 'results/pilot-ais-genint-L0-3Components_'+semantics+'-semantics_'+"-steps"+steps +"-samples"+samples +'_chain'+chain+'.json'
 
-var postOut = BDMC(model, {steps: [steps], samples: 1})
+var postOut = AIS(model, {steps: [steps], samples: samples, returnMean: false})
 
 json.write(resultsOutFile, postOut)
