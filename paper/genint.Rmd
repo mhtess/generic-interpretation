@@ -426,6 +426,66 @@ Biological properties (*biological*, *vague*, and *color* body parts) have preva
 Interpretations of generics about these properties ($L$ model, Eq. \ref{eq:L0}) update these distributions to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}a; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category.
 By contrast, accidental properties (both *rare* and *common*) follow unimodal prior distributions and update to convex posterior distributions, predicting weaker and more variable interpretations of novel generics for these properties. 
 
+```{r cimpian-prevPrior, fig.width = 9, fig.asp = 0.4, fig.cap="Prevalence priors."}
+load("cached_results/cimpian-prevPrior-interpretations.Rdata")
+# m.rs.priors.reconstructed.subset,
+     # df.c.prior.bs.wide, 
+     # df.c.int.bs,
+
+fig.prevPriors <- ggplot(m.rs.priors.reconstructed.subset, 
+       aes( x = prevalence,
+                                    fill = stim_type))+
+    stat_density ( aes(y = ..scaled.. ), color = 'black')+
+    facet_wrap(~property, nrow = 2)+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+    theme(strip.text.y = element_text(angle = 0))+   guides(fill=guide_legend(title="Property type"))+
+  ylab("Probability density (scaled)")+
+  xlab("Prevalence")
+
+fig.prevParams <- ggplot(df.c.prior.bs.wide %>%
+         mutate("Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "gradable adj + part",
+                                                    "color adj + part",
+                                                    "accidental"))), 
+       aes( x = mixture_mean, xmin = mixture_lower, xmax = mixture_upper,
+            y = pwp_mean, ymin = pwp_lower, ymax = pwp_upper,
+            fill = `Property type`))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+
+
+
+cowplot::plot_grid( 
+  cowplot::plot_grid(
+    fig.prevParams + theme(plot.margin = unit(c(6, 6, 0, 0), "pt"),
+                           legend.position = 'none'),
+    fig.prevPriors + theme(plot.margin = unit(c(6, 0, 0, 0), "pt"),
+                           legend.position = 'none'), 
+    nrow = 1,
+    labels = c("A", "B"),
+    rel_widths = c(0.33, 0.66)
+  ), 
+  cowplot::get_legend(
+    fig.prevPriors + theme(
+      legend.position="bottom"
+      #legend.text = element_text(size = 16),
+      #legend.title = element_text(size = 16)
+                           )
+    ), ncol = 1, rel_heights = c(1, .2))
+
+```
+
+
 
 <!-- In addition to specifying the correct way to combine our two prior-elicitation questions, using this inferred prior resolves two technical difficulties. -->
 <!-- First, it smooths effects that are clearly results of the response format.  -->
@@ -437,7 +497,7 @@ By contrast, accidental properties (both *rare* and *common*) follow unimodal pr
 
 <!-- We used the same structured, statistical model for the prior data from Expt.~1. -->
 <!-- The only difference from Expt.~1a. is that our experimental data comes from inquiring about the parameters of the priors directly, as opposed to asking about particular samples from the prior (i.e. particular kinds) as was done in Expt.~1a.  -->
-<!-- <!-- %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}). --> -->
+<!-- <!-- %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}). -->
 <!-- We assume these two measurements follow Beta distributions ($d_{potential} \sim \text{Beta}(\gamma_{1}, \xi_{1})$; $ -->
 <!-- d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before: $P(x) = \int [ \phi\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \phi) \cdot \delta_{x=0} ] \cdot \text{Beta}(\phi \mid \gamma_{1}, \xi_{1}) d\phi$. -->
 <!-- We used the same uninformative priors over parameters $\phi, \gamma_{i}, \xi_{i}$ as in Expt.~1a. -->
@@ -446,20 +506,6 @@ By contrast, accidental properties (both *rare* and *common*) follow unimodal pr
 <!-- %These convex posteriors show that generics about accidental or temporary properties come with highly uncertain interpretations, plausibly as a consequence of theory-driven considerations \cite{Cimpian2010c}.  -->
 
 
-<!-- \begin{figure*} -->
-<!-- \centering -->
-<!--     \includegraphics[width=\columnwidth]{prevalence-implied-wPriors} -->
-<!--     \caption{Understanding novel generics. (a) Prevalence prior distributions empirically elicited for 40 animal properties. -->
-<!--     Parameters of the structured statistical model---$\phi$ and $\gamma$---reveal quantitative differences in beliefs about the prevalence of conceptually different types of properties (scatterplot).  -->
-<!--     Inset plots show differences in shapes between biological properties (red, green, blue; bimodal) and accidental properties (orange, purple; unimodal).    -->
-<!--   These differences in the prior (darker shade) give rise to the variability of $L_1$ interpretations of generic utterances (lighter shade). -->
-<!--   (b) -->
-<!--   Human interpretation of prevalence upon hearing a generic compared with the $L_1$ model posterior predictive.  -->
-<!--     Participants and the model interpret generics differently for different property types: Generics of biological properties (red, blue, green) have  strong interpretations while generics of accidental properties (purple, orange) are weaker.  -->
-<!--       Error bars denote Bayesian 95\% credible intervals. -->
-<!--   } -->
-<!--   \label{fig:prior2} -->
-<!-- \end{figure*} -->
 
 
 ## Experiment 1b: Generic interpretation

@@ -98,6 +98,7 @@ ggplot(df.c.prior.bs.wide %>%
   scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
   ylab("Prevalence when present")+
   xlab("P(feature is present)")
+
 ```
 
 
@@ -107,7 +108,7 @@ ggplot(df.c.prior.bs.wide %>%
 ```{r}
 model.path <- "../models/results/"
 
-model.prefix <- "pilot-results-cimpian-L0-structuredPrior_fixed-semantics_25000_burn12500_lag2_chain1"
+model.prefix <- "pilot-results-cimpian-L0-structuredPrior_uncertain-semantics_25000_burn12500_lag2_chain1"
 m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
 
 # model.files <- list.files(
@@ -165,7 +166,10 @@ m.rs.prior.parameters <- m.samp.iter %>%
                             n = 1),
     mixtureParam = rbeta(shape1 = alpha_mixtureParam,
                             shape2 = beta_mixtureParam, 
-                            n = 1)
+                            n = 1),
+    isPresent = rbinom(n = 1, prob = mixtureParam, size = 1),
+    prevalence = ifelse(isPresent == 1, prevWhenPresent, 
+                        rbeta( shape1 = 1, shape2 = 200, n = 1) )
     )
 ```
 
@@ -188,18 +192,66 @@ md.prevPriorParams <- bind_rows(
   )
 
 
-ggplot(md.prevPriorParams, aes( x = val, color = src))+
+ggplot(m.rs.prior.parameters, 
+       aes( x = val, color = src))+
     stat_ecdf()+
     facet_wrap(~stim_property + param)+
     scale_color_solarized()+
     scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
     scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
     theme(strip.text.y = element_text(angle = 0))
-
 ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
        width = 14, height = 8)
 ```
 
+
+### Reconstructed prevalence priors
+
+```{r gen-prevalencepriors, fig.width = 8, fig.height = 5}
+m.rs.prior.parameters2 <- left_join(
+  m.rs.prior.parameters,
+  df.c.prior.bs.wide %>%
+    distinct(stim_property, stim_type) %>%
+    rename(property = stim_property)
+)  %>% mutate(stim_type= 
+                factor(stim_type,
+                       levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental")))
+
+example.properties.priors <- c(
+  "claws",  "big claws",   "blue claws",   "worn-out claws", 
+  "feathers","smooth feathers","purple feathers","torn feathers"
+)
+
+m.rs.priors.reconstructed.subset <- m.rs.prior.parameters2 %>%
+         filter(property %in% example.properties.priors) %>% 
+       mutate(property = factor(property,
+                                levels = example.properties.priors))
+
+ggplot(m.rs.priors.reconstructed.subset, 
+       aes( x = prevalence,
+                                    fill = stim_type))+
+    stat_density ( aes(y = ..scaled.. ), color = 'black')+
+    facet_wrap(~property, nrow = 2)+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))+
+  guides(fill = F)
+
+save(m.rs.priors.reconstructed.subset,
+     df.c.prior.bs.wide, 
+     df.c.int.bs,
+     file = "../paper/cached_results/cimpian-prevPrior-interpretations")
+
+# ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
+#        width = 14, height = 8)
+```
 
 ### Implied prevalence
 
