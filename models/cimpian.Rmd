@@ -1,0 +1,247 @@
+---
+title: "CBG replication and extension"
+output: html_notebook
+---
+
+
+
+```{r}
+library(rwebppl)
+library(tidyverse)
+library(tidyboot)
+library(knitr)
+library(ggpirate)
+library(viridis)
+```
+
+## Load data
+
+```{r}
+df.c.prior <- read_csv("../data/asymmetry/asymmetry-prior-4-trials.csv")
+
+df.c.int <- read_csv("../data/asymmetry/implied-prevalence-2-trials.csv") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+```
+
+## Interpretation data
+
+```{r fig.height = 5}
+df.c.int.bs <- df.c.int %>%
+  group_by(stim_property) %>%
+  tidyboot_mean(column = response)
+
+df.c.int %>%
+  mutate(stim_property = factor(stim_property, 
+                           levels =  with(df.c.int.bs, stim_property[order(mean)]))) %>%
+  ggplot(., aes( x = stim_property, y = response, color = stim_property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+```
+```{r}
+df.c.int.bs %>%
+  ggplot(., aes(x = mean))+
+  geom_histogram( binwidth = 0.075)
+```
+
+## Linear model: Interpretation ~ two prior questions
+
+Summarized prevalence prior questions
+
+```{r}
+df.c.prior.bs <- df.c.prior %>%
+  gather(key, val, response0, response1) %>%
+  mutate(key = factor(key, levels = c("response0", "response1"),
+                labels = c("mixtureParam","prevalenceWhenPresent")),
+         stim_type = ifelse(stim_type == "disease", "accidental", stim_type)) %>%
+  group_by(stim_type, stim_property, key)  %>%
+  tidyboot_mean(column = val)
+
+
+df.c.prior.bs.wide <- left_join(
+  df.c.prior.bs %>%
+    filter(key == "mixtureParam") %>%
+    rename(mixture_lower = ci_lower,
+           mixture_mean = mean,
+           mixture_upper = ci_upper) %>%
+    select(-empirical_stat, -key),
+  df.c.prior.bs %>%
+    filter(key == "prevalenceWhenPresent") %>%
+    rename(pwp_lower = ci_lower,
+           pwp_mean = mean,
+           pwp_upper = ci_upper) %>%
+    select(-empirical_stat, -key)
+)
+```
+
+Scatterplot of two prevalence questions
+
+```{r}
+ggplot(df.c.prior.bs.wide %>%
+         mutate("Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental"))), 
+       aes( x = mixture_mean, xmin = mixture_lower, xmax = mixture_upper,
+            y = pwp_mean, ymin = pwp_lower, ymax = pwp_upper,
+            fill = `Property type`))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+```
+
+
+
+## Load model results
+
+```{r}
+model.path <- "../models/results/"
+
+model.prefix <- "pilot-results-cimpian-L0-structuredPrior_fixed-semantics_25000_burn12500_lag2_chain1"
+m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
+
+# model.files <- list.files(
+#   path = model.path, 
+#   pattern = paste(model.prefix, n_samples, "_burn", n_burn, 
+#                   "_lag", lg, "_chain", sep = "")
+#   )
+# m.samp <- data.frame()
+# for (modfile in model.files){
+#   m.item <- read_csv(paste(model.path , modfile, sep = ""))
+#   
+#   m.samp <- bind_rows(
+#     m.samp,
+#     m.item %>% mutate(chain = match(modfile, model.files))
+#   )
+#     
+# }
+```
+
+### Null distribution parameters
+
+```{r}
+m.samp %>%
+  filter(param == "nullParams") %>%
+  ggplot(., aes( x = val))+
+  geom_histogram()+
+  facet_wrap(~category, scales = 'free')
+
+ggsave(paste("figs/", model.prefix, "nullDistParams.pdf", sep = ""),
+       width = 4, height = 4)
+```
+
+
+#### Forward sample prevalence priors
+
+Add iteration number back in.
+
+```{r}
+m.samp.iter <-   m.samp %>% 
+  filter(param %in% c("mixtureParam", "prevWhenPresent")) %>%
+  mutate(parameter = paste(type, param, property, category, sep = "_")) %>%
+  select(-type, -param, -property, -category) %>%
+  group_by(parameter) %>%
+  mutate(iteration = ave(parameter==parameter, parameter, FUN=cumsum)) %>%
+  ungroup() %>%
+  separate(parameter, into = c("parameter", "componentID", "property", "componentParam"), sep= "_")
+
+m.rs.prior.parameters <- m.samp.iter %>% 
+  mutate(componentParam = paste(componentParam, "_", componentID, sep = "")) %>% select(-componentID) %>%
+  spread(componentParam, val) %>%
+  rowwise() %>%
+  mutate(
+    prevWhenPresent = rbeta(shape1 = alpha_prevWhenPresent,
+                            shape2 = beta_prevWhenPresent, 
+                            n = 1),
+    mixtureParam = rbeta(shape1 = alpha_mixtureParam,
+                            shape2 = beta_mixtureParam, 
+                            n = 1)
+    )
+```
+
+
+### Prevalence prior parameters
+
+```{r gen-prevpriorParams-cdf, fig.width = 8, fig.height = 5}
+md.prevPriorParams <- bind_rows(
+  df.c.prior %>% 
+    gather(param, val, response0, response1) %>%
+    mutate(param = factor(param, levels = c("response0", "response1"),
+                          labels = c("mixtureParam", "prevWhenPresent"))) %>%
+    select(stim_property,param,  val) %>%
+    mutate(src = 'data'),
+  m.rs.prior.parameters %>% 
+    gather(param, val, mixtureParam, prevWhenPresent) %>%
+    select(property, param, val) %>%
+    rename(stim_property = property) %>%
+    mutate(src = 'model') 
+  )
+
+
+ggplot(md.prevPriorParams, aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~stim_property + param)+
+    scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
+       width = 14, height = 8)
+```
+
+
+### Implied prevalence
+
+```{r}
+
+md.impprev <- left_join(
+   m.samp %>%
+    filter(type == "prediction") %>%
+    rename(Parameter = category) %>%
+    group_by(property, Parameter) %>%
+    summarize(model_MAP = estimate_mode(val),
+            model_upper = hdi_upper(val),
+            model_lower = hdi_lower(val)),
+  df.c.int.bs %>%
+    ungroup() %>%
+    rename(property = stim_property)
+)
+```
+
+```{r}
+ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2)+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  facet_wrap(~Parameter)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()
+
+ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
+       width = 6, height = 4)
+```
+
+```{r}
+md.impprev %>%
+  filter(!is.na(mean)) %>%
+  group_by(Parameter) %>%
+  summarize( mse  = mean((model_MAP-mean)^2),
+             r2 = cor(model_MAP, mean)^2) %>% 
+  kable()
+```
+
+
+
