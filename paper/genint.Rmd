@@ -549,6 +549,130 @@ Consisntent with this qualitative prediction, a mixed-effects linear model with 
 
 \red{Flesh out alternative models}
 
+```{r cimpian-modelingResults, fig.width = 10, fig.asp = 0.57, fig.cap="Model fits."}
+
+load(file = "cached_results/cimpian-modelFits-interpretations.RData")
+load(file = "cached_results/cimpian-interpretations-95ci.RData")
+
+
+
+fig.cimpian.interpretation.95ci <- df.c.int.bs %>%
+  ungroup() %>%
+  mutate(stim_property = factor(stim_property, 
+                           levels =  with(df.c.int.bs, stim_property[order(-mean)])),
+         stim_type = ifelse(stim_type == "disease", "accidental", stim_type),
+          "Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental"))) %>%
+  ggplot(., aes( x = stim_property, y = mean, ymin = ci_lower, ymax = ci_upper, 
+                 fill = `Property type`))+
+  geom_col(position = position_dodge(), color = 'black')+
+  geom_errorbar(position = position_dodge(), alpha = 0.3)+
+  #geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  #coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        axis.title.x = element_blank())+
+  ylab("Implied prevalence")
+
+
+fig.cimpian.interpretation.stimtype <- md.impprev.type %>%
+  mutate("Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental")),
+         src  = factor(src, levels = c("data","model"),
+                       labels = c("data", "generics model"))) %>%
+  ggplot(., aes( x = src,
+                        y = mean, ymin = ci_lower, ymax = ci_upper,
+                 fill = `Property type`))+
+  geom_col(position = position_dodge(0.7), width = 0.7, color = 'black')+
+  #geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.7, position = position_dodge(0.7), width = 0.3)+
+  #geom_point(shape = 21, size = 2.6, color = 'black')+
+  #facet_wrap(~src, nrow = 1)+
+  #scale_x_continuous(limits = c(0,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(0,1.01), breaks = c(0,0.5, 1)) +
+  #coord_fixed()+
+  #xlab("Model prediction")+
+  ylab("Implied prevalence")+
+  theme(axis.title.x = element_blank())
+
+
+md.impprev.plotting <- md.impprev %>% 
+  filter((Parameter == "posterior") | (semantics == "uncertain")) %>%
+  mutate(src = paste(Parameter, "_", semantics, sep =""),
+         src = factor(src, levels = c("prior_uncertain", "posterior_some",
+                                      "posterior_most", "posterior_uncertain"),
+                      labels = c("Prevalence prior mean",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"most" + noise\n(threshold = 0.5)',
+                                 'generic\n(uncertain threshold)')),
+         "Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental")))
+
+
+
+fig.cimpian.interpretation.models <- ggplot(md.impprev.plotting, 
+       aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper,
+                 fill = `Property type`))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  geom_point(shape = 21, size = 2.6, color = 'black')+
+  facet_wrap(~src, nrow = 1)+
+  scale_x_continuous(limits = c(0,1.01), breaks = c(0, 1)) +
+  scale_y_continuous(limits = c(0,1.01), breaks = c(0, 1)) +
+  coord_fixed()+
+  xlab("Model prediction")+
+  ylab("Implied prevalence")+
+  theme(legend.position = 'right')
+
+cowplot::plot_grid( 
+  fig.cimpian.interpretation.95ci + theme(
+    plot.margin = unit(c(30, 6, 0, 6), "pt"),
+                         legend.position = 'none'),
+  cowplot::plot_grid(
+    fig.cimpian.interpretation.stimtype + theme(plot.margin = unit(c(20, 6, 12, 6), "pt"),
+                           legend.position = 'none'),
+    fig.cimpian.interpretation.models + theme(plot.margin = unit(c(0, 6, 0, 6), "pt"),
+                           legend.position = 'none'), 
+    nrow = 1,
+    labels = c("B", "C"),
+    rel_widths = c(1, 2.5)
+  ), 
+  cowplot::get_legend(
+    fig.cimpian.interpretation.stimtype + theme(
+      legend.position="bottom"
+      #legend.text = element_text(size = 16),
+      #legend.title = element_text(size = 16)
+                           )
+    ), ncol = 1, rel_heights = c(1.2, 1.2, 0.2),
+  labels = c("A", "", "")
+  )
+
+```
+
+
 ## Discussion
 
 We replicated @Cimpian2010's finding of a difference in the implied prevalence between biological properties (e.g., *yellow fur*) and accidental properties (e.g., *fungus-covered claws*).

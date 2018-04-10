@@ -48,7 +48,7 @@ df.c.int.bs %>%
 
 ## Linear model: Interpretation ~ two prior questions
 
-Summarized prevalence prior questions
+## Summarized prevalence prior questions
 
 ```{r}
 df.c.prior.bs <- df.c.prior %>%
@@ -108,7 +108,7 @@ ggplot(df.c.prior.bs.wide %>%
 ```{r}
 model.path <- "../models/results/"
 
-model.prefix <- "pilot-results-cimpian-L0-structuredPrior_uncertain-semantics_25000_burn12500_lag2_chain1"
+model.prefix <- "pilot-results-cimpian-L0-structuredPrior_most-semantics_-nullDist_beta1_100_2500_burn1250_lag1_chain2"
 m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
 
 # model.files <- list.files(
@@ -132,10 +132,11 @@ m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
 
 ```{r}
 m.samp %>%
-  filter(param == "nullParams") %>%
+  #filter(param == "nullParams") %>%
+  filter(type == "noise") %>%
   ggplot(., aes( x = val))+
-  geom_histogram()+
-  facet_wrap(~category, scales = 'free')
+  geom_histogram()#+
+  #facet_wrap(~category, scales = 'free')
 
 ggsave(paste("figs/", model.prefix, "nullDistParams.pdf", sep = ""),
        width = 4, height = 4)
@@ -192,7 +193,7 @@ md.prevPriorParams <- bind_rows(
   )
 
 
-ggplot(m.rs.prior.parameters, 
+ggplot(md.prevPriorParams, 
        aes( x = val, color = src))+
     stat_ecdf()+
     facet_wrap(~stim_property + param)+
@@ -200,8 +201,8 @@ ggplot(m.rs.prior.parameters,
     scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
     scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
     theme(strip.text.y = element_text(angle = 0))
-ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
-       width = 14, height = 8)
+# ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
+#        width = 14, height = 8)
 ```
 
 
@@ -281,9 +282,9 @@ ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper,
   scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
   scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
   coord_fixed()
-
-ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
-       width = 6, height = 4)
+# 
+# ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
+#        width = 6, height = 4)
 ```
 
 ```{r}
