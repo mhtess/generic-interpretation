@@ -1,4 +1,4 @@
-// time ~/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
+// time ~/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils most 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -68,7 +68,19 @@ var properties = levels(data.interpretation, "property");
 var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
 // properties
 
+var addNoise = function(dist, noise){
+  return Infer({model: function(){
+    return flip(noise) ? uniformDraw(midBins) : sample(dist)
+  }})
+}
+
+var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+  (semantics == "most") ? 0.5 :
+  false
+
 var model = function(){
+
+  var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
   var numberOfComponents = 3;//poisson(1) + 1;
 
@@ -123,13 +135,14 @@ var model = function(){
   	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
   	    var state = sample(statePrior);
-        var theta = (semantics == "uncertain") ? sample(thetaPrior) : _.min(thetaBins);
+        var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
   	    var m = meaning(utterance, state, theta)
   	    condition(m)
   	    return state
   	 }})}, 10000)
 
-    var interpretationPrediction = listener0("generic")
+  var L0 = listener0("generic")
+  var interpretationPrediction = addNoise(L0, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -145,15 +158,15 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   // query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
+   semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
 
 	return query
 }
 
-var totalIterations = 250000, lag = 75;
+var totalIterations = 500000, lag =  100;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'pilot-results-genint-L0-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,
