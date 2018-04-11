@@ -83,11 +83,11 @@ df.prior.2.filtered <- df.prior.2 %>% filter(pass == 1)
 df.prior.categories.2 <- df.prior.2.filtered %>%
   filter(trial_type == "category_elicitation") %>%
   mutate(response = gsub("&quotechar", "", response)) %>%
-  tidytext::unnest_tokens(word, response) %>%
-  tidytext::anti_join(stop_words)
+  unnest_tokens(word, response) %>%
+  anti_join(stop_words)
 
 df.prior.categories.2 %>%
-  group_by(response) %>%
+  group_by(word) %>%
   count() %>%
   kable()
 
@@ -133,11 +133,26 @@ Item distributions (prevalence priors)
 ```{r fig.width = 18, fig.height = 8}
 df.prior.prevalence.2 %>%
   ggplot(., aes( x = response ))+
-  geom_histogram( bins = 20)+
+  geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ))+
   facet_wrap(~property, scales = 'free') +
   scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
 
-ggsave("figs/prior-2-prevpriors-n72.pdf", width = 20, height = 14)
+ggsave("figs/prior-2-prevpriors-n144.pdf", width = 20, height = 14)
+```
+
+Item distributions conditional on > 0
+
+```{r fig.width = 18, fig.height = 8}
+df.prior.prevalence.2 %>%
+  filter(response > 0) %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ))+
+  facet_wrap(~property, scales = 'free') +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+
+ggsave("figs/prior-2-prevpriorsNonZero-n144.pdf", width = 20, height = 14)
 ```
 
 Distribution of expected values
@@ -150,7 +165,7 @@ df.prior.2.ev <- df.prior.prevalence.2 %>%
 ggplot(df.prior.2.ev, aes ( x = mean ))+
   geom_histogram(bins = 20)
 
-ggsave("figs/prior-2-expvals-n72.pdf", width = 4, height = 4)
+ggsave("figs/prior-2-expvals-n144.pdf", width = 4, height = 4)
 
 ```
 
@@ -166,12 +181,85 @@ df.prior.2.conditional.ev <- df.prior.prevalence.2 %>%
 ggplot(df.prior.2.conditional.ev, aes ( x = mean ))+
   geom_histogram(bins = 20)
 
-ggsave("figs/prior-2-nonZeroExpvals-n72.pdf", width = 4, height = 4)
+ggsave("figs/prior-2-nonZeroExpvals-n144.pdf", width = 4, height = 4)
 
 ```
 
+```{r}
+df.prior.prevalence.2.isZero <- df.prior.prevalence.2 %>%
+  mutate(isZero = ifelse(response == 0, 1, 0)) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = isZero)
 
 
+ggplot(df.prior.prevalence.2.isZero, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+
+ggsave("figs/prior-2-isZero-n144.pdf", width = 4, height = 4)
+```
+
+```{r}
+
+df.prior.2.conditional.ev <- df.prior.prevalence.2 %>%
+  filter(response > 0) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+
+df.prior.prevalence.2.isZero.conditionalEv <- left_join(
+  df.prior.2.conditional.ev %>%
+    select(-n, -empirical_stat) %>%
+    rename(pwp_mean = mean, pwp_low = ci_lower, pwp_high = ci_upper),
+  df.prior.prevalence.2.isZero %>%
+    select(-n, -empirical_stat) %>%
+    rename(isZero = mean, zero_low = ci_lower, zero_high = ci_upper)
+)
+
+ggplot(df.prior.prevalence.2.isZero.conditionalEv, 
+       aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
+            y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black', fill = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+```
+
+
+```{r fig.width=6}
+target.properties <- c("eat insects", 
+                       "feed on the carcasses of dead animals",
+                       "are afraid of loud noises",
+                       "get in fights with other animals",
+                       "live in urban areas",
+                       "live in zoos",
+                       #"drink alcohol left behind by tourists",
+                       "chase their tails",
+                       "have seizures")
+var_width <- 20
+
+save(df.prior.prevalence.2.isZero.conditionalEv,
+     df.prior.prevalence.2,
+     file = "../../paper/cached_results/genInt_priors.RData"
+     )
+
+df.prior.prevalence.2 %>%
+  filter(property %in% target.properties) %>%
+  mutate(property = factor(property, levels = target.properties,
+                           labels = stringr::str_wrap(target.properties, 
+                                                      width = var_width))) %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( 
+    bins = 20,
+    aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
+    color = 'black', fill= 'white')+
+  facet_wrap(~property, scales = 'free', nrow = 2) +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  ylab("Proportion of responses")+
+  xlab("Prevalence")
+
+```
 
 Copy interpretation df over from `generic-interpretation-1.Rmd`
 

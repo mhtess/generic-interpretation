@@ -723,6 +723,62 @@ For each item, we then computed its belief distribution’s expected value.
 As intended, items covered a wide range of probabilities and expected values (see Figure 2).
 
 
+```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors."}
+load(file = "cached_results/genInt_priors.RData")
+# df.prior.prevalence.2.isZero.conditionalEv,
+#      df.prior.prevalence.2,
+
+
+fig.prevParams.genInt <- ggplot(df.prior.prevalence.2.isZero.conditionalEv, 
+       aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
+            y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black', fill = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+
+target.properties <- c("eat insects", 
+                       "feed on the carcasses of dead animals",
+                       "are afraid of loud noises",
+                       "get in fights with other animals",
+                       "live in urban areas",
+                       "live in zoos",
+                       #"drink alcohol left behind by tourists",
+                       "chase their tails",
+                       "have seizures")
+var_width <- 22
+
+fig.prevPriors.genInt <- df.prior.prevalence.2 %>%
+  filter(property %in% target.properties) %>%
+  mutate(property = factor(property, levels = target.properties,
+                           labels = stringr::str_wrap(target.properties, 
+                                                      width = var_width))) %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( 
+    bins = 20,
+    aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
+    color = 'black', fill= 'white')+
+  facet_wrap(~property, scales = 'free', nrow = 2) +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  ylab("Proportion of responses")+
+  xlab("Prevalence")
+
+cowplot::plot_grid(
+  fig.prevParams.genInt + theme(plot.margin = unit(c(18, 6, 6, 6), "pt"),
+                         legend.position = 'none'),
+  fig.prevPriors.genInt + theme(plot.margin = unit(c(6, 6, 6, 0), "pt"),
+                         legend.position = 'none'), 
+  nrow = 1,
+  labels = c("A", "B"),
+  rel_widths = c(1, 2)
+)
+
+```
+
+
+
 ## Experiment 2b: Generic interpretation
 
 ### Methods
