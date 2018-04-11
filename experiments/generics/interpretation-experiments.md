@@ -24,11 +24,22 @@
 
 ## Interpretation-4
 
-- [pending]
+- 3/17/18
 - 74 items (stims-5), subjects rate 36 items
+- n out of 100 question
 - after memory check, low responses were asked a follow-up questions (explain)
 - $0.80
 - n = 36 --> 28.8 + 5.76 = 34.56
+
+## Interpretation-5
+
+- 4/11/18
+- preregistered
+- 74 items (stims-5), subjects rate 36 items
+- after memory check, low responses were asked a follow-up questions (explain) and can change response
+- n out of 100 question
+- $0.80
+- n = 140 --> 112 + 22.4 = 134.4
 
 # Prior experiments
 
@@ -46,6 +57,6 @@
 - $0.80
 - n = 36 --> 28.8 + 5.76 = 34.56
 + n = 36 --> 28.8 + 5.76 = 34.56
-+ n = 72 --> 69.12 (4/10)
++ n = 72 --> 69.12 (4/10/18)
 
 # Manipulated prior experiments
