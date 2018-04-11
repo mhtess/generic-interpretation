@@ -1,4 +1,4 @@
-// time ~/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils most 1
+// time ~/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -6,51 +6,50 @@ var chain = last(process.argv) // load index as last command line index
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
 var semantics = process.argv[process.argv.length - 2]
-console.log(semantics)
+// console.log(semantics)
 var dataPath = "../data/",
     priorFilePrefix = "prior-2",
-    interpretationFilePrefix = "interpretation-4"
+    interpretationFilePrefix = "interpretation-5"
 
 var priorFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-trials.csv",
-    priorCatchFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-catch_trials.csv",
     interpretationFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-trials.csv",
-    interpretationCatchFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-catch_trials.csv";
+    priorCatchFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-catch_trials.csv",
+    interpretationCatchFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-catch_trials.csv",
+    priorSubjFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-subject_information.csv",
+    interpretationSubjFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-subject_information.csv";
 
 var d_prior = dataFrame(utils.readCSV(priorFile).data, ["workerid","response"]),
-    d_prior_catch = dataFrame(utils.readCSV(priorCatchFile).data, ["workerid",  "correct"]),
-		d_interpretation = dataFrame(utils.readCSV(interpretationFile).data, ["workerid", "response"]),
-    d_interpretation_catch=dataFrame(utils.readCSV(interpretationCatchFile).data, ["workerid", "correct"]);
+    d_interpretation = dataFrame(utils.readCSV(interpretationFile).data, ["workerid", "response"]),
+    d_prior_catch = dataFrame(utils.readCSV(priorCatchFile).data, ["workerid", "tested_on", "correct"]),
+    d_interpretation_catch=dataFrame(utils.readCSV(interpretationCatchFile).data, ["workerid", "tested_on", "correct"]),
+    d_prior_subj = dataFrame(utils.readCSV(priorSubjFile).data, ["workerid"]),
+    d_interpretation_subj=dataFrame(utils.readCSV(interpretationSubjFile).data, ["workerid"]);
 
-var priorWorkerids = levels(d_prior_catch, "workerid")
-var interpretationWorkerids = levels(d_interpretation_catch, "workerid")
-
-var priorWorkeridsPassed = filter(function(workerid){
-  sum(_.map(_.filter(d_prior_catch, {workerid: workerid}), "correct")) >= 8
-}, priorWorkerids)
-
-var interpretationWorkeridsPassed = filter(function(workerid){
-  sum(_.map(_.filter(d_prior_catch, {workerid: workerid}), "correct")) >= 8
-}, interpretationWorkerids)
+var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
+    interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
+    priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
+    interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
 
 var data = {
 	prior: filter(function(di){
-    return (priorWorkeridsPassed.indexOf(di.workerid) > -1) && (utils.isNumber(di.response))
+    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) && 
+      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+      utils.isNumber(di.response))
   }, map(function(d){ return extend(d, {
 		avoided_endval: avoidEnds(d.response)
   })}, d_prior)),
 	interpretation: filter(function(di){
-    return (interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && (utils.isNumber(di.response))
+    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && 
+      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+      utils.isNumber(di.response))
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
 	})}, d_interpretation))
 };
 
-
-// // test that removing Ss who failed catch trial works properly
-assert.ok(levels(data.interpretation, "workerid").length == interpretationWorkeridsPassed.length)
-
-assert.ok(levels(data.prior, "workerid").length == priorWorkeridsPassed.length)
-
+// // // test that removing Ss who failed catch trial works properly (computed in R)
+assert.ok(levels(data.interpretation, "workerid").length == 107)
+assert.ok(levels(data.prior, "workerid").length == 131)
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -163,6 +162,7 @@ var model = function(){
 	return query
 }
 
+// var totalIterations = 500, lag =  1;
 var totalIterations = 500000, lag =  100;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 

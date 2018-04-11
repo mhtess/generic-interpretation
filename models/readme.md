@@ -13,7 +13,7 @@ Note on model implementations: Models use a custom WebPPL implementation that st
 ## Modeling new generic interpretation data
 
 - `generics-bda-L0-iMH.wppl`: 
-	- to run: `webppl cgenerics-bda-L0-iMH.wppl --require utils uncertain chainNum` (where `chainNum` is just used for id purposes)
+	- to run: `webppl generics-bda-L0-iMH.wppl --require utils uncertain chainNum` (where `chainNum` is just used for id purposes)
 	- lesioned form of the model can be run using the following:
 		- fixed-threshold at 0: `webppl cimpian-bda-L0-iMH.wppl --require utils some chainNum`
 		- fixed-threshold at 0.5: `webppl cimpian-bda-L0-iMH.wppl --require utils most chainNum` (note that with a fixed-threshold at 0.5, some responses will be literally impossible; thus, this model inherits and extra "noise" parameter)
