@@ -66,12 +66,16 @@ library(tidyverse)
 library(cowplot)
 library(ggthemes)
 library(RColorBrewer)
+library(ggpirate)
 theme_set(theme_few())
 ```
 
 ```{r analysis_preferences}
 # Seed for random number generation
 set.seed(42)
+
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, cache=T, message=FALSE, sanitize = T)
+
 ```
 
 # Introduction
@@ -561,7 +565,7 @@ Consisntent with this qualitative prediction, a mixed-effects linear model with 
 
 \red{Flesh out alternative models}
 
-```{r cimpian-modelingResults, fig.width = 10, fig.asp = 0.57, fig.cap="Model fits."}
+```{r cimpian-modelingResults, fig.width = 10, fig.asp = 0.57, fig.cap="Implied prevalence data and model predictions for items from Cimpian et al. (2010). A: Mean implied prevalence ratings for forty stimuli. B: Implied prevalence and generics model prections collapsed across property type. C: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions."}
 
 load(file = "cached_results/cimpian-modelFits-interpretations.RData")
 load(file = "cached_results/cimpian-interpretations-95ci.RData")
@@ -735,7 +739,7 @@ For each item, we then computed its belief distribution’s expected value.
 As intended, items covered a wide range of probabilities and expected values (see Figure 2).
 
 
-```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors."}
+```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors for a broad set of animal properties. A: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. B: Eight example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence."}
 load(file = "cached_results/genInt_priors.RData")
 # df.prior.prevalence.2.isZero.conditionalEv,
 #      df.prior.prevalence.2,
@@ -818,6 +822,58 @@ Each participant completed thirty-six trials, corresponding to a random subset o
 ## Model-based analysis and results
 
 ## Discussion
+
+```{r genint-modelingResults, fig.width = 11, fig.asp = 0.90, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are raw empirical judgments).B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
+
+load(file = "cached_results/genInt_interpretation_modelData.RData")
+#df.int.filtered, df.int.filtered.bs, md.impprev
+
+fig.genint.interpretation.ci <- df.int.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35)+
+  coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  scale_y_continuous(limits= c(0, 1), breaks = c(0, 0.5, 1))+
+  theme(axis.title.y = element_blank())+
+  xlab("Implied prevalence rating")
+
+
+fig.genint.interpretation.modelss <- md.impprev %>% 
+  filter((parameter == "posterior") | (semantics == "uncertain")) %>%
+  mutate(src = paste(parameter, "_", semantics, sep =""),
+         src = factor(src, levels = c("prior_uncertain", "posterior_some",
+                                      "posterior_most", "posterior_uncertain"),
+                      labels = c("Prevalence prior mean",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"most" + noise\n(threshold = 0.5)',
+                                 'generic\n(uncertain threshold)'))) %>%
+  ggplot(., aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  geom_point(alpha = 1)+
+  facet_wrap(~src, ncol = 1)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()+
+  xlab("Model prediction")+
+  ylab("Human implied prevalence")
+
+
+cowplot::plot_grid(
+  fig.genint.interpretation.ci + theme(plot.margin = unit(c(12, 6, 6, 6), "pt"),
+                         legend.position = 'none'),
+  fig.genint.interpretation.modelss + theme(plot.margin = unit(c(0, 6, 6, 6), "pt"),
+                         legend.position = 'none'), 
+  nrow = 1,
+  labels = c("A", "B"),
+  rel_widths = c(3.5, 1)
+)
+
+```
+
 
 # Experiment 3: Prior Manipulation
 
