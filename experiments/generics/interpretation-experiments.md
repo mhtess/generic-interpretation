@@ -60,3 +60,10 @@
 + n = 72 --> 69.12 (4/10/18)
 
 # Manipulated prior experiments
+
+## Prior-manipulation-1
+
+- 4/13/18
+- pilot, 6 distributions x {prior, listener}, 1 nonse verb (dax)
+- $0.30
+- n = 36 --> 10.8 + 2.16 = 12.96
