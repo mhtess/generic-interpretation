@@ -172,7 +172,7 @@ function make_slides(f) {
       // debugger;
       // this.missing = _.sample([1,2,3,4,5,6,7,8,9]);
 
-      this.missing = exp.n_data == 0 ? "A" : _.sample(_.range(1, stim.data.length - 1));
+      this.missing = exp.n_data == 0 ? "A" : _.sample(_.range(3, stim.data.length - 3));
       // console.log(_.range(stim.data.length - 1))
       this.experimentNames = stim.categories.slice(0, stim.data.length);
 
@@ -538,13 +538,13 @@ function init() {
 
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
-  exp.condition = _.sample(["prior","listener"])
-  // exp.condition = "listener"
+  // exp.condition = _.sample(["prior","listener"])
+  exp.condition = "listener"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
 
-  exp.n_data = 11;
+  exp.n_data = 10;
 
   var shuffledCreatures = _.shuffle(creatureNames);
   var creatures = _.map(shuffledCreatures.slice(0,exp.n_data),

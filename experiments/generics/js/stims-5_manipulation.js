@@ -151,7 +151,7 @@ var creatureNames =
       }
     }
 
-    var rarity = 4; // (how many out of 11 will have it?)
+    var rarity = 5; // (how many out of 11 will have it?)
 
     var zeroDist = gaussian(0, 1.2);
     var sampleNull = function(){
@@ -169,9 +169,9 @@ var creatureNames =
 
     var noise = gaussian(0, 4);
 
-    var weak = gaussian(25, 5);
-    var half = gaussian(50, 5);
-    var strong = gaussian(75, 7);
+    var weak = gaussian(25, 6);
+    var half = gaussian(50, 6);
+    var strong = gaussian(75, 6);
 
     var rare_weak_samples = [], 
         rare_half_samples = [],
@@ -179,6 +179,15 @@ var creatureNames =
         weak_or_strong_samples = [],
         weak_or_deterministic_samples = [],
         uniform_samples = [];
+
+
+    var uniform_samples = [
+      0, 2, 
+      24, 27,
+      45, 52,
+      79, 75,
+      100, 97
+    ]
 
     // for (var i=0; i<11; i++){
     //   var s = Math.round(noise.ppf(Math.random()));
@@ -193,7 +202,7 @@ var creatureNames =
     // }
 
     // rare weak distribution
-    for (var i=0; i<11; i++){
+    for (var i=0; i<10; i++){
       if (i < rarity) { // minor component
 
         rare_weak_samples.push(Math.round(weak.ppf(Math.random())));
@@ -211,7 +220,7 @@ var creatureNames =
         weak_or_deterministic_samples.push(Math.round(weak.ppf(Math.random())));
 
       }
-      uniform_samples.push(Math.round(Math.random()*100))
+      // uniform_samples.push(Math.round(Math.random()*100))
     }
 
     // var uniform_samples = _.map(_.range(10), function(i){
@@ -226,26 +235,26 @@ var creatureNames =
         distribution: "uniform",
         data: _.shuffle(uniform_samples),
       },
-      {
-        distribution: "rare_weak",
-        data: _.shuffle(rare_weak_samples)
-      },
-      {
-        distribution: "rare_half",
-        data: _.shuffle(rare_half_samples)
-      },
-      {
-        distribution: "rare_strong",
-        data: _.shuffle(rare_strong_samples)
-      },
+      // {
+      //   distribution: "rare_weak",
+      //   data: _.shuffle(rare_weak_samples)
+      // },
+      // {
+      //   distribution: "rare_half",
+      //   data: _.shuffle(rare_half_samples)
+      // },
+      // {
+      //   distribution: "rare_strong",
+      //   data: _.shuffle(rare_strong_samples)
+      // },
       {
         distribution: "weak_or_strong",
         data: _.shuffle(weak_or_strong_samples)
       },
-      {
-        distribution: "weak_or_deterministic",
-        data: _.shuffle(weak_or_deterministic_samples)
-      }
+      // {
+      //   distribution: "weak_or_deterministic",
+      //   data: _.shuffle(weak_or_deterministic_samples)
+      // }
       // {
       //   distribution: "common_weak",
       //   data: _.shuffle(common_weak_samples)

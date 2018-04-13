@@ -67,3 +67,5 @@
 - pilot, 6 distributions x {prior, listener}, 1 nonse verb (dax)
 - $0.30
 - n = 36 --> 10.8 + 2.16 = 12.96
++ n = 18 (only uniform) --> 6.48
++ n = 18 (pseudo-uniform, equal mixture weak or strong, only listener) --> 6.48
