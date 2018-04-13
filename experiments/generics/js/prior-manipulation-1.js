@@ -15,6 +15,19 @@ var jsUcfirst = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+function createRadioElement(name, label, checked) {
+    var radioHtml = '<label><input type="radio" name="' + name + '" value = "'+label+'"';
+    if ( checked ) {
+        radioHtml += ' checked="checked"';
+    }
+    radioHtml += '/>' + label + "</label>";
+
+    var radioFragment = document.createElement('div');
+    radioFragment.innerHTML = radioHtml;
+
+    return radioFragment.firstChild;
+}
+
 function make_slides(f) {
   var slides = {};
 
@@ -36,6 +49,52 @@ function make_slides(f) {
     }
   });
 
+  slides.memory_check = slide({
+    name : "memory_check",
+    start: function() {
+
+     $(".err").hide();
+
+     this.check_properties = _.shuffle(_.flatten([exp.memory_properties, exp.property.property]))
+
+     // clear the former content of a given <div id="memory_checkboxes"></div>
+     document.getElementById('memory_buttons').innerHTML = '';
+
+     for (i=0;i<this.check_properties.length;i++){
+
+      var radioElement = createRadioElement("memory_check" ,this.check_properties[i], false)
+       document.getElementById('memory_buttons').appendChild(radioElement);
+       document.getElementById('memory_buttons').appendChild(document.createElement("br"));
+
+     }
+   },
+    button : function() {
+
+      var property_response = $('input[name="memory_check"]:checked').val()
+      var numeric_response = parseInt($("#resultRetrieval").val())
+
+      if ( (property_response == null)|| isNaN(numeric_response) ) {
+         $(".err").show();
+      } else {
+
+        var passNumeric = exp.stimscopy[0].data.indexOf(numeric_response) != -1 ? 1 : 0;
+         var passProperty = (property_response == exp.property.property) ?  1 : 0;
+
+        exp.catch_trials.push({
+          condition: "memory_check",
+          reported_property: property_response,
+          reported_results: numeric_response,
+          actual_property: exp.property.property,
+          pass_property: passProperty,
+          pass_numeric: passNumeric,
+          pass_both: ((passProperty + passNumeric) == 2) ? 1 : 0
+        })
+        exp.go(); //use exp.go() if and only if there is no "present" data.
+      }
+    }
+  });
+
+
   slides.prior_manipulation = slide({
     name: "prior_manipulation",
     trialNum: 1,
@@ -46,6 +105,10 @@ function make_slides(f) {
     present_handle : function(stim) {
       var prompt, utt;
       console.log(stim)
+
+      $(".followUpQ").hide();
+      $("#followUpResponse").val('');
+      this.followUp = true;
       // show prior questions and responses
       $(".question0").hide();
       $("#slider_table0").hide();
@@ -83,7 +146,7 @@ function make_slides(f) {
         $("#nextExptButton").html("Continue");
         this.waitFlag = 2;
       } else {
-        $("#nextExptButton").html("Look at results of next experiment");
+        $("#nextExptButton").html("Look at information about the next kind of animal");
       }
 
       // this.switch = true;
@@ -153,17 +216,17 @@ function make_slides(f) {
 
       $("#evidenceDescription").show();
 
-      var experimentEvent = 'The scientists studied 100 ' + this.stim.categories[i].category + " over the course of the past year.";
+      var experimentEvent = 'The scientists studied 100 ' + this.stim.categories[i].category + " in their natural habitat over the course of the past year.";
       // experimentEvent = experimentEvent.replace("SPECIAL", this.stim.treatment + " " +  this.experimentNames[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar);
 
-      var experimentResults = 'The scientists concluded that ' +this.stim.data[i] + ' out of those 100 ' + this.stim.categories[i].category + ' ' + this.stim.property +'.';
+      var experimentResults = 'The scientists found that ' +this.stim.data[i] + ' out of those 100 ' + this.stim.categories[i].category + ' ' + this.stim.property +'.';
       // experimentResults = experimentResults.replace("N", this.stim.data[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar)
 
       if (this.stim.data[i] == "?") {
 
         // $("#evidenceDescription").html("Your team "+ experimentEvent + isAnother + " 100 " + this.stim.category + "<br>The results of this experiment have been misplaced so <strong>we don't know</strong> how many " + this.stim.category + " " + this.stim.evidence +".");
 
-        $("#evidenceDescription").html("Unfortunately, we have misplaced these data so we don't yet know how many "+ ' out of those 100 ' + this.stim.categories[i].category + ' ' + this.stim.property +'.')
+        $("#evidenceDescription").html("Unfortunately, we have misplaced these data so we don't yet know how many "+ this.stim.categories[i].category + ' ' + this.stim.property +'.')
 
         //
         // $("#evidenceDescription").html("Your team treated "+isAnother+"100 " + this.stim.category + " with " + this.stim.treatment + " " + this.experimentNames[i] + ". <br>The results of this experiment have been misplaced so <strong>we don't know</strong> how many " + this.stim.category + " " + this.stim.evidence +".");
@@ -188,7 +251,7 @@ function make_slides(f) {
           this.waitFlag = 2;
 
         } else if (this.waitFlag == 2){
-          $("#evidenceDescription").html("<strong>Please take another moment to review the results of the experiments.</strong>");
+          $("#evidenceDescription").html("<strong>Please take another moment to review the information about animals.</strong>");
           this.waitFlag = 0;
 
         } else {
@@ -268,7 +331,7 @@ function make_slides(f) {
 
             // prompt = replaceTerms(this.stim, "prompt") + "<br>" + replaceTerms(this.stim, "experiment");
 
-            utt = 'They say: <strong>"' + jsUcfirst(this.stim.categories[this.missing].category) + " " + this.stim.property +'."' + '</strong><br>How many out of the 100 ' + this.stim.categories[this.missing].category + ' studied do you think ' + this.stim.property + "?";
+            utt = '<strong>They say: <u>"' + jsUcfirst(this.stim.categories[this.missing].category) + " " + this.stim.property +'."</u>' + '</strong><br><br><br>How many out of the 100 ' + this.stim.categories[this.missing].category + ' studied do you think ' + this.stim.property + "?";
 
             $("#listener_number").html("---");
             $("#listener_number").show();
@@ -332,7 +395,18 @@ function make_slides(f) {
 
       if (error == 1) {
         $(".err").show();
-      } else {
+      } else if (this.followUp) {
+        $(".err").hide();
+        $(".followUpQ").show()
+        this.followUp = false;
+        if (exp.condition == "prior") {
+            for (var slider_i=0; slider_i<exp.nextExperimentNames.length; slider_i++) {
+               $("#single_slider" + slider_i).unbind("mousedown");
+            }
+        } else if (exp.condition == "listener") {
+          $("#single_slider2").unbind("mousedown");
+        }
+      } else {        
         this.rt = Date.now() - this.startTime;
         this.log_responses();
         _stream.apply(this);
@@ -360,7 +434,8 @@ function make_slides(f) {
           "missing":this.missing,
           "response": response,
           "experimentResults": this.stim.data,
-          "label": -99
+          "label": -99,
+          "explanation": $("#followUpResponse").val()
         });
       } else if (exp.condition == "prior") {
         for (var i=0; i<exp.sliderPrior.length; i++){
@@ -381,7 +456,8 @@ function make_slides(f) {
             "missing":this.missing,
             "response": exp.sliderPrior[i],
             "experimentResults": this.stim.data,
-            "label": this.nextExperimentNames[i]
+            "label": exp.nextExperimentNames[i],
+             "explanation": $("#followUpResponse").val()
           });
         }
       } else if (exp.condition == "listener") {
@@ -402,7 +478,8 @@ function make_slides(f) {
           "missing":this.missing,
           "response": exp.sliderPost,
           "experimentResults": this.stim.data,
-          "label": -99
+          "label": -99,
+          "explanation": $("#followUpResponse").val()
         });
       }
     }
@@ -464,12 +541,12 @@ function init() {
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
   // exp.condition = _.sample(["prior","speaker"])
-  exp.condition = "prior"
+  exp.condition = "listener"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
 
-  exp.n_data = 3;
+  exp.n_data = 11;
 
   var shuffledCreatures = _.shuffle(creatureNames);
   var creatures = _.map(shuffledCreatures.slice(0,exp.n_data),
@@ -481,7 +558,12 @@ function init() {
     )
 
   var property = _.sample(stim_properties)
+  exp.property = property;
+  exp.other_properties = _.without(stim_properties, property)
+  exp.memory_properties = _.shuffle(_.pluck(exp.other_properties, "property")).slice(0, 10)
+
   var dist = _.sample(distributions);
+  console.log(dist)
 
   // exp.stims =_.map(_.zip(creatures, properties_to_be_tested),
   //   function(cp){
@@ -532,9 +614,9 @@ function init() {
 
   //blocks of the experiment:
    exp.structure=[
-     // "i0",
-     // "instructions",
+     "i0",
      "prior_manipulation",
+     "memory_check",
      "subj_info",
      "thanks"
    ];

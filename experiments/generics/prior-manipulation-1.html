@@ -34,7 +34,7 @@
 
     <!-- experiment file -->
     <script src="js/prior-manipulation-1.js"></script>
-    <script src="js/stims-5.js"></script>
+    <script src="js/stims-5_manipulation.js"></script>
 
     <script src="_shared/js/uniqueturker.js"></script>
 
@@ -57,14 +57,14 @@
 
   <div class="slide" id="instructions">
     <h3>Instructions</h3>
-    <p>Recently, a team of scientists discovered lots of animals that we did not know existed. The scientists are trying to learn about the properties of these new animals. The team has collected data about these different animals. </p>
+    <p>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are trying to learn about the properties of these new animals. The team has collected data about these different animals. </p>
     <button onclick="_s.button()">Continue</button>
   </div>
 
 
   <div class="slide" id="prior_manipulation">
     <!-- <br> -->
-    <p class='data'>Recently, a team of scientists discovered lots of animals that we did not know existed. The scientists are trying to learn about the properties of these new animals. In particular, they are interested in learning about the tendency to <span class="property">{{}}</span>. The team has collected data about how many of these different animals <span class="property">{{}}</span>.
+    <p class='data'>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are trying to learn about the tendency of these new animals to <strong><span class="property">{{}}</span></strong>. The team has collected data about how many of these different animals <span class="property">{{}}</span>.
     </p>
 
     </p>
@@ -171,12 +171,33 @@
       </label>
     </div>
 
-    <button onclick="_s.nextExperiment()" id="nextExptButton">Look at results of next experiment</button>
+    <div class="followUpQ">
+      <p>Can you explain why you gave the response or responses that you gave?</p>
+      <textarea id="followUpResponse" rows="3" cols="75"></textarea>
+    </div>
+    <br>    
+
+    <button onclick="_s.nextExperiment()" id="nextExptButton">Look at information about the next kind of animal.</button>
 
     <button onclick="_s.button()" id="continueButton">Continue</button>
     <p class="err">Please respond to the questions.</p>
 
   </div>
+
+
+  <div class="slide" id="memory_check">
+    <p>Select the property the scientists were studying.</p>
+    <div id="memory_buttons" align="left"></div>
+
+      <p>In the text box below, write down one of the numbers of animals you remember that had the property (in other words: one of the numbers you saw in the table in the first part of the experiment). </p>
+      <textarea id="resultRetrieval" rows="1" cols="3"></textarea>
+      <br><br>
+
+      <button onclick="_s.button()">Continue</button>
+      <p class="err">Please respond to the questions.</p>
+
+  </div>
+
 
 
   <div class="slide"  id="debrief">
