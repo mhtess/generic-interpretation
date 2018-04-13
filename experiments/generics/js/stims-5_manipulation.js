@@ -15,43 +15,32 @@ var stim_properties = [
   // { property: "experience emotions", type: "psychological" },
   // { property: "have personalities", type: "psychological" },
   // { property: "mourn their dead", type: "psychological" },
-  { property: "develop phobias", type: "psychological" },
   // { property: "know when earthquakes are about to happen", type: "psychological" },
   // { property: "know how to open doors", type: "psychological" },
-  { property: "know how to ride bicycles", type: "psychological" },
 
   // { property: "use tools", type: "behavior" },
   // { property: "sleep during the day", type: "behavior"},
   // { property: "sing beautiful songs", type: "behavior"},
   // { property: "swim in shallow pools", type: "behavior"},
-  { property: "fly into building windows", type: "behavior"},
   // { property: "do handstands to scare off predators", type: "behavior"},
   // { property: "perform in the circus", type: "behavior"},
   // { property: "ride the subway", type: "behavior"},
-  { property: "play with bottlecaps", type: "behavior"},
-  { property: "chase their tails", type: "behavior"},
-  { property: "like to cuddle", type: "behavior"},
 
   // { property: "capture other animals' territory", type: "behavior_aggressive"},
   // { property: "hunt other animals", type: "behavior_aggressive"},
   // { property: "steal farmers' crops", type: "behavior_aggressive"},
   // { property: "get in fights with other animals", type: "behavior_aggressive"},
   // { property: "pound their chests to display dominance", type: "behavior_aggressive"},
-  { property: "torture other animals", type: "behavior_aggressive"},
-  { property: "attack hikers", type: "behavior_aggressive"},
-  // { property: "carry out premeditated murder", type: "behavior_aggressive"},
+// { property: "carry out premeditated murder", type: "behavior_aggressive"},
 
   // { property: "eat garbage", type: "diet" },
   // { property: "eat human food", type: "diet" },
   // { property: "eat grass", type: "diet" },
   // { property: "feed on the carcasses of dead animals", type: "diet" },
   // { property: "eat insects", type: "diet" },
-  { property: "eat candy wrappers", type: "diet" },
   // { property: "eat people", type: "diet" },
   // { property: "cannibalize each other", type: "diet" },
-  { property: "drink soda", type: "diet" },
-  { property: "drink alcohol left behind by tourists", type: "diet" },
-  // { property: "eat cannabis", type: "diet" },
+ // { property: "eat cannabis", type: "diet" },
   // { property: "fish in the Hudson River", type: "diet" },
 
   // { property: "live in trees", type: "habitat" },
@@ -61,18 +50,35 @@ var stim_properties = [
   // { property: "live in high-rise buildings", type: "habitat" },
 
   // { property: "carry Lyme disease", type: "disease_other"},
-  { property: "carry malaria", type: "disease_other"},
   // { property: "transmit HIV", type: "disease_other"},
-  { property: "transmit rabies", type: "disease_other"},
 
-  { property: "get addicted to nicotine", type: "disease_self"},
   // { property: "develop back problems", type: "disease_self"},
-  { property: "have seizures", type: "disease_self"},
-  // { property: "have strange genetic mutations", type: "disease_self"},
+  
+
+ //  { property: "carry malaria", type: "disease_other"},
+ //  { property: "get addicted to nicotine", type: "disease_self"},
+ //  { property: "transmit rabies", type: "disease_other"},
+ //  { property: "have seizures", type: "disease_self"},
+ //  { property: "go bald", type: "disease_self"},
+ //  { property: "drink soda", type: "diet" },
+ //  { property: "drink alcohol left behind by tourists", type: "diet" },
+ //   { property: "eat candy wrappers", type: "diet" },
+ //  { property: "torture other animals", type: "behavior_aggressive"},
+ //  { property: "attack hikers", type: "behavior_aggressive"},
+ //   { property: "play with bottlecaps", type: "behavior"},
+ //  { property: "chase their tails", type: "behavior"},
+ //  { property: "like to cuddle", type: "behavior"},
+ //  { property: "know how to ride bicycles", type: "psychological" },
+ //  { property: "develop phobias", type: "psychological" },
+ // { property: "fly into building windows", type: "behavior"},
+
+ { property: "dax", type: "nonse"}//,
+ // { property: "meek", type: "nonse"}
+
+   // { property: "have strange genetic mutations", type: "disease_self"},
   // { property: "get dandruff", type: "disease_self"},
   // { property: "get cancer", type: "disease_self"},
   // { property: "lose their teeth", type: "disease_self"},
-  { property: "go bald", type: "disease_self"},
 
   // { property: "give birth underwater", type: "reproduction"},
   // { property: "lay eggs in other birds' nests", type: "reproduction"},
@@ -154,7 +160,7 @@ var creatureNames =
       return Math.round(si)
     }
 
-    var deterministic = gaussian(100, 3);
+    var deterministic = gaussian(100, 5);
     var sampleDeterministic = function(){
       var s = deterministic.ppf(Math.random())
       var si = s < 100 ? s : 100
@@ -163,11 +169,9 @@ var creatureNames =
 
     var noise = gaussian(0, 4);
 
-
-
-    var weak = gaussian(25, 2);
-    var half = gaussian(50, 3);
-    var strong = gaussian(75, 5);
+    var weak = gaussian(25, 5);
+    var half = gaussian(50, 5);
+    var strong = gaussian(75, 7);
 
     var rare_weak_samples = [], 
         rare_half_samples = [],
@@ -222,26 +226,26 @@ var creatureNames =
         distribution: "uniform",
         data: _.shuffle(uniform_samples),
       },
-      // {
-      //   distribution: "rare_weak",
-      //   data: _.shuffle(rare_weak_samples)
-      // },
-      // {
-      //   distribution: "rare_half",
-      //   data: _.shuffle(rare_half_samples)
-      // },
-      // {
-      //   distribution: "rare_strong",
-      //   data: _.shuffle(rare_strong_samples)
-      // },
-      // {
-      //   distribution: "weak_or_strong",
-      //   data: _.shuffle(weak_or_strong_samples)
-      // },
-      // {
-      //   distribution: "weak_or_deterministic",
-      //   data: _.shuffle(weak_or_deterministic_samples)
-      // }
+      {
+        distribution: "rare_weak",
+        data: _.shuffle(rare_weak_samples)
+      },
+      {
+        distribution: "rare_half",
+        data: _.shuffle(rare_half_samples)
+      },
+      {
+        distribution: "rare_strong",
+        data: _.shuffle(rare_strong_samples)
+      },
+      {
+        distribution: "weak_or_strong",
+        data: _.shuffle(weak_or_strong_samples)
+      },
+      {
+        distribution: "weak_or_deterministic",
+        data: _.shuffle(weak_or_deterministic_samples)
+      }
       // {
       //   distribution: "common_weak",
       //   data: _.shuffle(common_weak_samples)

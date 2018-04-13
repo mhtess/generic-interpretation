@@ -55,30 +55,33 @@ function make_slides(f) {
 
      $(".err").hide();
 
-     this.check_properties = _.shuffle(_.flatten([exp.memory_properties, exp.property.property]))
+     // this.check_properties = _.shuffle(_.flatten([exp.memory_properties, exp.property.property]))
 
-     // clear the former content of a given <div id="memory_checkboxes"></div>
-     document.getElementById('memory_buttons').innerHTML = '';
+     // // clear the former content of a given <div id="memory_checkboxes"></div>
+     // document.getElementById('memory_buttons').innerHTML = '';
 
-     for (i=0;i<this.check_properties.length;i++){
+     // for (i=0;i<this.check_properties.length;i++){
 
-      var radioElement = createRadioElement("memory_check" ,this.check_properties[i], false)
-       document.getElementById('memory_buttons').appendChild(radioElement);
-       document.getElementById('memory_buttons').appendChild(document.createElement("br"));
+     //  var radioElement = createRadioElement("memory_check" ,this.check_properties[i], false)
+     //   document.getElementById('memory_buttons').appendChild(radioElement);
+     //   document.getElementById('memory_buttons').appendChild(document.createElement("br"));
 
-     }
+     // }
    },
     button : function() {
 
-      var property_response = $('input[name="memory_check"]:checked').val()
+      var property_response = $("#propertyRetrieval").val()
+      // var property_response = $('input[name="memory_check"]:checked').val()
       var numeric_response = parseInt($("#resultRetrieval").val())
 
-      if ( (property_response == null)|| isNaN(numeric_response) ) {
+      // if ( (property_response == null)|| isNaN(numeric_response) ) {
+      if ( (property_response == "")|| isNaN(numeric_response) ) {
          $(".err").show();
       } else {
 
         var passNumeric = exp.stimscopy[0].data.indexOf(numeric_response) != -1 ? 1 : 0;
-         var passProperty = (property_response == exp.property.property) ?  1 : 0;
+        // var passProperty = (property_response == exp.property.property) ?  1 : 0;
+        var passProperty = ((exp.property.property.indexOf(property_response) > -1) || (property_response.indexOf(exp.property.property) > -1)) ? 1 : 0
 
         exp.catch_trials.push({
           condition: "memory_check",
@@ -104,7 +107,7 @@ function make_slides(f) {
     //this gets run only at the beginning of the block
     present_handle : function(stim) {
       var prompt, utt;
-      console.log(stim)
+      // console.log(stim)
 
       $(".followUpQ").hide();
       $("#followUpResponse").val('');
@@ -331,7 +334,7 @@ function make_slides(f) {
 
             // prompt = replaceTerms(this.stim, "prompt") + "<br>" + replaceTerms(this.stim, "experiment");
 
-            utt = '<strong>They say: <u>"' + jsUcfirst(this.stim.categories[this.missing].category) + " " + this.stim.property +'."</u>' + '</strong><br><br><br>How many out of the 100 ' + this.stim.categories[this.missing].category + ' studied do you think ' + this.stim.property + "?";
+            utt = '<strong>They say: "<u>' + jsUcfirst(this.stim.categories[this.missing].category) + " " + this.stim.property +'.</u>"' + '</strong><br><br><br>How many out of the 100 ' + this.stim.categories[this.missing].category + ' studied do you think ' + this.stim.property + "?";
 
             $("#listener_number").html("---");
             $("#listener_number").show();
@@ -418,7 +421,7 @@ function make_slides(f) {
       if (exp.condition == "speaker") {
         response = $('input[name="speaker"]:checked').val() == "Yes" ?  1 : 0;
         exp.data_trials.push({
-          "trial_type" : "causals",
+          "trial_type" : "prior_manipulation",
           "condition": exp.condition,
           "trial_num": this.trialNum,
           "rt":this.rt,
@@ -440,45 +443,40 @@ function make_slides(f) {
       } else if (exp.condition == "prior") {
         for (var i=0; i<exp.sliderPrior.length; i++){
           exp.data_trials.push({
-            "trial_type" : "causals",
+            "trial_type" : "prior_manipulation",
             "condition": exp.condition,
             "trial_num": this.trialNum,
             "rt":this.rt,
-            "frequency": -99,
-            "category": this.stim.category,
-            "story": this.stim.story,
+            // "frequency": -99,
+            "category": exp.nextExperimentNames[i].category,
             "distribution": this.stim.distribution,
             "n_data":this.stim.n_data,
-            "treatment":this.stim.treatment,
-            "unit":this.stim.unit,
-            "target":this.stim.target,
-            "query": this.stim.query,
+            "property_type":this.stim.type,
+            "property": this.stim.property,
             "missing":this.missing,
             "response": exp.sliderPrior[i],
             "experimentResults": this.stim.data,
-            "label": exp.nextExperimentNames[i],
              "explanation": $("#followUpResponse").val()
           });
         }
       } else if (exp.condition == "listener") {
         exp.data_trials.push({
-          "trial_type" : "causals",
+          "trial_type" : "prior_manipulation",
           "condition": exp.condition,
           "trial_num": this.trialNum,
           "rt":this.rt,
-          "frequency": -99,
-          "category": this.stim.category,
-          "story": this.stim.story,
+          "category": this.stim.categories[this.missing].category,
+          // "story": this.stim.story,
           "distribution": this.stim.distribution,
           "n_data":this.stim.n_data,
-          "treatment":this.stim.treatment,
-          "unit":this.stim.unit,
-          "target":this.stim.target,
-          "query": this.stim.query,
+          // "treatment":this.stim.treatment,
+          // "unit":this.stim.unit,
+          "property_type":this.stim.type,
+          "property": this.stim.property,
           "missing":this.missing,
           "response": exp.sliderPost,
           "experimentResults": this.stim.data,
-          "label": -99,
+          // "label": -99,
           "explanation": $("#followUpResponse").val()
         });
       }
@@ -527,7 +525,7 @@ function init() {
 
   repeatWorker = false;
   (function(){
-      var ut_id = "mht-causals-20170508";
+      var ut_id = "mht-intmanip-20170413";
       if (UTWorkerLimitReached(ut_id)) {
         $('.slide').empty();
         repeatWorker = true;
@@ -540,8 +538,8 @@ function init() {
 
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
-  // exp.condition = _.sample(["prior","speaker"])
-  exp.condition = "listener"
+  exp.condition = _.sample(["prior","listener"])
+  // exp.condition = "listener"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
@@ -563,7 +561,7 @@ function init() {
   exp.memory_properties = _.shuffle(_.pluck(exp.other_properties, "property")).slice(0, 10)
 
   var dist = _.sample(distributions);
-  console.log(dist)
+  // console.log(dist)
 
   // exp.stims =_.map(_.zip(creatures, properties_to_be_tested),
   //   function(cp){

@@ -50,7 +50,7 @@
     <p id="instruct-text">You will be asked short questions about a hypothetical situation. The HIT should take approximately 2 minutes. Please pay attention, thanks!</p>
     <button id="start_button" type="button">Start Experiment</button>
 
-    <p style="font-family:courier; font-size:14px; text-align: justify;">Please note: There will be multiple posted versions of this HIT (name: <strong>Language Study - Causes 320</strong>) throughout the next few days. Please attempt only one HIT in this series. You will not be allowed to complete multiple HITs in this series.</p>
+    <p style="font-family:courier; font-size:14px; text-align: justify;">Please note: There will be multiple posted versions of this HIT (name: <strong>Language Study - Animals 131</strong>) throughout the next few days. Please attempt only one HIT in this series. You will not be allowed to complete multiple HITs in this series.</p>
 
     <p id="legal" style="text-align: justify;">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact MH Tessler at <a href="mailto://mhtessler@stanford.edu">mhtessler@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
   </div>
@@ -64,7 +64,7 @@
 
   <div class="slide" id="prior_manipulation">
     <!-- <br> -->
-    <p class='data'>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are trying to learn about the tendency of these new animals to <strong><span class="property">{{}}</span></strong>. The team has collected data about how many of these different animals <span class="property">{{}}</span>.
+    <p class='data'>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are interested in learning about the tendency of these new animals to <strong><span class="property">{{}}</span></strong>, an interesting new behavior. The team has collected data about how many of these different animals <span class="property">{{}}</span>.
     </p>
 
     </p>
@@ -186,8 +186,14 @@
 
 
   <div class="slide" id="memory_check">
-    <p>Select the property the scientists were studying.</p>
-    <div id="memory_buttons" align="left"></div>
+    <!-- <p>Select the property the scientists were studying.</p> -->
+    <!-- <div id="memory_buttons" align="left"></div> -->
+
+
+
+      <p>Please input the name of the new behavior the scientists were investigating.</p>
+      <textarea id="propertyRetrieval" rows="1" cols="10"></textarea>
+      <br><br>
 
       <p>In the text box below, write down one of the numbers of animals you remember that had the property (in other words: one of the numbers you saw in the table in the first part of the experiment). </p>
       <textarea id="resultRetrieval" rows="1" cols="3"></textarea>
