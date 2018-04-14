@@ -174,7 +174,7 @@ function make_slides(f) {
 
       this.missing = exp.n_data == 0 ? "A" : _.sample(_.range(3, stim.data.length - 3));
       // console.log(_.range(stim.data.length - 1))
-      this.experimentNames = stim.categories.slice(0, stim.data.length);
+      this.experimentNames = stim.categories.slice(0, stim.data.length + 1);
 
       stim.data.splice(this.missing, 0, "?");
 
@@ -206,6 +206,7 @@ function make_slides(f) {
       $("#d-1").show()
       $("#d-1a").show()
       i =this.count;
+      // console.log(i)
       $("#h" + i).show()
       $("#d" + i + "a").show()
       $("#d" + i).show()
