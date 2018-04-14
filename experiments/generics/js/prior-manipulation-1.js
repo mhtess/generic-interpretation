@@ -544,7 +544,7 @@ function init() {
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
 
-  exp.n_data = 10;
+  exp.n_data = 11;
 
   var shuffledCreatures = _.shuffle(creatureNames);
   var creatures = _.map(shuffledCreatures.slice(0,exp.n_data),
