@@ -70,3 +70,5 @@
 + n = 18 (only uniform) --> 6.48
 + n = 18 (pseudo-uniform, equal mixture weak or strong, only listener) --> 6.48
 + n = 18 (familiar properties) --> 6.48 (but paid 12.96)
++ n = 18 ("earthquakes", refactor cover story, forced waiting)
+

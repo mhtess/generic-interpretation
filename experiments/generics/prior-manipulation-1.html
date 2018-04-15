@@ -57,17 +57,21 @@
 
   <div class="slide" id="instructions">
     <h3>Instructions</h3>
-    <p>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are trying to learn about the properties of these new animals. The team has collected data about these different animals. </p>
+    <p>Recently, a team of scientists discovered an island with lots of animals that we did not know existed. The scientists are trying to learn about the properties of these new animals. The team has collected data about these different animals. </p>
     <button onclick="_s.button()">Continue</button>
   </div>
 
 
   <div class="slide" id="prior_manipulation">
-    <!-- <br> -->
-    <p class='data'>Recently, a team of scientists discovered lots of animals on an island that we did not know existed. The scientists are interested in learning about the tendency of these new animals to <strong><span class="property">{{}}</span></strong>, an interesting new behavior. The team has collected data about how many of these different animals <span class="property">{{}}</span>.
+    <br>
+    <br>
+    <p class='data'>Imagine you are an astronaut-scientist exploring a distant planet with lots of new animals on it. <br><br>It is believed that some animals have the ability to <i><span class="property">{{}}</span></i> and you are trying to better understand this ability. 
+      <!-- The team has collected data about how many of these different animals <span class="property">{{}}</span>. -->
     </p>
 
     </p>
+    <p id="evidenceDescription"></p>
+
     <table style="width:100%" table-layout="fixed">
       <tr align="center">
         <th id="h-1"></th>
@@ -97,7 +101,7 @@
         <td id="d9"></th>
         <td id="d10"></th>
       </tr>
-      <tr align="center">
+<!--       <tr align="center">
         <td id="d-1a"></th>
         <td id="d0a" class="totalNum"></th>
         <td id="d1a" class="totalNum"></th>
@@ -110,10 +114,9 @@
         <td id="d8a" class="totalNum"></th>
         <td id="d9a" class="totalNum"></th>
         <td id="d10a" class="totalNum"></th>
-      </tr>
+      </tr> -->
     </table>
 
-    <p id="evidenceDescription"></p>
 
     <!-- STRUCTURED PRIOR Questions -->
     <!-- <p class="question0"></p>
@@ -186,16 +189,17 @@
 
 
   <div class="slide" id="memory_check">
-    <!-- <p>Select the property the scientists were studying.</p> -->
-    <!-- <div id="memory_buttons" align="left"></div> -->
+    <p>Select the property the scientists were studying.</p>
+    <div id="memory_buttons" align="left"></div>
 
 
 
-      <p>Please input the name of the new behavior the scientists were investigating.</p>
+<!--       <p>Please input the name of the new behavior the scientists were investigating.</p>
       <textarea id="propertyRetrieval" rows="1" cols="10"></textarea>
+     --> 
       <br><br>
 
-      <p>In the text box below, write down one of the numbers of animals you remember that had the property (in other words: one of the numbers you saw in the table in the first part of the experiment). </p>
+      <p>In the text box below, write down one of the numbers from the first page (in other words: the precentage of one of the animals that had the property). </p>
       <textarea id="resultRetrieval" rows="1" cols="3"></textarea>
       <br><br>
 

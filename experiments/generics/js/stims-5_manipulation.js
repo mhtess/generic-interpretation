@@ -15,7 +15,7 @@ var stim_properties = [
   // { property: "experience emotions", type: "psychological" },
   // { property: "have personalities", type: "psychological" },
   // { property: "mourn their dead", type: "psychological" },
-  // { property: "know when earthquakes are about to happen", type: "psychological" },
+  { property: "know when earthquakes are about to happen", type: "psychological" },
   // { property: "know how to open doors", type: "psychological" },
 
   // { property: "use tools", type: "behavior" },
@@ -54,23 +54,22 @@ var stim_properties = [
 
   // { property: "develop back problems", type: "disease_self"},
   
-
-  { property: "carry malaria", type: "disease_other"},
+  // { property: "carry malaria", type: "disease_other"},
   // { property: "get addicted to nicotine", type: "disease_self"},
-  { property: "transmit rabies", type: "disease_other"},
-  { property: "have seizures", type: "disease_self"},
-  { property: "go bald", type: "disease_self"},
+  // { property: "transmit rabies", type: "disease_other"},
+  // { property: "have seizures", type: "disease_self"},
+  // { property: "go bald", type: "disease_self"},
   // { property: "drink soda", type: "diet" },
-  { property: "drink alcohol left behind by tourists", type: "diet" },
-  { property: "eat candy wrappers", type: "diet" },
-  { property: "torture other animals", type: "behavior_aggressive"},
-  { property: "attack hikers", type: "behavior_aggressive"},
-  { property: "play with bottlecaps", type: "behavior"},
-  { property: "chase their tails", type: "behavior"},
+  // { property: "drink alcohol left behind by tourists", type: "diet" },
+  // { property: "eat candy wrappers", type: "diet" },
+  // { property: "torture other animals", type: "behavior_aggressive"},
+  // { property: "attack hikers", type: "behavior_aggressive"},
+  // { property: "play with bottlecaps", type: "behavior"},
+  // { property: "chase their tails", type: "behavior"},
   // { property: "like to cuddle", type: "behavior"},
   // { property: "know how to ride bicycles", type: "psychological" },
-  { property: "develop phobias", type: "psychological" },
-  { property: "fly into building windows", type: "behavior"},
+  // { property: "develop phobias", type: "psychological" },
+  // { property: "fly into building windows", type: "behavior"},
 
  // { property: "dax", type: "nonse"}//,
  // { property: "meek", type: "nonse"}
@@ -89,6 +88,27 @@ var stim_properties = [
   // { property: "have dozens of sexual partners", type: "reproduction"}
 
 ]
+
+var memory_properties = [
+
+  { property: "carry malaria", type: "disease_other"},
+  { property: "get addicted to nicotine", type: "disease_self"},
+  { property: "transmit rabies", type: "disease_other"},
+  { property: "have seizures", type: "disease_self"},
+  { property: "go bald", type: "disease_self"},
+  { property: "drink soda", type: "diet" },
+  { property: "eat candy wrappers", type: "diet" },
+  { property: "torture other animals", type: "behavior_aggressive"},
+  { property: "attack hikers", type: "behavior_aggressive"},
+  { property: "play with bottlecaps", type: "behavior"},
+  { property: "chase their tails", type: "behavior"},
+  { property: "like to cuddle", type: "behavior"},
+  { property: "know how to ride bicycles", type: "psychological" },
+  { property: "develop phobias", type: "psychological" },
+  { property: "fly into building windows", type: "behavior"}
+
+]
+
 
 
 var creatureNames =
@@ -182,11 +202,11 @@ var creatureNames =
 
 
     var uniform_samples = [
-      0, 2, 
-      24, 27,
-      45, 52,
-      79, 75,
-      100, 97
+      0, 5, 
+      20, 30,
+      45, 55,
+      70, 80,
+      100, 95
     ]
 
     // for (var i=0; i<11; i++){
@@ -251,10 +271,10 @@ var creatureNames =
         distribution: "weak_or_strong",
         data: _.shuffle(weak_or_strong_samples)
       },
-      // {
-      //   distribution: "weak_or_deterministic",
-      //   data: _.shuffle(weak_or_deterministic_samples)
-      // }
+      {
+        distribution: "weak_or_deterministic",
+        data: _.shuffle(weak_or_deterministic_samples)
+      }
       // {
       //   distribution: "common_weak",
       //   data: _.shuffle(common_weak_samples)
