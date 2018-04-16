@@ -925,6 +925,34 @@ Participants then click a button to show the data for each previously studied no
 <!--   We chose to present a "lost data" category to imply that the sampling procedure for the referent-category was random. The alternative would be to present data from ten categories and have participants rate the eleventh, which could imply that the scientists are collecting data until they find one for which the property applied generically. \red{[clean up]} -->
 <!-- ] -->
 
+```{r priorManipulationExpt, fig.cap="Overview of Experiment 3. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence", fig.width = 9,fig.asp = 0.4, cache=F}
+prior.manip.exp.1 <- ggdraw() + draw_image("figs/prior-manip-paradigm-1.jpeg", scale = 0.9) +
+  theme(plot.margin = unit(c(2,0,0,0), "pt"),
+        panel.background = element_rect(colour = "black", size=1)) 
+prior.manip.exp.2 <- ggdraw() + draw_image("figs/prior-manip-paradigm-2.jpeg", scale = 0.9)+
+  theme(plot.margin = unit(c(2,0,0,0), "pt"),
+        panel.background = element_rect(colour = "black", size=1)) 
+prior.manip.exp.3 <- ggdraw() + draw_image("figs/prior-manip-paradigm-priorMeasure.jpeg", scale = 0.95)+
+  theme(plot.margin = unit(c(2,0,0,0), "pt"),
+        panel.background = element_rect(colour = "black", size=1))
+prior.manip.exp.4 <- ggdraw() + draw_image("figs/prior-manip-paradigm-intMeasure.jpeg", scale = 0.95)+
+  theme(plot.margin = unit(c(2,0,0,0), "pt"),
+        panel.background = element_rect(colour = "black", size=1))
+
+
+
+
+prior.manip.toprow <- plot_grid(prior.manip.exp.1, 
+                             prior.manip.exp.2, labels = c("A", "B", "C"), nrow = 1, align = 'vh')
+
+title <- ggdraw() + draw_label("Prevalence prior manipulation")
+plot_grid(
+  plot_grid(title, prior.manip.toprow, ncol=1, rel_heights=c(0.15, 1)),
+  plot_grid(add_sub(prior.manip.exp.3, "Manipulation check"), 
+            add_sub(prior.manip.exp.4,"Generic interpretation"), labels = c("D", "E"), nrow = 1),
+  nrow = 2)
+```
+
 
 <!-- scientists had recently discovered lots of new animals that we did not know existed, and that scientists were trying to understand the properties of these new animals.  -->
 
