@@ -823,7 +823,7 @@ Each participant completed thirty-six trials, corresponding to a random subset o
 
 ## Discussion
 
-```{r genint-modelingResults, fig.width = 11, fig.asp = 0.90, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are raw empirical judgments).B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
+```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are raw empirical judgments).B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
 
 load(file = "cached_results/genInt_interpretation_modelData.RData")
 #df.int.filtered, df.int.filtered.bs, md.impprev
@@ -837,7 +837,7 @@ fig.genint.interpretation.ci <- df.int.filtered %>%
   #scale_color_viridis(discrete = T)+
   scale_y_continuous(limits= c(0, 1), breaks = c(0, 0.5, 1))+
   theme(axis.title.y = element_blank())+
-  xlab("Implied prevalence rating")
+  ylab("Implied prevalence rating")
 
 
 fig.genint.interpretation.modelss <- md.impprev %>% 
@@ -877,8 +877,9 @@ cowplot::plot_grid(
 
 # Experiment 3: Prior Manipulation
 
-In this final experiment, we aim to test the causal role of the prevalence prior in generic interpretation. 
-We do this by manipulating the prevalence prior and measuring the resulting influence on interpretation.
+In this final experiment, we test the causal role of the prevalence prior in generic interpretation. 
+We do this by manipulating the prevalence prior and measuring the resulting influence on interpretation (*generic interpretation* condition).
+To serve as a manipulation check, some participants were assigned to the *prior elicitation* condition.
 
 ## Methods
 
@@ -888,33 +889,42 @@ We recruited N participants from MTurk.
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
 The experiment took on average X minutes and participants were compensated \$K.
 
-### Materials
+### Materials and procedure
 
-From the stimulus set of 74 properties used in Expt. 2, we selected a subset of 24 items that received intermediate interpretation judgments (Expt. 2b: implied prevalence between: 40 - 65\%), which we believed would make them most susceptible to our prior manipulation.
+Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with lots of new animals on it.
+They were studying these animals with another scientist to understand the animals' ability to "know when earthquakes are about to happen".
+This property was chosen because the prevalence prior elicited in Expt. 2 suggested that participants had a lot of uncertainty as to what prevalence levels to expect for this property.
 
-Participants were told that scientists had recently discovered lots of new animals that we did not know existed, and that scientists were trying to understand the properties of these new animals. 
-Participants were then shown "data" that other scientists had collected about a particular property.
-These data were in terms of how many (out of 100) of different categories had the particular property.
-These data followed one of \red{N} distributions.
+Participants were then shown "data" that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
+In order to minimize distraction, novel animals were simply labeled by a letter (e.g., "Animal C" or just "Cs").
+Information about the animal appeared in an *evidence statement* (e.g., \red{"You and your partner find that 98\% of Animal C *know when earthquakes are about to happen*."}) and were displayed in a table showing the corresponding numerical data \red{(e.g., "number with property"; Figure)}. 
+Participants proceed by clicking a continue button to reveal information about the next animals.
+After participants viewed the data for ten categories, they are told to review the information about the animals before continuing (\red{Figure}).
 
-### Procedure
+After the data table, participants were provided the prompt for either the *prior manipulation* condition or the *generic interpretation* condition.
+In the *generic interpretation* condition, participants were told that their fellow scientist studied another animal (*Animal K*) while they were away, and their partner tells them: "Ks know when earthquakes are about to happen".
+Participants are then asked: "What percentage of Ks do you think know when earthquakes are about to happen?" to which they could respond with a rating on a slider bar ranging from 0%-100%. 
+In the *prior manipulation* condition, participants were told they were going to study five more animals and asked to predict how many of each would have the property (\red{Figure}).
+Participants were given five slider bars ranging from 0 - 100, and asked to predict the prevalence for the next five categories (Animals K - P).
+
+After rating the slider bar(s), participants in both condition were asked if they could explain why they gave the response(s) that they did. 
+Then, they completed an attention check survey where they were asked what property the team of scientists was investigating (choosing a response from a list of 10 options) and to input one of the prevalence levels they saw on the familiarization screen.
+
+\red{The prevalences shown following one of N distributions}.
 
 In order to avoid potential influence from learning the structure of the task, participants completed only a single trial: Each participant saw only one property with one prevalence distribution.
 Participants then click a button to show the data for each previously studied novel animal.
-Data appear one at a time (upon a click), and are described in an *evidence statement* (e.g., \red{"Your team observed 100 different cheebas. Of those 100 observed, 98 cheebas had property."}) as well as displayed in a table showing the corresponding numerical data (e.g., "number with property"; \red{Figure}). 
 
-Participants see the data from eleven different categories, though they are told the data for one kind were lost and a "?" was placed in the table (\red{Figure}).^[
-  These lost results would be found in the *generic interpretation* task, Expt. 3b.
-  We chose to present a "lost data" category to imply that the sampling procedure for the referent-category was random. The alternative would be to present data from ten categories and have participants rate the eleventh, which could imply that the scientists are collecting data until they find one for which the property applied generically. \red{[clean up]}
-]
-After participants viewed the data for ten categories (and one missing category), they are told to review the data before continuing (\red{Figure}).
+<!-- Participants see the data from eleven different categories, though they are told the data for one kind were lost and a "?" was placed in the table (\red{Figure}).^[ -->
+<!--   These lost results would be found in the *generic interpretation* task, Expt. 3b. -->
+<!--   We chose to present a "lost data" category to imply that the sampling procedure for the referent-category was random. The alternative would be to present data from ten categories and have participants rate the eleventh, which could imply that the scientists are collecting data until they find one for which the property applied generically. \red{[clean up]} -->
+<!-- ] -->
 
-Upon clicking the continue button, the data table was removed and participants were told more animals were going to be observed.
-Participants were asked to predict the results for the next five categories (\red{Figure}).
-Participants were given five slider bars ranging from 0 - 100, and asked to predict the next five categories.
 
-After responding, participants then completed an attention check survey where they were asked what property the team of scientists was investigating (choosing a response from a drop-down menu with 12 options) and to input one of the data points they saw on the familiarization screen.
-This attention check served to confirm that participants had encoded both relevant aspects of the experiment (the property and the prevalences).
+<!-- scientists had recently discovered lots of new animals that we did not know existed, and that scientists were trying to understand the properties of these new animals.  -->
+
+<!-- From the stimulus set of 74 properties used in Expt. 2, we selected a subset of 24 items that received intermediate interpretation judgments (Expt. 2b: implied prevalence between: 40 - 65\%), which we believed would make them most susceptible to our prior manipulation. -->
+
 
 ## Results
 
