@@ -41,6 +41,17 @@
 - $0.80
 - n = 140 --> 112 + 22.4 = 134.4
 
+
+## Interpretation-6
+
+- 4/16/18
+- replication using % question
+- 75 items (stims-6), subjects rate 35 items
+- after memory check, low responses were asked a follow-up questions (explain) and can change response
+- $0.80
+- n = 140 --> 112 + 22.4 = 134.4
+
+
 # Prior experiments
 
 ## Prior-1
@@ -70,5 +81,10 @@
 + n = 18 (only uniform) --> 6.48
 + n = 18 (pseudo-uniform, equal mixture weak or strong, only listener) --> 6.48
 + n = 18 (familiar properties) --> 6.48 (but paid 12.96)
-+ n = 18 ("earthquakes", refactor cover story, forced waiting)
++ n = 18 ("earthquakes", refactor cover story, forced waiting): weak_or_strong, weak_or_deterministic, uniform
+
+
+## Prior-manipulation-1a
++ n = 36 ("earthquakes", refactor cover story, forced waiting): weak_or_strong, weak_or_deterministic, uniform
+
 
