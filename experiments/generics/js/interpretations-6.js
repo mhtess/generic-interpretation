@@ -115,9 +115,9 @@ function make_slides(f) {
       // var query_prompt = "Out of 100 "  + this.stim.category + ", how many do you think " + this.stim.property + "?\n";
       var query_prompt = "<strong>Out of all of the "  + this.stim.category + " on the planet</strong>,<br> what percentage do you think " + this.stim.property + "?\n";
 
-      this.evidence_prompt = utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + ".\n"
+      this.evidence_prompt = '"' + utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + '."' 
 
-      $(".evidence").html("You are told: \"" + this.evidence_prompt + "\"");
+      $(".evidence").html('You are told: ' + this.evidence_prompt);
       $(".query").html(query_prompt);
 
       this.init_sliders();
