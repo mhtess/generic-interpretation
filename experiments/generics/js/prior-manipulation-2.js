@@ -155,7 +155,7 @@ function make_slides(f) {
 
       setTimeout(function(){
         $("#nextExptButton").show()
-      }, 1000)
+      }, 6000)
 
 
       // this.switch = true;
@@ -241,7 +241,7 @@ function make_slides(f) {
       // experimentEvent = experimentEvent.replace("SPECIAL", this.stim.treatment + " " +  this.experimentNames[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar);
 
       var experimentResults = 
-      'You and your partner find that <strong>' +this.stim.data[i] + '%</strong> of ' + this.experimentNames[i] + 's <i>' + this.stim.property +'</i>.'
+      'After studying the animal, you and your partner determine that <strong>' +this.stim.data[i] + '%</strong> of ' + this.experimentNames[i] + 's <i>' + this.stim.property +'</i>.'
       ;
       // experimentResults = experimentResults.replace("N", this.stim.data[i]).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar)
 
@@ -379,7 +379,7 @@ function make_slides(f) {
                 $(".question2").html(utt);
                 $(".left").show()
                 $(".right").show()
-            }, 4000)
+            }, 5000)
 
             // prompt = replaceTerms(this.stim, "prompt") + "<br>" + 'Your colleague tells you: <strong>"' + jsUcfirst(replaceTerms(this.stim, "utterance")).replace("CATEGORY", this.stim.category).replace("EXEMPLAR", this.stim.exemplar) + '"</strong>'
             //
@@ -562,7 +562,7 @@ function init() {
 
   repeatWorker = false;
   (function(){
-      var ut_id = "mht-intmanip-20170413";
+      var ut_id = "mht-intmanip-20170416";
       if (UTWorkerLimitReached(ut_id)) {
         $('.slide').empty();
         repeatWorker = true;

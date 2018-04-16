@@ -88,3 +88,10 @@
 + n = 36 ("earthquakes", refactor cover story, forced waiting): weak_or_strong, weak_or_deterministic, uniform
 
 
+## Prior-manipulation-2
+
+- 4/16/18
+- pilot, 3 distributions: weak_or_strong, weak_or_deterministic, uniform
+- $0.30
+- n = 36 --> 10.8 + 2.16 = 12.96
+
