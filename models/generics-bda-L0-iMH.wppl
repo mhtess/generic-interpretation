@@ -9,7 +9,7 @@ var semantics = process.argv[process.argv.length - 2]
 // console.log(semantics)
 var dataPath = "../data/",
     priorFilePrefix = "prior-2",
-    interpretationFilePrefix = "interpretation-5"
+    interpretationFilePrefix = "interpretation-6"
 
 var priorFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-trials.csv",
     interpretationFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-trials.csv",
@@ -48,7 +48,8 @@ var data = {
 };
 
 // // // test that removing Ss who failed catch trial works properly (computed in R)
-assert.ok(levels(data.interpretation, "workerid").length == 107)
+assert.ok(levels(data.interpretation, "workerid").length == 132)
+// assert.ok(levels(data.interpretation, "workerid").length == 107)
 assert.ok(levels(data.prior, "workerid").length == 131)
 
 var utterancePrior = Infer({model: function(){
@@ -162,11 +163,11 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 500, lag =  1;
-var totalIterations = 500000, lag =  100;
+var totalIterations = 500, lag =  1;
+// var totalIterations = 500000, lag =  100;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L0-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-int6-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,

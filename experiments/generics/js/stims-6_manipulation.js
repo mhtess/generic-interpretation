@@ -270,11 +270,11 @@ var creatureNames =
       {
         distribution: "weak_or_strong",
         data: _.shuffle(weak_or_strong_samples)
-      },
-      {
-        distribution: "weak_or_deterministic",
-        data: _.shuffle(weak_or_deterministic_samples)
-      }
+      }//,
+      // {
+      //   distribution: "weak_or_deterministic",
+      //   data: _.shuffle(weak_or_deterministic_samples)
+      // }
       // {
       //   distribution: "common_weak",
       //   data: _.shuffle(common_weak_samples)
