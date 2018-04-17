@@ -1,5 +1,5 @@
 ---
-title: "Lang-gen model simulations"
+title: "Generic Interpretation model simulations"
 output: html_notebook
 ---
 
@@ -95,9 +95,11 @@ var meaning = function(utt,state, theta) {
          utt=="all"? state >= 0.99:
          true
 }
+'
 
+statePrior <- '
 var mixture = data.prior.mix[0];
-var priorParams = data.prior.params[0];
+var priorParams = data.prior.params;
 
 var statePrior = Infer({model: function(){
   var component = flip(mixture);
@@ -105,13 +107,13 @@ var statePrior = Infer({model: function(){
     categorical({
       vs: bins,
       ps: map(function(b) {
-        return probability(Beta(priorParams), b) + Number.EPSILON
+        return probability(Beta(priorParams.c1[0]), b) + Number.EPSILON
       }, bins )
     }) :
     categorical({
       vs: bins,
       ps: map(function(b) {
-        return probability(Beta({a:1,b:100}), b) + Number.EPSILON
+        return probability(Beta(priorParams.c2[0]), b) + Number.EPSILON
       }, bins )
     })
 }});
@@ -169,7 +171,7 @@ condition(state > theta)
 
 ```{r simulationCalls}
 fixed.threshold.calls <- '
-_.fromPairs(map(function(t){return [t, fixedThresholdInterpreter(t)]}, [_.min(thetaBins), 0.5]))
+_.fromPairs(map(function(t){return [t, fixedThresholdInterpreter(t)]}, [_.min(thetaBins), 0.33, 0.5]))
 '
 no.utterance.call <- ' 
   //noUtteranceInterpreter()
@@ -191,12 +193,30 @@ priorNames <- c(
 )
 
 priorShapes <- list(
-  uniform =  list(params = data.frame(a = 1, b = 1), mix = 1), 
-  uniform_rare =  list(params = data.frame(a = 1, b = 1), mix = 0.4), 
-  biological_common =  list(params = data.frame(a = 30, b = 1), mix = 1), 
-  biological_rare =  list(params = data.frame(a = 30, b = 1), mix = 0.4), 
-  accidental_common =  list(params = data.frame(a = 2, b = 10), mix = 1),
-  accidental_rare =  list(params = data.frame(a = 2, b = 10), mix = 0.4)
+  uniform =  list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1), 
+  uniform_rare =  list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4), 
+  biological_common =  list(params = list(
+    c1 = data.frame(a = 30, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1), 
+  biological_rare =  list(params = list(
+    c1 = data.frame(a = 30, b = 1),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4), 
+  accidental_common =  list(params = list(
+    c1 = data.frame(a = 2, b = 10), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1),
+  accidental_rare =  list(params = list(
+    c1 = data.frame(a = 2, b = 10), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4)
 )
 
 
@@ -207,14 +227,14 @@ sims.uncertain.thresholds <- data.frame()
 for (p in priorNames){
 
   inputData = list(prior = priorShapes[[p]])
-  rs.fixed.threshold.model <- webppl(paste(rsaHelpers, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "data")
-  rs.uncertain.threshold.model <- webppl(paste(rsaHelpers, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "data")
-  rs.prior <- webppl(paste(rsaHelpers, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var = "data")
+  rs.fixed.threshold.model <- webppl(paste(rsaHelpers, statePrior, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "data")
+  rs.uncertain.threshold.model <- webppl(paste(rsaHelpers, statePrior, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "data")
+  rs.prior <- webppl(paste(rsaHelpers, statePrior, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var = "data")
 
   sims.fixed.thresholds <- bind_rows(sims.fixed.thresholds,
     bind_rows(
       mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.01`) %>% rename(prob = probs), 20000), threshold = 0.1) ,
-      #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.3`) %>% rename(prob = probs), 20000), threshold = 0.3),
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.3`) %>% rename(prob = probs), 20000), threshold = 0.33),
       mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.5`) %>% rename(prob = probs), 20000), threshold = 0.5),
       #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.7`) %>% rename(prob = probs), 20000), threshold = 0.7),
       #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.9`) %>% rename(prob = probs), 20000), threshold = 0.9)
@@ -247,14 +267,14 @@ sims.combined <- bind_rows(
       select(-threshold)
     )
 
-save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+#save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 
 
 #save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 ```
 
 ```{r}
-load(file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+#load(file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 
 
 fig.sims.priors <- ggplot(sims.combined %>%
@@ -289,7 +309,6 @@ fig.sims.priors <- ggplot(sims.combined %>%
           )
 
 ```
-
 
 ```{r fig.width = 6, fig.asp = 0.6}
       # PriorShape = factor(PriorShape, 
@@ -358,6 +377,7 @@ sims.combined.summary <- sims.combined %>%
     group_by(PriorShape, src) %>%
     summarize(expval = mean(state))
   
+
   
 fig.sims.bars <- ggplot(sims.combined.summary %>% mutate(blank = ''), 
        aes(x = PriorShape, y = expval, fill = src))+
@@ -382,6 +402,136 @@ cowplot::plot_grid(
   rel_widths = c(0.33, 1, 0.33)
 )
 
+```
+
+
+
+## Manipulated priors experiment (Expt 3)
+
+```{r}
+
+statePrior2 <- '
+var priorComponents = {
+ "rare": Beta({a: 1, b:100}),
+ "weak": Gaussian({mu: 0.25, sigma: 0.06}),
+ "half": Gaussian({mu: 0.5, sigma: 0.06}),
+ "strong": Gaussian({mu: 0.75, sigma: 0.06}),
+ "deterministic": Beta({a: 50, b:1}),
+  "uniform": Beta({a:1,b:1})
+}
+
+var mixture = 0.5;
+var priorComponentNames = priorNames[0].split("_"),
+  C1 = priorComponents[priorComponentNames[0]],
+  C2 = priorComponents[priorComponentNames[1]];
+
+var statePrior = Infer({model: function(){
+  var component = flip(mixture);
+  return component ?
+    categorical({
+      vs: bins,
+      ps: map(function(b) {
+        return probability(C1, b) + Number.EPSILON
+      }, bins )
+    }) :
+    categorical({
+      vs: bins,
+      ps: map(function(b) {
+        return probability(C2, b) + Number.EPSILON
+      }, bins )
+    })
+}});
+'
+
+manipulatedPriorNames <- c("uniform_uniform","rare_weak","rare_half","rare_strong", "rare_deterministic", 
+                                        "weak_half","weak_strong","weak_deterministic",
+                                        "half_deterministic","strong_deterministic"
+                                        )
+
+sims.fixed.thresholds <- data.frame()
+sims.priors <- data.frame()
+sims.uncertain.thresholds <- data.frame()
+
+for (p in manipulatedPriorNames){
+
+  inputData = p
+  
+  rs.fixed.threshold.model <- webppl(paste(rsaHelpers,statePrior2, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "priorNames")
+  rs.uncertain.threshold.model <- webppl(paste(rsaHelpers,statePrior2, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "priorNames")
+  rs.prior <- webppl(paste(rsaHelpers, statePrior2, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var =  "priorNames")
+
+  sims.fixed.thresholds <- bind_rows(sims.fixed.thresholds,
+    bind_rows(
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.01`) %>% rename(prob = probs), 20000), threshold = 0.1) ,
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.3`) %>% rename(prob = probs), 20000), threshold = 0.33),
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.5`) %>% rename(prob = probs), 20000), threshold = 0.5)
+      #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.7`) %>% rename(prob = probs), 20000), threshold = 0.7),
+      #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.9`) %>% rename(prob = probs), 20000), threshold = 0.9)
+    ) %>% 
+      mutate(PriorShape = p)
+    )
+
+  sims.uncertain.thresholds <- bind_rows(
+    sims.uncertain.thresholds, 
+    get_samples(rs.uncertain.threshold.model, 20000) %>% mutate(PriorShape = p)
+    #rs.uncertain.threshold.model %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+  
+  
+  sims.priors <- bind_rows(
+    sims.priors, 
+    get_samples(rs.prior, 20000) %>% rename(state = support) %>% mutate(PriorShape = p)
+    #rs.prior %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+  
+  print(p)
+}
+
+
+sims.combined <- bind_rows(
+    sims.priors %>% mutate(src = 'priors'),
+    sims.uncertain.thresholds %>% mutate(src = 'posteriors'),
+    sims.fixed.thresholds %>%
+      mutate(src = paste('fixed', threshold, sep = "_")) %>%
+      select(-threshold)
+    )
+```
+
+```{r}
+ggplot(sims.combined,# %>%
+         # filter(
+         #   PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+         #   src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+         #   ) %>%
+         # mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
+         #                            labels = c("Xs Y    \n[uniform]", "Xs fly      \n[biological]", "Xs carry malaria \n [accidental]         ")),
+         #        src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", "posteriors"),
+         #                     labels = c(
+         #                   #    'prevalence prior',
+         #                       '"some" (threshold = 0.01)',
+         #                      '"most" (threshold = 0.5)',
+         #                       'generic (uncertain threshold)'
+         #                                ))), 
+       aes(x = state, fill = src, color = src))+
+    #geom_density_ridges(scale = 0.9, alpha = 0.7)+
+    geom_density(aes(y = ..scaled..), size = 0.6, alpha = 0.7, adjust = 1.1)+
+    theme_few() +
+    scale_x_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    # geom_label(data = s1.simulations.relabeled.2,
+    #             aes(x = xlabpos, y=0.25, label = category),
+    #             label.padding = unit(0.075, "lines"),
+    #               family = 'Palatino', fontface = 'bold', size = 3.2, inherit.aes =F, force = 15)+
+    ylab("Scaled posterior density") +
+    xlab("Implied Prevalence")+
+    scale_color_solarized()+
+    scale_fill_solarized()+
+    facet_grid(PriorShape~src, scales = 'free')+
+    theme(strip.text.y = element_text(angle = 0, hjust =0, size = 12),
+          legend.position = "none"#,
+          #axis.title.y = element_blank()
+          #plot.margin=unit(c(0.5,0.5,1.5,0.5),"cm")
+          )
 ```
 
 # Schematic (uniform prior) figure
@@ -500,6 +650,8 @@ fig.l0.thresholds <- ggplot(rs.wp.l0, aes( x = state,
   xlab("Degree of happiness")+
   facet_wrap(~theta)+
   theme(text = element_text(size = 16))
+
+fig.l0.thresholds
 ```
 
 
