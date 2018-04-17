@@ -85,6 +85,7 @@ function make_slides(f) {
 
         exp.catch_trials.push({
           condition: "memory_check",
+          distribution: exp.dist.distribution,
           reported_property: property_response,
           reported_results: numeric_response,
           actual_property: exp.property.property,
@@ -183,7 +184,7 @@ function make_slides(f) {
       // console.log(_.range(stim.data.length - 1))
       // this.experimentNames = stim.categories.slice(0, stim.data.length + 1);
       // this.nextName = ["A","B","C","D","E","F","G","H","I","J","K","L"]
-      this.experimentNames = ["A","B","C","D","E","F","G","H","I","J","K","L"].slice(0, stim.data.length + 1);
+      this.experimentNames = ["A","B","C","D","E","F","G","H","I","J","K"].slice(0, stim.data.length + 1);
 
       // stim.data.splice(this.missing, 0, "?");
       stim.data.push("?");
@@ -298,22 +299,23 @@ function make_slides(f) {
           if (exp.condition == "prior"){
             // utils.make_slider("#single_slider0", this.make_slider_callback(0))
             // prior questions and sliders
-            $(".question0").html("There were "+exp.nSliders+" other species of animals studied over the past year. For each species, 100 individuals were studied.<br>How many of each species do you think " + this.stim.property + "?")
+            $(".question0").html("Tomorrow, you and your partner will study "+exp.nSliders+" other new species of animals. <br>What percentage of each do you think will <i>" + this.stim.property + "</i>?")
             // exp.nextExperimentNames =;
+            exp.nextExperimentNames = ["K", "L", "M", "N", "O"].slice(0, exp.nSliders);
 
 
             $(".slider_row").remove();
             for (var i=0; i<exp.nextExperimentNames.length; i++) {
               // var sentence_type = exp.nextExperimentNames[i].category;
-              var sentence = exp.nextExperimentNames[i].category;
+              // var sentence = exp.nextExperimentNames[i].category;
+              var sentence = exp.nextExperimentNames[i];
               $("#multi_slider_table").append('<tr class="slider_row"><td class="slider_target" id="sentence' + i + '">' + sentence + '</td><td colspan="2"><div id="single_slider' + i + '" class="slider">-------[ ]--------</div></td></tr>');
               utils.match_row_height("#multi_slider_table", ".slider_target");
               this.init_sliders(i)
               // utils.make_slider("#single_slider" + i,  this.make_slider_callback(i))
             }
 
-
-
+            $("#continueButton").show();
             $(".question0").show();
             $("#multi_slider_table").show();
             $(".left").show()
@@ -485,7 +487,7 @@ function make_slides(f) {
             "trial_num": this.trialNum,
             "rt":this.rt,
             // "frequency": -99,
-            "category": exp.nextExperimentNames[i].category,
+            "category": exp.nextExperimentNames[i],
             "distribution": this.stim.distribution,
             "n_data":this.stim.n_data,
             "property_type":this.stim.type,
@@ -576,7 +578,7 @@ function init() {
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
   // exp.condition = _.sample(["prior","listener"])
-  exp.condition = "listener"
+  exp.condition = "prior"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
@@ -598,6 +600,7 @@ function init() {
   exp.memory_properties = _.shuffle(_.pluck(memory_properties, "property")).slice(0, 10)
 
   var dist = _.sample(distributions);
+  exp.dist = dist;
   // console.log(dist)
 
   // exp.stims =_.map(_.zip(creatures, properties_to_be_tested),

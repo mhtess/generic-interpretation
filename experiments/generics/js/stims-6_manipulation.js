@@ -196,10 +196,13 @@ var creatureNames =
     var rare_weak_samples = [], 
         rare_half_samples = [],
         rare_strong_samples = [],
+        rare_deterministic_samples = [],
+        weak_or_half_samples = [],
         weak_or_strong_samples = [],
         weak_or_deterministic_samples = [],
-        uniform_samples = [];
-
+        half_or_deterministic_samples = [],
+        uniform_samples = [],
+        strong_or_deterministic_samples = [];
 
     var uniform_samples = [
       0, 5, 
@@ -228,16 +231,28 @@ var creatureNames =
         rare_weak_samples.push(Math.round(weak.ppf(Math.random())));
         rare_half_samples.push(Math.round(half.ppf(Math.random())));
         rare_strong_samples.push(Math.round(strong.ppf(Math.random())));
+
+        weak_or_half_samples.push(Math.round(half.ppf(Math.random())))
         weak_or_strong_samples.push(Math.round(strong.ppf(Math.random())));
+
+        rare_deterministic_samples.push(sampleDeterministic());
         weak_or_deterministic_samples.push(sampleDeterministic());
+        half_or_deterministic_samples.push(sampleDeterministic());
+        strong_or_deterministic_samples.push(sampleDeterministic());
 
       } else { // major component
 
         rare_weak_samples.push(sampleNull());
         rare_half_samples.push(sampleNull());
         rare_strong_samples.push(sampleNull());
+        rare_deterministic_samples.push(sampleNull());
+
+        weak_or_half_samples.push(Math.round(weak.ppf(Math.random())));
         weak_or_strong_samples.push(Math.round(weak.ppf(Math.random())));
         weak_or_deterministic_samples.push(Math.round(weak.ppf(Math.random())));
+
+        strong_or_deterministic_samples.push(Math.round(strong.ppf(Math.random())));
+        half_or_deterministic_samples.push(Math.round(half.ppf(Math.random())))
 
       }
       // uniform_samples.push(Math.round(Math.random()*100))
@@ -253,29 +268,45 @@ var creatureNames =
     var distributions = [
       {
         distribution: "uniform",
-        data: _.shuffle(uniform_samples),
+        data: _.shuffle(uniform_samples)
       },
-      // {
-      //   distribution: "rare_weak",
-      //   data: _.shuffle(rare_weak_samples)
-      // },
-      // {
-      //   distribution: "rare_half",
-      //   data: _.shuffle(rare_half_samples)
-      // },
-      // {
-      //   distribution: "rare_strong",
-      //   data: _.shuffle(rare_strong_samples)
-      // },
+      {
+        distribution: "rare_weak",
+        data: _.shuffle(rare_weak_samples)
+      },
+      {
+        distribution: "rare_half",
+        data: _.shuffle(rare_half_samples)
+      },
+      {
+        distribution: "rare_strong",
+        data: _.shuffle(rare_strong_samples)
+      },
+      {
+        distribution: "rare_deterministic",
+        data: _.shuffle(rare_deterministic_samples)
+      },
+      {
+        distribution: "weak_or_half",
+        data: _.shuffle(weak_or_half_samples)
+      },
       {
         distribution: "weak_or_strong",
         data: _.shuffle(weak_or_strong_samples)
-      }//,
-      // {
-      //   distribution: "weak_or_deterministic",
-      //   data: _.shuffle(weak_or_deterministic_samples)
-      // }
-      // {
+      },
+      {
+        distribution: "weak_or_deterministic",
+        data: _.shuffle(weak_or_deterministic_samples)
+      },
+      {
+        distribution: "half_or_deterministic",
+        data: _.shuffle(half_or_deterministic_samples)
+      },
+      {
+        distribution: "strong_or_deterministic",
+        data: _.shuffle(strong_or_deterministic_samples)
+      }
+            // {
       //   distribution: "common_weak",
       //   data: _.shuffle(common_weak_samples)
       // },

@@ -41,7 +41,6 @@
 - $0.80
 - n = 140 --> 112 + 22.4 = 134.4
 
-
 ## Interpretation-6
 
 - 4/16/18
@@ -50,6 +49,7 @@
 - after memory check, low responses were asked a follow-up questions (explain) and can change response
 - $0.80
 - n = 140 --> 112 + 22.4 = 134.4
++ n = 60 --> 57.6
 
 
 # Prior experiments
@@ -93,5 +93,18 @@
 - 4/16/18
 - pilot, 3 distributions: weak_or_strong, weak_or_deterministic, uniform
 - $0.30
-- n = 36 --> 10.8 + 2.16 = 12.96
+- n = 54 --> 16.2 + 3.24 = 19.44
+- n = 36 (only weak_or_strong or uniform) --> 10.8 + 2.16 = 12.96
+
+
+## Prior-manipulation-3
+
+### Prior elicitation / manipulation check
+
+- 4/17/18
+- full sample: 10 distributions
+- 30 ratings / dist --> n = 300
+- $0.30
+- 90 + 18 = $108
++ compensation hit for turker: $0.96
 
