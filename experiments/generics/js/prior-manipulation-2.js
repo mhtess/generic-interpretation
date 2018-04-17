@@ -308,7 +308,7 @@ function make_slides(f) {
             for (var i=0; i<exp.nextExperimentNames.length; i++) {
               // var sentence_type = exp.nextExperimentNames[i].category;
               // var sentence = exp.nextExperimentNames[i].category;
-              var sentence = exp.nextExperimentNames[i];
+              var sentence = "Animal " + exp.nextExperimentNames[i];
               $("#multi_slider_table").append('<tr class="slider_row"><td class="slider_target" id="sentence' + i + '">' + sentence + '</td><td colspan="2"><div id="single_slider' + i + '" class="slider">-------[ ]--------</div></td></tr>');
               utils.match_row_height("#multi_slider_table", ".slider_target");
               this.init_sliders(i)
