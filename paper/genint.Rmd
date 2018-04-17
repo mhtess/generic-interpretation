@@ -916,38 +916,86 @@ We recruited N participants from MTurk.
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
 The experiment took on average X minutes and participants were compensated \$K.
 
-### Materials and procedure
+### Materials 
 
+The goal of this experiment was to manipulate the prevalence prior. 
+To focus on the influence of our prior manipulation cover story (described below), we chose to use a single property (*know when earthquakes are about to happen*) whose prevalence prior elicited in Expt. 2a suggested that it was particularly amenable to manipulation (participants had a lot of uncertainty as to what prevalence levels to expect for this property).
+Pilot testing using a completely novel property (e.g., *daxing*) appeared to make the task too artificial and participants treated the task as a number game. 
+
+Participants were familiarized with one of ten prevalence prior distributions, shown in Figure\ \@ref(fig:priorManipulationExpt)E). 
+All but one of these distributions (the uniform distribution) are bimodal with modes either at 0%, 25% (*weak*), 50% (*half*), 75% (*strong*), or 100% (*deterministic*).
+The mixture component between the two modes was always 50% (half of samples were from one mode and half from the other, as shown in Figure\ \@ref(fig:priorManipulationExpt)B).
+These distributions were chosen in order to disambiguate alternative hypotheses.
+
+### Procedure
+
+In order to avoid potential influence from learning the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
 Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with lots of new animals on it.
 They were studying these animals with another scientist to understand the animals' ability to "know when earthquakes are about to happen".
-This property was chosen because the prevalence prior elicited in Expt. 2 suggested that participants had a lot of uncertainty as to what prevalence levels to expect for this property.
-
 Participants were then shown "data" that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
 In order to minimize distraction, novel animals were simply labeled by a letter (e.g., "Animal C" or just "Cs").
-Information about the animal appeared in an *evidence statement* (e.g., \red{"You and your partner find that 98\% of Animal C *know when earthquakes are about to happen*."}) and were displayed in a table showing the corresponding numerical data \red{(e.g., "number with property"; Figure)}. 
-Participants proceed by clicking a continue button to reveal information about the next animals.
-After participants viewed the data for ten categories, they are told to review the information about the animals before continuing (\red{Figure}).
+Information about the animal appeared in an *evidence statement* (e.g., "After studying the animal, you and your partner determine that 98\% of Cs *know when earthquakes are about to happen*.") and were displayed in a table showing the corresponding numerical data (Figure\ \@ref(fig:priorManipulationExpt)A). 
+Participants proceed by clicking a button to reveal information about the next animals.
+After participants viewed the data for ten categories, they are told to review the information about the animals before continuing (Figure\ \@ref(fig:priorManipulationExpt)B).
 
-After the data table, participants were provided the prompt for either the *prior manipulation* condition or the *generic interpretation* condition.
+Then, the data table is removed and participants are provided the prompt for either the *prior manipulation* condition or the *generic interpretation* condition.
 In the *generic interpretation* condition, participants were told that their fellow scientist studied another animal (*Animal K*) while they were away, and their partner tells them: "Ks know when earthquakes are about to happen".
-Participants are then asked: "What percentage of Ks do you think know when earthquakes are about to happen?" to which they could respond with a rating on a slider bar ranging from 0%-100%. 
-In the *prior manipulation* condition, participants were told they were going to study five more animals and asked to predict how many of each would have the property (\red{Figure}).
-Participants were given five slider bars ranging from 0 - 100, and asked to predict the prevalence for the next five categories (Animals K - P).
+Participants are then asked: "What percentage of Ks do you think know when earthquakes are about to happen?" to which they could respond with a rating on a slider bar ranging from 0%-100% (Figure\ \@ref(fig:priorManipulationExpt)D). 
+In the *prior manipulation* condition, participants were told they were going to study five more animals and asked to predict how many of each would have the property; participants were given five slider bars ranging from 0 - 100, and asked to predict the prevalence for the next five categories (Animals K - P; Figure\ \@ref(fig:priorManipulationExpt)C).
 
 After rating the slider bar(s), participants in both condition were asked if they could explain why they gave the response(s) that they did. 
 Then, they completed an attention check survey where they were asked what property the team of scientists was investigating (choosing a response from a list of 10 options) and to input one of the prevalence levels they saw on the familiarization screen.
-
-\red{The prevalences shown following one of N distributions}.
-
-In order to avoid potential influence from learning the structure of the task, participants completed only a single trial: Each participant saw only one property with one prevalence distribution.
-Participants then click a button to show the data for each previously studied novel animal.
 
 <!-- Participants see the data from eleven different categories, though they are told the data for one kind were lost and a "?" was placed in the table (\red{Figure}).^[ -->
 <!--   These lost results would be found in the *generic interpretation* task, Expt. 3b. -->
 <!--   We chose to present a "lost data" category to imply that the sampling procedure for the referent-category was random. The alternative would be to present data from ten categories and have participants rate the eleventh, which could imply that the scientists are collecting data until they find one for which the property applied generically. \red{[clean up]} -->
 <!-- ] -->
 
-```{r priorManipulationExpt, fig.cap="Overview of Experiment 3. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence", fig.width = 9,fig.asp = 0.4, cache=F}
+```{r priorManipulationExpt, fig.cap="Overview of Experiment 3. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence. E: Experimentally manipulated prevalence prior distributions. The distribution shown in B is the \\emph{weak or deterministic} distribution.", fig.width = 11,fig.asp = 0.6}
+zero.samples <- rbeta(n = 5000, shape1 = 1, shape2 = 100)
+weak.samples <- rnorm(n = 5000, mean = 0.25, sd = 0.06)
+half.samples <- rnorm(n = 5000, mean = 0.50, sd = 0.06)
+strong.samples <- rnorm(n = 5000, mean = 0.75, sd = 0.06)
+deterministic.samples <-rbeta(n = 5000, shape1 = 50, shape2 = 1)
+
+sample.dists <- bind_rows(
+  data.frame( dist = "rare weak", x = c(zero.samples, weak.samples) ),
+  data.frame( dist = "rare half", x = c(zero.samples, half.samples) ),
+  data.frame( dist = "rare strong", x = c(zero.samples, strong.samples) ),
+  data.frame( dist = "rare deterministic", x = c(zero.samples, deterministic.samples) ),
+  
+  data.frame( dist = "weak or half", x = c(weak.samples, half.samples) ),
+  data.frame( dist = "weak or strong", x = c(weak.samples, strong.samples) ),
+  data.frame( dist = "weak or deterministic", x = c(weak.samples, deterministic.samples) ),
+
+  data.frame( dist = "half or deterministic", x = c(half.samples, deterministic.samples) ),
+  data.frame( dist = "strong or deterministic", x = c(strong.samples, deterministic.samples) ),
+  
+  data.frame( dist = "uniform", x = rbeta(n = 50000, shape1 = 1, shape2 = 1))
+)
+
+fig.manipulatedPriors <- sample.dists %>%
+  mutate(dist = factor(dist, levels = c("uniform","rare weak","rare half","rare strong", "rare deterministic", 
+                                        "weak or half","weak or strong","weak or deterministic",
+                                        "half or deterministic","strong or deterministic"
+                                        ))) %>%
+  ggplot(., aes(x = x))+ 
+  geom_density(aes( y = ..scaled..))+ #
+  # geom_histogram(bins = 20,
+  #   aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
+  #   color = 'black', fill= 'grey')+
+  scale_x_continuous(limits = c(-0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  #scale_fill_manual(values = c("#636363", "#d7191c"))+#, "#2b83ba"))+
+  #scale_fill_solarized()+scale_color_solarized()+
+  #scale_color_manual(values = c("#636363", "#d7191c"))+
+  ylab("Scaled Prior Probability")+
+  xlab("Prevalence")+
+  facet_wrap(~dist, scales = 'free', nrow = 2)+
+  guides(fill = F, color = F)+
+  theme(legend.position = 'bottom', legend.direction = 'horizontal')
+
+
 prior.manip.exp.1 <- ggdraw() + draw_image("figs/prior-manip-paradigm-1.jpeg", scale = 0.9) +
   theme(plot.margin = unit(c(2,0,0,0), "pt"),
         panel.background = element_rect(colour = "black", size=1)) 
@@ -965,14 +1013,22 @@ prior.manip.exp.4 <- ggdraw() + draw_image("figs/prior-manip-paradigm-intMeasure
 
 
 prior.manip.toprow <- plot_grid(prior.manip.exp.1, 
-                             prior.manip.exp.2, labels = c("A", "B", "C"), nrow = 1, align = 'vh')
+                             prior.manip.exp.2, labels = c("A", "B"), nrow = 1, align = 'vh')
 
 title <- ggdraw() + draw_label("Prevalence prior manipulation")
 plot_grid(
   plot_grid(title, prior.manip.toprow, ncol=1, rel_heights=c(0.15, 1)),
-  plot_grid(add_sub(prior.manip.exp.3, "Manipulation check"), 
-            add_sub(prior.manip.exp.4,"Generic interpretation"), labels = c("D", "E"), nrow = 1),
-  nrow = 2)
+  plot_grid(
+    plot_grid(ggdraw() + draw_label("Manipulation check"), 
+              prior.manip.exp.3, ncol=1, rel_heights=c(0.15, 1) ), 
+    plot_grid(ggdraw() + draw_label("Generic interpretation"), 
+              prior.manip.exp.4, ncol=1, rel_heights=c(0.15, 1) ),
+              labels = c("C", "D"), nrow = 1),
+  # plot_grid(add_sub(prior.manip.exp.3, "Manipulation check"), 
+  #           add_sub(prior.manip.exp.4,"Generic interpretation"), labels = c("C", "D"), nrow = 1),
+  fig.manipulatedPriors, labels = c("","", "E"),
+  rel_heights = c(1,1,1.5),
+  nrow = 3)
 ```
 
 
