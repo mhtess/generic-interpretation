@@ -738,13 +738,25 @@ The list included five properties that they had been tested on and five distract
 
 ### Results
 
-Each item received between X and Y responses. 
-<!-- Distributions of responses for each item were smoothed using nonparametric density estimation for ordinal categorical variables (Li & Racine, 2003) with the np package in R (Hayfield & Racine, 2008).  -->
-For each item, we then computed its belief distribution’s expected value.
-As intended, items covered a wide range of probabilities and expected values (see Figure 2).
+We used the same exclusion criteria that were preregistered for the generic interpretation study (Expt. 2b). 
+Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded ($n =$).
+In addition, we excluded participants who self-reported a native language other than English ($n = $). 
+This left a total of $n = $ participants, with each item receiving between X and Y responses. 
 
+A response in this task can be thought of as a sample from a property's prevalence prior distribution.
+Thus, the distribution of responses for an item are an estimate of the prevalence prior distribution.
+Figure\ \@ref(fig:genInt-prevPrior)A shows eight example items' distributions of responses.
+The property *eats insects* is most likely either completely present (prevalence = 100%) or completely absent (prevalence = 0%) from categories, though there is considerable probability mass spread among the non-binary alternatives ($0\% <$ prevalence $< 100\%$). 
+*Feeding on the carcasses of dead animals* looks similar to *eats insects*: animals either do it or don't do it; however, there is a considerably more probability mass at 0%, reflecting the belief that this is a relatively more rare property than *eating insects*.
+*Live in urban areas* shows a monotonically decreasing probability function; the higher the prevalence, the less likely it is. 
+*Live in zoos* is expected to be even less prevalent, and the property *has seizures* is expected to not be widespread at all. 
 
-```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors for a broad set of animal properties. A: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. B: Eight example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence."}
+Most of the elicited prevalence prior distributions are at least bi-modal. 
+To visualize all properties simultaneously, we represent each distribution by its relative probability mass at 0%---$P(\text{feature is present})$---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---$\mathbb{E}[P(p \mid p>0)]$, which we refer to as *prevalence when present* (Figure\ \@ref(fig:genInt-prevPrior)B).
+Our stimulus set covers a wide range of possible values of both of these parameters; the set of parameters that summarize these priors is also largely non-overlapping with those of Expt. 1 (compare with Figure\ \@ref(fig:cimpian-prevPrior)A).
+This suggests we have sampled items with priors that exhibit a lot of quantitative variability; the variability in priors provides a good test of our model as the model makes predictions given these priors.
+
+```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors for a broad set of animal properties.  A: Eight example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present."}
 load(file = "cached_results/genInt_priors.RData")
 # df.prior.prevalence.2.isZero.conditionalEv,
 #      df.prior.prevalence.2,
@@ -787,13 +799,14 @@ fig.prevPriors.genInt <- df.prior.prevalence.2 %>%
   xlab("Prevalence")
 
 cowplot::plot_grid(
-  fig.prevParams.genInt + theme(plot.margin = unit(c(18, 6, 6, 6), "pt"),
-                         legend.position = 'none'),
   fig.prevPriors.genInt + theme(plot.margin = unit(c(6, 6, 6, 0), "pt"),
                          legend.position = 'none'), 
+  fig.prevParams.genInt + theme(plot.margin = unit(c(18, 6, 6, 6), "pt"),
+                         legend.position = 'none'),
+
   nrow = 1,
   labels = c("A", "B"),
-  rel_widths = c(1, 2)
+  rel_widths = c(2, 1)
 )
 
 ```
@@ -816,15 +829,24 @@ The materials were the same as in Expt. 2a.
 Participants were told that scientists had recently discovered lots of new animals that we did not know existed.
 On each trial, they would be told facts about the new animals and be asked to translate it into the how many (out of 100) of that animal it applies to.
 On each trial, participants read a bare plural statement about a familiar property $F$ (e.g., *attack hikers*) applying to a novel animal category $K$ (e.g., *Javs*).
-They were then asked "How many *Ks* do you think *F*?" (e.g., "How many javs do you think attack hikers?").
+They were then asked "Out of all of the *K*s on the planet, what percentage do you think *F*?" (e.g., "what percentage of javs do you think attack hikers?").
 Novel animal category names were mostly taken from @Cimpian2010 and similar studies on generic language. 
 Participants responded using a slider bar with endpoints labeled 0 and 100, and the 
 exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
-Each participant completed thirty-six trials, corresponding to a random subset of the full stimulus set.
+Each participant completed thirty-five trials, corresponding to a random subset of the full stimulus set.
+
+After the generic interpretation trials, participants completed the same memory check trial as was done in the prior elicitation. 
+They were shown ten properties and asked to click on those they had seen in the experiment.
 
 ### Results
 
-- split-half correlation
+We used preregistered exclusion criteria, which were also used for Expt. 2a. 
+Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded ($n =$).
+In addition, we excluded participants who self-reported a native language other than English ($n = $). 
+This left a total of $n = $ participants, with each item receiving between X and Y responses. 
+
+To assess the reliability of these data, we ran a replication ($n=140$) using a slightly different dependent measure. Instead of being asked a question about percentages (e.g., "Out of all of the Ks in the world, what percentage F?"), participants were asked a question in terms of frequency: "Out of 100 Ks, how many do you think F?".
+The empirical by-item means between these data and the original data are highly correlated ($r(75) = $, $r_{spearman}=$).
 
 ## Model-based analysis and results
 
