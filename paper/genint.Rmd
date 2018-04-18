@@ -1095,37 +1095,45 @@ Predictions of these models for the ten distributions of interest are shown in \
 
 # General Discussion
 
-- Studying generic interpretation is an important problem. 
-- Some quantitative evidence exists, but no quantitative models
-- Here we test a quantitative model on a broad set of quantitative data (including a replication data set from Cimpian)
-- We find fine-grained quantitative differences in interpretations, which only the uncertain-threshold model can account for.
+Much of what we come to learn about the world comes from other people, typically expressed in language.
+Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language.
+Despite its ubiquity and relative morphosyntactic simplicity, there have been few quantitative studies of generics and no quantitative models that make predictions about how generic language is interpreted.
+Here we test a quantitative model on a broad set of quantitative data (including a replication data set from Cimpian)
+We find reliable, fine-grained, context-sensitive differences in interpretations, which only our uncertain threshold model can account for.
+This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
 
-- Finer points about the data? Discussion explanation data? Have relationship to DR theories come here?
+- Finer points about the data? Discussion of explanation data? Have relationship to DR theories come here?
 
-## Domain restriction and the problem of generic identification
+## Domain restriction
 
 In this paper, we test a particular model of generic interpretation.
 This model use a prior distribution over the prevalence of a feature across relevant categories and assumes the truth-functional meaning of the generic is an uncertain threshold on the prevalence. 
 The prevalence prior distributions, which we elicit from participants, already have conceptual knowledge baked into them.
-For example, the prevalence priors over properties that have to do with reproduction (e.g., *have menstrual cycles*, *get erections*) are multi-modal with one mode around 50%.
+For example, the prevalence priors over properties that have to do with reproduction (e.g., *have menstrual cycles*, *get erections*) are multi-modal with one mode around 50%, clearly reflecting participants' knowledge that these properties are specific to one sex of the animal.
 
-Other formal theories of generic language make use a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted [e.g., @Cohen1999].
-In such a theory, the statement "Lorches have a menstrual cycle" gets interpreted to mean "Female lorches have a menstrual cycle".
-Therefore, in such a theory, the prevalence of this feature would be 100% (or near 100%), because 100% of the *relevant lorches* have the feature.
-Domain restriction is an attractive mechanisms because the semantic theory could be a fixed-threhsold [e.g., at 50%; @Cohen1999].
-However, such a theory still needs to formalize *how* the domain gets restricted and, to my knowledge, there have been no formal treatements of this problem. 
+Other formal theories of generic language make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted [e.g., @Cohen1999].
+In such a theory, the statement "Lorches have a menstrual cycle" gets rewritten as "Female lorches have a menstrual cycle" and the prevalence of the feature would be 100% (or near 100%) because 100% of the *relevant lorches* have a menstrual cycle.
+Domain restriction is an attractive mechanism because it would allow the semantic theory to be a context-invariant fixed threhsold [e.g., at 50%; @Cohen1999].
+However, such a theory still needs to explain why and formalize how the domain gets restricted; without such a theory to accompany the domain restriction hypothesis, the hypothesis is vacuous: it explains but does not predict.
 
 The uncertain threshold model that we present here can be seen as a particular instantiation of a domain restriction theory. 
-In our model, the statement "Lorches have a menstrual cycle" minimally gets interpreted to mean "50% of lorches have a menstrual cycle".
-However, with the added conceptual knowledge that the reason why 50% of a category would have the property is because it is present in only one sex of the category would enrich this interpretation to "Female lorches have a menstrual cycle".
+In our model, the statement "Lorches have a menstrual cycle" is resolved by a literal interpretation model to mean mean "50% of lorches have a menstrual cycle".
+Were a listener to have the background theory that the reason why half of a category would have such a property is for reproductive purpoeses,  the interpretation could naturally be enriched to "Female lorches have a menstrual cycle".
 Indeed, this kind of conceptual knowledge is present in our participants, \red{as evidence by their explanations}.
-Our model restricts the domain by reasoning about a threshold that would make sense for that particular property. 
+Our model restricts the domain by reasoning about a threshold that would make sense for that particular property, given its background distribution on prevalence. 
 Thus, an uncertain threshold is one mechanism by which the domain can be restricted. 
 
-The duality of an uncertain threshold and domain restriction could possibly shed light on so-called "non-generic" bare plurals (e.g., "Dogs are on my front lawn").
-Many generics actually expressed two or more generalizations. 
-For example, "Lorches eat insects" says that *[gen lorches]* *[hab eat]* *[gen insects]*.
-Thus, in this paper, we have looked at the first aspect of generic understanding, the generalization over the head noun category (e.g., lorches) though in previous work we have shown that the same uncertain threshold model can explain habitual language as well [e.g., "John smokes"; @TesslerLanGenUnderReview].
+## Generic identification
+
+It is often noted that bare plurals (e.g., "Dogs have four legs") though often interpreted as generics can also manifest as *non-generics* (e.g., "Dogs are on my front lawn").
+Figuring out when a sentence expresses a generic meaning vs. a non-generic meaning is called the problem of generic identification is a parallel challenge to the problem of generic meaning, which we have addressed in this paper.
+
+Our answer to the question "what do generics mean?" involves vagueness concerning the prevalence. 
+Interpreting the uncertain threshold as a kind of domain restriction might be sufficient to extend the model to interpreting "non-generic" bare plurals (e.g., "Dogs are on my front lawn").
+
+First, let us note that many generics actually expressed two or more generalizations. 
+For example, "Lorches eat insects" says that $[gen \text{ lorches}] [hab \text{ eat}] [gen \text{ insects}]$.
+In this paper, we have looked at the first aspect of generic understanding, the generalization over the head noun category (e.g., lorches) though in previous work we have shown that the same uncertain threshold model can explain habitual language as well [e.g., "John smokes"; @TesslerLangGenUnderReview].
 \red{[one view of generics is that they are timeless and enduring... but this may actually be the habitual componentn]}
 One observation of "non-generics" is that they may only exhibit a single generalization (e.g., over *dogs*).
 The habitual aspect of the verb may influence the expected prevalence: the more *vague*, habitual, predicate may cover more cases.
@@ -1136,6 +1144,13 @@ Thus, we may find continuity in interpretations of underspecified noun phrases w
 <!-- ## Implications for social categories -->
 
 ## Development of weak interpretations
+
+The experimental data we present provides strong evidence for the existence of "weak generics", which we operationalize here as generic statements that imply a prevalence less than 50%. 
+Statements like "Lorches live in zoos", "Feps perform in the circus", and "Wugs have seizures" all received average implied prevalence ratings below 50%, with many individual participants providing ratings of 10% or less (Expt. 2b).
+When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0% or aroud 25%, participants interpret the statement "Ks know when earthquakes are about to happen" to mean about 25% (Expt. 3b). 
+Adults readily use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, \red{as evidenced by their explanations}.
+This is an aspect of generic language understanding often swept under the rug: Generics are believed to (in a generic sense) carry strong implications.
+Here, we show that generics also carry weak implications.
 
 - priors may start out as single Betas: arugment from the Beta(0,0) distribution
 - as we learn hierarchically about categories and about properties, we may begin to represent more components to the distribution
