@@ -828,7 +828,7 @@ The experiment took on average X minutes and participants were compensated \$K.
 The materials were the same as in Expt. 2a.
 Participants were told that scientists had recently discovered lots of new animals that we did not know existed.
 On each trial, they would be told facts about the new animals and be asked to translate it into the how many (out of 100) of that animal it applies to.
-On each trial, participants read a bare plural statement about a familiar property $F$ (e.g., *attack hikers*) applying to a novel animal category $K$ (e.g., *Javs*).
+On each trial, participants read a bare plural statement about a familiar property $F$ applying to a novel animal category $K$ (e.g., "Javs attack hikers").
 They were then asked "Out of all of the *K*s on the planet, what percentage do you think *F*?" (e.g., "what percentage of javs do you think attack hikers?").
 Novel animal category names were mostly taken from @Cimpian2010 and similar studies on generic language. 
 Participants responded using a slider bar with endpoints labeled 0 and 100, and the 
@@ -837,6 +837,11 @@ Each participant completed thirty-five trials, corresponding to a random subset 
 
 After the generic interpretation trials, participants completed the same memory check trial as was done in the prior elicitation. 
 They were shown ten properties and asked to click on those they had seen in the experiment.
+Following the memory check trials and depending on their ratings in the task, participants completed up to five explanation trials. 
+On an explanation trial, participants saw a rating they had given for a property they had rated as applying to less than 50% and asked if they could explain why they gave the response that they gave. 
+Participants also had the option of changing their response after providing an explanation. 
+(These data were used in an exploratory analysis.)
+If participants gave no ratings less than 50%, they did not complete any explanation trials. 
 
 ### Results
 
