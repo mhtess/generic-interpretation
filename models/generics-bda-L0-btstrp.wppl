@@ -1,0 +1,59 @@
+// time ~/webppl-fork/webppl generics-bda-L0-btstrp.wppl --require utils --require webppl-json uncertain 1
+
+var chain = last(process.argv) // load index as last command line index
+
+var bootstrappedPriors = json.read('generics-bda-L0-btstrp-priors-notPretty.json')
+var iterations = levels(bootstrappedPriors, "i")
+var priorsNames = levels(bootstrappedPriors, "distribution")
+
+var chunkLength = 1000
+var chunks = _.range(0, iterations.length, chunkLength)
+// var chunks = _.range(5000, iterations.length, chunkLength)
+
+// run in chunks to parallelize and decrease file sizes
+foreach(chunks, function(startingIteration){
+
+  var subsetIterations = iterations.slice(startingIteration, startingIteration + chunkLength)
+  var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L0-btstrp-results_chunk" + startingIteration + ".csv")
+  utils.writeLine(resultsHandle, ["model", "distribution", "iteration", "state", "prob"])
+
+  foreach(subsetIterations, function(i){
+
+    var iterationPriors = _.filter(bootstrappedPriors, {i: i})
+
+    foreach(priorsNames, function(distribution){
+      var distributionPriorsObj = _.filter(iterationPriors, {distribution: distribution} )[0]
+      var distributionPriors = _.omit(distributionPriorsObj, ["distribution", "i"])
+
+      var vs = sort(map(function(x){utils.wpParseFloat(x)}, _.keys(distributionPriors)))
+      var ps = map(function(v){distributionPriors[v]}, vs)
+      var statePrior = Infer({model: function(){ categorical({vs, ps}) } })
+
+      var listener = function(threshold) {
+        Infer({model: function(){
+        var state = sample(statePrior)
+        var theta = threshold ? threshold : sample(thetaPrior)
+        condition( state > theta)
+        return state
+      }})}
+
+      var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
+
+      utils.saveERP(statePrior, ["prior", distribution, i], resultsHandle)
+
+      foreach(all_thresholds, function(t){
+
+        var posterior = listener(t)
+        var modelName = t ? "fixed_" + t : "uncertain"
+        utils.saveERP(posterior, [modelName, distribution, i], resultsHandle)
+
+      })
+
+    })
+
+  })
+
+  utils.closeFile(resultsHandle)
+  console.log("iteration = " + (startingIteration + chunkLength) + " complete")
+})
+
