@@ -351,7 +351,7 @@ function make_slides(f) {
 
             // debugger;
             // console.log(this.missing)
-            $(".task_prompt").html('The next day, you are busy, and your partner studies a new animal --- Animal '+this.experimentNames[this.missing]+' --- on their own.');
+            $(".task_prompt").html('The next day, you are busy and your partner studies a new animal on their own: Animal '+this.experimentNames[this.missing]);
             $(".task_prompt").show(); 
             $(".question2").show();
 
@@ -578,7 +578,7 @@ function init() {
 
   // exp.condition = _.sample(["prior","speaker","speaker","speaker","speaker","listener"])
   // exp.condition = _.sample(["prior","listener"])
-  exp.condition = "prior"
+  exp.condition = "listener"
   exp.nTrials = 1;
   exp.nSliders = exp.condition == "prior" ? 5 : 1;
   exp.stims = [];
