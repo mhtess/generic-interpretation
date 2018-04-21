@@ -107,4 +107,14 @@
 - $0.30
 - 90 + 18 = $108
 + compensation hit for turker: $0.96
++ n = 150 (bootstrapping priors led to high variance estimates)
+- $0.30 * 150 = 45 + 9 = 54
+
+### Interpretation task
+
+- 4/21/18
+- full sample: 10 distributions
+- 50 ratings / distribution (after exclusions) --> n = 600
+- $0.30
+- 180 + 36 = 216
 
