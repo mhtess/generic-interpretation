@@ -1,0 +1,1125 @@
+---
+title: "Prior manipulation pilots"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+library(ggpirate)
+library(knitr)
+library(viridis)
+library(tidytext)
+library(rwebppl)
+library(jsonlite)
+library(parallel)
+
+readData = function(proj){
+  read_csv(
+    paste("../../data/prior-manipulation/",proj,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(proj){
+  read_csv(
+    paste("../../data/prior-manipulation/",proj,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
+readSubjInfo = function(proj){
+  read_csv(
+    paste("../../data/prior-manipulation/",proj,"/",
+          proj,"-subject_information.csv", sep = "")
+    )
+}
+```
+
+# Prior manipulation pilots
+
+- n = 36 --> 10.8 + 2.16 = 12.96
++ n = 18 (only uniform) --> 6.48
++ n = 18 (pseudo-uniform, equal mixture weak or strong, only listener) --> 6.48
++ n = 18 (familiar properties) --> 6.48 (but paid 12.96)
++ n = 18 ("earthquakes", refactor cover story, forced waiting): weak_or_strong, weak_or_deterministic, uniform
+
+```{r}
+df.pm <- read_csv("../../mturk/prior-manipulation-1/prior-manipulation-1-trials.csv")
+df.pm.subj <- read_csv("../../mturk/prior-manipulation-1/prior-manipulation-1-subject_information.csv")
+df.pm.catch <- read_csv("../../mturk/prior-manipulation-1/prior-manipulation-1-catch_trials.csv")
+
+pilot.1.ids <- seq(0, 35)
+pilot.2.ids <- seq(36, 53)
+pilot.3.ids <- seq(54, 71)
+pilot.4.ids <- seq(72, 89)
+pilot.5.ids <- seq(90, 107)
+
+```
+
+
+
+```{r}
+df.pm.pilot5 <- read_csv("../../mturk/prior-manipulation-1a/prior-manipulation-1a-trials.csv")
+df.pm.pilot5.subj <- read_csv("../../mturk/prior-manipulation-1a/prior-manipulation-1a-subject_information.csv")
+df.pm.pilot5.catch <- read_csv("../../mturk/prior-manipulation-1a/prior-manipulation-1a-catch_trials.csv")
+
+df.pm.pilot5 <- bind_rows(
+  df.pm %>% filter(workerid %in% pilot.5.ids),
+  df.pm.pilot5
+)
+
+```
+
+```{r}
+df.pm.pilot5 %>%
+  ggplot(., aes( x = response )) +
+  geom_histogram(bins = 20)+
+  facet_wrap(~distribution)
+```
+
+
+## Prior manipulation 2
+
+- 4/16/18
+- pilot, 3 distributions: weak_or_strong, weak_or_deterministic, uniform
+- $0.30
+- n = 54 
+
+```{r}
+df.pm.2 <- readData("prior-manipulation-2")
+df.pm.2.catch <- readCatchInfo("prior-manipulation-2")
+
+df.pm.2.subj <- readSubjInfo("prior-manipulation-2")
+```
+
+
+```{r}
+df.pm.2.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+```{r}
+df.pm.2.filtered <- left_join(df.pm.2, df.pm.2.catch %>%
+            select(workerid, pass_property, pass_numeric, pass_both)) %>%
+  filter(pass_both == 1)
+
+length(unique(df.pm.2.filtered$workerid))
+```
+
+```{r}
+df.pm.2.filtered %>%
+  ggplot(., aes( x = response )) +
+  geom_histogram(bins = 20, fill = 'white', color = 'black')+
+  facet_wrap(~distribution)
+```
+```{r}
+df.pm.pilot.priors <- df.pm %>% 
+  filter(condition == "prior",
+                 distribution %in% c("uniform", "weak_or_deterministic", "weak_or_strong"))
+
+workerids.save <- unique(df.pm.pilot.priors$workerid)
+
+df.pm.catch.workerid <- df.pm.catch  %>%
+  filter(workerid %in% workerids.save)
+
+write_csv(df.pm.catch.workerid, "~/Documents/research/generic-interpretation/data/prior-manipulation/prior-manipulation-2-test/prior-manipulation-2-test-catch_trials.csv")
+
+
+df.pm.subj.workerid <- df.pm.subj  %>%
+  filter(workerid %in% workerids.save)
+
+write_csv(df.pm.subj.workerid, "~/Documents/research/generic-interpretation/data/prior-manipulation/prior-manipulation-2-test/prior-manipulation-2-test-subject_information.csv")
+
+write_csv(df.pm.catch.workerid, "~/Documents/research/generic-interpretation/data/prior-manipulation/prior-manipulation-2-test/prior-manipulation-2-test-catch_trials.csv")
+
+write_csv(df.pm.pilot.priors, 
+          "~/Documents/research/generic-interpretation/data/prior-manipulation/prior-manipulation-2-test/prior-manipulation-2-test-trials.csv")
+```
+
+# Prior manipulation 3
+
+full data collection
+
+```{r}
+df.pm.3.catch <- readCatchInfo("prior-manipulation-3")
+
+df.pm.3.catch %>%
+  select(pass_both) %>%
+  table()
+```
+
+```{r}
+df.pm.3.subj <- readSubjInfo("prior-manipulation-3")
+
+df.pm.3.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+Native english
+
+```{r}
+df.pm.3.subj.nativeEng <- df.pm.3.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(englishNative = grepl("eng", tolower(language)))
+
+#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+
+table(df.pm.3.subj.nativeEng$englishNative)
+
+# what do people report for native english that is not english?
+df.pm.3.subj.nativeEng %>%
+  filter(!englishNative) %>%
+  select(language) %>%
+  kable(.)
+```
+
+Load data
+
+```{r}
+df.pm.3 <- readData("prior-manipulation-3") #%>%
+  #filter(trial_type == "implied_prevalence") %>%
+  #group_by(workerid) %>%
+  #mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+## RTs
+# df.pm.3 <- df.pm.3 %>%
+#   group_by(workerid) %>%
+#   summarize(meanRT = mean(rt/ 1000),
+#             rt_lt_4 = meanRT < 4)
+
+df.pm.3 %>%
+  distinct(workerid, rt)  %>%
+  ggplot(., aes(x = rt / 60000))+
+  geom_histogram()+
+  xlab("minutes")
+  #xlim(0, 10)
+###
+
+
+df.pm.3 <- left_join(
+  left_join(df.pm.3, df.pm.3.catch %>%
+                         select(workerid, pass_both)),
+  df.pm.3.subj.nativeEng)
+
+df.pm.3.filtered <- df.pm.3 %>% 
+  filter(pass_both == 1, englishNative)
+
+df.pm.3.filtered %>%
+  distinct(workerid) %>%
+  count()
+```
+
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.pm.3.filtered %>% distinct(workerid, distribution),
+                table(distribution))
+```
+
+```{r fig.width = 8}
+df.pm.3.filtered %>%
+  ggplot(., aes(x = response))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black', fill = 'grey')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ distribution, scales = 'free')+
+  scale_x_continuous(limits = c(-0.05, 1.05), breaks = c(0, 0.5, 1))
+  
+
+#ggsave("figs/interpretation-5-filtered-n140-hist.pdf", width = 20, height = 14)
+```
+
+round to bins
+
+```{r fig.width = 8}
+# lower_bins <- c(0, 0.01, seq(0.05, 0.95, 0.05), 0.99)
+# upper_bins <- c(0.01, seq(0.05, 0.95, 0.05), 0.99, 1)
+lower_bins <-seq(0, 0.95, 0.05)
+upper_bins <- seq(0.05, 1, 0.05)
+mid_bins <- (upper_bins - lower_bins)/2 + lower_bins
+
+round_to_bin <- function(x){
+  index <- if (x==0){ 1 } else if (x ==1){ length(mid_bins)} else{
+    x <= upper_bins & x > lower_bins
+  }
+  #if (sum(index) > 1) { print (x) }
+  return (mid_bins[index])
+}
+
+df.pm.3.filtered.binned_summary <- df.pm.3.filtered %>%
+  rowwise() %>%
+  mutate(binned_response = round_to_bin(response)) %>%
+  group_by(distribution, binned_response) %>%
+  count() %>%
+  ungroup() %>%
+  group_by(distribution) %>%
+  mutate(prop = n / sum(n))
+
+  ggplot(df.pm.3.filtered.binned_summary, 
+         aes(x = binned_response, y = prop))+
+  geom_col(position = position_dodge(), width = 0.05, color = 'black', fill = 'grey')+
+  # geom_histogram(aes(
+  #   y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+  #   ),
+  #   bins = 22, color = 'black', fill = 'grey')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ distribution, scales = 'free')+
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+```
+
+
+## Model predictions
+
+```{r}
+df.pm.3.filtered.priors <- df.pm.3.filtered.binned_summary %>%
+  select(-prop) %>%
+  spread(binned_response, n)
+
+df.pm.3.filtered.priors[is.na(df.pm.3.filtered.priors)] <- 0
+
+df.pm.3.filtered.priors.wpReady <- df.pm.3.filtered.priors %>%
+  gather(state, n, -distribution) %>%
+  group_by(distribution) %>%
+  mutate(prop = (n+1) / sum(n + 1)) %>%
+  select(-n) %>%
+  spread(state, prop)
+
+
+# %>%
+#   unite(prior_probs, -distribution, sep =",") %>%
+#   mutate(prior_probs = paste("[", prior_probs, "]", sep = "")) %>%
+#   spread(distribution, prior_probs)
+```
+
+#### WebPPL Model
+
+```{r rsaHelpers}
+rsaHelpers <- '
+var probability = function(Dist, x) {
+    return Math.exp(Dist.score(x));
+}
+var targetUtterance = "generic";
+
+var round = function(x){
+  return Math.round(x*1000)/1000
+}
+var utterancePrior = Infer({model: function(){
+  return uniformDraw([targetUtterance,"silence"])
+}});
+
+var roundTo3 = function(x){
+  return Math.round(x * 10000) / 10000
+}
+
+var upperBins = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1]
+var lowerBins = [0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95] 
+
+var midBins = map2(function(b1,b2){
+  return roundTo3((b2 - b1)/2 + b1)
+}, lowerBins, upperBins)
+
+var thetaBins = map2(function(b1, b2){
+  return roundTo3((b2-b1)/2 + b1);
+}, midBins.slice(0, midBins.length-1), midBins.slice(1))
+
+var thetaPrior = Infer({model: function(){
+ return uniformDraw(thetaBins)
+}});
+
+var meaning = function(utt,state, theta) {
+  return utt=="generic"? state > theta :
+         utt=="generic is false"? state<=theta :
+         utt=="silence"? true :
+         utt=="some"? state>0.01:
+         utt=="most"? state> 0.5:
+         utt=="all"? state >= 0.99:
+         true
+}
+'
+```
+
+```{r rsaInterpretationModels}
+# no.utterance.model <- '
+# var noUtteranceInterpreter = function() {
+#   Infer({model: function(){
+# //   var state = sample(Beta( flip(mixture) ? priorParams : {a:1,b:100}))
+#    var state = sample(statePrior)
+#     return { state }
+#  }, method: "forward", samples: 20000})}
+# '
+no.utterance.model <- 'statePrior'
+fixed.threshold.model <- '
+var fixedThresholdInterpreter = function(threshold) {
+  Infer({model: function(){
+  // var state = sample(Beta( flip(mixture) ? priorParams : {a:1,b:100}))
+   var state = sample(statePrior)
+  condition( state > threshold)
+    return {
+      state: state
+  }
+ // }, method: "rejection", samples: 20000, burn:5000, verbose: T})}
+ }, method: "enumerate"})}
+'
+
+# uncertain.threshold.model <- '
+# var uncertainThresholdInterpreter = function() {
+#   Infer({model: function(){
+#    var state = sample(Beta( flip(mixture) ? priorParams : {a:1,b:100}))
+#     factor( Math.log(state) )
+#     return {
+#       state: state, 
+#   }
+#   }, method: "rejection", samples: 20000, burn:5000, verbose: T})}
+# '
+
+uncertain.threshold.model <- '
+var uncertainThresholdInterpreter = function() {
+  Infer({model: function(){
+   var state = sample(statePrior) // sample(Beta( flip(mixture) ? priorParams : {a:1,b:100}))
+  var theta = sample(thetaPrior);
+      // factor( Math.log(state) )
+condition(state > theta)
+    return {
+      state: state, 
+  }
+  }, method: "enumerate"})}
+'
+
+```
+
+```{r simulationCalls}
+fixed.threshold.calls <- '
+_.fromPairs(map(function(t){return [t, fixedThresholdInterpreter(t)]}, [_.min(thetaBins), 0.125, 0.375, 0.625, 0.875]))
+'
+no.utterance.call <- ' 
+  //noUtteranceInterpreter()
+  statePrior
+'
+uncertain.threshold.call <- '
+  uncertainThresholdInterpreter()
+'
+
+all.models.call <-'
+var fixedThresholdPreds = _.fromPairs(map(function(t){return [t, fixedThresholdInterpreter(t)]}, [_.min(thetaBins), 0.125, 0.375, 0.625, 0.875]))
+
+var returnObj = extend({
+prior: statePrior,
+generic: uncertainThresholdInterpreter(),
+},fixedThresholdPreds)
+returnObj
+'
+```
+
+
+
+```{r}
+statePrior <- '
+// var MakeDistribution = function(distName){
+//  
+//  var distInfo = _.omit(_.filter(data, {distribution: distName})[0], "distribution")
+//   return Categorical({vs: _.keys(distInfo), ps: _.values(distInfo)})
+// }
+// var statePrior = MakeDistribution(distName)
+var distInfo = priorData[0]
+var statePrior = Categorical({vs: _.keys(distInfo), ps: _.values(distInfo)})
+statePrior
+'
+```
+
+
+```{r runModels}
+
+sims.fixed.thresholds <- data.frame()
+sims.priors <- data.frame()
+sims.uncertain.thresholds <- data.frame()
+manipulatedPriorNames <- df.pm.3.filtered.priors.wpReady$distribution
+for (p in manipulatedPriorNames){
+
+  inputData = df.pm.3.filtered.priors.wpReady %>% filter(distribution == p) %>% ungroup() %>% select(-distribution)
+
+  rs.fixed.threshold.model <- webppl(paste(rsaHelpers,statePrior, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "priorData")
+  
+  rs.uncertain.threshold.model <- webppl(paste(rsaHelpers,statePrior, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "priorData")
+  
+  rs.prior <- webppl(paste(rsaHelpers, statePrior, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var =  "priorData")
+
+  sims.fixed.thresholds <- bind_rows(sims.fixed.thresholds,
+    bind_rows(
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.05`) %>% rename(prob = probs), 20000), threshold = 0.1) ,
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.3`) %>% rename(prob = probs), 20000), threshold = 0.33),
+      mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.5`) %>% rename(prob = probs), 20000), threshold = 0.5)
+      #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.7`) %>% rename(prob = probs), 20000), threshold = 0.7),
+      #mutate(get_samples(data.frame(rs.fixed.threshold.model$`0.9`) %>% rename(prob = probs), 20000), threshold = 0.9)
+    ) %>% 
+      mutate(PriorShape = p)
+    )
+
+  sims.uncertain.thresholds <- bind_rows(
+    sims.uncertain.thresholds, 
+    get_samples(rs.uncertain.threshold.model, 20000) %>% mutate(PriorShape = p)
+    #rs.uncertain.threshold.model %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+  
+  
+  sims.priors <- bind_rows(
+    sims.priors, 
+    get_samples(rs.prior, 20000) %>% rename(state = support) %>% mutate(PriorShape = p)
+    #rs.prior %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+  
+  print(p)
+}
+
+
+sims.combined <- bind_rows(
+    sims.priors %>% mutate(src = 'priors'),
+    sims.uncertain.thresholds %>% mutate(src = 'posteriors'),
+    sims.fixed.thresholds %>%
+      mutate(src = paste('fixed', threshold, sep = "_")) %>%
+      select(-threshold)
+    ) %>%
+  mutate(state = as.numeric(state))
+
+```
+
+
+```{r}
+
+sims.combined.expval <- sims.combined %>%
+  group_by(src, PriorShape) %>%
+  summarize(expval = mean(state))
+
+model.predicted.ordering <- unique(sims.combined.expval$PriorShape)[with(filter(sims.combined.expval,src == "posteriors"), order(expval))]
+
+ggplot(sims.combined %>%
+          mutate(PriorShape = factor(PriorShape, levels = model.predicted.ordering)),
+         # filter(
+         #   PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+         #   src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+         #   ) %>%
+         # mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
+         #                            labels = c("Xs Y    \n[uniform]", "Xs fly      \n[biological]", "Xs carry malaria \n [accidental]         ")),
+         #        src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", "posteriors"),
+         #                     labels = c(
+         #                   #    'prevalence prior',
+         #                       '"some" (threshold = 0.01)',
+         #                      '"most" (threshold = 0.5)',
+         #                       'generic (uncertain threshold)'
+         #                                ))), 
+       aes(x = state, fill = src, color = src))+
+    #geom_density_ridges(scale = 0.9, alpha = 0.7)+
+    geom_density(aes(y = ..scaled..), size = 0.6, alpha = 0.7, adjust = 1.1)+
+    theme_few() +
+    scale_x_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    scale_y_continuous(breaks = c(0, 1), limits= c(0, 1))+
+    # geom_label(data = s1.simulations.relabeled.2,
+    #             aes(x = xlabpos, y=0.25, label = category),
+    #             label.padding = unit(0.075, "lines"),
+    #               family = 'Palatino', fontface = 'bold', size = 3.2, inherit.aes =F, force = 15)+
+    ylab("Scaled posterior density") +
+    xlab("Implied Prevalence")+
+    scale_color_solarized()+
+    scale_fill_solarized()+
+    facet_grid(PriorShape~src, scales = 'free')+
+    theme(strip.text.y = element_text(angle = 0, hjust =0, size = 12),
+          legend.position = "none"#,
+          #axis.title.y = element_blank()
+          #plot.margin=unit(c(0.5,0.5,1.5,0.5),"cm")
+          )
+```
+
+```{r}
+sims.combined.expval %>%
+  mutate(PriorShape = factor(PriorShape, levels = PriorShape[with(filter(sims.combined.expval,src == "posteriors"), order(expval))])) %>%
+  ggplot(., aes(x = src, y = expval, fill = PriorShape))+
+  geom_col(color = 'black', position = position_dodge())+
+  scale_fill_viridis(discrete = T, option = 'plasma')
+```
+
+
+### Bootstrapping priors
+
+
+```{r}
+
+  head(df.pm.3.filtered %>% 
+         spread(category, response))
+df.pm.3.filtered.priors.i %>%
+  group_by(distribution) %>%
+  count()
+
+df.pm.3.filtered.priors.wpReady
+```
+
+
+to do:
+- resample priors before running parallel, and then just index in.
+
+```{r}
+
+bootstrapModelPredictions <- function(i){
+  
+  #workerids <- unique(df.pm.3.filtered$workerid)
+
+  #start_time <- Sys.time()
+  #sampled.workerids <- sample(workerids, size = length(workerids), replace = TRUE)
+
+  df.pm.3.filtered.priors.i <- df.pm.3.filtered %>% 
+    spread(category, response) %>%
+    group_by(distribution) %>%
+    sample_n(40, replace = TRUE) %>%
+    gather(category, response, K, L, M, N, O)  %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(distribution, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.pm.3.filtered.priors.i[is.na(df.pm.3.filtered.priors.i)] <- 0
+
+
+df.pm.3.filtered.priors.wpReady <- df.pm.3.filtered.priors.i %>%
+  gather(state, n, -distribution) %>%
+  group_by(distribution) %>%
+  mutate(prop = (n+1) / sum(n + 1),
+         prop = round(prop, 8)) %>%
+  select(-n) %>%
+  spread(state, prop)
+
+manipulatedPriorNames <- df.pm.3.filtered.priors.wpReady$distribution
+# sims.fixed.thresholds <- data.frame()
+# sims.priors <- data.frame()
+# sims.uncertain.thresholds <- data.frame()
+sims.all.models <- data.frame()
+
+  for (p in manipulatedPriorNames){
+
+    inputData = df.pm.3.filtered.priors.wpReady %>% filter(distribution == p) %>% ungroup() %>% select(-distribution)
+
+    # rs.fixed.threshold.model <- webppl(paste(rsaHelpers,statePrior, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "priorData")
+    # 
+    # rs.uncertain.threshold.model <- webppl(paste(rsaHelpers,statePrior, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "priorData")
+    # 
+    # rs.prior <- webppl(paste(rsaHelpers, statePrior, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var =  "priorData")
+    # 
+    priorProbs = sum(inputData) 
+    if (( ( length(inputData) == 20 ) && ((priorProbs > 0.99) && (priorProbs < 1.01))) ) {
+    
+    
+    #if  ( length(inputData) == 20 )  {
+
+      # rs.all.models <- webppl(paste(rsaHelpers, statePrior, fixed.threshold.model,
+      #                             uncertain.threshold.model,
+      #                             all.models.call, sep = '\n'), data = inputData, data_var =  "priorData")
+      rs.all.models <- webppl(statePrior, data = inputData, data_var =  "priorData")
+
+      
+      sims.all.models <- bind_rows(
+        sims.all.models, rs.all.models %>% mutate(PriorShape = p,i = i)
+      )
+
+    #     sims.all.models <- bind_rows(
+    # sims.all.models, bind_rows(
+    #         data.frame(rs.all.models$`0.05`)  %>%
+    #          mutate(threshold = "0.05"),
+    #         data.frame(rs.all.models$`0.125`)  %>%
+    #          mutate(threshold = "0.125"),
+    #        data.frame(rs.all.models$`0.375`)  %>%
+    #          mutate(threshold = "0.375"),
+    #         data.frame(rs.all.models$`0.625`)  %>%
+    #          mutate(threshold = "0.625"),
+    #        data.frame(rs.all.models$`0.875`)  %>%
+    #          mutate(threshold = "0.875"),
+    #        data.frame(rs.all.models$generic)  %>%
+    #          mutate(threshold = "generic"),
+    #        data.frame(rs.all.models$prior)  %>%
+    #          mutate(threshold = "prior") %>%
+    #          rename(state = support)
+    #        ) %>% mutate(PriorShape = p,
+    #                     i = i,
+    #                     state = as.numeric(state)))
+
+    }
+
+    
+    # sims.all.models <- bind_rows(sims.all.models,
+    #                                    bind_rows(
+    #                                    data.frame(rs.all.models$`0.05`)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "0.05"),
+    #                                     data.frame(rs.all.models$`0.125`)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "0.125"),
+    #                                    data.frame(rs.all.models$`0.375`)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "0.375"),
+    #                                     data.frame(rs.all.models$`0.625`)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "0.625"),
+    #                                    data.frame(rs.all.models$`0.875`)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "0.875"),
+    #                                    data.frame(rs.all.models$generic)  %>%
+    #                                      mutate(state = as.numeric(state)) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "generic"),
+    #                                    data.frame(rs.all.models$prior)  %>%
+    #                                      mutate(state = as.numeric(as.character(support))) %>%
+    #                                      summarize(expval = sum(probs*state)) %>%
+    #                                      mutate(threshold = "prior")
+    #                                    ) %>% mutate(PriorShape = p,
+    #                                                 i = i))
+
+
+            
+  }
+
+  return(sims.all.models)
+
+}
+```
+
+```{r}
+
+data.frame(rs.all.models$generic) %>%
+  mutate(state = as.numeric(state)) %>%
+  ggplot(., aes( x = state, y = probs))+
+  geom_col(position= position_dodge())#+
+  #geom_errorbar(position = position_dodge())+
+  #facet_wrap(~distribution, nrow = 2)
+
+
+bind_rows(
+  data.frame(rs.all.models$`0.05`)  %>%
+   mutate(threshold = "0.05"),
+  data.frame(rs.all.models$`0.125`)  %>%
+   mutate(threshold = "0.125"),
+ data.frame(rs.all.models$`0.375`)  %>%
+   mutate(threshold = "0.375"),
+  data.frame(rs.all.models$`0.625`)  %>%
+   mutate(threshold = "0.625"),
+ data.frame(rs.all.models$`0.875`)  %>%
+   mutate(threshold = "0.875"),
+ data.frame(rs.all.models$generic)  %>%
+   mutate(threshold = "generic"),
+ data.frame(rs.all.models$prior)  %>%
+   mutate(threshold = "prior") %>%
+   rename(state = support)
+ ) %>% mutate(PriorShape = p,
+              i = i, state = as.numeric(state))   %>%
+  ggplot(., aes( x = state, y = probs))+
+  geom_col(position= position_dodge())+
+  #geom_errorbar(position = position_dodge())+
+  facet_wrap(~threshold, nrow = 2)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+```
+
+
+```{r runParallel}
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+m.rs.parallel <- bind_rows(
+  parLapply(cl, 1:100, bootstrapModelPredictions)
+)
+end_time <- Sys.time()
+print(end_time - start_time) 
+# 1 min per sample (/ 3 for 3 clusters)
+# 1000 samples --> 5.5h
+stopCluster(cl)
+```
+
+
+```{r}
+m.rs.parallel %>%
+  spread(support, prob) %>% View()
+```
+
+
+```{r}
+m.rs.parallel.save <- m.rs.parallel
+m.rs.parallel.200 <- bind_rows(m.rs.parallel.save,m.rs.parallel %>%
+  mutate(i = i + 100)
+                               )
+tail(m.rs.parallel)
+
+
+inputData$`0.025` <- 0.02
+str(m.rs.parallel)
+
+m.rs.parallel %>%
+  #gather(key, val, -PriorShape, -i) %>%
+  #mutate(key = as.numeric(as.character(key))) %>%
+  group_by(PriorShape, threshold, i) %>%
+  summarize(sum = sum(probs))
+
+inputData
+```
+
+
+
+```{r old_trash1}
+sims.combined.bs <- data.frame()
+workerids <- unique(df.pm.3.filtered$workerid)
+num_bootstrapped_samples <- 3
+
+for (i in seq(1, num_bootstrapped_samples)){
+  
+  start_time <- Sys.time()
+  sampled.workerids <- sample(workerids, size = length(workerids), replace = TRUE)
+  
+  df.pm.3.filtered.priors.i <- df.pm.3.filtered %>%
+  filter(workerid %in% sampled.workerids) %>%
+  rowwise() %>%
+  mutate(binned_response = round_to_bin(response)) %>%
+  group_by(distribution, binned_response) %>%
+  count() %>%
+  ungroup() %>%
+  spread(binned_response, n)
+
+df.pm.3.filtered.priors.i[is.na(df.pm.3.filtered.priors.i)] <- 0
+
+
+df.pm.3.filtered.priors.wpReady <- df.pm.3.filtered.priors.i %>%
+  gather(state, n, -distribution) %>%
+  group_by(distribution) %>%
+  mutate(prop = (n+1) / sum(n + 1)) %>%
+  select(-n) %>%
+  spread(state, prop)
+
+
+manipulatedPriorNames <- df.pm.3.filtered.priors.wpReady$distribution
+sims.fixed.thresholds <- data.frame()
+sims.priors <- data.frame()
+sims.uncertain.thresholds <- data.frame()
+
+  for (p in manipulatedPriorNames){
+
+    inputData = df.pm.3.filtered.priors.wpReady %>% filter(distribution == p) %>% ungroup() %>% select(-distribution)
+  
+    rs.fixed.threshold.model <- webppl(paste(rsaHelpers,statePrior, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "priorData")
+    
+    rs.uncertain.threshold.model <- webppl(paste(rsaHelpers,statePrior, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "priorData")
+    
+    rs.prior <- webppl(paste(rsaHelpers, statePrior, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var =  "priorData")
+  
+    sims.fixed.thresholds <- bind_rows(sims.fixed.thresholds,
+                                       bind_rows(
+                                       data.frame(rs.fixed.threshold.model$`0.05`)  %>%
+                                         mutate(state = as.numeric(state)) %>%
+                                         summarize(expval = sum(probs*state)) %>%
+                                         mutate(threshold = 0.05),
+                                        data.frame(rs.fixed.threshold.model$`0.125`)  %>%
+                                         mutate(state = as.numeric(state)) %>%
+                                         summarize(expval = sum(probs*state)) %>%
+                                         mutate(threshold = 0.125),
+                                       data.frame(rs.fixed.threshold.model$`0.375`)  %>%
+                                         mutate(state = as.numeric(state)) %>%
+                                         summarize(expval = sum(probs*state)) %>%
+                                         mutate(threshold = 0.375),
+                                        data.frame(rs.fixed.threshold.model$`0.625`)  %>%
+                                         mutate(state = as.numeric(state)) %>%
+                                         summarize(expval = sum(probs*state)) %>%
+                                         mutate(threshold = 0.625),
+                                       data.frame(rs.fixed.threshold.model$`0.875`)  %>%
+                                         mutate(state = as.numeric(state)) %>%
+                                         summarize(expval = sum(probs*state)) %>%
+                                         mutate(threshold = 0.875)
+                                       ) %>% mutate(PriorShape = p))
+  
+    
+      sims.uncertain.thresholds <- bind_rows( sims.uncertain.thresholds, 
+      rs.uncertain.threshold.model %>% 
+        mutate(state = as.numeric(state)) %>%
+        summarize(expval = sum(prob*state)) %>%
+        mutate(PriorShape = p)
+      )
+    
+    sims.priors <- bind_rows(sims.priors, 
+                             rs.prior %>% rename(state = support) %>% mutate(state = as.numeric(as.character(state))) %>%
+                                         summarize(expval = sum(prob*state)) %>%
+                                         mutate(PriorShape = p)
+      )
+    
+    print(p)
+  }
+
+  sims.combined.bs <- bind_rows(
+    sims.combined.bs, 
+    bind_rows(
+      sims.priors %>% mutate(src = 'priors'),
+      sims.uncertain.thresholds %>% mutate(src = 'posteriors'),
+      sims.fixed.thresholds %>%
+        mutate(src = paste('fixed', threshold, sep = "_")) %>%
+        select(-threshold)
+      )  %>% 
+    mutate(i = i)
+  )
+  
+  end_time <- Sys.time()
+  print(paste('iteration ', i, " in ", end_time - start_time, sep = ""))
+}
+
+```
+
+
+
+```{r bsDistributionsAndExpvals, fig.width = 8, fig.height = 4}
+m.rs.parallel %>%
+  filter(threshold %in% c("prior", "generic")) %>%
+  group_by(threshold, PriorShape, state) %>%
+  summarize( lower = quantile(probs, 0.025),
+             mean = mean(probs),
+             upper = quantile(probs, 0.975)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge())+
+  geom_errorbar(position = position_dodge(),  alpha = 0.3)+
+  facet_grid(threshold~PriorShape)
+
+head(m.rs.parallel)
+
+m.rs.parallel %>%
+    filter(threshold %in% c("prior", "generic")) %>%
+  group_by(threshold, PriorShape, i) %>%
+  summarize(expval = sum(probs*state)) %>%
+  ggplot(., aes(x = expval))+
+  geom_histogram()+
+  facet_grid(threshold~PriorShape)
+```
+
+```{r bsExpvalViz}
+
+posterior.average.means <- m.rs.parallel %>%
+  filter(threshold == "generic") %>%
+  group_by(threshold, PriorShape) %>%
+  summarize(meanExpVal = mean(expval))
+
+property.order <- with(posterior.average.means, PriorShape[order(meanExpVal)])
+
+m.rs.parallel %>%
+  #filter(src %in% c("priors", "posteriors")) %>%
+  mutate(PriorShape = factor(PriorShape, levels = property.order)) %>%
+  ggplot(., aes(x = PriorShape, y = expval, color = PriorShape))+
+  geom_pirate(violins = F, bars = F, lines = F, cis = F)+
+  #geom_point(position = position_dodge())+
+  #geom_col(color = 'black', position = position_dodge())+
+  scale_fill_viridis(discrete = T, option = 'plasma')+
+  facet_wrap(~threshold, nrow = 1)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+
+
+```
+
+
+
+
+```{r}
+m.rs.parallel %>%
+  filter(threshold == "generic") %>%
+  mutate(PriorShape = factor(PriorShape, levels = property.order)) %>%
+  ggplot(., aes(x = PriorShape, y = expval, color = PriorShape))+
+  geom_pirate(violins = F, bars = F)+
+  #geom_point(position = position_dodge())+
+  #geom_col(color = 'black', position = position_dodge())+
+  scale_fill_viridis(discrete = T, option = 'plasma')+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+
+
+m.rs.parallel %>%
+  filter(threshold == "generic") %>%
+  mutate(PriorShape = factor(PriorShape, levels = property.order)) %>%
+  ggplot(., aes(x = expval))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black', fill = 'grey')+  #  #geom_pirate(violins = F, bars = F)+
+  #geom_point(position = position_dodge())+
+  #geom_col(color = 'black', position = position_dodge())+
+  #scale_fill_viridis(discrete = T, option = 'plasma')+
+  facet_wrap(~PriorShape, nrow = 2)+
+  scale_x_continuous(limits = c(0, 1))
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+```
+
+
+```{r}
+highestModeThresholds <- list(
+  "half_or_deterministic"= 0.675,
+  "rare_deterministic"= 0.125,
+  "rare_half"= 0.125,
+  "rare_strong"= 0.125,
+  "rare_weak"= 0.125,
+  "strong_or_deterministic"= 0.875,
+  "uniform"= 0.375,
+  "weak_or_deterministic"= 0.375,
+  "weak_or_half" = 0.375,
+  "weak_or_strong" = 0.375
+)
+```
+
+#### bootstrap priors (check that this works)
+
+```{r}
+bootstrapPriors <- function(i){
+  
+  df.pm.3.filtered.priors.i <- df.pm.3.filtered %>% 
+    spread(category, response) %>%
+    group_by(distribution) %>%
+    sample_n(40, replace = TRUE) %>%
+    gather(category, response, K, L, M, N, O)  %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(distribution, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.pm.3.filtered.priors.i[is.na(df.pm.3.filtered.priors.i)] <- 0
+
+
+df.pm.3.filtered.priors.wpReady <- df.pm.3.filtered.priors.i %>%
+  gather(state, n, -distribution) %>%
+  group_by(distribution) %>%
+  mutate(prop = (n+1) / sum(n + 1),
+         prop = round(prop, 5),
+         i = i)
+df.pm.3.filtered.priors.wpReady
+}
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+df.pm.3.filtered.priors.bs <- bind_rows(
+  parLapply(cl, 1:10000, bootstrapPriors)
+)
+
+end_time <- Sys.time()
+print(end_time - start_time) 
+```
+
+
+```{r}
+head(df.pm.3.filtered.priors.bs)
+
+df.pm.3.filtered.priors.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(distribution, state) %>%
+  summarize( lower = quantile(prop, 0.025),
+             mean = mean(prop),
+             upper = quantile(prop, 0.975)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge())+
+  geom_errorbar(position = position_dodge())+
+  facet_wrap(~distribution, nrow = 2)
+
+
+
+df.pm.3.filtered.priors.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  ggplot(., aes( x = state, y = prop))+
+  geom_pirate(violins = F, bars = F)+
+  facet_wrap(~distribution)
+```
+
+```{r write bootstrapped priors}
+df.pm.3.filtered.priors.bs %>% 
+  select(-n) %>%
+  spread(state, prop) %>%
+  jsonlite::toJSON(., pretty = F) %>%
+  write(., "../../models/generics-bda-L0-btstrp-priors-notPretty.json")
+```
+
+```{r}
+model.path <- "../../models/results/bootstrap/"
+model.prefix <- "generics-bda-L0-btstrp-results_chunk"
+
+model.files <- list.files(
+  path = model.path,
+  pattern = model.prefix
+)
+
+m.preds <- bind_rows(lapply(model.files, function(modfile){
+  read_csv(paste(model.path, modfile, sep = ""))
+}))
+
+
+m.preds.zeroPadded <- left_join(
+  expand.grid(
+  model = unique(m.preds$model),
+  distribution = unique(m.preds$distribution),
+  iteration = unique(m.preds$iteration),
+  state = unique(m.preds$state)
+  ), m.preds)
+
+m.preds.zeroPadded[is.na(m.preds.zeroPadded)] <- 0
+summary(m.preds.zeroPadded)
+```
+
+
+
+```{r bsDistributionsAndExpvals2, fig.width = 20, fig.height = 8}
+m.preds.zeroPadded %>%
+  #filter(threshold %in% c("prior", "generic")) %>%
+  group_by(model, distribution, state) %>%
+  summarize( lower = quantile(prob, 0.025),
+             mean = mean(prob),
+             upper = quantile(prob, 0.975)) %>%
+  ungroup() %>% 
+  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 1)+
+  facet_grid(model~distribution, scales = 'free')+
+  scale_x_continuous(breaks = c(0, 0.5 , 1))+
+  scale_fill_viridis(discrete = T)+
+  ylab("predicted probability")+
+  xlab("prevalence")
+
+head(m.rs.parallel)
+
+m.preds.zeroPadded.expectations <- m.preds.zeroPadded %>%
+  group_by(model, distribution, iteration) %>%
+  summarize(expval = sum(prob*state))
+
+ggplot(m.preds.zeroPadded.expectations, aes(x = expval))+
+  geom_histogram(bins = 20, fill = 'white', color = 'black')+
+  facet_wrap(~model + distribution, scales = 'free')
+
+
+
+```
+
+
+```{r, fig.width = 11}
+m.pred.uncertain.expvals <- m.preds.zeroPadded.expectations %>%
+  filter(model == "uncertain") %>%
+  group_by(distribution) %>%
+  summarize(mean_expval = mean(expval))
+property.order <- with(m.pred.uncertain.expvals, distribution[order(mean_expval)])
+
+m.preds.zeroPadded.expectations %>%
+  group_by(model, distribution) %>%
+  summarize( lower = quantile(expval, 0.025),
+             mean = mean(expval),
+             upper = quantile(expval, 0.975)) %>%
+  ungroup() %>%
+  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = model, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")
+```
+
