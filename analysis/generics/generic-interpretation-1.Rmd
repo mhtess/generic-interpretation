@@ -19,6 +19,13 @@ readData = function(proj){
     )
 }
 
+readCatchInfo = function(proj){
+  read_csv(
+    paste("../../data/interpretation/",proj,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
 readSubjInfo = function(proj){
   read_csv(
     paste("../../data/interpretation/",proj,"/",
@@ -50,18 +57,20 @@ df.1.bs %>%
 ```
 
 
-
 # Interpretation-1
 
 ```{r}
-df.int.1 <- readData("interpretation-1")
+df.int.1 <- readData("interpretation-1") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+ 
 df.int.1.subj <- readSubjInfo("interpretation-1")
 df.int.1.subj %>%
   select(problems, comments) %>%
   kable()
 ```
 
-
+### by item histogram
 
 ```{r fig.width = 10, fig.height = 4}
 df.int.1 %>%
@@ -82,7 +91,7 @@ df.int.1.bs %>%
   coord_flip()+
   ylim(0, 1)
 
-ggsave("figs/interpretation-1-n18-95ci.pdf", height = 4)
+#ggsave("figs/interpretation-1-n18-95ci.pdf", height = 4)
 ```
 ```{r fig.height = 4}
 df.int.1 %>%
@@ -94,6 +103,913 @@ df.int.1 %>%
   scale_color_viridis(discrete = T)+
   ylim(0, 1)
 
-ggsave("figs/interpretation-1-n18-pirates.pdf", height = 7)
+#ggsave("figs/interpretation-1-n18-pirates.pdf", height = 7)
+```
+
+
+### by subject hists
+
+```{r fig.width = 10, fig.height = 4}
+df.int.1 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~workerid)
+```
+
+
+```{r}
+df.int.norm.bs.1 <- df.int.1 %>%
+ group_by(property) %>%
+  tidyboot_mean(column = normalizedResponse)
+
+df.int.1 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.norm.bs.1, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = normalizedResponse, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)
+
+#ggsave("figs/interpretation-1-normalized-n18-pirates.pdf", height = 7)
+```
+
+
+# Interpretation-2
+
+```{r}
+df.int.2.catch <- readCatchInfo("interpretation-2")
+
+df.int.2.catch.summary <- df.int.2.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int.2.catch.summary %>%
+  select(`0`, `1`) %>%
+  table()
+
+df.int.2.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+```{r}
+df.int.2 <- readData("interpretation-2") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+df.int.2 <- left_join(df.int.2, df.int.2.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.int.2.filtered <- df.int.2 %>% filter(pass == 1)
+  
+df.int.2.subj <- readSubjInfo("interpretation-2")
+
+df.int.2.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.int.2, table(property))
+
+# filtered data
+with(df.int.2.filtered, table(property))
+```
+
+```{r fig.width = 10, fig.height = 4}
+df.int.2 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property)
+```
+
+
+
+```{r fig.height = 4}
+df.int.2.bs <- df.int.2 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.2 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.2.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-1-n18-pirates.pdf", height = 7)
+```
+
+
+```{r fig.height = 4}
+df.int.2.filtered.bs <- df.int.2.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.2.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.2.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-2-n36filterd-pirates.pdf", height = 9)
+```
+
+
+
+### by subject hists
+
+```{r fig.width = 10, fig.height = 4}
+df.int.2 %>%
+  ggplot(., aes(x = response, fill= factor(pass )))+
+  geom_histogram()+
+  facet_wrap(~workerid)#+
+  #scale_x_continuous(breaks = c(0, 0.5, 1), limits = c(-0.1, 1.1))+
+  #scale_fill_viridis(discrete = T)
+
+#ggsave("figs/interpretation-2-bySubj-hists.pdf", height = 6, width = 11)
+```
+
+
+```{r}
+df.int.norm.bs.1 <- df.int.1 %>%
+ group_by(property) %>%
+  tidyboot_mean(column = normalizedResponse)
+
+df.int.1 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.norm.bs.1, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = normalizedResponse, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)
+
+#ggsave("figs/interpretation-1-normalized-n18-pirates.pdf", height = 7)
+```
+
+
+# Interpretation-3
+
+72 items. follow-up question for responses < 0.25
+
+```{r}
+df.int.3.catch <- readCatchInfo("interpretation-3")
+
+df.int.3.catch.summary <- df.int.3.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int.3.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+```{r}
+df.int.3 <- readData("interpretation-3") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+df.int.3 <- left_join(df.int.3, df.int.3.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.int.3.filtered <- df.int.3 %>% filter(pass == 1)
+  
+df.int.3.subj <- readSubjInfo("interpretation-3")
+
+df.int.3.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.int.3, table(property))
+
+# filtered data
+with(df.int.3.filtered, table(property))
+```
+
+```{r fig.width = 10, fig.height = 4}
+df.int.3 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property)
+```
+
+
+
+```{r fig.height = 4}
+df.int.3.bs <- df.int.3 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.3 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.3.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-3-n18-pirates.pdf", height = 7)
+```
+
+
+```{r fig.height = 4}
+df.int.3.filtered.bs <- df.int.3.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.3.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.3.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-3-n36filterd-pirates.pdf", height = 9)
+```
+
+
+
+### by subject hists
+
+```{r fig.width = 10, fig.height = 4}
+df.int.3 %>%
+  ggplot(., aes(x = response, fill= factor(pass )))+
+  geom_histogram()+
+  facet_wrap(~workerid)#+
+  #scale_x_continuous(breaks = c(0, 0.5, 1), limits = c(-0.1, 1.1))+
+  #scale_fill_viridis(discrete = T)
+
+#ggsave("figs/interpretation-2-bySubj-hists.pdf", height = 6, width = 11)
+```
+
+### explanations of low prevalence interpretations
+
+```{r}
+df.int.3.expl <- df.int.3 %>%
+  filter(!(explanation == "<NA>")) %>%
+  select(property, response, explanation)
+
+df.int.3.expl[order(df.int.3.expl$property),] %>%
+  kable()
+```
+
+
+
+
+# Interpretation-4
+
+74 items. follow-up question for responses < 0.5
+
+```{r}
+df.int.4.catch <- readCatchInfo("interpretation-4")
+
+df.int.4.catch.summary <- df.int.4.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int.4.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+```{r}
+df.int.4 <- readData("interpretation-4") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+df.int.4 <- left_join(df.int.4, df.int.4.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.int.4.filtered <- df.int.4 %>% filter(pass == 1)
+  
+df.int.4.subj <- readSubjInfo("interpretation-4")
+
+df.int.4.subj %>%
+  select(language)
+
+df.int.4.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.int.4, table(property))
+
+# filtered data
+data.frame(with(df.int.4.filtered, table(property))) %>%
+  ggplot(., aes( x = Freq ))+
+  geom_bar()
+```
+
+```{r fig.width = 18, fig.height = 8}
+df.int.4 %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property)
+
+ggsave("figs/interpretation-4-n36-hist.pdf", width = 20, height = 14)
+```
+
+
+
+```{r fig.height = 4}
+df.int.4.bs <- df.int.4 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.4 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.4.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-4-n36-pirates.pdf", height = 7)
+```
+
+
+```{r fig.height = 4}
+df.int.4.filtered.bs <- df.int.4.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.4.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.4.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-3-n36filterd-pirates.pdf", height = 9)
+```
+
+
+
+```{r}
+df.int.34.filtered.bs <- left_join(
+  df.int.3.filtered.bs %>%
+    rename(mean_3 = mean, ci_lower_3 = ci_lower, ci_upper_3 = ci_upper,
+           n_3 = n, empirical_stat_3 = empirical_stat),
+  df.int.4.filtered.bs %>%
+    rename(mean_4 = mean, ci_lower_4 = ci_lower, ci_upper_4 = ci_upper,
+           n_4 = n, empirical_stat_4 = empirical_stat)
+)
+
+print(with(df.int.34.filtered.bs, cor(mean_3, mean_4, use = "pairwise.complete.obs")))
+
+ggplot(df.int.34.filtered.bs, aes ( x = mean_3, y = mean_4,
+                  xmin = ci_lower_3, xmax = ci_upper_3,
+                  ymin = ci_lower_4, ymax = ci_upper_4))+
+  geom_point()+
+  geom_errorbarh(alpha = 0.3)+geom_errorbar(alpha = 0.3)+
+  xlim(0, 1)+
+  ylim(0, 1)+
+  coord_fixed()
+  
+  
+```
+
+
+
+### by subject hists
+
+```{r fig.width = 10, fig.height = 4}
+df.int.3 %>%
+  ggplot(., aes(x = response, fill= factor(pass )))+
+  geom_histogram()+
+  facet_wrap(~workerid)#+
+  #scale_x_continuous(breaks = c(0, 0.5, 1), limits = c(-0.1, 1.1))+
+  #scale_fill_viridis(discrete = T)
+
+#ggsave("figs/interpretation-2-bySubj-hists.pdf", height = 6, width = 11)
+```
+
+### explanations of low prevalence interpretations
+
+```{r}
+df.int.4.expl <- df.int.4 %>%
+  filter(!(explanation == "<NA>")) %>%
+  select(property, response, explanation) %>%
+  mutate(explanation = gsub("&quotechar", "'", explanation))
+
+df.int.4.expl[with(df.int.4.expl, order(property, response)),] %>%
+  kable()
+```
+
+
+
+
+# Interpretation-5
+
+74 items. follow-up question for responses < 0.5
+
+```{r}
+df.int.5.catch <- readCatchInfo("interpretation-5")
+
+df.int.5.catch.summary <- df.int.5.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+#  mutate(pass = ifelse(hit > 4 & correct_rejection > 4, 1, 0),
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int.5.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+```{r}
+df.int.5.subj <- readSubjInfo("interpretation-5")
+
+df.int.5.subj %>%
+  select(language)
+
+df.int.5.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+Native english
+
+```{r}
+d.int.5.nativeEnglish <- df.int.5.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(englishNative = grepl("eng", tolower(language)))
+
+#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+
+table(d.int.5.nativeEnglish$englishNative)
+
+# what do people report for native english that is not english?
+d.int.5.nativeEnglish %>%
+  filter(!englishNative) %>%
+  select(language) %>%
+  kable(.)
+```
+
+Load data
+
+```{r}
+df.int.5 <- readData("interpretation-5") %>%
+  filter(trial_type == "implied_prevalence") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+## RTs
+df.int.5.rt <- df.int.5 %>%
+  group_by(workerid) %>%
+  summarize(meanRT = mean(rt/ 1000),
+            rt_lt_4 = meanRT < 4)
+
+df.int.5.rt %>%
+  ggplot(., aes(x = meanRT))+
+  geom_histogram()+
+  xlim(0, 10)
+###
+
+
+df.int.5 <- left_join(
+  left_join(
+  left_join(df.int.5, df.int.5.catch.summary %>%
+                         select(workerid, totalCorrect, pass)),
+  d.int.5.nativeEnglish),
+  
+                      df.int.5.rt)
+
+df.int.5.filtered <- df.int.5 %>% 
+  filter(pass == 1, englishNative)
+```
+
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.int.5.filtered, table(property))
+
+# filtered data
+data.frame(with(df.int.5.filtered, table(property))) %>%
+  ggplot(., aes( x = Freq ))+
+  geom_bar()
+```
+
+```{r fig.width = 18, fig.height = 8}
+df.int.5.filtered %>%
+  ggplot(., aes(x = response, fill = property_type))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ property_type + property, scales = 'free')+
+  scale_x_continuous(limits = c(-0.05, 1.05), breaks = c(0, 0.5, 1))
+  
+
+#ggsave("figs/interpretation-5-filtered-n140-hist.pdf", width = 20, height = 14)
+```
+
+```{r fig.width = 18, fig.height = 8}
+df.int.5 %>%
+  mutate(pass_rt = paste(pass, rt_lt_4)) %>%
+  ggplot(., aes(x = response, fill = pass_rt))+
+  geom_histogram()+
+  facet_wrap(~workerid)
+
+ggsave("figs/interpretation-5-subj-n140-hist.pdf", width = 20, height = 18)
+```
+
+
+
+
+
+```{r fig.height = 4}
+df.int.5.bs <- df.int.5 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.5 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.5.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.3)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-5-n140-pirates.pdf", height = 7)
+```
+
+
+```{r fig.height = 4}
+df.int.5.filtered.bs <- df.int.5.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.5.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.5.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property_type))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35)+
+  coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+#ggsave("figs/interpretation-5-n140filterd-pirates.pdf", height = 9)
+```
+
+
+
+```{r}
+df.int.45.filtered.bs <- left_join(
+  df.int.5.filtered.bs %>%
+    rename(mean_5 = mean, ci_lower_5 = ci_lower, ci_upper_5 = ci_upper,
+           n_5 = n, empirical_stat_5 = empirical_stat),
+  df.int.4.filtered.bs %>%
+    rename(mean_4 = mean, ci_lower_4 = ci_lower, ci_upper_4 = ci_upper,
+           n_4 = n, empirical_stat_4 = empirical_stat)
+)
+
+print(with(df.int.45.filtered.bs, cor(mean_5, mean_4, use = "pairwise.complete.obs")))
+
+ggplot(df.int.45.filtered.bs, aes ( x = mean_4, y = mean_5,
+                  xmin = ci_lower_4, xmax = ci_upper_4,
+                  ymin = ci_lower_5, ymax = ci_upper_5))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1, lty = 3)+
+  geom_errorbarh(alpha = 0.3)+geom_errorbar(alpha = 0.3)+
+  xlim(0, 1)+
+  ylim(0, 1)+
+  coord_fixed()
+  
+  
+```
+
+
+
+### explanations of low prevalence interpretations
+
+```{r}
+df.int.5.expl <- readData("interpretation-5") %>%
+  filter(trial_type != "implied_prevalence")%>%
+  select(property, original_response, response, explanation) %>%
+  mutate(explanation = gsub("&quotechar", "'", explanation))
+
+
+ggplot(df.int.5.expl, aes(x = original_response, y = response))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1, lty = 3)+
+  xlim(0, 1)+
+  ylim(0, 1)+
+  coord_fixed()
+
+df.int.5.expl[with(df.int.5.expl, order(property, response)),] %>%
+  kable()
+```
+
+
+
+
+# Interpretation-6
+
+% question. 75 items. follow-up question for responses < 0.5
+
+```{r}
+df.int.6.catch <- readCatchInfo("interpretation-6")
+
+df.int.6.catch.summary <- df.int.6.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  #mutate(pass = ifelse(hit > 4 & correct_rejection > 4, 1, 0),
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int.6.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+```{r}
+df.int.6.subj <- readSubjInfo("interpretation-6")
+
+df.int.6.subj %>%
+  select(language)
+
+df.int.6.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+Native english
+
+```{r}
+d.int.6.nativeEnglish <- df.int.6.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(englishNative = grepl("eng", tolower(language)))
+
+#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+
+table(d.int.6.nativeEnglish$englishNative)
+
+# what do people report for native english that is not english?
+d.int.6.nativeEnglish %>%
+  filter(!englishNative) %>%
+  select(language) %>%
+  kable(.)
+```
+
+Load data
+
+```{r}
+df.int.6 <- readData("interpretation-6") %>%
+  filter(trial_type == "implied_prevalence") %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+## RTs
+df.int.6.rt <- df.int.6 %>%
+  group_by(workerid) %>%
+  summarize(meanRT = mean(rt/ 1000),
+            rt_lt_4 = meanRT < 4)
+
+df.int.6.rt %>%
+  ggplot(., aes(x = meanRT))+
+  geom_histogram()+
+  xlim(0, 10)
+###
+
+
+df.int.6 <- left_join(
+  left_join(
+  left_join(df.int.6, df.int.6.catch.summary %>%
+                         select(workerid, totalCorrect, pass)),
+  d.int.6.nativeEnglish),
+  
+                      df.int.6.rt)
+
+df.int.6.filtered <- df.int.6 %>% 
+  filter(pass == 1, englishNative)
+```
+
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.int.6.filtered, table(property))
+
+# filtered data
+data.frame(with(df.int.6.filtered, table(property))) %>%
+  ggplot(., aes( x = Freq ))+
+  geom_bar()
+```
+
+```{r fig.width = 18, fig.height = 8}
+df.int.6.filtered %>%
+  ggplot(., aes(x = response, fill = property_type))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ property_type + property, scales = 'free')+
+  scale_x_continuous(limits = c(-0.05, 1.05), breaks = c(0, 0.5, 1))
+  
+
+#ggsave("figs/interpretation-5-filtered-n140-hist.pdf", width = 20, height = 14)
+```
+
+```{r fig.width = 18, fig.height = 8}
+df.int.6 %>%
+  mutate(pass_rt = paste(pass, rt_lt_4)) %>%
+  ggplot(., aes(x = response, fill = pass_rt))+
+  geom_histogram()+
+  facet_wrap(~workerid)
+
+ggsave("figs/interpretation-6-subj-n140-hist.pdf", width = 20, height = 18)
+```
+
+
+
+```{r fig.height = 4}
+df.int.6.bs <- df.int.6 %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.6 %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.6.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.3)+
+  coord_flip()+
+  scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-6-n200-pirates.pdf", height = 7)
+```
+
+
+```{r fig.height = 4}
+df.int.6.filtered.bs <- df.int.6.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.6.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.6.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response, color = property))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35)+
+  coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  ylim(0, 1)
+
+ggsave("figs/interpretation-6-n200filterd-pirates.pdf", height = 9)
+```
+
+
+
+```{r}
+df.int.56.filtered.bs <- left_join(
+  df.int.5.filtered.bs %>%
+    rename(mean_5 = mean, ci_lower_5 = ci_lower, ci_upper_5 = ci_upper,
+           n_5 = n, empirical_stat_5 = empirical_stat),
+  df.int.6.filtered.bs %>%
+    rename(mean_6 = mean, ci_lower_6 = ci_lower, ci_upper_6 = ci_upper,
+           n_6 = n, empirical_stat_6 = empirical_stat)
+)
+
+print(with(df.int.56.filtered.bs, cor(mean_5, mean_6, use = "pairwise.complete.obs")))
+
+print(with(df.int.56.filtered.bs, cor(mean_5, mean_6, use = "pairwise.complete.obs", method = "spearman")))
+
+ggplot(df.int.56.filtered.bs, aes ( x = mean_5, y = mean_6,
+                  xmin = ci_lower_5, xmax = ci_upper_5,
+                  ymin = ci_lower_6, ymax = ci_upper_6))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1, lty = 3)+
+  geom_errorbarh(alpha = 0.3)+geom_errorbar(alpha = 0.3)+
+  xlim(0, 1)+
+  ylim(0, 1)+
+  coord_fixed()
+  
+  
+```
+
+
+
+### explanations of low prevalence interpretations
+
+```{r}
+df.int.6.expl <- readData("interpretation-6") %>%
+  filter(trial_type != "implied_prevalence")%>%
+  select(property, original_response, response, explanation) %>%
+  mutate(explanation = gsub("&quotechar", "'", explanation))
+
+
+ggplot(df.int.6.expl, aes(x = original_response, y = response))+
+  geom_point()+
+  geom_abline(intercept = 0, slope = 1, lty = 3)+
+  xlim(0, 1)+
+  ylim(0, 1)+
+  coord_fixed()
+
+df.int.6.expl[with(df.int.6.expl, order(property, response)),] %>%
+  kable()
+```
+
+
+```{r}
+df.int.6.expl %>%
+  mutate(change = ifelse(
+    original_response < response, -1, 
+    ifelse(original_response > response, 1, 0))) %>%
+  group_by(change) %>%
+  summarize(n = n())
+```
+
+
+## select 25 items equally spaced on implied prevalence
+
+
+```{r}
+df.int.6.filtered.bs[with(df.int.6.filtered.bs, order(mean)),]
+with(df.int.6.filtered.bs, order(mean))
+
+df.int.6.filtered.bs[with(df.int.6.filtered.bs, order(mean))[c(seq(1, 75, 3), 75)],] %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.6.filtered.bs, property[order(mean)[c(seq(1, 75, 3), 75)]])
+                             
+                             )) %>%
+  ggplot(., aes( x = property, y = mean, ymin = ci_lower, ymax = ci_upper, fill = property))+
+  #geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.3)+
+  geom_col(position = position_dodge())+
+  geom_errorbar(position = position_dodge())+
+  coord_flip()+
+  scale_fill_viridis(discrete = T)+
+  ylim(0, 1)+
+  guides(fill = F)
+```
+
+
+```{r}
+
+left_join(
+  df.int.6.filtered.bs[with(df.int.6.filtered.bs, order(mean)[c(seq(1, 75, 3), 75)]),], 
+  df.int.6.filtered %>% ungroup() %>% distinct(property, property_type)
+) %>%
+  select(property, property_type) %>%
+  jsonlite::toJSON(, pretty = T)
 ```
 
