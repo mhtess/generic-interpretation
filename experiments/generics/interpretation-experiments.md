@@ -70,6 +70,15 @@
 + n = 36 --> 28.8 + 5.76 = 34.56
 + n = 72 --> 69.12 (4/10/18)
 
+## Prior-3
+
+- 4/23/18
+- 75 items (stims-6), subjects rate 12 items
+- % question
+- $0.80
+- n = 144 --> 138.24
+
+
 # Manipulated prior experiments
 
 ## Prior-manipulation-1
