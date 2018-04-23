@@ -10,6 +10,8 @@ library(ggpirate)
 library(knitr)
 library(viridis)
 library(tidytext)
+library(parallel)
+
 readData = function(proj){
   read_csv(
     paste("../../data/prior/",proj,"/",
@@ -373,12 +375,55 @@ df.prior.3.filtered.bs %>%
              mean = mean(prop),
              upper = quantile(prop, 0.975)) %>%
   ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
-  geom_col(position= position_dodge(), alpha = 0.5)+
-  geom_errorbar(position = position_dodge())+
+  geom_col(position= position_dodge(), color = 'black', fill= 'white')+
+  geom_errorbar(position = position_dodge(), width= 0.036, alpha = 0.3 )+
   facet_wrap(~property, scales = 'free')
 
 ggsave("figs/prior-3-prevpriors-bs-n144.pdf", width = 20, height = 14)
 ```
+
+
+```{r}
+target.properties <- c("have four legs", "eat insects", 
+                       #"feed on the carcasses of dead animals",
+                       "are afraid of loud noises",
+                       "get in fights with other animals",
+                       #"live in urban areas",
+                       "get erections",
+                       "know when earthquakes are about to happen",
+                       "live in zoos",
+                       #"drink alcohol left behind by tourists",
+                       #"chase their tails",
+                       "have seizures")
+var_width <- 20
+
+save(df.prior.prevalence.3.isZero.conditionalEv,
+     df.prior.prevalence.3,
+     df.prior.3.filtered.bs,
+     file = "../../paper/cached_results/genInt_priors3.RData"
+     )
+
+df.prior.3.filtered.bs %>%
+  ungroup() %>%
+  filter(property %in% target.properties) %>%
+  mutate(property = factor(property, levels = target.properties,
+                           labels = stringr::str_wrap(target.properties, 
+                                                      width = var_width))) %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, state) %>%
+  summarize( lower = quantile(prop, 0.025),
+             mean = mean(prop),
+             upper = quantile(prop, 0.975)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge(), color = 'black', fill= 'white')+
+  geom_errorbar(position = position_dodge(), width= 0.036, alpha = 0.4 )+
+  facet_wrap(~property, scales = 'free', nrow = 2) +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  ylab("Proportion of responses")+
+  xlab("Prevalence")
+```
+
+
 
 ```{r write bootstrapped priors}
 df.prior.3.filtered.bs %>% 

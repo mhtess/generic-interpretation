@@ -755,13 +755,18 @@ To visualize all properties simultaneously, we represent each distribution by it
 Our stimulus set covers a wide range of possible values of both of these parameters; the set of parameters that summarize these priors is also largely non-overlapping with those of Expt. 1 (compare with Figure\ \@ref(fig:cimpian-prevPrior)A).
 This suggests we have sampled items with priors that exhibit a lot of quantitative variability; the variability in priors provides a good test of our model as the model makes predictions given these priors.
 
-```{r genInt-prevPrior, fig.width = 11, fig.asp = 0.36, fig.cap="Prevalence priors for a broad set of animal properties.  A: Eight example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present."}
-load(file = "cached_results/genInt_priors.RData")
+```{r genInt-prevPrior, fig.width = 11.5, fig.asp = 0.36, fig.cap="Prevalence priors for a broad set of animal properties.  A: Ten example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. Error bars denote bootstrapped 95% confidence intervals. "}
+#load(file = "cached_results/genInt_priors.RData")
 # df.prior.prevalence.2.isZero.conditionalEv,
 #      df.prior.prevalence.2,
 
+load(file = "cached_results/genInt_priors3.RData")
 
-fig.prevParams.genInt <- ggplot(df.prior.prevalence.2.isZero.conditionalEv, 
+# df.prior.prevalence.3.isZero.conditionalEv,
+#      df.prior.prevalence.3,
+#      df.prior.3.filtered.bs,
+
+fig.prevParams.genInt <- ggplot(df.prior.prevalence.3.isZero.conditionalEv, 
        aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
             y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
   geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
@@ -769,31 +774,41 @@ fig.prevParams.genInt <- ggplot(df.prior.prevalence.2.isZero.conditionalEv,
   scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
   scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
   ylab("Prevalence when present")+
-  xlab("P(feature is present)")
+  xlab("P(feature is present)")+
+  coord_fixed()
 
-target.properties <- c("eat insects", 
-                       "feed on the carcasses of dead animals",
+target.properties <- c("have four legs", 
+                       "eat insects", 
+                       "eat garbage",
+                       #"feed on the carcasses of dead animals",
                        "are afraid of loud noises",
                        "get in fights with other animals",
                        "live in urban areas",
+                       "know when earthquakes are about to happen",
+                       "get erections",
                        "live in zoos",
                        #"drink alcohol left behind by tourists",
-                       "chase their tails",
+                       #"chase their tails",
                        "have seizures")
+
 var_width <- 22
 
-fig.prevPriors.genInt <- df.prior.prevalence.2 %>%
+fig.prevPriors.genInt <- df.prior.3.filtered.bs %>% ungroup() %>%
   filter(property %in% target.properties) %>%
   mutate(property = factor(property, levels = target.properties,
                            labels = stringr::str_wrap(target.properties, 
                                                       width = var_width))) %>%
-  ggplot(., aes( x = response ))+
-  geom_histogram( 
-    bins = 20,
-    aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
-    color = 'black', fill= 'white')+
-  facet_wrap(~property, scales = 'free', nrow = 2) +
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, state) %>%
+  summarize( lower = quantile(prop, 0.025),
+             mean = mean(prop),
+             upper = quantile(prop, 0.975)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge(), color = 'black', fill= 'white')+
+  geom_errorbar(position = position_dodge(), width= 0.036, alpha = 0.4 )+
+  facet_wrap(~property, nrow = 2) +
   scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(-0, 0.8), breaks = c(0, 0.25, 0.5, 0.75))+
   ylab("Proportion of responses")+
   xlab("Prevalence")
 
@@ -805,7 +820,7 @@ cowplot::plot_grid(
 
   nrow = 1,
   labels = c("A", "B"),
-  rel_widths = c(2, 1)
+  rel_widths = c(2.5, 1)
 )
 
 ```
