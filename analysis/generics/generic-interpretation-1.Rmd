@@ -840,7 +840,8 @@ df.int.6 <- left_join(
                       df.int.6.rt)
 
 df.int.6.filtered <- df.int.6 %>% 
-  filter(pass == 1, englishNative)
+  filter(pass == 1, englishNative) %>%
+  mutate(property = gsub("&quotechar", "", property))
 ```
 
 
@@ -849,7 +850,7 @@ df.int.6.filtered <- df.int.6 %>%
 
 by item counts
 ```{r}
-with(df.int.6.filtered, table(property))
+with(df.int.6.filtered, table(property)) %>% mean()
 
 # filtered data
 data.frame(with(df.int.6.filtered, table(property))) %>%
@@ -878,7 +879,7 @@ df.int.6 %>%
   geom_histogram()+
   facet_wrap(~workerid)
 
-ggsave("figs/interpretation-6-subj-n140-hist.pdf", width = 20, height = 18)
+#ggsave("figs/interpretation-6-subj-n140-hist.pdf", width = 20, height = 18)
 ```
 
 
@@ -897,7 +898,7 @@ df.int.6 %>%
   scale_color_viridis(discrete = T)+
   ylim(0, 1)
 
-ggsave("figs/interpretation-6-n200-pirates.pdf", height = 7)
+#ggsave("figs/interpretation-6-n200-pirates.pdf", height = 7)
 ```
 
 
@@ -915,7 +916,7 @@ df.int.6.filtered %>%
   #scale_color_viridis(discrete = T)+
   ylim(0, 1)
 
-ggsave("figs/interpretation-6-n200filterd-pirates.pdf", height = 9)
+#ggsave("figs/interpretation-6-n200filterd-pirates.pdf", height = 9)
 ```
 
 
@@ -943,8 +944,6 @@ ggplot(df.int.56.filtered.bs, aes ( x = mean_5, y = mean_6,
   xlim(0, 1)+
   ylim(0, 1)+
   coord_fixed()
-  
-  
 ```
 
 
@@ -1003,13 +1002,221 @@ df.int.6.filtered.bs[with(df.int.6.filtered.bs, order(mean))[c(seq(1, 75, 3), 75
 ```
 
 
-```{r}
-
+```{r output 25 items to json}
 left_join(
   df.int.6.filtered.bs[with(df.int.6.filtered.bs, order(mean)[c(seq(1, 75, 3), 75)]),], 
   df.int.6.filtered %>% ungroup() %>% distinct(property, property_type)
 ) %>%
   select(property, property_type) %>%
-  jsonlite::toJSON(, pretty = T)
+  jsonlite::toJSON(., pretty = T)
 ```
 
+## bootstrap interpretation distributions
+
+
+```{r bootstrap interpretation distributions}
+ bootstrapInterpretationDistributions<- function(i){
+  # within each property, you only have one rating per subject
+  # hence, you can group by property, and sample rows (subjects)
+  df.int.6.filtered.i <- df.int.6.filtered %>% 
+    group_by(property) %>%
+    sample_n(61, replace = TRUE) %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(property, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.int.6.filtered.i[is.na(df.int.6.filtered.i)] <- 0
+
+  df.int.6.filtered.i %>%
+    gather(state, n, -property) %>%
+    group_by(property) %>%
+    mutate(prop = n / sum(n),
+           prop = round(prop, 5),
+           i = i)
+ }
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+df.int.6.filtered.dists.bs <- bind_rows(
+  parLapply(cl, 1:1000, bootstrapInterpretationDistributions)
+)
+
+end_time <- Sys.time()
+print(end_time - start_time) 
+stopCluster(cl)
+```
+
+```{r bootstrap interpretation distributions (summarize), fig.width = 10, fig.height = 7}
+df.int.6.filtered.dists.bs.summary <- df.int.6.filtered.dists.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, state) %>%
+  summarize(data_lower = quantile(prop, 0.025),
+            data_mean = mean(prop),
+            data_upper = quantile(prop, 0.975))
+
+ggplot(df.int.6.filtered.dists.bs.summary, 
+       aes( x = state, y = data_mean, ymin = data_lower, ymax = data_upper))+
+  geom_col(position= position_dodge())+
+  geom_errorbar(position = position_dodge())+
+  facet_wrap(~property)
+```
+
+```{r read in (boostrapped) model predictions}
+model.path <- "../../models/results/bootstrap/"
+model.prefix <- "generics-bda-L0-btstrp-genint-results-prior3_chunk"
+
+model.files <- list.files(
+  path = model.path,
+  pattern = model.prefix
+)
+
+m.preds <- bind_rows(lapply(model.files, function(modfile){
+  read_csv(paste(model.path, modfile, sep = ""))
+}))
+
+m.preds.genint.zeroPadded <- left_join(
+  expand.grid(
+  model = unique(m.preds$model),
+  property = unique(m.preds$property),
+  iteration = unique(m.preds$iteration),
+  state = unique(m.preds$state)
+  ), m.preds)
+
+m.preds.genint.zeroPadded[is.na(m.preds.genint.zeroPadded)] <- 0
+summary(m.preds.genint.zeroPadded)
+```
+
+```{r model expvals, fig.width = 11}
+m.preds.zeroPadded.genint.expectations <- m.preds.genint.zeroPadded %>%
+  group_by(model, property, iteration) %>%
+  summarize(expval = sum(prob*state))
+
+m.pred.uncertain.expvals <- m.preds.zeroPadded.genint.expectations %>%
+  filter(model == "uncertain") %>%
+  group_by(property) %>%
+  summarize(mean_expval = mean(expval))
+
+property.order <- with(m.pred.uncertain.expvals, property[order(mean_expval)])
+
+m.preds.zeroPadded.genint.expectations.summary <- m.preds.zeroPadded.genint.expectations %>%
+  group_by(model, property) %>%
+  summarize( lower = quantile(expval, 0.025),
+             mean = mean(expval),
+             upper = quantile(expval, 0.975)) %>%
+  ungroup() %>%
+  mutate(property = factor(property, levels = property.order))
+
+ggplot(m.preds.zeroPadded.genint.expectations.summary, 
+       aes( x = property, y = mean, ymin = lower, ymax = upper, fill = property))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  facet_wrap(~model, nrow = 2)+
+  theme(axis.text.x = element_blank())
+```
+
+```{r scatters expected values}
+md.int6.binned.boostrapped <- left_join(m.preds.zeroPadded.genint.expectations %>%
+    group_by(model, property) %>%
+    summarize( model_lower = quantile(expval, 0.025),
+               model_prediction = mean(expval),
+               model_upper = quantile(expval, 0.975)),
+  df.int.6.filtered.bs) %>%
+  ungroup()
+
+left_join(m.preds.zeroPadded.genint.expectations %>%
+    group_by(model, property) %>%
+    summarize( model_lower = quantile(expval, 0.025),
+               model_prediction = mean(expval),
+               model_upper = quantile(expval, 0.975)),
+  df.int.6.filtered.bs) %>%
+  ungroup() %>%   
+  mutate(property = factor(property, levels = property.order)) %>%
+  ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = property))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), alpha = 0.8)+
+  geom_errorbarh(position = position_dodge(), alpha = 0.4)+
+  geom_point(shape = 21, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  coord_fixed()+
+  facet_wrap(~model, nrow = 2)+
+  guides(fill = F)
+
+ggsave("figs/interpretation6-filtered-prior3-bootstrap-scatter-all.png", width = 10, height = 5)
+```
+
+```{r scatters 3 models}
+md.int6.binned.boostrapped %>%
+    filter(model %in% c("prior", "uncertain", "fixed_0.125")) %>%
+  mutate(property = factor(property, levels = property.order)) %>%
+  ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = property))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), alpha = 0.8)+
+  geom_errorbarh(position = position_dodge(), alpha = 0.4)+
+  geom_point(shape = 21, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  coord_fixed()+
+  facet_wrap(~model, nrow = 1)+
+  guides(fill = F)
+
+ggsave("figs/interpretation6-filtered-prior3-bootstrap-scatter.png", width = 10, height = 5)
+md.int6.binned.boostrapped %>%
+  group_by(model) %>%
+  summarize(r2 = cor(model_prediction, mean)^2,
+            mse = mean((model_prediction-mean)^2),
+            n = n()) %>%
+  kable(.)
+```
+
+
+### not yet used 
+
+```{r model posteriors, fig.width = 20, fig.height = 8}
+m.preds.zeroPadded.bins.boostrapped <- m.preds.zeroPadded %>%
+  #filter(threshold %in% c("prior", "generic")) %>%
+  group_by(model, distribution, state) %>%
+  summarize( lower = quantile(prob, 0.025),
+             mean = mean(prob),
+             upper = quantile(prob, 0.975)) %>%
+  ungroup()
+
+m.preds.zeroPadded.bins.boostrapped %>%
+  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 1)+
+  facet_grid(model~distribution, scales = 'free')+
+  scale_x_continuous(breaks = c(0, 0.5 , 1))+
+  scale_fill_viridis(discrete = T)+
+  ylab("predicted probability")+
+  xlab("prevalence")
+```
+
+```{r scatters binned_posteriors}
+md.int3.binned.boostrapped <- left_join(m.preds.zeroPadded.bins.boostrapped %>%
+    rename(model_mean = mean, model_lower = lower, model_upper = upper),
+  df.int.6.filtered.dists.bs.summary)
+
+
+ggplot(md.int3.binned.boostrapped, aes(fill = state,
+                x = model_mean, xmin = model_lower, xmax = model_upper,
+                y = data_mean, ymin = data_lower, ymax = data_upper))+
+  facet_wrap(~model, nrow = 2)+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  #coord_fixed()+
+  geom_point(shape = 21, color = 'black')+
+  #scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  #scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_fill_viridis()+
+  theme(legend.position = 'bottom')
+  
+ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
+```

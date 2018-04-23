@@ -2,22 +2,24 @@
 
 var chain = last(process.argv) // load index as last command line index
 
-var bootstrappedPriors = json.read('generics-bda-L0-btstrp1000-genint-priors-notPretty.json')
+var bootstrappedPriors = json.read('generics-bda-L0-btstrp1000-genint-priors3-notPretty.json')
 var iterations = levels(bootstrappedPriors, "i")
 var priorsNames = levels(bootstrappedPriors, "property")
 
 var chunkLength = 100
-var chunks = _.range(500, iterations.length, chunkLength)
-// var chunks = _.range(5000, iterations.length, chunkLength)
+var chunks = _.range(0, iterations.length/2, chunkLength)
+// var chunks = _.range(500, iterations.length, chunkLength)
 
 // run in chunks to parallelize and decrease file sizes
+var optimality = 1;
+var prevalence_levels = [0.125, 0.325, 0.525, 0.725, 0.925]
 foreach(chunks, function(startingIteration){
 
   var subsetIterations = iterations.slice(startingIteration, startingIteration + chunkLength)
-  var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L0-btstrp-genint-results_chunk" + startingIteration + ".csv")
-  var endorsementResultsHandle = utils.openFile("results/bootstrap/generics-bda-L0-btstrp-genendorse-results_chunk" + startingIteration + ".csv")
+  // var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L0-btstrp-genint-results-prior3_chunk" + startingIteration + ".csv")
+  var endorsementResultsHandle = utils.openFile("results/bootstrap/generics-bda-L0-btstrp-genendorse-alpha1-results_chunk" + startingIteration + ".csv")
 
-  utils.writeLine(resultsHandle, ["model", "property", "iteration", "state", "prob"])
+  // utils.writeLine(resultsHandle, ["model", "property", "iteration", "state", "prob"])
   utils.writeLine(endorsementResultsHandle, ["model", "property", "iteration", "state", "prob"])
 
   foreach(subsetIterations, function(i){
@@ -50,14 +52,14 @@ foreach(chunks, function(startingIteration){
 
       var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
 
-      utils.saveERP(statePrior, ["prior", property, i], resultsHandle)
+      // utils.saveERP(statePrior, ["prior", property, i], resultsHandle)
 
       foreach(all_thresholds, function(t){
 
         var modelName = t ? "fixed_" + t : "uncertain"
 
-        var posterior = listener(t)
-        utils.saveERP(posterior, [modelName, property, i], resultsHandle)
+        // var posterior = listener(t)
+        // utils.saveERP(posterior, [modelName, property, i], resultsHandle)
 
         foreach(prevalence_levels, function(p){
           var endorsement = speaker(p, t)
@@ -71,7 +73,8 @@ foreach(chunks, function(startingIteration){
 
   })
 
-  utils.closeFile(resultsHandle)
+  // utils.closeFile(resultsHandle)
+  utils.closeFile(endorsementResultsHandle)
   console.log("iteration = " + (startingIteration + chunkLength) + " complete")
 })
 

@@ -48,6 +48,9 @@ round_to_bin <- function(x){
   #if (sum(index) > 1) { print (x) }
   return (mid_bins[index])
 }
+
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, sanitize = T)
+
 ```
 
 # Prior manipulation pilots
@@ -287,7 +290,7 @@ df.pm.3.filtered.binned_summary <- df.pm.3.filtered %>%
 ```
 
 
-## Model predictions
+## Model predictions (failed)
 ```{r}
 df.pm.3.filtered.priors <- df.pm.3.filtered.binned_summary %>%
   select(-prop) %>%
@@ -942,7 +945,7 @@ highestModeThresholds <- list(
 )
 ```
 
-#### bootstrap priors (then write, and read into webppl)
+## bootstrap priors (then write, and read into webppl)
 ```{r}
 bootstrapPriors <- function(i){
   
@@ -979,6 +982,7 @@ df.pm.3.filtered.priors.bs <- bind_rows(
 
 end_time <- Sys.time()
 print(end_time - start_time) 
+stopCluster(cl)
 ```
 
 ```{r visualize bootstrapped priors}
@@ -1039,7 +1043,6 @@ summary(m.preds.zeroPadded)
 ```
 
 ```{r model expvals, fig.width = 11}
-
 m.preds.zeroPadded.expectations <- m.preds.zeroPadded %>%
   group_by(model, distribution, iteration) %>%
   summarize(expval = sum(prob*state))
@@ -1071,7 +1074,6 @@ ggplot(m.preds.zeroPadded.expectations, aes(x = expval))+
   geom_histogram(bins = 20, fill = 'white', color = 'black')+
   facet_wrap(~model + distribution, scales = 'free')
 ```
-
 
 ```{r model posteriors, fig.width = 20, fig.height = 8}
 m.preds.zeroPadded.bins.boostrapped <- m.preds.zeroPadded %>%
@@ -1281,13 +1283,15 @@ ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-expvals-model-dat
 ```
 
 ```{r scatters expected values}
-left_join(m.preds.zeroPadded.expectations %>%
+md.pm.int3.expvals <- left_join(m.preds.zeroPadded.expectations %>%
     group_by(model, distribution) %>%
     summarize( model_lower = quantile(expval, 0.025),
                model_prediction = mean(expval),
                model_upper = quantile(expval, 0.975)),
   df.pm.int.3.filtered.bs) %>%
-  ungroup() %>%   
+  ungroup()
+
+md.pm.int3.expvals %>%   
   mutate(distribution = factor(distribution, levels = property.order)) %>%
   ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = distribution))+
   geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.8)+
@@ -1301,6 +1305,12 @@ left_join(m.preds.zeroPadded.expectations %>%
   guides(fill = F)
 
 #ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-modelFits-scatter.png", width = 10, height = 5)
+
+md.pm.int3.expvals %>%
+  group_by(model) %>%
+  summarize(r2 = cor(model_prediction, mean) ^2,
+            mse = mean((model_prediction-mean)^2)) %>%
+  kable(.)
 ```
 
 ```{r (unused) bin and bootstrap}
@@ -1354,7 +1364,7 @@ ggplot(df.pm.int.3.filtered.binned_summary,
   df.pm.3.intDist.filtered.i %>%
     gather(state, n, -distribution) %>%
     group_by(distribution) %>%
-    mutate(prop = (n+1) / sum(n + 1),
+    mutate(prop = n / sum(n),
            prop = round(prop, 5),
            i = i)
 }
@@ -1404,9 +1414,6 @@ df.pm.int.3.filtered.dists.bs %>%
   write(., "../../models/generics-bda-L0-interpretations-counts.json")
 ```
 
-
-
-
 ```{r bootstrap interpretation distributions (summarize)}
 
 df.pm.int.3.filtered.dists.bs.summary <- df.pm.int.3.filtered.dists.bs %>%
@@ -1422,9 +1429,6 @@ ggplot(df.pm.int.3.filtered.dists.bs.summary,
   geom_errorbar(position = position_dodge())+
   facet_wrap(~distribution, nrow = 2)
 ```
-
-
-
 
 ```{r scatters binned_posteriors}
 md.int3.binned.boostrapped <- left_join(m.preds.zeroPadded.bins.boostrapped %>%
@@ -1446,8 +1450,15 @@ ggplot(md.int3.binned.boostrapped, aes(fill = state,
   theme(legend.position = 'bottom')
   
 ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
-```
 
+
+md.int3.binned.boostrapped %>%
+  group_by(model) %>%
+  summarize(r2 = cor(model_mean, data_mean) ^2,
+            mse = mean((model_mean-data_mean)^2),
+            n = n()) %>%
+  kable(.)
+```
 
 ```{r scatters binned_posteriors 3 models}
 md.int3.binned.boostrapped %>%
@@ -1492,6 +1503,7 @@ df.pm.int.3.filtered %>%
 explanations all had to do with pattern matching. some participants randomly got a distribution that had an especially deviant pattern to it.
 
 Where does fixed0.125 go wrong?
+
 - dont yet understand this.
 ```{r fixed model residual}
 md.int3.binned.boostrapped %>%
@@ -1562,8 +1574,7 @@ model.likelihoodRatios.summarized %>%
   geom_errorbar(position = position_dodge(), width = 0.3)+
   scale_fill_viridis(discrete = T)+
   ylab("log [ p (d | generics model) / p (d | alternative model) ]")+
-  theme(axis.text.x = element_blank())+
-  ylim(0, 50)
+  theme(axis.text.x = element_blank())
 
 
 model.likelihoodRatios.summarized %>% kable(.)

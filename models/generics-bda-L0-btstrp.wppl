@@ -6,7 +6,7 @@ var bootstrappedPriors = json.read('generics-bda-L0-btstrp-priors-notPretty.json
 var iterations = levels(bootstrappedPriors, "i")
 var priorsNames = levels(bootstrappedPriors, "distribution")
 
-var chunkLength = 1000
+var chunkLength = 10
 var chunks = _.range(0, iterations.length, chunkLength)
 // var chunks = _.range(5000, iterations.length, chunkLength)
 

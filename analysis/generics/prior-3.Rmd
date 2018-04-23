@@ -1,5 +1,5 @@
 ---
-title: "Prior elicitation"
+title: "Prior elicitation 3"
 output: html_notebook
 ---
 
@@ -35,27 +35,27 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, sanitize = T)
 
 ```
 
-# Prior 2
+# Prior 3
 
 ## Subject information
 
 ```{r}
-df.prior.2 <- readData("prior-2")
+df.prior.3 <- readData("prior-3")
  
-df.prior.2.subj <- readSubjInfo("prior-2")
-df.prior.2.subj %>%
+df.prior.3.subj <- readSubjInfo("prior-3")
+df.prior.3.subj %>%
   select(problems, comments) %>%
   kable()
 
-df.prior.2.nativeEnglish <- df.prior.2.subj %>% 
+df.prior.3.nativeEnglish <- df.prior.3.subj %>% 
   select(workerid ,language) %>% 
   mutate(englishNative = grepl("eng", tolower(language)))
 
 
-table(df.prior.2.nativeEnglish$englishNative)
+table(df.prior.3.nativeEnglish$englishNative)
 
 # what do people report for native english that is not english?
-df.prior.2.nativeEnglish %>%
+df.prior.3.nativeEnglish %>%
   filter(!englishNative) %>%
   select(language) %>%
   kable(.)
@@ -64,9 +64,9 @@ df.prior.2.nativeEnglish %>%
 ## Catch trials
 
 ```{r}
-df.prior.2.catch <- readCatchInfo("prior-2")
+df.prior.3.catch <- readCatchInfo("prior-3")
 
-df.prior.2.catch.summary <- df.prior.2.catch %>%
+df.prior.3.catch.summary <- df.prior.3.catch %>%
   group_by(workerid, tested_on) %>%
   summarize(totalCorrect = sum(correct)) %>%
   ungroup() %>%
@@ -76,7 +76,7 @@ df.prior.2.catch.summary <- df.prior.2.catch %>%
   mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
          totalCorrect = correct_rejection + hit)
 
-df.prior.2.catch.summary %>%
+df.prior.3.catch.summary %>%
   select(pass) %>%
   table()
 ```
@@ -84,12 +84,12 @@ df.prior.2.catch.summary %>%
 remove catch trial failures
 
 ```{r}
-df.prior.2 <- left_join(
-  left_join(df.prior.2, df.prior.2.catch.summary %>%
+df.prior.3 <- left_join(
+  left_join(df.prior.3, df.prior.3.catch.summary %>%
                          select(workerid, totalCorrect, pass)),
-  df.prior.2.nativeEnglish)
+  df.prior.3.nativeEnglish)
 
-df.prior.2.filtered <- df.prior.2 %>% filter(pass == 1, englishNative)
+df.prior.3.filtered <- df.prior.3 %>% filter(pass == 1, englishNative)
 
 ```
 
@@ -97,18 +97,18 @@ df.prior.2.filtered <- df.prior.2 %>% filter(pass == 1, englishNative)
 ## What categories do people produce?
 
 ```{r}
-df.prior.categories.2 <- df.prior.2.filtered %>%
+df.prior.categories.3 <- df.prior.3.filtered %>%
   filter(trial_type == "category_elicitation") %>%
   mutate(response = gsub("&quotechar", "", response)) %>%
   unnest_tokens(word, response) %>%
   anti_join(stop_words)
 
-df.prior.categories.2 %>%
+df.prior.categories.3 %>%
   group_by(word) %>%
   count() %>%
   kable()
 
-d.tidy.wordCounts <- df.prior.categories.2 %>%
+d.tidy.wordCounts <- df.prior.categories.3 %>%
   count(animal_class,word)
 
 d.tidy.wordCounts[with(d.tidy.wordCounts, order(animal_class, -n)),] %>%
@@ -119,7 +119,7 @@ d.tidy.wordCounts[with(d.tidy.wordCounts, order(animal_class, -n)),] %>%
 ## Prevalence priors
 
 ```{r}
-df.prior.prevalence.2 <- df.prior.2.filtered %>%
+df.prior.prevalence.3 <- df.prior.3.filtered %>%
   filter(trial_type == "prevalence_elicitation", !(is.na(response))) %>%
   mutate(response = as.numeric(response),
          property = gsub("&quotechar", "", property))
@@ -129,7 +129,7 @@ df.prior.prevalence.2 <- df.prior.2.filtered %>%
 Histogram of number of responses per item
 
 ```{r}
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   group_by(property) %>%
   count() %>%
   ggplot(., aes(x = n / 5))+
@@ -137,7 +137,7 @@ df.prior.prevalence.2 %>%
   ylab("number of items")+
   xlab("number of participants rated item")
 
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   group_by(property) %>%
   count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n / 5))
 ```
@@ -145,7 +145,7 @@ df.prior.prevalence.2 %>%
 Distribution of all responses (collapse item)
 
 ```{r}
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   ggplot(., aes( x = response ))+
   geom_histogram()
 ```
@@ -153,20 +153,20 @@ df.prior.prevalence.2 %>%
 Item distributions (prevalence priors)
 
 ```{r fig.width = 18, fig.height = 8}
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   ggplot(., aes( x = response ))+
   geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
     ))+
   facet_wrap(~property, scales = 'free') +
   scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
 
-ggsave("figs/prior-2-prevpriors-n144.pdf", width = 20, height = 14)
+ggsave("figs/prior-3-prevpriors-n144.pdf", width = 20, height = 14)
 ```
 
 Item distributions conditional on > 0
 
 ```{r fig.width = 18, fig.height = 8}
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   filter(response > 0) %>%
   ggplot(., aes( x = response ))+
   geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
@@ -174,20 +174,20 @@ df.prior.prevalence.2 %>%
   facet_wrap(~property, scales = 'free') +
   scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
 
-ggsave("figs/prior-2-prevpriorsNonZero-n144.pdf", width = 20, height = 14)
+ggsave("figs/prior-3-prevpriorsNonZero-n144.pdf", width = 20, height = 14)
 ```
 
 Distribution of expected values
 
 ```{r}
-df.prior.2.ev <- df.prior.prevalence.2 %>%
+df.prior.3.ev <- df.prior.prevalence.3 %>%
   group_by(property) %>%
   tidyboot_mean(column = response)
 
-ggplot(df.prior.2.ev, aes ( x = mean ))+
-  geom_histogram(bins = 20)
+ggplot(df.prior.3.ev, aes ( x = mean ))+
+  geom_histogram(bins = 30)
 
-ggsave("figs/prior-2-expvals-n144.pdf", width = 4, height = 4)
+ggsave("figs/prior-3-expvals-n144.pdf", width = 4, height = 4)
 
 ```
 
@@ -195,49 +195,49 @@ ggsave("figs/prior-2-expvals-n144.pdf", width = 4, height = 4)
 Distribution of expected values conditional on non-zero prevalence
 
 ```{r}
-df.prior.2.conditional.ev <- df.prior.prevalence.2 %>%
+df.prior.3.conditional.ev <- df.prior.prevalence.3 %>%
   filter(response > 0) %>%
   group_by(property) %>%
   tidyboot_mean(column = response)
 
-ggplot(df.prior.2.conditional.ev, aes ( x = mean ))+
+ggplot(df.prior.3.conditional.ev, aes ( x = mean ))+
   geom_histogram(bins = 20)
 
-ggsave("figs/prior-2-nonZeroExpvals-n144.pdf", width = 4, height = 4)
+ggsave("figs/prior-3-nonZeroExpvals-n144.pdf", width = 4, height = 4)
 
 ```
 
 ```{r}
-df.prior.prevalence.2.isZero <- df.prior.prevalence.2 %>%
+df.prior.prevalence.3.isZero <- df.prior.prevalence.3 %>%
   mutate(isZero = ifelse(response == 0, 1, 0)) %>%
   group_by(property) %>%
   tidyboot_mean(column = isZero)
 
 
-ggplot(df.prior.prevalence.2.isZero, aes ( x = mean ))+
+ggplot(df.prior.prevalence.3.isZero, aes ( x = mean ))+
   geom_histogram(bins = 20)
 
-ggsave("figs/prior-2-isZero-n144.pdf", width = 4, height = 4)
+ggsave("figs/prior-3-isZero-n144.pdf", width = 4, height = 4)
 ```
 
 ```{r}
 
-df.prior.2.conditional.ev <- df.prior.prevalence.2 %>%
+df.prior.3.conditional.ev <- df.prior.prevalence.3 %>%
   filter(response > 0) %>%
   group_by(property) %>%
   tidyboot_mean(column = response)
 
 
-df.prior.prevalence.2.isZero.conditionalEv <- left_join(
-  df.prior.2.conditional.ev %>%
+df.prior.prevalence.3.isZero.conditionalEv <- left_join(
+  df.prior.3.conditional.ev %>%
     select(-n, -empirical_stat) %>%
     rename(pwp_mean = mean, pwp_low = ci_lower, pwp_high = ci_upper),
-  df.prior.prevalence.2.isZero %>%
+  df.prior.prevalence.3.isZero %>%
     select(-n, -empirical_stat) %>%
     rename(isZero = mean, zero_low = ci_lower, zero_high = ci_upper)
 )
 
-ggplot(df.prior.prevalence.2.isZero.conditionalEv, 
+ggplot(df.prior.prevalence.3.isZero.conditionalEv, 
        aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
             y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
   geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
@@ -261,12 +261,12 @@ target.properties <- c("eat insects",
                        "have seizures")
 var_width <- 20
 
-save(df.prior.prevalence.2.isZero.conditionalEv,
-     df.prior.prevalence.2,
+save(df.prior.prevalence.3.isZero.conditionalEv,
+     df.prior.prevalence.3,
      file = "../../paper/cached_results/genInt_priors.RData"
      )
 
-df.prior.prevalence.2 %>%
+df.prior.prevalence.3 %>%
   filter(property %in% target.properties) %>%
   mutate(property = factor(property, levels = target.properties,
                            labels = stringr::str_wrap(target.properties, 
@@ -286,16 +286,16 @@ df.prior.prevalence.2 %>%
 Copy interpretation df over from `generic-interpretation-1.Rmd`
 
 ```{r}
-df.prior.2.ev.wInt <- left_join(
-  df.prior.2.ev,
-  #df.prior.2.conditional.ev,
+df.prior.3.ev.wInt <- left_join(
+  df.prior.3.ev,
+  #df.prior.3.conditional.ev,
   df.int.3.filtered.bs %>%
     rename(int_mean = mean, int_upper = ci_upper, int_lower = ci_lower) %>%
     select(property, int_mean, int_upper, int_lower)
 ) %>%
   mutate(sq_err = (mean - int_mean)^2)
 
-ggplot(df.prior.2.ev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
+ggplot(df.prior.3.ev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
                      y = int_mean, ymin = int_lower, ymax = int_upper))+
   geom_point()+
   geom_errorbar(alpha = 0.2)+
@@ -325,15 +325,15 @@ round_to_bin <- function(x){
 ```
 
 ```{r}
-df.prior.prevalence.2.wide <- df.prior.prevalence.2 %>%
+df.prior.prevalence.3.wide <- df.prior.prevalence.3 %>%
     select(workerid, property, index, response) %>%
     spread(index, response) 
 
 bootstrapPriors <- function(i){
   
-  df.prior.2.filtered.i <- df.prior.prevalence.2.wide %>%
+  df.prior.3.filtered.i <- df.prior.prevalence.3.wide %>%
     group_by(property) %>%
-    sample_n(21, replace = TRUE) %>%
+    sample_n(20, replace = TRUE) %>%
     gather(category, response, -workerid, -property) %>%
     rowwise() %>%
     mutate(binned_response = round_to_bin(response)) %>%
@@ -342,9 +342,9 @@ bootstrapPriors <- function(i){
     ungroup() %>%
     spread(binned_response, n)
 
-  df.prior.2.filtered.i[is.na(df.prior.2.filtered.i)] <- 0
+  df.prior.3.filtered.i[is.na(df.prior.3.filtered.i)] <- 0
 
-  df.prior.2.filtered.i %>%
+  df.prior.3.filtered.i %>%
     gather(state, n, -property) %>%
     group_by(property) %>%
     mutate(prop = (n+1) / sum(n + 1),
@@ -356,7 +356,7 @@ no_cores <- detectCores() - 1
 cl <- makeCluster(no_cores, type="FORK")
 start_time <- Sys.time()
 
-df.prior.2.filtered.bs <- bind_rows(
+df.prior.3.filtered.bs <- bind_rows(
   parLapply(cl, 1:1000, bootstrapPriors)
 )
 
@@ -366,7 +366,7 @@ stopCluster(cl)
 ```
 
 ```{r visualize bootstrapped priors, fig.width = 10, fig.height = 7}
-df.prior.2.filtered.bs %>%
+df.prior.3.filtered.bs %>%
   mutate(state = as.numeric(state)) %>%
   group_by(property, state) %>%
   summarize( lower = quantile(prop, 0.025),
@@ -376,12 +376,14 @@ df.prior.2.filtered.bs %>%
   geom_col(position= position_dodge(), alpha = 0.5)+
   geom_errorbar(position = position_dodge())+
   facet_wrap(~property, scales = 'free')
+
+ggsave("figs/prior-3-prevpriors-bs-n144.pdf", width = 20, height = 14)
 ```
 
 ```{r write bootstrapped priors}
-df.prior.2.filtered.bs %>% 
+df.prior.3.filtered.bs %>% 
   select(-n) %>%
   spread(state, prop) %>%
   jsonlite::toJSON(., pretty = F) %>%
-  write(., "../../models/generics-bda-L0-btstrp1000-genint-priors-notPretty.json")
+  write(., "../../models/generics-bda-L0-btstrp1000-genint-priors3-notPretty.json")
 ```

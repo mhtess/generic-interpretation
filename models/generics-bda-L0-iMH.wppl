@@ -7,23 +7,25 @@ var chain = last(process.argv) // load index as last command line index
 // fixed = fixed threshold at lowest threshold value
 var semantics = process.argv[process.argv.length - 2]
 // console.log(semantics)
-var dataPath = "../data/",
-    priorFilePrefix = "prior-2",
+var priorFilePrefix = "prior-3",
+    // priorFilePrefix = "prior-manipulation-3",
     interpretationFilePrefix = "interpretation-6"
 
-var priorFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-trials.csv",
-    interpretationFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-trials.csv",
-    priorCatchFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-catch_trials.csv",
-    interpretationCatchFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-catch_trials.csv",
-    priorSubjFile = dataPath + "prior/"+priorFilePrefix+"/"+priorFilePrefix+"-subject_information.csv",
-    interpretationSubjFile = dataPath + "interpretation/"+interpretationFilePrefix+"/"+interpretationFilePrefix+"-subject_information.csv";
+// expt 2: measured priors
+var d_prior = readDataFile("prior", priorFilePrefix),
+    d_prior_catch = readCatchFile("prior", priorFilePrefix),
+    d_prior_subj = readSubjFile("prior", priorFilePrefix),
+    d_interpretation = readDataFile("interpretation", interpretationFilePrefix),
+    d_interpretation_catch = readCatchFile("interpretation", interpretationFilePrefix),
+    d_interpretation_subj = readSubjFile("interpretation", interpretationFilePrefix);
 
-var d_prior = dataFrame(utils.readCSV(priorFile).data, ["workerid","response"]),
-    d_interpretation = dataFrame(utils.readCSV(interpretationFile).data, ["workerid", "response"]),
-    d_prior_catch = dataFrame(utils.readCSV(priorCatchFile).data, ["workerid", "tested_on", "correct"]),
-    d_interpretation_catch=dataFrame(utils.readCSV(interpretationCatchFile).data, ["workerid", "tested_on", "correct"]),
-    d_prior_subj = dataFrame(utils.readCSV(priorSubjFile).data, ["workerid"]),
-    d_interpretation_subj=dataFrame(utils.readCSV(interpretationSubjFile).data, ["workerid"]);
+// expt 3: Prior manipulation
+// var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
+//     d_prior_catch = readCatchFile("prior-manipulation", priorFilePrefix),
+//     d_prior_subj = readSubjFile("prior-manipulation", priorFilePrefix),
+//     d_interpretation = readDataFile("prior-manipulation", interpretationFilePrefix),
+//     d_interpretation_catch = readCatchFile("prior-manipulation", interpretationFilePrefix),
+//     d_interpretation_subj = readSubjFile("prior-manipulation", interpretationFilePrefix);
 
 var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
@@ -50,7 +52,8 @@ var data = {
 // // // test that removing Ss who failed catch trial works properly (computed in R)
 assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
-assert.ok(levels(data.prior, "workerid").length == 131)
+// assert.ok(levels(data.prior, "workerid").length == 131)
+assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -74,7 +77,7 @@ var addNoise = function(dist, noise){
   }})
 }
 
-var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
   (semantics == "most") ? 0.5 :
   false
 
@@ -163,11 +166,11 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 500, lag =  1;
-// var totalIterations = 500000, lag =  100;
+// var totalIterations = 500, lag =  1;
+var totalIterations = 500000, lag =  150;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L0-int6-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,
