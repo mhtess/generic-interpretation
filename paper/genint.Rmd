@@ -871,7 +871,7 @@ The empirical by-item means between these data and the original data are highly 
 
 ```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are raw empirical judgments).B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
 
-load(file = "cached_results/genInt_interpretation_modelData.RData")
+load(file = "cached_results/genInt_interpretation6_prior3_modelData.RData")
 #df.int.filtered, df.int.filtered.bs, md.impprev
 
 fig.genint.interpretation.ci <- df.int.filtered %>%
