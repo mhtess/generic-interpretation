@@ -776,9 +776,12 @@ df.int.6.catch.summary <- df.int.6.catch %>%
   mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
          totalCorrect = correct_rejection + hit)
 
+expt2.int.catchFail <- sum(!df.int.6.catch.summary$pass)
+
 df.int.6.catch.summary %>%
   select(pass) %>%
   table()
+
 ```
 
 ```{r}
@@ -799,7 +802,7 @@ d.int.6.nativeEnglish <- df.int.6.subj %>%
   select(workerid ,language) %>% 
   mutate(englishNative = grepl("eng", tolower(language)))
 
-#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+expt2.int.nonEnglish <- sum(!d.int.6.nativeEnglish$englishNative)
 
 table(d.int.6.nativeEnglish$englishNative)
 
@@ -818,30 +821,36 @@ df.int.6 <- readData("interpretation-6") %>%
   group_by(workerid) %>%
   mutate(normalizedResponse = (response - mean(response)) / sd(response))
 
-## RTs
-df.int.6.rt <- df.int.6 %>%
-  group_by(workerid) %>%
-  summarize(meanRT = mean(rt/ 1000),
-            rt_lt_4 = meanRT < 4)
 
-df.int.6.rt %>%
-  ggplot(., aes(x = meanRT))+
-  geom_histogram()+
-  xlim(0, 10)
-###
+expt2.int.n <- length(unique(df.int.6$workerid))
 
 
 df.int.6 <- left_join(
-  left_join(
   left_join(df.int.6, df.int.6.catch.summary %>%
                          select(workerid, totalCorrect, pass)),
-  d.int.6.nativeEnglish),
-  
-                      df.int.6.rt)
+  d.int.6.nativeEnglish)
+
 
 df.int.6.filtered <- df.int.6 %>% 
   filter(pass == 1, englishNative) %>%
   mutate(property = gsub("&quotechar", "", property))
+
+expt2.int.n.passCatch.English <- length(unique(df.int.6.filtered$workerid))
+
+
+## RTs
+df.int.6.rt <- readData("interpretation-6") %>%
+  group_by(workerid) %>%
+  summarize(total_rt = sum(rt/ 1000))
+
+df.int.6.meanTime <- df.int.6.rt %>%
+  summarize(mean_time = mean(total_rt) / 60)
+
+df.int.6.rt %>%
+  ggplot(., aes(x = total_rt))+
+  geom_histogram()
+###
+
 ```
 
 
@@ -852,10 +861,27 @@ by item counts
 ```{r}
 with(df.int.6.filtered, table(property)) %>% mean()
 
+
+
+df.int.6.filtered.n_subj_per_item <- df.int.6.filtered %>%
+  group_by(property) %>%
+  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n),
+                                      lb = min(n),
+                                      ub = max(n))
+
+save(expt2.int.n,
+     expt2.int.nonEnglish,
+     expt2.int.catchFail,
+     expt2.int.n.passCatch.English,
+     df.int.6.meanTime, 
+     df.int.6.filtered.n_subj_per_item,
+     file = "../../paper/cached_results/genint_int_metaData.RData")
+
 # filtered data
 data.frame(with(df.int.6.filtered, table(property))) %>%
   ggplot(., aes( x = Freq ))+
   geom_bar()
+
 ```
 
 ```{r fig.width = 18, fig.height = 8}

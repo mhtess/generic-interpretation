@@ -43,7 +43,9 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, sanitize = T)
 
 ```{r}
 df.prior.3 <- readData("prior-3")
- 
+
+expt2.prior.n <- length(unique(df.prior.3$workerid))
+  
 df.prior.3.subj <- readSubjInfo("prior-3")
 df.prior.3.subj %>%
   select(problems, comments) %>%
@@ -55,6 +57,8 @@ df.prior.3.nativeEnglish <- df.prior.3.subj %>%
 
 
 table(df.prior.3.nativeEnglish$englishNative)
+
+expt2.prior.nonEnglish <- sum(!df.prior.3.nativeEnglish$englishNative)
 
 # what do people report for native english that is not english?
 df.prior.3.nativeEnglish %>%
@@ -78,6 +82,10 @@ df.prior.3.catch.summary <- df.prior.3.catch %>%
   mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
          totalCorrect = correct_rejection + hit)
 
+
+expt2.prior.catchFail <- sum(!df.prior.3.catch.summary$pass)
+
+
 df.prior.3.catch.summary %>%
   select(pass) %>%
   table()
@@ -92,6 +100,20 @@ df.prior.3 <- left_join(
   df.prior.3.nativeEnglish)
 
 df.prior.3.filtered <- df.prior.3 %>% filter(pass == 1, englishNative)
+
+expt2.prior.n.passCatch.English <- length(unique(df.prior.3.filtered$workerid))
+```
+
+
+How long did the experiemnt take
+
+```{r}
+df.prior.3.filtered.meanTime <- df.prior.3.filtered %>%
+  distinct(workerid, rt, trial_num, trial_type) %>%
+  group_by(workerid) %>%
+  summarize(total_time = sum(rt / 1000)) %>%
+  ungroup() %>%
+  summarize(mean_time = mean(total_time) / 60)
 
 ```
 
@@ -139,9 +161,21 @@ df.prior.prevalence.3 %>%
   ylab("number of items")+
   xlab("number of participants rated item")
 
-df.prior.prevalence.3 %>%
+df.prior.3.filtered.n_subj_per_item <- df.prior.prevalence.3 %>%
   group_by(property) %>%
-  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n / 5))
+  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n / 5),
+                                      lb = min(n / 5),
+                                      ub = max(n / 5))
+
+
+save(expt2.prior.n,
+     expt2.prior.nonEnglish,
+     expt2.prior.catchFail,
+     expt2.prior.n.passCatch.English,
+     df.prior.3.filtered.meanTime, 
+     df.prior.3.filtered.n_subj_per_item,
+     file = "../../paper/cached_results/genint_priors_metaData.RData")
+
 ```
 
 Distribution of all responses (collapse item)
