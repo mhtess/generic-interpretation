@@ -165,7 +165,7 @@ var model = function(){
         return state
       }})}, 10000)
 
-    var L1 = listener0("generic")
+    var L1 = listener1("generic")
     var interpretationPrediction = addNoise(L1, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
