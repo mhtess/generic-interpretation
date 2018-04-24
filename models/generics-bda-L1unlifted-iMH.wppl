@@ -1,4 +1,4 @@
-// time ~/webppl-fork/webppl generics-bda-L1-iMH.wppl --require utils uncertain 1
+// time ~/webppl-fork/webppl generics-bda-L1unlifted-iMH.wppl --require utils uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -79,9 +79,11 @@ var addNoise = function(dist, noise){
   }})
 }
 
+
 var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
   (semantics == "most") ? 0.5 :
   false
+
 
 var model = function(){
 
@@ -138,18 +140,19 @@ var model = function(){
   	}});
 
   	/// RSA model
-  	var listener0 = cache(function(utterance, theta) {
+  	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
   	    var state = sample(statePrior);
+        var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
   	    var m = meaning(utterance, state, theta)
   	    condition(m)
   	    return state
   	 }})}, 10000)
 
-     var speaker1 = cache(function(state, theta) {
+     var speaker1 = cache(function(state) {
       Infer({model: function(){
         var utterance = sample(utterancePrior);
-        var L0 = listener0(utterance, theta);
+        var L0 = listener0(utterance);
         factor(speakerOptimality * L0.score(state))
         return utterance
       }})}, 10000)
@@ -157,8 +160,7 @@ var model = function(){
     var listener1 = cache(function(utterance) {
       Infer({model: function(){
         var state = sample(statePrior);
-        var theta = (semantics == "uncertain") ? sample(thetaPrior) : _.min(thetaBins);
-        var S1 = speaker1(state, theta)
+        var S1 = speaker1(state)
         observe(S1, utterance)
         return state
       }})}, 10000)
@@ -186,11 +188,11 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 500, lag =  1;
+// var totalIterations = 50, lag =  1;
 var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L1-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-unliftedL1-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,
