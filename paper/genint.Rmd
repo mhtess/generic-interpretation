@@ -67,6 +67,7 @@ library(cowplot)
 library(ggthemes)
 library(RColorBrewer)
 library(ggpirate)
+library(viridis)
 theme_set(theme_few())
 ```
 
@@ -974,11 +975,32 @@ sample.dists <- bind_rows(
   data.frame( dist = "uniform", x = rbeta(n = 50000, shape1 = 1, shape2 = 1))
 )
 
+
+
+distribution.order.levels <- c("rare_weak",
+                                        "rare_half",
+                                        "weak_or_half",
+                                        "rare_strong",
+                                        "weak_or_strong",
+                                        "rare_deterministic", 
+                                        "weak_or_deterministic",
+                                        "half_or_deterministic",
+                                        "strong_or_deterministic",
+                                        "uniform")
+
+distribution.order.labels <- c("rare weak",
+                                        "rare half",
+                                        "weak or half",
+                                        "rare strong",
+                                        "weak or strong",
+                                        "rare deterministic", 
+                                        "weak or deterministic",
+                                        "half or deterministic",
+                                        "strong or deterministic",
+                                        "uniform")
+                                        
 fig.manipulatedPriors <- sample.dists %>%
-  mutate(dist = factor(dist, levels = c("uniform","rare weak","rare half","rare strong", "rare deterministic", 
-                                        "weak or half","weak or strong","weak or deterministic",
-                                        "half or deterministic","strong or deterministic"
-                                        ))) %>%
+  mutate(dist = factor(dist, levels = distribution.order.labels)) %>%
   ggplot(., aes(x = x))+ 
   geom_density(aes( y = ..scaled..))+ #
   # geom_histogram(bins = 20,
@@ -1059,6 +1081,103 @@ Figure\ \@ref(fig:genManip-prevPrior)A shows the ten manipulated prevalence prio
 These distributions clearly reflect the familiarization distributions supplied to participants in the experiment.
 Thus, we have good evidence that participants are encoding the prevalence distributions supplied during the familiarization period of this experiment.
 Next, we look at these distribution's resulting influence on generic interpretation.
+
+
+
+```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means. C: Same as B shown in scatterplot.", fig.width = 13.5,fig.asp = 0.6}
+load(file = "cached_results/gentInt_manipPriors_dists_expvals.RData")
+# md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+#      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
+
+distribution.order.levels <- with(md.pm.int.3.filtered.expvals.bs.summary %>%
+                         filter(model == "data"), distribution[order(mean)])
+distribution.order.labels <- gsub("_", " ", distribution.order.levels)
+
+fig.int.dists.bs <- md.pm.int.3.filtered.dists.bs.summary %>%
+  filter(model %in% c("prior", "uncertain", "data")) %>%
+  mutate(distribution = factor(distribution,  levels = distribution.order.levels, labels = distribution.order.labels),
+         model = factor(model, levels = c("prior", "uncertain", "data"),
+                        labels = c("prevalence prior", "generics model", "data"))) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 0.3)+
+  geom_text(data = data.frame(model = c("prevalence prior", "generics model", "data"),
+    x = c(0.5, 0.5, 0.5),
+    y = c(0.4, 0.5, 0.6),
+    distribution = c("strong or deterministic", "strong or deterministic", "strong or deterministic")), 
+    aes( x= x ,y =y, label = model), inherit.aes = F)+
+  facet_grid(model~distribution, scales = 'free')+
+  scale_x_continuous(breaks = c(0, 1))+
+  scale_fill_viridis(discrete = T)+
+  ylab("predicted / empirical probability")+
+  xlab("prevalence")+
+  theme(strip.text.y = element_blank())+
+  guides(fill = F)
+
+
+fig.int.expval.bs <- md.pm.int.3.filtered.expvals.bs.summary %>%
+  ungroup() %>%
+  filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
+  mutate(distribution = factor(distribution,  levels = distribution.order.levels, labels = distribution.order.labels),
+         model = factor(model,
+                        levels = c("prior", "uncertain", "data",
+                                   "fixed_0.0175", "fixed_0.125",
+                                   "fixed_0.375"),
+                        labels = c("prevalence prior", "generics model", "data",
+                                   '"some" (fixed threshold = 0.01)', "fixed threshold = 0.10", "fixed threshold = 0.35"))) %>%
+  ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank())+
+  facet_wrap(~model, nrow = 2)+ guides(fill = guide_legend(reverse=T))
+
+
+
+fig.int.expval.bs.scatters <- md.pm.int.3.filtered.expvals.bs.summary.wide %>%
+  filter(!(model %in% c("fixed_0.625", "fixed_0.875","fixed_0.375"))) %>%
+  mutate(distribution = factor(distribution, levels = distribution.order.levels),
+         model = factor(model, levels = c("prior", "fixed_0.0175", "fixed_0.125", "uncertain"),
+                        labels = c("prevalence prior", '"some"\n(fixed threshold = 0.01)', "fixed threshold = 0.10",
+                                   "generics model"))) %>%
+  ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = distribution))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(position = position_dodge(), alpha = 0.8)+
+  geom_errorbarh(position = position_dodge(), alpha = 0.4)+
+  geom_point(shape = 21, color = 'black')+
+  scale_fill_viridis(discrete = T)+
+  ylab("Empirical mean implied prevalence")+
+  xlab("Model prediction")+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  coord_fixed()+
+  facet_wrap(~model, nrow = 2)+
+  guides(fill = F)
+
+
+
+
+cowplot::plot_grid(
+  fig.int.dists.bs + theme(plot.margin = unit(c(6, 6, 6, 0), "pt"),
+                         legend.position = 'none'), 
+  cowplot::plot_grid(
+    fig.int.expval.bs + theme(plot.margin = unit(c(6, 6, 6, 6), "pt"),
+                         legend.position = 'none'),
+    fig.int.expval.bs.scatters + theme(plot.margin = unit(c(6, 0, 0, 0), "pt"),
+                           legend.position = 'none'),
+    get_legend(fig.int.expval.bs), rel_widths = c(1, 0.65,0.3),
+    nrow = 1,  labels = c("B", "C", "")
+  ),
+  nrow = 2,
+  labels = c("A", "B"),
+  rel_widths = c(3.5, 1, 1)
+)
+```
+
+
+
 
 ## Experiment 3b: Generic interpretation
 

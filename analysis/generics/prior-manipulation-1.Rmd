@@ -988,24 +988,20 @@ stopCluster(cl)
 ```{r visualize bootstrapped priors}
 head(df.pm.3.filtered.priors.bs)
 
-df.pm.3.filtered.priors.bs %>%
+df.pm.3.filtered.priors.bs.summary <- df.pm.3.filtered.priors.bs %>%
   mutate(state = as.numeric(state)) %>%
   group_by(distribution, state) %>%
   summarize( lower = quantile(prop, 0.025),
              mean = mean(prop),
-             upper = quantile(prop, 0.975)) %>%
+             upper = quantile(prop, 0.975))
+
+
+df.pm.3.filtered.priors.bs.summary %>%
   ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
   geom_col(position= position_dodge())+
   geom_errorbar(position = position_dodge())+
   facet_wrap(~distribution, nrow = 2)
 
-
-
-df.pm.3.filtered.priors.bs %>%
-  mutate(state = as.numeric(state)) %>%
-  ggplot(., aes( x = state, y = prop))+
-  geom_pirate(violins = F, bars = F)+
-  facet_wrap(~distribution)
 ```
 
 ```{r write bootstrapped priors}
@@ -1085,7 +1081,7 @@ m.preds.zeroPadded.bins.boostrapped <- m.preds.zeroPadded %>%
   ungroup()
 
 m.preds.zeroPadded.bins.boostrapped %>%
-  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  #mutate(distribution = factor(distribution, levels = property.order)) %>%
   ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
   geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
   geom_errorbar(position = position_dodge(),  alpha = 1)+
@@ -1255,13 +1251,16 @@ preregistered prediction ordering []s denote very small difference in predicted
  
  
 ```{r data model expvals}
-bind_rows(
+md.pm.int.3.filtered.expvals.bs.summary <- bind_rows(
   df.pm.int.3.filtered.bs %>% 
     select(-n, -empirical_stat) %>% 
     mutate(model = 'data'),
   m.preds.zeroPadded.expectations.summary %>%
     rename(ci_lower = lower, ci_upper = upper)
-) %>% ungroup() %>%
+) 
+
+
+md.pm.int.3.filtered.expvals.bs.summary %>% ungroup() %>%
   filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
   mutate(distribution = factor(distribution, levels = property.order),
          model = factor(model,
@@ -1283,7 +1282,7 @@ ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-expvals-model-dat
 ```
 
 ```{r scatters expected values}
-md.pm.int3.expvals <- left_join(m.preds.zeroPadded.expectations %>%
+md.pm.int.3.filtered.expvals.bs.summary.wide <- left_join(m.preds.zeroPadded.expectations %>%
     group_by(model, distribution) %>%
     summarize( model_lower = quantile(expval, 0.025),
                model_prediction = mean(expval),
@@ -1291,7 +1290,7 @@ md.pm.int3.expvals <- left_join(m.preds.zeroPadded.expectations %>%
   df.pm.int.3.filtered.bs) %>%
   ungroup()
 
-md.pm.int3.expvals %>%   
+md.pm.int.3.filtered.expvals.bs.summary.wide %>%   
   mutate(distribution = factor(distribution, levels = property.order)) %>%
   ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = distribution))+
   geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.8)+
@@ -1306,7 +1305,7 @@ md.pm.int3.expvals %>%
 
 #ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-modelFits-scatter.png", width = 10, height = 5)
 
-md.pm.int3.expvals %>%
+md.pm.int.3.filtered.expvals.bs.summary.wide %>%
   group_by(model) %>%
   summarize(r2 = cor(model_prediction, mean) ^2,
             mse = mean((model_prediction-mean)^2)) %>%
@@ -1373,7 +1372,7 @@ no_cores <- detectCores() - 1
 cl <- makeCluster(no_cores, type="FORK")
 start_time <- Sys.time()
 df.pm.int.3.filtered.dists.bs <- bind_rows(
-  parLapply(cl, 1:1000, bootstrapInterpretationDistributions)
+  parLapply(cl, 1:5000, bootstrapInterpretationDistributions)
 )
 
 end_time <- Sys.time()
@@ -1423,6 +1422,14 @@ df.pm.int.3.filtered.dists.bs.summary <- df.pm.int.3.filtered.dists.bs %>%
             data_mean = mean(prop),
             data_upper = quantile(prop, 0.975))
 
+
+md.pm.int.3.filtered.dists.bs.summary <-bind_rows(m.preds.zeroPadded.bins.boostrapped,
+          df.pm.int.3.filtered.dists.bs.summary %>% rename(lower = data_lower, mean = data_mean,upper= data_upper) %>%
+            mutate(model = 'data'))
+
+
+
+
 ggplot(df.pm.int.3.filtered.dists.bs.summary, 
        aes( x = state, y = data_mean, ymin = data_lower, ymax = data_upper))+
   geom_col(position= position_dodge())+
@@ -1431,12 +1438,12 @@ ggplot(df.pm.int.3.filtered.dists.bs.summary,
 ```
 
 ```{r scatters binned_posteriors}
-md.int3.binned.boostrapped <- left_join(m.preds.zeroPadded.bins.boostrapped %>%
+md.pm.int.3.filtered.dists.bs.summary.wide <- left_join(m.preds.zeroPadded.bins.boostrapped %>%
     rename(model_mean = mean, model_lower = lower, model_upper = upper),
   df.pm.int.3.filtered.dists.bs.summary)
 
 
-ggplot(md.int3.binned.boostrapped, aes(fill = state,
+ggplot(md.pm.int.3.filtered.dists.bs.summary.wide, aes(fill = state,
                 x = model_mean, xmin = model_lower, xmax = model_upper,
                 y = data_mean, ymin = data_lower, ymax = data_upper))+
   facet_wrap(~model, nrow = 2)+
@@ -1449,6 +1456,11 @@ ggplot(md.int3.binned.boostrapped, aes(fill = state,
   scale_fill_viridis()+
   theme(legend.position = 'bottom')
   
+
+# save(md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+#      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide,
+#      file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals.RData")
+
 ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
 
 
