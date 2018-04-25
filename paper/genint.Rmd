@@ -708,7 +708,7 @@ We thus aim to replicate these findings of low prevalence interpretations using 
 
 # Experiment 2
 
-This is experiment is designed to measure the prevalence implied by a generic about a diverse set of properties (Expt. 2b). 
+This experiment is designed to measure the prevalence implied by a generic about a diverse set of properties (Expt. 2b). 
 In addition, we elicit participants' beliefs about the likely prevalence levels expected for these different properties (Expt. 2a). 
 We use our computational model and alternative models together with the elicited prevalence priors to make predictions about the prevalence implied by a generic.
 
@@ -909,7 +909,10 @@ To assess the reliability of these data, we ran a replication ($n=140$) using a 
 ] Instead of being asked a question about percentages (e.g., "Out of all of the Ks in the world, what percentage F?"), participants were asked a question in terms of frequency: "Out of 100 Ks, how many do you think F?".
 The empirical by-item means between these data and the original data are highly correlated ($r(`r df.int.56.filtered.means.n`) = `r round(df.int.56.filtered.means.r, 2)`$, $r_{spearman}(`r df.int.56.filtered.means.n`)= `r round(df.int.56.filtered.means.spearman, 2)`$), indicating very high data reliability.
 
-```{r}
+```{r load interpretation results}
+load(file = "cached_results/genInt_interpretation6_prior3_modelData.RData")
+#df.int.filtered, df.int.filtered.bs, md.impprev
+load(file = "cached_results/genInt_interpretation6_prior3_mostNoise.RData")
 format_empirical_ci <- function(
   df, estimate = "mean", low = "ci_lower",
   high = "ci_upper", sigfigs = 2){
@@ -921,38 +924,76 @@ format_empirical_ci <- function(
     round(df[[1,high]], sigfigs),
     "]", sep = ""))
 }
-```
-
-
-Across our seventy-five items, we observe a clear gradient in the implied prevalence ratings (Figure\ \@(fig:genint-modelingResults)A).
-On one of the continuum, we have the generic "Ks have four legs", which is interpreted as a universal (mean implied prevalence and bootstrapped 95% confidence interval= $`r format_empirical_ci(filter(df.int.filtered.bs, property == "have four legs"))`$).
-On the other end is "Ks perform in the circus", which is interpreted as applying to less than half of the category ($`r format_empirical_ci(filter(df.int.filtered.bs, property == "perform in the circus"))`$).
-Several items have implied prevalence ratings less than 50%. 
-Many sex-specific properties about the reproductive behavior of animals have interpretation distributions that are bimodal. 
-For example, "Ks have a menstrual cycle" is interpreted primary as applying to 50% of Ks; however, some participants rate this as applying to 100% of Ks, perhaps interpreting the question as already restricting the domain to only the members of that category that *could* have the property. 
-
-Our primary analysis concerns how well the uncertain threshold generic interpretation model can accomodate these data in comparison to alternative models. 
-To fit these models, we construct a Bayesian data analysis to jointly model the prevalence prior data (Expt. 2a) and the generic interpretation data (Expt. 2b). 
-We model the prevalence prior as a mixture of three Beta distributions. 
-Beta is an appropriate choice here because it is a distribution over numbers on the unit interval (the same as our slider ratings), and we allow each individual item's prevalence prior to be composed of up to three constituent Betas to allow the Bayesian model the flexibility to accomodate the complex prevalence prior distributions.
-The inferred prevalence prior distributions are then used as $P(p)$ in Eq. \ref{eq:L0} in order to generate predictions for the generic interpretation data.
-The generic interpretation model is fully given by Eq. \ref{eq:L0} and has no free parameters.
-Each prevalence prior has eight parameters governing its shape: a mean $\gamma$ and variance parameter $\xi$ for each of the three Beta components and two parameters that describe the relative weighting among the three components.
-We put uninformative priors over these parameters $\gamma \sim \text{Uniform}(0, 1)$, $\xi \sim \text{Uniform}(0, 100)$, $\phi \sim \text{Dirichlet}(1,1,1)$.
-
-```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
-
-load(file = "cached_results/genInt_interpretation6_prior3_modelData.RData")
-#df.int.filtered, df.int.filtered.bs, md.impprev
-
 
 md.impprev.stats <- md.impprev %>%
   group_by(parameter, semantics) %>%
-  summarize( mse  = round(mean((model_MAP-mean)^2), 4),
-             r2 = round(cor(model_MAP, mean)^2, 2),
+  summarize( mse  = mean((model_MAP-mean)^2),
+             r2 = cor(model_MAP, mean)^2,
              n = n())
+```
+
+#### Descriptive results
+
+Interpreting a novel generic sentence "Ks have F" often has the possibility of being understood as a universal claim (*all or almost all Ks Fs)*. 
+Across our seventy-five items, however, we observe a clear gradient in the implied prevalence ratings (Figure\ \@ref(fig:genint-modelingResults)A).
+On one end of the continuum, we have the generic "Wugs have four legs", which is interpreted as a universal---applying to exactly 100% of wugs---by `r sum(filter(df.int.filtered, property == "have four legs")$response == 1)` out of `r length(filter(df.int.filtered, property == "have four legs")$response)` participants and which received a mean implied prevalence rating of $`r format_empirical_ci(filter(df.int.filtered.bs, property == "have four legs"))`$. 
+^[
+  Note the novel category term is randomized for each participant and property. 
+  We use particular novel category terms in the text for ease of exposition.
+]
+On the other end is "Glippets perform in the circus", which is interpreted as applying to less than 25% of glippets by `r sum(filter(df.int.filtered, property == "perform in the circus")$response < 0.25)` out of `r length(filter(df.int.filtered, property == "perform in the circus")$response)` participants and which receives a mean rating below 50% ($`r format_empirical_ci(filter(df.int.filtered.bs, property == "perform in the circus"))`$).
+<!-- Several items have mean ratings below 50%.  -->
+Additionally remarkable is the distribution of responses for individual items: Though "Feps live in zoos" probably means around 25% of feps live in zoos, it is still quite possible that almost 100% live in zoos (e.g., in the real world, 100% of Micronesian Kingfishers live in zoos).
+
+Several properties about the reproductive behavior of animals have interpretation distributions that are bimodal. 
+For example, "Morseths have a menstrual cycle" is interpreted primarily as applying to 50% of morseths (`r sum(with(filter(df.int.filtered, property == "have a menstrual cycle"), ((response < 0.55) & (response > 0.45))))` out of `r length(with(filter(df.int.filtered, property == "have a menstrual cycle"), response))` give a response between 45% and 55%); however, some participants (`r sum(with(filter(df.int.filtered, property == "have a menstrual cycle"), response ==1 ))` of `r length(with(filter(df.int.filtered, property == "have a menstrual cycle"), response))`) rate this as applying to 100% of morseths.^[
+  The scientifically correct term for this is actually an "estrous cycle". We are grateful to one of our MTurk participants for pointing this out to us. 
+]
+This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that *could* have the property (e.g., 100% of female morseths have a menstrual cycle).
+We notice this bimodal interpretation in our prevalence elicitation task (Expt. 2a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0% (the animals that don't have a menstrual cycle), 50% ("only females") and 100% (perhaps, "all females").
+The fact that this multi-modality appears in the prior elicitation task as well means that the generic interpretation model will be well-positioned to predict a bi-modal distribution for the implied prevalence data.
+
+#### Model-based analysis and results
+
+Our primary analysis concerns how well the uncertain threshold generic interpretation model can accomodate the implied prevalence data in comparison to alternative models. 
+To fit these models, we construct a Bayesian data analysis (BDA) model to jointly predict the prevalence prior data (Expt. 2a) and the generic interpretation data (Expt. 2b). 
+Such a joint-inference mode allows us to retain the uncertainty in the measurement of the prevalence prior data when using it in our model to predict the implied prevalence results. 
+
+The joint cognitive-statistical model attempts to predict both data sources (prevalence prior and generic interpretation) simultaneously; the former is modeled as a mixture of three Beta distributions and the latter is modeled by our generic interpretation model (Eq. \ref{eq:L0}).
+Beta is an appropriate choice for the prevalence prior data because it is a distribution over numbers on the unit interval (the same as our slider ratings), and we allow each individual property's prevalence prior to be composed of up to three constituent Betas to allow the statistical model the flexibility to accomodate the complex prevalence prior distributions.
+Each prevalence prior, thus, has eight parameters governing its shape: a mean $\gamma$ and variance parameter $\xi$ for each of the three Beta components and two parameters $\phi_1$, $\phi_2$ that describe the relative weighting among the three components.
+We put uninformative priors over these parameters $\gamma \sim \text{Uniform}(0, 1)$, $\xi \sim \text{Uniform}(0, 100)$, $\phi \sim \text{Dirichlet}(1,1,1)$.
+The inferred prevalence prior distributions are then used as $P(p)$ in Eq. \ref{eq:L0} in order to generate predictions for the generic interpretation data.^[
+  In reality, this procedure is done simultaneously, not sequentially.
+]
+The generic interpretation model is fully specified by Eq. \ref{eq:L0} and has no free parameters.
+The model is implememented in the probabilistic programming language WebPPL [@dippl].
+
+To learn about the credible values of the parameters governing the prevalence priors as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on the model by running three chains of an incrementalized version of MCMC [@Ritchie2016] for 750,000 iterations, removing the first 250,000 iterations for burn-in.
+A qualitative examination showed that the prevalence prior distributions were well-modeled as a mixture of three Beta distributions. 
+Often one Beta distribution is devoted to accounting for the very small numbers (0% or near 0% prevalence ratings), while the two others attempt to fit the other parts of the distribution, the details of which depend upon the property.
+
+As a first attempt to understand the implied prevalence data in a quantitative way, we compare the means of the inferred prevalence priors to the empirical means of the implied prevalence data (Figure\ \@ref(fig:genint-modelingResults)B top facet).
+The means of the prevalence prior distributions do a rather poor job at predicting the implied prevalence ratings, consistently underpredicting the ratings ($r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["mse"]], digits = 2)`$).
+The fact that the prevalence prior data does not fit the generic interpretation data is good evidence that participants are actually *updating* their beliefs about the property in the generic interpretation task, as opposed to simply sampling from their prior.
+
+We ran alternative interpretation models using the same data analytic approach (i.e., joint cognitive-statistical models) but which had access to only a single fixed-threshold rather the uncertain threshold of the generic interpretation model. 
+These alternative models correspond to models of the quantifier "some" and "most" and provide strict tests of our generic interpretation model because they too have access to the full prior distribution over prevalence as well as the flexibility endowed by the Bayesian data analysis method.
+Figure\ \@ref(fig:genint-modelingResults)B shows each of the alternative model's predictions (technically, the BDA models' posterior predictive distributions) for the mean implied prevalence of each of the seventy-novel generic sentences, in comparison to the empirical means. 
+We see that the model based on quantifier "some" (i.e., a fixed threshold at the lowest possible value) consistently *underpredicts* the implied prevalence, consistent with the intuition that assigning the semantics of "some" for generics is too weak.
+Though the model explains a lot of the variance $r^2(`r filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["r2"]]`$, it does so with a relatively high mean squared error $MSE = `r format(filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["mse"]], digits = 2)`$.
+
+It is impossible for the model based on the quantifier "most" to accomodate these data: *Most* has a strict threshold at 0.5 and thus assigns probability 0 to all responses less than 0.5.
+In order to alleviate this issue, we endow the BDA model for "most" with a external noise parameter, which allows the model to randomly guess on some proportion of trial (the exact proportion is a parameter to be inferred from the data).
+The "most" model assigns `r format_empirical_ci(m.samp.most.noise, "MAP", "cred_lower", "cred_upper")` proportion of the data to be noise, because of the high prevalence of minority (i.e., less than 50%) interpretations. 
+A model based on the semantics for "most" is not well-suited for these data $r^2(`r filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["r2"]]`$,  $MSE = `r format(filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["mse"]], digits = 2)`$.
+
+Finally, we examine the uncertain threshold model's predictions for the mean implied prevalence ratings. 
+Unlike each of the alternative models, the uncertain threshold is able to perfectly accomodate the highly variable generic interpretation data $r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior")[["mse"]], digits = 2)`$.
+The generic interpretation model is able to flexibly adjust the threshold depending on the prevalence prior, resulting in context-sensitive generic interpretation that finely tracks human judgments.
 
 
+```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = T}
 fig.genint.interpretation.ci <- df.int.filtered %>%
   mutate(property = factor(property, 
                            levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
@@ -996,7 +1037,6 @@ cowplot::plot_grid(
   labels = c("A", "B"),
   rel_widths = c(3.5, 1)
 )
-
 ```
 
 
