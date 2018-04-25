@@ -150,7 +150,7 @@ var model = function(){
      var speaker1 = cache(function(state, theta) {
       Infer({model: function(){
         // var utterance = sample(utterancePrior);
-        var utterance = categorical({vs: "generic", "silence"}, ps: [cost_uttProb, 1])
+        var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
         var L0 = listener0(utterance, theta);
         factor(speakerOptimality * L0.score(state))
         return utterance
@@ -189,7 +189,7 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 500, lag =  1;
+// var totalIterations = 50, lag =  1;
 var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
