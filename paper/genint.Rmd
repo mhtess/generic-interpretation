@@ -69,13 +69,14 @@ library(RColorBrewer)
 library(ggpirate)
 library(viridis)
 theme_set(theme_few())
+remove(list= ls())
 ```
 
 ```{r analysis_preferences}
 # Seed for random number generation
 set.seed(42)
 
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, cache=T, message=FALSE, sanitize = T)
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, cache=F, message=FALSE, sanitize = T)
 
 ```
 
@@ -993,7 +994,7 @@ Unlike each of the alternative models, the uncertain threshold is able to perfec
 The generic interpretation model is able to flexibly adjust the threshold depending on the prevalence prior, resulting in context-sensitive generic interpretation that finely tracks human judgments.
 
 
-```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = T}
+```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
 fig.genint.interpretation.ci <- df.int.filtered %>%
   mutate(property = factor(property, 
                            levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
@@ -1042,6 +1043,11 @@ cowplot::plot_grid(
 
 # Experiment 3: Prior Manipulation
 
+In the previous experiments, we see how participants' prior beliefs about the prevalence of the property, either measured by asking about alternative categories (Expt. 2) or abstract questions about the distribution of the property (Expt. 1), related to the prevalence implied by a novel generic via a model that reasons about an uncertain threshold on prevalence (Eq. \ref{eq:L0}).
+In both of the previous experiments, we measured both generic interpretation and the prevalence prior and related the two via our model. 
+Though our model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational. 
+We have shown that the two are related but not that intervening on the prevalence prior can change interpretations.
+
 In this final experiment, we test the causal role of the prevalence prior in generic interpretation. 
 We do this by manipulating the prevalence prior and measuring the resulting influence on interpretation (*generic interpretation* condition).
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
@@ -1064,9 +1070,8 @@ To focus on the influence of our prior manipulation cover story (described below
 ]
 
 Participants were familiarized with one of ten prevalence prior distributions, shown in Figure\ \@ref(fig:priorManipulationExpt)E). 
-All but one of these distributions (the uniform distribution) are bimodal with modes either at 0% (*absent*), 25% (*weak*), 50% (*half*), 75% (*strong*), or 100% (*ubiquitous*).
+Nine of the ten distributions are bimodal with modes either at 0% (*absent*), 25% (*weak*), 50% (*half*), 75% (*strong*), or 100% (*ubiquitous*); the tenth distribution is uniform over all prevalence levels between 0% and 100%.
 The mixture component between the two modes was always 50% (half of samples were from one mode and half from the other, as shown in Figure\ \@ref(fig:priorManipulationExpt)B).
-These distributions were chosen in order to disambiguate alternative hypotheses.
 
 #### Procedure
 
@@ -1171,12 +1176,10 @@ plot_grid(
   nrow = 3)
 ```
 
-
-
-In order to avoid potential influence from learning the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
+In order to avoid participants learning the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
 Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with lots of new animals on it.
 They were studying these animals with another scientist to understand the animals' ability to "know when earthquakes are about to happen".
-Participants were then shown "data" that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
+Participants were then shown data that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
 In order to minimize distraction, novel animals were simply labeled by a letter (e.g., "Animal C" or just "Cs").
 Information about the animal appeared in an *evidence statement* (e.g., "After studying the animal, you and your partner determine that 98\% of Cs *know when earthquakes are about to happen*.") and were displayed in a table showing the corresponding numerical data (Figure\ \@ref(fig:priorManipulationExpt)A). 
 Participants proceed in a self-paced way by clicking a button to reveal information about the next animals.
@@ -1186,7 +1189,7 @@ Then, the data table is removed and participants are provided the following prom
 
 > Tomorrow, you and your partner will study 5 other new species of animals. What percentage of each do you think will know when earthquakes are about to happen?
 
-Participants were given five slider bars ranging from 0 - 100, and asked to predict the prevalence for the next five categories (Animals K - P; Figure\ \@ref(fig:priorManipulationExpt)C).
+Participants were given five slider bars ranging from 0% - 100%, and asked to predict the prevalence for the next five categories (Animals K - P; Figure\ \@ref(fig:priorManipulationExpt)C).
 After rating the slider bars, participants were asked if they could explain why they gave the responses that they did. 
 Then, they completed an attention check survey where they were asked what property was being investigated (choosing a response from a list of 10 options) and to input one of the prevalence levels they saw on the familiarization screen.
 
@@ -1195,11 +1198,18 @@ Then, they completed an attention check survey where they were asked what proper
 Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded.
 
 Similar to the data from Expt. 2a, a response in this task can be thought of as a sample from a prevalence prior distribution and the distribution of responses as estimates for the whole distribution.
-Figure\ \@ref(fig:genManip-prevPrior)A shows the ten manipulated prevalence prior distributions.
-These distributions clearly reflect the familiarization distributions supplied to participants in the experiment.
-Thus, we have good evidence that participants are encoding the prevalence distributions supplied during the familiarization period of this experiment.
-Next, we look at these distribution's resulting influence on generic interpretation.
+We visualize the distributions by discretizing the responses so that each response goes into one of twenty equally spaced bins (effectively turning the 101-pt scale into a 20-pt scale).
+Figure\ \@ref(fig:priorManipulationResults)A (top row) shows the empirically elicited predicted prevalence  distributions.
+These distributions clearly reflect the familiarization distributions supplied to participants in the experiment, with some idiosyncractic features.
+The distribution that is most different from the familiarization distribution is the uniform distribution; the empirical predicted distribution is more unimodal with a peak at 50%. 
+Many distributions exhibit a regression to the mean in some participants' predictions: In the *rare or deterministic* distribution (which featured prevalence levels either around 0% or 100%), some participants guess that the next animal will have 50% prevalence; a similar phenomenon can be observed in the *weak or strong* distribution (25% or 75%) and to a lesser extent in the other bimodal distributions. 
 
+Because our generic interpretation model has no free parameters, we use these empirically measured prevalence istributions to generate *a priori* model predictions using the generic interpretation data.
+To account for our uncertainty in the measurement of the prevalence priors, we bootstrap the priors by resampling subjects (with replacement), calculating the empirical prevalence distributions (by binning, as above), and generating model predictions. 
+We repeated this procedure 10,000 times to generate distributions of predictions.
+The boostrapped mean and 95% quantiles for each prevalence bin in each distribution are shown in Figure\ \@ref(fig:priorManipulationResults)A (middle row).
+We see that context-sensitive interpretations are predicted, with idiosyncracies that reflect empirically measured distributions.
+We then tested these predictions against interpretations in the same empirical paradigm.
 
 
 ```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means. C: Same as B shown in scatterplot.", fig.width = 13.5,fig.asp = 0.6}
@@ -1295,17 +1305,25 @@ cowplot::plot_grid(
 ```
 
 
-
-
 ## Experiment 3b: Generic interpretation
 
 ### Methods
 
+```{r load prior manip meta data}
+load(file = "cached_results/priorManip_int_metaData.RData")
+# expt3.int.catchFail,
+#      expt3.int.nonEnglish,
+#      expt3.int.n,
+#      expt3.int.n.passCatch.English,
+#      expt3.int.meanTime,
+#df.prior_manip.int.filtered.n_subj_per_item
+```
+
 #### Participants
 
-We recruited 500 participants from MTurk. 
+We recruited `r expt3.int.n` participants from MTurk.
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
-The experiment took on average X minutes and participants were compensated \$K.
+The experiment took on average `r round(expt3.int.meanTime$mean_time, 1)` minutes and participants were compensated \$0.30.
 
 #### Materials and procedure
 
@@ -1317,7 +1335,7 @@ After the familiarization period, the data table is removed and participants are
 
 In order to encourage participants to pay attention to the language, this text is on the screen for five seconds before participants are asked: "What percentage of Ks do you think know when earthquakes are about to happen?" and provided with a slider bar ranging from 0%-100% (Figure\ \@ref(fig:priorManipulationExpt)D). 
 As in Expt. 3a, participants then completed an attention check survey where they were asked what property was being investigated and to input one of the prevalence levels they saw on the familiarization screen.
-
+The experiment can be viewed at http://stanford.edu/~mtessler/generic-interpretation/experiments/generics/prior-manipulation-2.html. 
 <!-- Participants see the data from eleven different categories, though they are told the data for one kind were lost and a "?" was placed in the table (\red{Figure}).^[ -->
 <!--   These lost results would be found in the *generic interpretation* task, Expt. 3b. -->
 <!--   We chose to present a "lost data" category to imply that the sampling procedure for the referent-category was random. The alternative would be to present data from ten categories and have participants rate the eleventh, which could imply that the scientists are collecting data until they find one for which the property applied generically. \red{[clean up]} -->
@@ -1330,12 +1348,26 @@ As in Expt. 3a, participants then completed an attention check survey where they
 
 ### Results
 
-Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded.
+```{r load prior manip regression}
+load(file = "cached_results/gentInt_manipPriors_lm.RData")
+#rs.lm.priorManip
+rs.lm.priorManip.summ <- summary(rs.lm.priorManip)
+```
 
-- Some sort of regression tests to see the test the following infleunces:
-  - Effect of the prior mean
-  - Effect above and beyond the prior mean
-  - The type of the weaker distribution and the type of the stronger distribution?
+
+<!-- We used preregistered exclusion criteria, which were also used for Expt. 2a.  -->
+Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded ($n = `r expt3.int.catchFail`$).
+In addition, we excluded participants who self-reported a native language other than English ($n = `r expt3.int.nonEnglish`$). 
+This left a total of $n = `r expt3.int.n.passCatch.English`$ participants, with items receiving on average `r round(df.prior_manip.int.filtered.n_subj_per_item$n_subj_per_item)` responses (range = [`r round(df.prior_manip.int.filtered.n_subj_per_item$lb)`, `r round(df.prior_manip.int.filtered.n_subj_per_item$ub)`]).
+
+
+The differences in interpretations are evident in the empirical distributions of responses (Figure \@ref(fig:priorManipulationResults)A, bottom row).
+To test in the effect of the prior mean on resulting interpretation, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 3a).
+There was a significant main effect of prior mean, with a coefficient close to 1 ($\beta_1 = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "t value"]]`$).
+In addition, there was a significant mean effect of intercept, indicating that participants' responses were significantly greater than in the prior elicitation condition ($\beta_0 = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "t value"]]`$).
+
+<!-- - Some sort of regression tests to see the test the following infleunces: -->
+  <!-- - The type of the weaker distribution and the type of the stronger distribution? -->
 
 In addition to the qualitative analyses afforded by the regression models, we examine the generic interpretation's quantitative predictions and compare those to a set of alternative models. 
 The first alternative model we consider is prevalence prior; we have already seen via the regression analyses that this will not be sufficient. 
