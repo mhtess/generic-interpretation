@@ -9,7 +9,8 @@ var semantics = process.argv[process.argv.length - 2]
 // console.log(semantics)
 var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
-    interpretationFilePrefix = "interpretation-6"
+    interpretationFilePrefix = "interpretation-6",
+    endorsementFilePrefix = "endorsement-1";
 
 // expt 2: measured priors
 var d_prior = readDataFile("prior", priorFilePrefix),
@@ -18,6 +19,9 @@ var d_prior = readDataFile("prior", priorFilePrefix),
     d_interpretation = readDataFile("interpretation", interpretationFilePrefix),
     d_interpretation_catch = readCatchFile("interpretation", interpretationFilePrefix),
     d_interpretation_subj = readSubjFile("interpretation", interpretationFilePrefix);
+    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
 
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
@@ -29,24 +33,36 @@ var d_prior = readDataFile("prior", priorFilePrefix),
 
 var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
+    // endorsementWorkeridsPassed = passCatchTrials(d_endorsement_catch),
     priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
     interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
+    // endorsementWorkeridsEnglish = nativeEnglish(d_endorsement_subj);
 
 var data = {
 	prior: filter(function(di){
     return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) && 
       (priorWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+      utils.isNumber(di.response) &&
+      di.trial_type == "prevalence_elicitation")
   }, map(function(d){ return extend(d, {
 		avoided_endval: avoidEnds(d.response)
   })}, d_prior)),
 	interpretation: filter(function(di){
     return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && 
       (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+      utils.isNumber(di.response) &&
+      di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
-	})}, d_interpretation))
+	})}, d_interpretation))//,
+  // endorsement: filter(function(di){
+  //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) && 
+  //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+  //     utils.isNumber(di.response) &&
+  //     di.trial_type == "truth_conditions")
+  // }, map(function(d){ return extend(d, {
+  //   binned_prevalence:  utils.closest( midBins, d.prevalence_level / 100)
+  // })}, d_endorsement))
 };
 
 
@@ -57,7 +73,8 @@ assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
 // assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
-assert.ok(levels(data.prior, "workerid").length == 175) // prior 3
+assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
+// assert.ok(levels(data.endorsement, "workerid").length == 150) // endorsement 1
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -196,8 +213,10 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 500, lag =  1;
-var totalIterations = 500000, lag =  150;
+
+// data.endorsement
+var totalIterations = 500, lag =  1;
+// var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 // var outfile = 'results-genint-S1-endorsePrediction-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
