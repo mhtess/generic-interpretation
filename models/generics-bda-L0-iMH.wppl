@@ -50,13 +50,14 @@ var data = {
 };
 
 
-var prevalence_levels = map(function(x){ utils.closest(midBins, x) }, [0.1,0.3,0.5,0.7,0.9])
+// var prevalence_levels = map(function(x){ utils.closest(midBins, x) }, [0.1,0.3,0.5,0.7,0.9])
 
 // // // test that removing Ss who failed catch trial works properly (computed in R)
 assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
-assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+// assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+assert.ok(levels(data.prior, "workerid").length == 175) // prior 3
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -158,25 +159,31 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-   var speaker1 = function(state, speakerOptimality) {
-    Infer({model: function(){
-      var utterance = sample(utterancePrior);
-      var L0 = listener0(utterance);
-      factor(speakerOptimality * L0.score(state))
-      return utterance
-    }})}
+   var supp = interpretationPrediction.support()
 
-    foreach([1, 5, 10], function(speakerOptimality){
+   foreach(supp, function(s){
+     query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   })
 
-     foreach(prevalence_levels, function(p){
+   // var speaker1 = function(state, speakerOptimality) {
+   //  Infer({model: function(){
+   //    var utterance = sample(utterancePrior);
+   //    var L0 = listener0(utterance);
+   //    factor(speakerOptimality * L0.score(state))
+   //    return utterance
+   //  }})}
 
-       var endorsement = speaker1(p, speakerOptimality)
+    // foreach([1, 5, 10], function(speakerOptimality){
 
-       query.add(["endorsement", item, speakerOptimality, p], Math.exp(endorsement.score("generic")))
+    //  foreach(prevalence_levels, function(p){
 
-     })
+    //    var endorsement = speaker1(p, speakerOptimality)
 
-    })
+    //    query.add(["endorsement", item, speakerOptimality, p], Math.exp(endorsement.score("generic")))
+
+    //  })
+
+    // })
 
    // query.add(["prediction", item, -99, "prior"], expectation(statePrior))
    // query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
@@ -184,7 +191,7 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
+   // semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
 
 	return query
 }
@@ -193,7 +200,8 @@ var model = function(){
 var totalIterations = 500000, lag =  150;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-S1-endorsePrediction-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+// var outfile = 'results-genint-S1-endorsePrediction-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var posterior = Infer({
   model: model,
