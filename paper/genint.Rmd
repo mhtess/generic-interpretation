@@ -1471,30 +1471,31 @@ The differences in interpretations are evident in the empirical distributions of
 Much of what we come to learn about the world comes from other people, often expressed in language.
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language.
 Despite its ubiquity and relative morphosyntactic simplicity, there have been few quantitative studies of generics and no quantitative models that make predictions about how generic language is interpreted.
-Here we test a quantitative model on a broad set of quantitative data (including a replication data set from Cimpian)
+Here we test a quantitative model on a broad set of quantitative data, including a replication data set from @Cimpian2010.
 We find reliable, fine-grained, context-sensitive differences in interpretations, which only our uncertain threshold model can account for.
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
 
-- Finer points about the data? Discussion of explanation data? Have relationship to DR theories come here?
+In what follows, we relate our account to a related kind of account based on the idea of *domain restriction*, discuss how our answer to the problem of generic interpretation can inform an answer to the problem of a parallel problem *generic identification*, and speculate about the origins of context-sensitive generic interpretations.
+<!-- - Finer points about the data? Discussion of explanation data? Have relationship to DR theories come here? -->
 
 ## Domain restriction
 
 In this paper, we test a particular model of generic interpretation.
 This model use a prior distribution over the prevalence of a feature across relevant categories and assumes the truth-functional meaning of the generic is an uncertain threshold on the prevalence. 
-The prevalence prior distributions, which we elicit from participants, already have conceptual knowledge baked into them.
+The prevalence prior distributions, which we elicit from participants, are likely already influenced by the conceptual knowledge of our participants.
 For example, the prevalence priors over properties that have to do with reproduction (e.g., *have menstrual cycles*, *get erections*) are multi-modal with one mode around 50%, clearly reflecting participants' knowledge that these properties are specific to one sex of the animal.
 
-Other formal theories of generic language make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted [e.g., @Cohen1999].
-In such a theory, the statement "Lorches have a menstrual cycle" gets rewritten as "Female lorches have a menstrual cycle" and the prevalence of the feature would be 100% (or near 100%) because 100% of the *relevant lorches* have a menstrual cycle.
+Other formal theories of generic language make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted [e.g., @Cohen1999; @Declerck1991].
+In such a theory, the statement "Lorches have a menstrual cycle" gets evaluated as "Female lorches have a menstrual cycle"; under such an account, the prevalence of the feature would be 100% (or near 100%) because 100% of the *relevant lorches* (i.e., the females) have a menstrual cycle.
 Domain restriction is an attractive mechanism because it would allow the semantic theory to be a context-invariant fixed threhsold [e.g., at 50%; @Cohen1999].
-However, such a theory still needs to explain why and formalize how the domain gets restricted; without such a theory to accompany the domain restriction hypothesis, the hypothesis is vacuous: it explains but does not predict.
+However, such a theory still needs to explain why and formalize how the domain gets restricted; without such a formal account to accompany the domain restriction hypothesis, the hypothesis is vacuous: it explains but does not predict.
 
 The uncertain threshold model that we present here can be seen as a particular instantiation of a domain restriction theory. 
 In our model, the statement "Lorches have a menstrual cycle" is resolved by a literal interpretation model to mean mean "50% of lorches have a menstrual cycle".
-Were a listener to have the background theory that the reason why half of a category would have such a property is for reproductive purpoeses,  the interpretation could naturally be enriched to "Female lorches have a menstrual cycle".
+Were a listener to have the background theory that the reason why half of a category would have such a property is for reproductive purposes, the listener's interpretation would most naturally be expressed as "Female lorches have a menstrual cycle".
 Indeed, this kind of conceptual knowledge is present in our participants, \red{as evidence by their explanations}.
 Our model restricts the domain by reasoning about a threshold that would make sense for that particular property, given its background distribution on prevalence. 
-Thus, an uncertain threshold is one mechanism by which the domain can be restricted. 
+Reasoning about an uncertain threshold via backgroudn knowledge is one mechanism by which the domain can be restricted.
 
 ## Generic identification
 
@@ -1506,13 +1507,14 @@ Interpreting the uncertain threshold as a kind of domain restriction might be su
 
 First, let us note that many generics actually expressed two or more generalizations. 
 For example, "Lorches eat insects" says that $[gen \text{ lorches}] [hab \text{ eat}] [gen \text{ insects}]$.
-In this paper, we have looked at the first aspect of generic understanding, the generalization over the head noun category (e.g., lorches) though in previous work we have shown that the same uncertain threshold model can explain habitual language as well [e.g., "John smokes"; @TesslerLangGenUnderReview].
-\red{[one view of generics is that they are timeless and enduring... but this may actually be the habitual componentn]}
-One observation of "non-generics" is that they may only exhibit a single generalization (e.g., over *dogs*).
-The habitual aspect of the verb may influence the expected prevalence: the more *vague*, habitual, predicate may cover more cases.
+<!-- In this paper, we have looked at the first aspect of generic understanding, the generalization over the head noun category (e.g., lorches) though in previous work we have shown that the same uncertain threshold model can explain habitual language as well [e.g., "John smokes"; @TesslerLangGenUnderReview]. -->
+In this paper, we have looked at the first aspect of generic understanding, the generalization over the head noun category (e.g., lorches) though in the next chapter we will see that the same uncertain threshold model can explain habitual language as well (e.g., "John smokes").
+An old intuition with generics is that at least some express properties that are especially timeless and enduring [@Lyons1977; @Gelman2003; @Gelman2007], though it is not clear what generalization this should be attributed to. 
+For instance, "Dogs are on my front lawn" exhibits only a single generalization (e.g., over *dogs*); it lacks the habitual verb phrase (*eat*).
+The habitual aspect of the verb may influence the expected prevalence in the head noun category: the more vague, habitual predicate may apply to more instances of the category (e.g., it's easy to tell whether or not a dog is on your front lawn, but harder to tell whether or not an animal eats insects *habitually*).
 For non-habitual predicates, the expected prevalence would be substantially more restricted. 
 Thus, we may find continuity in interpretations of underspecified noun phrases which include so-called "non-generics": "Tigers have stripes", "Tigers are in the savanna", "Tigers are in zoos", "Tigers are in my local zoo", "Tigers are on my front lawn".
-\red{[cite Declerck]}
+The uncertain threshold model may be such a way as to pragmatically infer a continuum of interpretations, from generics that are interpreted as universals ("Tigers are mammals") to those that are interpreted existentially but habitually ("Tigers are in zoos") to those that are interpreted existentially and non-habitually ("Tigers are on my front lawn").
 
 <!-- ## Implications for social categories -->
 
@@ -1525,12 +1527,25 @@ Adults readily use their causal knowledge of the world to restrict the interpret
 This is an aspect of generic language understanding often swept under the rug: Generics are believed to (in a generic sense) carry strong implications.
 Here, we show that generics also carry weak implications.
 
-- priors may start out as single Betas: arugment from the Beta(0,0) distribution
-- as we learn hierarchically about categories and about properties, we may begin to represent more components to the distribution
-  - such a development would predict (for adult "weak generics"), children start out with strong generics.
-  - since properties tend to be rare of objects (e.g., Oaksford & Chater wason), false-positives are not as bad as false-negatives (from a purely informational standpoint, because false-negatives are less likely? because most things are going to be correct rejections?)
-  - howver, for social categories this can be bad, as social categories are socially-constructed, reflecting what the speaker believes is a relevant categorization to make (Foster-Hansen, maybe Steve Roberts?)
-- does this *strong interpretations before weak interpretations* relate at all to Gelman & Bloom's developmental changes?
+It is often argued that children have adult-like understanding of generics from a very young age \red{(cite Gelman, Leslie, Brandone, Cimpian)}.
+These studies often look at a small range of properties that do not exhibit much context-sensitivity. 
+It is an open-question whether or not children understand "weak generics".
+
+There are theoretical reasons to think that the understanding of weak generics may be later developing. 
+Prevalence priors are naturally modeled as Beta distributions, which are probability distributions over numbers ranging from 0 - 1: In other words, Beta distributions are probability distributions over probabilities. 
+These probabilities can be thought of as the weight of a biased coin, and a common interpretation of the parameters of the Beta distribution are as *pseudo-counts*, imaginary outcomes of a previous experiment of flipping the coin.
+For example, a Beta(1, 9) distribution describes beliefs about the weight of the coin upon observing 1+9 = 10 flips of that coin, 1 of which landed on heads and 9 of which landed on tails. 
+This probability distribution heavily favors numbers around 0.1, as a coin of that weight is most likely to have generated the observed 1 out of 10 heads. 
+
+If we take the pseudo-counts as indices of worldly experience, it is interesting to note what happens as the pseudo-counts approach 0. 
+As the parameters approach zero, the Beta probability distribution increasingly prefers extreme values: 0 or 1. 
+If our knowledge about predictive probabilities are represented by Beta distributions, then early on, our belief distributions would favor categorical thinking. 
+However, once we start to learn about different kinds of categories and properties, probably via labeling, we may begin to represent multiple distributions in our prevalence priors. 
+Such a development would predict that children start out interpreting all generics as strong generics, and that the understanding of weak generics is later developing ability.
+
+<!--   - since properties tend to be rare of objects (e.g., Oaksford & Chater wason), false-positives are not as bad as false-negatives (from a purely informational standpoint, because false-negatives are less likely? because most things are going to be correct rejections?) -->
+<!--   - howver, for social categories this can be bad, as social categories are socially-constructed, reflecting what the speaker believes is a relevant categorization to make (Foster-Hansen, maybe Steve Roberts?) -->
+<!-- - does this *strong interpretations before weak interpretations* relate at all to Gelman & Bloom's developmental changes? -->
 
 ## Conclusion
 
