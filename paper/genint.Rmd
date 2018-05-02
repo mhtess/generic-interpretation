@@ -68,6 +68,7 @@ library(ggthemes)
 library(RColorBrewer)
 library(ggpirate)
 library(viridis)
+library(broom)
 theme_set(theme_few())
 remove(list= ls())
 ```
@@ -82,10 +83,8 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, cache=T, message=FALSE, sanitiz
 
 # Introduction
 
-- is there a way to connect to the claims of Cimpian2009 about generics influencing feature-as-cause vs. feature-as-effect explanations?
-  - perhaps not due to the generic vs. specific distiction, but to prior beliefs about the property?
-  
-- in generic endorsement: connect double generalizations ("Dogs bark") to so-called "non-generics" ("Dogs are on my front lawn"). Since "are on my front lawn" is a stative (?) property, there is only one generalizations about dogs which gets heavily restricted by the property?
+
+<!-- - in generic endorsement: connect double generalizations ("Dogs bark") to so-called "non-generics" ("Dogs are on my front lawn"). Since "are on my front lawn" is a stative (?) property, there is only one generalizations about dogs which gets heavily restricted by the property? -->
 
 <!-- Learning from others comes in many forms.  -->
 <!-- An expert may tolerate onlookers, a demonstrator may slow down when completing a particularly challenging part of the task, and a teacher may actively provide pedagogical examples and describe them with language [@Kline2014; @Csibra2009].  -->
@@ -1397,42 +1396,94 @@ In addition, we excluded participants who self-reported a native language other 
 This left a total of $n = `r expt3.int.n.passCatch.English`$ participants, with items receiving on average `r round(df.prior_manip.int.filtered.n_subj_per_item$n_subj_per_item)` responses (range = [`r round(df.prior_manip.int.filtered.n_subj_per_item$lb)`, `r round(df.prior_manip.int.filtered.n_subj_per_item$ub)`]).
 
 Our main qualitative hypothesis is that there would be a difference across conditions in interpretations of the same generic sentence ("Ks know when earthquakes are about to happen").
-Specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
+The differences in interpretations are evident in the empirical distributions of responses (Figure \@ref(fig:priorManipulationResults)A, bottom row).
+More specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
 To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 3a).
 There was a significant main effect of prior mean, with a coefficient close to 1 ($\beta_1 = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "t value"]]`$), indicating a strong linear relationship between the mean of the prevalence prior and the resulting interpretations.
-Furthermore, there was a significant mean effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors ($\beta_0 = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "t value"]]`$).
+Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors ($\beta_0 = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "t value"]]`$).
 These results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
 There is a lot more to be learned from these data, however; this simple linear model explains less than a quarter of the variance in the data $r^2 = `r rs.lm.priorManip.summ[["r.squared"]]`$.
 
 From the generics model, we are able to make a number of *a priori* predictions about quantitative differences in mean implied prevalence ratings across the ten conditions. 
-These predictions were derived by examining pairs of distributions with small quantitative differences but for which the bootstrapped 95% confidence interval around the generics model predictions did not overlap (Figure\ \@ref(fig:priorManipulationResults)B, "generics model" panel).
+These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95% confidence interval around the generics model predictions did not overlap (Figure\ \@ref(fig:priorManipulationResults)B, "generics model" panel).
 <!-- For example, Figure\ \@ref(fig:priorManipulationResults)B ("generics model" panel) -->
-With those criteria in mind, we preregistered the following contrast predictions (\{\}s indicate no predicted difference): *rare weak* $<$ \{*weak or half*, *rare half*\} $<$ \{*weak or strong*, *uniform*\} $<$ *rare_strong* $<$ \{*weak or deterministic*, *half or deterministic*\}  $<$ \{*strong or deterministic*, *rare or deterministic*\}.
-We compare these predictions to those made by three fixed threshold models: a literal "some" model (fixed threshold at 0.01), and fixed threshold models with thresholds at 0.1 and 0.35.
-The fixed thresholds of 0.1 and 0.35 were chosen to lie in between the 0% and 25% distributions, and the 25% and 50% distributions, respectively.
-Predictions of these models, as well as a model based on the prevalence prior, for the average implied prevalence given the ten distributions are shown in Figure\ \@ref(fig:priorManipulationResults)B.
+With those criteria in mind, we preregistered the following contrast predictions (\{\}s indicate no predicted difference): 0/25 $<$ \{25/50, 0/50\} $<$ \{25/75, *uniform*\} $<$ 25/75 $<$ \{25/100, 50/100\}  $<$ \{75/100, 0/100\}.
+To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a "zero and one inflated beta" linking function to appropriately model the responses of exactly 0% and 100%, which are undefined under the beta distribution.
+The maximum a-posteriori estimates and 95% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 1.
+Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
+<!-- We compare these predictions to those made by three fixed threshold models: a literal "some" model (fixed threshold at 0.01), and fixed threshold models with thresholds at 0.1 and 0.35. -->
+<!-- The fixed thresholds of 0.1 and 0.35 were chosen to lie in between the 0% and 25% distributions, and the 25% and 50% distributions, respectively. -->
+<!-- Predictions of these models, as well as a model based on the prevalence prior, for the average implied prevalence given the ten distributions are shown in Figure\ \@ref(fig:priorManipulationResults)B. -->
 
-The generics model predicts that the *weak or half* and the *rare half* distributions will receive a higher implied prevalence than the *rare weak* distribution. This prediction is also made by the "not rare" model, though that model also predicts that the  *rare half* distribution receives a stronger interpretation that the *weak or half* distribution. As predicted by the generics model, the *weak or half* distribution received significantly stronger interpretations than the *rare weak* distribution ($\beta = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Pr(>|t|)"]]`$) as did the rare or half distribution ($\beta = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Pr(>|t|)"]]`$).
-The *rare half* distribution was not significantly different from the *weak or half* distribution ($\beta = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Pr(>|t|)"]]`$).
+
+```{r brmTable, results="asis"}
+
+load(file = "cached_results/gentInt_manipPriors_brms_contrasts.RData") #rs.brm.priorManip.sdif
+
+df.rs.brm.priorManip.sdif.summ <- data.frame(summary(rs.brm.priorManip.sdif)$fixed)
+df.rs.brm.priorManip.sdif.summ$term <- row.names(df.rs.brm.priorManip.sdif.summ)
+
+brm.table1 <- xtable::xtable(df.rs.brm.priorManip.sdif.summ %>%
+  mutate(coefficient = factor(term, 
+                              levels = c("Intercept", paste("dc", seq(1,9), sep ="")),
+                              labels = c("Intercept", 
+                                         "0/25 vs. {25/50, 0/50}",
+                                         "25/50 vs. 0/50",
+                                         "{0/25, 25/50, 0/50} vs. {25/75, uniform}",
+                                         "25/75 vs. uniform",
+                                         "{25/75, uniform} vs. 0/75",
+                                         "0/75 vs. {25/100, 50/100}",
+                                         "25/50 vs. 50/100",
+                                         "{25/100, 50/100} vs. {75/100, 0/100}",
+                                         "75/100 vs. 0/100")),
+         prediction = c("", ">", "=", ">", "=", ">", ">", "=", ">", "=")) %>%
+      mutate(credible_interval = paste(
+      "[", format(l.95..CI, digits = 2), ", ",
+      format(u.95..CI, digits = 2), "]", sep =""
+    )) %>%
+    select(coefficient, prediction, Estimate, credible_interval),
+  caption = "Regression model fits for planned comparisons. Predictions are based on whether the 95\\% credible intervals for the generics model prediction overlap.")
+
+
+
+print(brm.table1, type="latex", comment = F, table.placement = "H", size="\\fontsize{9pt}{10pt}\\selectfont", include.rownames=FALSE)
+```
+
+
+<!-- The generics model predicts that the *weak or half* and the *rare half* distributions will receive a higher implied prevalence than the *rare weak* distribution. This prediction is also made by the "not rare" model, though that model also predicts that the  *rare half* distribution receives a stronger interpretation that the *weak or half* distribution. As predicted by the generics model, the *weak or half* distribution received significantly stronger interpretations than the *rare weak* distribution ($\beta = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionweak_or_half", "Pr(>|t|)"]]`$) as did the rare or half distribution ($\beta = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast1.summ[["coefficients"]][["distributionrare_half", "Pr(>|t|)"]]`$). -->
+<!-- The *rare half* distribution was not significantly different from the *weak or half* distribution ($\beta = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "t value"]]`$, $p = `r rs.lm.priorManip.contrast2.summ[["coefficients"]][["distributionrare_half", "Pr(>|t|)"]]`$). -->
  
-All models predict that the *uniform* distribution will receive higher ratings than both the *weak or half* and the *rare half* distributions. 
-The *weak or strong* distribution is also predicted to be greater than *weak or half* or the *rare half*, by all models except the "not absent" model, which predicts no difference for this comparison. 
-In fact, both the *uniform* ($\beta = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "t value"]]`$, $p = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Pr(>|t|)"]]`$) and the *weak or strong* ($\beta = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "t value"]]`$, $p = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Pr(>|t|)"]]`$) distributions received significantly greater implied prevalence than the *weak or half* distributions, providing some evidence against the "not absent" model. 
+<!-- All models predict that the *uniform* distribution will receive higher ratings than both the *weak or half* and the *rare half* distributions.  -->
+<!-- The *weak or strong* distribution is also predicted to be greater than *weak or half* or the *rare half*, by all models except the "not absent" model, which predicts no difference for this comparison.  -->
+<!-- In fact, both the *uniform* ($\beta = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "t value"]]`$, $p = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionuniform", "Pr(>|t|)"]]`$) and the *weak or strong* ($\beta = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Estimate"]]`$, $SE=`r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Std. Error"]]`$, $t = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "t value"]]`$, $p = `r rs.lm.priorManip.contrast3.summ[["coefficients"]][["distributionweak_or_strong", "Pr(>|t|)"]]`$) distributions received significantly greater implied prevalence than the *weak or half* distributions, providing some evidence against the "not absent" model.  -->
 
  <!-- [n.s.] -- [weak_or_strong, uniform] vs.  rare_strong -->
-The *rare or strong* distribution was predicted (by most models) to receive stronger interpretations than either the *weak or strong* and/or the *uniform*. 
-Contra these predictions, such a difference was not observed in the empirical data
+<!-- The *rare or strong* distribution was predicted (by most models) to receive stronger interpretations than either the *weak or strong* and/or the *uniform*.  -->
+<!-- Contra these predictions, such a difference was not observed in the empirical data -->
 
 
 <!-- - Some sort of regression tests to see the test the following infleunces: -->
   <!-- - The type of the weaker distribution and the type of the stronger distribution? -->
 
-The computational models we articulate do more than just predict the *mean* implied prevalence; they generate predictions about the full distribution of responses.
-To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model.^[
-  As is evident from Figure\ \@ref(fig:priorManipulationResults)A (bottom row, "data"), several participants responded that 0% of Ks know when earthquakes were about to happen. Examining participants' explanations revealed that the majority of these respondents believed they were answering a question more akin to the prior elicitation / manipulation check task: Predict the next animal. This is a source of noise in the data and one that affects all models to an equal degree. All of the models we articulate (the uncertain threshold and the fixed threshold models) have no way to account for 0% responses (this is literally impossible given the utterance "Ks know when earthquakes were about to happen". To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to the model and responding according to the prior. We calculate Bayes Factors under a variety of different reasonable "noise" probabilities (noise probabilities $= \{0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.15\}$). The conclusions derived from the Bayes Factors are unchanged under different noise probabilities.   
-]
-Since the models have no free parameters, the ratio of these likelihood values corresponds to the *Bayes Factor*, which quantifies the evidence in favor of one model over another. 
+The computational models we articulate do more than just predict the *mean* implied prevalence; they predict the full distribution of responses.
+To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model.
+Since the models have no free parameters, the ratio of these likelihood values corresponds to the *Bayes Factor* (BF), which quantifies the evidence in favor of one model over another. 
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
+
+As is evident from Figure\ \@ref(fig:priorManipulationResults)A (bottom row, "data"), however, several participants responded that 0% of Ks had the property. 
+Examining participants' explanations revealed that the majority of these respondents believed they were answering a question more akin to the prior elicitation / manipulation check task: Predict the next animal. 
+This is a source of noise in the data and one that affects all models (execept the prior only model) to an equal degree. 
+All of the models we articulate (the uncertain threshold and the fixed threshold models) have no way to account for 0% responses, which is literally impossible given the utterance "Ks know when earthquakes were about to happen". 
+To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to the model and responding according to the prior. 
+We calculate Bayes Factors under a variety of different "noise" probabilities (noise probabilities $= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}$). 
+
+For all noise probabilities, the uncertain threshold model is preferred over each of the fixed threshold models (Table 2 shows the BFs assuming a noise parameter of 0.05). 
+In comparison to the prior only model, however, the uncertain threshold is equally as good at predicting the data with a noise parameter of 0.01, and the prior is the preferred model with noise parameters smaller than 0.01. 
+This is unsurprising given that the uncertain threshold model cannot predict responses of exactly 0% prevalence, and decreasing the amount of assumed noise further penalizes the model for all the 0% responses.
+The important result is that even little bit of noise (between 1-5% of responses), the uncertain threshold model is quantitatively the better model.
+
+<!-- For all noise probabilities greater than 0.01, the uncertain threshold model is the preferred model by  -->
+<!-- The conclusions derived from the Bayes Factors are unchanged under different noise probabilities.    -->
 
 ```{r bayes factors, results="asis"}
 load("cached_results/genint_manipPriors_bf.RData") # model.likelihoodRatios.summarized
@@ -1440,33 +1491,37 @@ load("cached_results/genint_manipPriors_bf.RData") # model.likelihoodRatios.summ
 tab1 <- xtable::xtable(
   model.likelihoodRatios.summarized %>% 
   ungroup() %>%
-  filter(noiseProb == 0.01, 
-         alternative_model %in% c("prior", "fixed_0.0175", "fixed_0.125", "fixed_0.375")) %>%
-  mutate(`Alternative model` = factor(alternative_model, levels = c("prior", "fixed_0.0175",
+  filter(noiseProb == 0.05, 
+         alternative_model %in% c("prior", "fixed_0.05", "fixed_0.125", "fixed_0.375")) %>%
+  mutate(`Alternative model` = factor(alternative_model, levels = c("prior", "fixed_0.05",
                                                                   "fixed_0.125", "fixed_0.375"),
-                                    labels = c("Prior", "Threshold = 0.01",
+                                    labels = c("Prior", 
+                                               "Threshold = 0.01",
                                                "Threshold = 0.1",
                                                "Threshold = 0.35")),
     `log Bayes Factor` = paste(
     round(expected_log_bf, 1), " (", round(lower_log_bf,1), ", ", round(upper_log_bf,1), ")", sep=""
   )) %>% select(`Alternative model`, `log Bayes Factor`),
-  caption = "Bayes Factors quantifying evidence in favor of the uncertain threshold generics model.")
+  caption = "Bayes Factors quantifying evidence in favor of the uncertain threshold generics model, assuming a noise level of 0.05.")
 
 print(tab1, type="latex", comment = F, table.placement = "H", size="\\fontsize{9pt}{10pt}\\selectfont", include.rownames=FALSE)
 ```
 
 
-In addition to the qualitative analyses afforded by the regression analysis, we examine the generic interpretation model's *a priori* quantitative predictions and compare those to a set of alternative models. 
-The first alternative model we consider is prevalence prior; we have already seen via the regression analyses that this will not be sufficient. 
-We also consider three fixed threshold models which have increasing sophisticating as to their knowledge of the prior distributions: a literal "some" model (fixed threshold at the lowest possible value), a "not absent" model where the fixed threshold is placed in between the "absent" distribution and the "weak distribution" (threshold $\sim 10\%$), and a "highest mode" model where the fixed threshold is placed, in a context-sensitive manner, in between the two component distributions thus always signalling the higher of the two. 
-Finally, we have our uncertain threshold model, which integrates the prevalence prior with the pressure from the literal semantics that favors higher prevalences.
-Predictions of these models for the ten distributions of interest are shown in \red{Figure X}.
+<!-- In addition to the qualitative analyses afforded by the regression analysis, we examine the generic interpretation model's *a priori* quantitative predictions and compare those to a set of alternative models.  -->
+<!-- The first alternative model we consider is prevalence prior; we have already seen via the regression analyses that this will not be sufficient.  -->
+<!-- We also consider three fixed threshold models which have increasing sophisticating as to their knowledge of the prior distributions: a literal "some" model (fixed threshold at the lowest possible value), a "not absent" model where the fixed threshold is placed in between the "absent" distribution and the "weak distribution" (threshold $\sim 10\%$), and a "highest mode" model where the fixed threshold is placed, in a context-sensitive manner, in between the two component distributions thus always signalling the higher of the two.  -->
+<!-- Finally, we have our uncertain threshold model, which integrates the prevalence prior with the pressure from the literal semantics that favors higher prevalences. -->
+<!-- Predictions of these models for the ten distributions of interest are shown in \red{Figure X}. -->
 
 
 
-The differences in interpretations are evident in the empirical distributions of responses (Figure \@ref(fig:priorManipulationResults)A, bottom row).
 
 # General Discussion
+
+<!-- - is there a way to connect to the claims of Cimpian2009 about generics influencing feature-as-cause vs. feature-as-effect explanations? -->
+  <!-- - perhaps not due to the generic vs. specific distiction, but to prior beliefs about the property? -->
+  
 
 Much of what we come to learn about the world comes from other people, often expressed in language.
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language.

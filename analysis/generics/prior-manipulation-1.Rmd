@@ -13,7 +13,8 @@ library(tidytext)
 library(rwebppl)
 library(jsonlite)
 library(parallel)
-
+library(lme4)
+library(brms)
 readData = function(proj){
   read_csv(
     paste("../../data/prior-manipulation/",proj,"/",
@@ -1137,7 +1138,8 @@ df.pm.int.3 <- readData("prior-manipulation-3-interpretation")
 
 df.pm.int.3 %>%
   distinct(workerid, rt)  %>%
-  ggplot(., aes(x = rt / 60000))+
+  mutate(rt_min = rt / 60000) %>%
+  ggplot(., aes(x = rt_min))+
   geom_histogram()+
   xlab("minutes")
   #xlim(0, 10)
@@ -1159,6 +1161,8 @@ df.pm.int.3.filtered %>%
 ```
 
 
+
+
 "0" responses
 
 ```{r 0 responses pm int3}
@@ -1177,6 +1181,7 @@ df.pm.int.3 %>%
 
 
 Explaining using "pattern"
+
 ```{r explanations using pattern or partner}
 df.pm.int.3 %>%
   mutate(mention_pattern = grepl("pattern", tolower(explanation)),
@@ -1197,7 +1202,32 @@ by item counts
 ```{r condition ns}
 with(df.pm.int.3.filtered %>% distinct(workerid, distribution),
                 table(distribution))
+
+df.prior_manip.int.filtered.n_subj_per_item <- df.pm.int.3.filtered %>%
+  group_by(distribution) %>%
+  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n),
+                                      lb = min(n),
+                                      ub = max(n))
 ```
+
+
+```{r save meta data}
+expt3.int.catchFail <- sum(!df.pm.3.int.catch$pass_both)
+expt3.int.nonEnglish <- sum(!df.pm.3.int.subj.nativeEng$englishNative)
+expt3.int.n <- length(unique(df.pm.int.3$workerid))
+expt3.int.n.passCatch.English <- length(unique(df.pm.int.3.filtered$workerid))
+expt3.int.meanTime <- df.pm.int.3 %>%
+  distinct(workerid, rt)  %>%
+  summarize(mean_time = mean(rt / 60000))
+save(expt3.int.catchFail,
+     expt3.int.nonEnglish,
+     expt3.int.n,
+     expt3.int.n.passCatch.English,
+     expt3.int.meanTime,
+     df.prior_manip.int.filtered.n_subj_per_item,
+  file = "../../paper/cached_results/priorManip_int_metaData.RData")
+```
+
 
 by item histogram
 
@@ -1528,67 +1558,357 @@ md.int3.binned.boostrapped %>%
 ```
 
 
-
 ### Model likelhoods / model comparison
 
 ```{r load model likelihood results}
-model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
+#model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
+
+
+
+model.path <- "../../models/results/bootstrap/"
+model.prefix <- "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb"
+
+sample_from_prior_probs <- c(0.0001,0.0005,0.001,0.005, 0.01, 0.05, 0.1, 0.15)
+
+
+m.ll <- data.frame()
+for (sfpp in sample_from_prior_probs){
+  
+  model.files <- list.files(
+    path = model.path,
+    pattern = paste(model.prefix, sfpp, ".csv", sep = "")
+  )
+
+  for (modfile in model.files){
+    m.item <- read_csv(paste(model.path , modfile, sep = ""))
+  
+    m.ll <- bind_rows(
+      m.ll,
+      m.item %>% mutate(noiseProb = sfpp)
+    )
+    
+  }
+}
 ```
 
 
 ```{r model likelihoods summarized}
-model.likelihoods.summarized <- model.likelihoods %>%
+model.likelihoods.summarized <- m.ll %>%
   # filter(distribution %in% c("rare_weak", "rare_strong",
   #                            "rare_half", "rare_deterministic")) %>%
-  group_by(model, iteration) %>%
+  group_by(model, noiseProb, iteration) %>%
   summarize(sum_likelihood = sum(likelihood)) %>%
-  group_by(model) %>%
+  group_by(model, noiseProb) %>%
   summarize(lower_likelihood = quantile(sum_likelihood, 0.025),
             mean_likelihood = mean(sum_likelihood),
             upper_likelihood = quantile(sum_likelihood, 0.975))
 
 
+
+model.order <- with(filter(model.likelihoods.summarized, noiseProb == 0.01), model[order(mean_likelihood)])
+
 model.likelihoods.summarized %>%
-  mutate(model = factor(model, levels = model[with(model.likelihoods.summarized, order(mean_likelihood))])) %>%
+  ungroup() %>%
+  mutate(model = factor(model, levels = model.order)) %>%
   ggplot(., aes( x = model, y = mean_likelihood, ymin = lower_likelihood, ymax = upper_likelihood, fill = model))+
   geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
   geom_errorbar(position = position_dodge(), width = 0.3)+
   scale_fill_viridis(discrete = T)+
   ylab("log p (d | m)")+
+  facet_wrap(~noiseProb)+
   theme(axis.text.x = element_blank())
 
-
-ggsave("figs/prior-manipulation-3-model-likelihoods.pdf", width = 6, height = 4)
+#Wggsave("figs/prior-manipulation-3-model-likelihoods-facetNoiseProb.pdf", width = 8, height = 5)
 ```
 
 
 ```{r bayes factors}
-model.likelihoodRatios.summarized <- model.likelihoods %>%
+model.likelihoodRatios.summarized <- m.ll %>%
   # filter(distribution %in% c("rare_weak", "rare_strong",
   #                            "rare_half", "rare_deterministic")) %>%
-  group_by(model, iteration) %>%
+  group_by(model, noiseProb, iteration) %>%
   summarize(sum_likelihood = sum(likelihood)) %>%
   ungroup() %>%
   spread(model, sum_likelihood) %>%
   gather(alternative_model, alternative_model_sum_likelihood, 
-         -iteration, -uncertain) %>%
+         -iteration, -uncertain, -noiseProb) %>%
   mutate(log_bf_uncertain_alternative = uncertain - alternative_model_sum_likelihood) %>%
-  group_by(alternative_model) %>%
+  group_by(alternative_model, noiseProb) %>%
   summarize(lower_log_bf = quantile(log_bf_uncertain_alternative, 0.025),
             expected_log_bf= mean(log_bf_uncertain_alternative),
             upper_log_bf = quantile(log_bf_uncertain_alternative, 0.975))
 
 
 model.likelihoodRatios.summarized %>%
-  mutate(alternative_model = factor(alternative_model, levels = alternative_model[with(model.likelihoodRatios.summarized, order(expected_log_bf))])) %>%
+  # mutate(alternative_model = factor(alternative_model, levels = alternative_model[with(model.likelihoodRatios.summarized, order(expected_log_bf))])) %>%
   ggplot(., aes( x = alternative_model, y = expected_log_bf, ymin = lower_log_bf, ymax = upper_log_bf, fill = alternative_model))+
   geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
   geom_errorbar(position = position_dodge(), width = 0.3)+
   scale_fill_viridis(discrete = T)+
+  facet_wrap(~noiseProb)+
+  ylim(0, 50)+
   ylab("log [ p (d | generics model) / p (d | alternative model) ]")+
   theme(axis.text.x = element_blank())
 
 
 model.likelihoodRatios.summarized %>% kable(.)
+
+#save(model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf.RData")
+```
+
+### Regression analyses
+
+```{r}
+load(file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals.RData")
+# md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+#      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
+
+
+df.pm.int.3.filtered.prior_mean <- left_join(
+  df.pm.int.3.filtered,
+  md.pm.int.3.filtered.expvals.bs.summary %>%
+    filter(model == "prior") %>%
+    select(distribution, mean) %>%
+    rename(prior_mean = mean)
+)
+
+
+rs.lm.priorManip <- lm(data = df.pm.int.3.filtered.prior_mean,
+     response ~ prior_mean)
+
+#save(rs.lm.priorManip,
+#     file = "../../paper/cached_results/gentInt_manipPriors_lm.RData")
+
+summary(rs.lm.priorManip)
+```
+
+
+ rare_weak vs. [weak_or_half, rare_half]
+```{r regression contrast 0}
+contrast1.levels <- c("rare_weak", "weak_or_half", "rare_half")
+rs.lm.priorManip.contrast1 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast1.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast1.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast1)
+```
+
+
+ rare_weak vs. [weak_or_half, rare_half]
+ 
+  0/25, 
+ [25/50, 0/50], 
+ [25/75, uniform], 
+ 0/75, 
+ [25/100, 50/100],
+ [75/100, 0/100]
+ 
+ 
+```{r regression contrast 1}
+contrast1.levels <- c(
+  "rare_weak", 
+  "weak_or_half", "rare_half",
+  "weak_or_strong", "uniform",
+  "rare_strong", 
+  "weak_or_deterministic","half_or_deterministic",
+  "strong_or_deterministic", "rare_deterministic"
+  )
+rs.lm.priorManip.contrast1 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast1.levels)
+      ),
+     response ~ distribution)
+
+df.pm.int.3.filtered.prior_mean$distribution <-  factor(df.pm.int.3.filtered.prior_mean$distribution,
+                                                        levels = contrast1.levels)
+custom_contrasts <- MASS::contr.sdif(10)
+colnames(custom_contrasts) <- paste("a", seq(1, 9))
+contrasts(df.pm.int.3.filtered.prior_mean$distribution) <- custom_contrasts
+
+
+
+
+rs.lm.priorManip.sdif <- lm(response ~ d,
+                            df.pm.int.3.filtered.prior_mean %>%
+                              rename(d = distribution))
+
+
+summary(rs.lm.priorManip.sdif)
+```
+
+
+ rare_weak, 
+ [weak_or_half, rare_half], 
+ [weak_or_strong, uniform], 
+ rare_strong, 
+ [weak_or_deterministic, half_or_deterministic],
+ [strong_or_deterministic, rare_deterministic]
+ 
+ 
+ 
+```{r}
+df.pm.int.3.filtered.prior_mean$distribution <- factor(df.pm.int.3.filtered.prior_mean$distribution)
+
+contrasts(df.pm.int.3.filtered.prior_mean$distribution) <- cbind(c1 = c(-2,1,1,0,0,0,0,0,0,0),
+      c2 = c(0, -1, 1, 0,0,0,0,0,0,0),
+      c3 = c(-2,-2,-2,3,3,0,0,0,0,0),
+      c4 = c(0,0,0,-1,1,0,0,0,0,0),
+      c5 = c(0,0,0,-1,-1,2,0,0,0,0),
+      c6 = c(0,0,0,0,0,-2,1,1,0,0),
+      c7 = c(0,0,0,0,0,0,-1,1,0,0),
+      c8 = c(0,0,0,0,0,0,-1,-1,1,1),
+      c9 = c(0,0,0,0,0,0,0,0,-1,1)
+      )
+
+
+
+
+
+rs.lm.priorManip.sdif <- lm(response ~ d,
+                            df.pm.int.3.filtered.prior_mean %>%
+                              rename(d = distribution))
+
+rs.brm.priorManip.sdif <- brm(
+  formula = response ~ d,
+  data = df.pm.int.3.filtered.prior_mean %>% rename(d = distribution),
+  family = "zero_one_inflated_beta",
+  chains = 3, 
+  cores = 3,
+  iter = 2000
+  )
+
+save(rs.brm.priorManip.sdif, file = "../../paper/cached_results/gentInt_manipPriors_brms_contrasts.RData")
+
+summary(rs.brm.priorManip.sdif)
+
+tidy(rs.brm.priorManip.sdif) %>%
+  mutate(estimate = paste(
+    format(estimate, digits = 2),
+    " [", format(lower, digits = 2), ", ",
+    format(upper, digits = 2), "]", sep =""
+  )) %>%
+  select(term, estimate)
+
+contrasts(df.pm.int.3.filtered.prior_mean$distribution)
+```
+
+
+
+
+[weak_or_half, rare_half]
+
+```{r regression contrast 2}
+contrast2.levels <- c("weak_or_half", "rare_half")
+rs.lm.priorManip.contrast2 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast2.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast2.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast2)
+```
+
+weak_or_half vs. [weak_or_strong, uniform]
+
+```{r regression contrast 3}
+contrast3.levels <- c("weak_or_half", "weak_or_strong", "uniform")
+rs.lm.priorManip.contrast3 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast3.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast3.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast3)
+```
+
+ [n.s.] -- [weak_or_strong, uniform] vs.  rare_strong
+
+```{r regression contrast 4}
+contrast4.levels <- c("weak_or_strong", "rare_strong")
+rs.lm.priorManip.contrast4 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast4.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast4.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast4)
+```
+
+
+rare_strong vs. [weak_or_deterministic, half_or_deterministic]
+
+```{r regression contrast 5}
+contrast5.levels <- c("rare_strong", "weak_or_deterministic", "half_or_deterministic")
+rs.lm.priorManip.contrast5 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast5.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast5.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast5)
+```
+
+- [n.s.]
+
+[weak_or_deterministic, half_or_deterministic]
+vs.
+ [strong_or_deterministic, rare_deterministic]
+ 
+```{r regression contrast 6}
+contrast6.levels <- c("half_or_deterministic", "rare_deterministic", "strong_or_deterministic")
+rs.lm.priorManip.contrast6 <- lm(
+  data = 
+    df.pm.int.3.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast6.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast6.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast6)
+```
+
+```{r}
+save(rs.lm.priorManip,
+  rs.lm.priorManip.contrast1,
+  rs.lm.priorManip.contrast2,
+  rs.lm.priorManip.contrast3,
+  rs.lm.priorManip.contrast4,
+  rs.lm.priorManip.contrast5,
+  rs.lm.priorManip.contrast6,
+  file = "../../paper/cached_results/gentInt_manipPriors_lm.RData")
+
+summary(rs.lm.priorManip)
 ```
 
