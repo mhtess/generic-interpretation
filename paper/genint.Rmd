@@ -250,11 +250,13 @@ spectrum.color.palette <- get.colors("Blues")
 
 fig.sims.priors <- ggplot(sims.combined %>%
          filter(
-           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+           PriorShape %in% c("uniform", "biological_rare", "sexed_rare","accidental_rare"),
            src %in% c("priors")
            ) %>%
-         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
-                                    labels = c("Xs Y (uniform)", "Xs fly (biological)", "Xs carry malaria (accidental)")),
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare",  "sexed_rare","accidental_rare"),
+                                    labels = c("Xs Y (uniform)", "Xs fly (biological)", 
+                                               "Xs lay eggs (sexed)", 
+                                               "Xs carry malaria (accidental)")),
                 src = factor(src, levels = c( "priors"),
                              labels = c(
                                '\n prevalence prior'
@@ -276,11 +278,12 @@ fig.sims.priors <- ggplot(sims.combined %>%
 
 fig.sims.distributions <- ggplot(sims.combined %>%
          filter(
-           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+           PriorShape %in% c("uniform", "biological_rare","sexed_rare", "accidental_rare"),
            src %in% c("fixed_0.1", "fixed_0.33", "fixed_0.5", "posteriors")
            ) %>%
-         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
-                                    labels = c("Xs Y\n[uniform]", "Xs fly\n[biological]", "Xs carry malaria \n [accidental]")),
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "sexed_rare", "accidental_rare"),
+                                    labels = c("Xs Y\n[uniform]", "Xs fly\n[biological]",
+                                               "Xs lay eggs\n[sexed]", "Xs carry malaria \n [accidental]")),
                 src = factor(src, levels = c( "fixed_0.1", "fixed_0.33",
                                               "fixed_0.5", "posteriors"),
                              labels = c(
@@ -313,8 +316,9 @@ sims.combined.summary <- sims.combined %>%
            src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
            ) %>%
          mutate(PriorShape = factor(PriorShape, 
-                                    levels = c( "accidental_rare", "biological_rare", "uniform"),
+                                    levels = c( "accidental_rare", "biological_rare","sexed_rare", "uniform"),
                                     labels = c("uniform", "Xs carry malaria\n[accidental]", 
+                                               "Xs lay eggs\n[sexed]",
                                                "Xs fly\n[biological]")),
                 src = factor(src, 
                              levels = c( 
