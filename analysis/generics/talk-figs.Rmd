@@ -1,0 +1,139 @@
+---
+title: "Figures for talks"
+output: html_notebook
+---
+
+```{r}
+theme_set(theme_black())
+library(tidyverse)
+library(ggpirate)
+fig.path <- "~/Documents/research/talks/defense/figs/"
+```
+
+
+```{r genInt-prevPrior, fig.width = 12, fig.asp = 0.35, fig.cap="Prevalence priors for a broad set of animal properties.  A: Ten example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. Error bars denote bootstrapped 95% confidence intervals. "}
+#load(file = "cached_results/genInt_priors.RData")
+# df.prior.prevalence.2.isZero.conditionalEv,
+#      df.prior.prevalence.2,
+
+load(file = "../../paper/cached_results/genInt_priors3.RData")
+
+# df.prior.prevalence.3.isZero.conditionalEv,
+#      df.prior.prevalence.3,
+#      df.prior.3.filtered.bs,
+
+fig.prevParams.genInt <- ggplot(df.prior.prevalence.3.isZero.conditionalEv, 
+       aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
+            y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
+  geom_errorbar(alpha = 0.3, color = 'white') + 
+  geom_errorbarh(alpha = 0.3, color = 'white') + 
+  geom_point(shape = 21, size = 2.6, color = 'white', fill = 'white')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")+
+  coord_fixed()
+
+ggsave(fig.prevParams.genInt, 
+       file = paste(fig.path, "genint_prev_params.pdf", sep =""),
+       width = 5, height = 5)
+```
+
+
+```{r}
+target.properties <- c("have four legs", 
+                       "eat insects", 
+                       "eat garbage",
+                       #"feed on the carcasses of dead animals",
+                       "are afraid of loud noises",
+                       "get in fights with other animals",
+                       "live in urban areas",
+                       "know when earthquakes are about to happen",
+                       "get erections",
+                       "live in zoos",
+                       #"drink alcohol left behind by tourists",
+                       #"chase their tails",
+                       "have seizures")
+
+var_width <- 22
+
+fig.prevPriors.genInt <- df.prior.3.filtered.bs %>% ungroup() %>%
+  filter(property %in% target.properties) %>%
+  mutate(property = factor(property, levels = target.properties,
+                           labels = stringr::str_wrap(target.properties, 
+                                                      width = var_width))) %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, state) %>%
+  summarize( lower = quantile(prop, 0.025),
+             mean = mean(prop),
+             upper = quantile(prop, 0.975)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge(), color = 'white', fill= 'black')+
+  geom_errorbar(position = position_dodge(), color = 'white',
+                width= 0.036, alpha = 0.4 )+
+  facet_wrap(~property, nrow = 2) +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(-0, 0.8), breaks = c(0, 0.25, 0.5, 0.75))+
+  ylab("Proportion of responses")+
+  xlab("Prevalence")
+
+ggsave(fig.prevPriors.genInt, 
+       file = paste(fig.path, "genint_prev_dists_10.pdf", sep =""),
+       width = 9, height = 4)
+
+```
+
+
+```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
+load(file = "../../paper/cached_results/genInt_interpretation6_prior3_modelData.RData")
+
+
+fig.genint.interpretation.ci <- df.int.filtered %>%
+  mutate(property = factor(property, 
+                           levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = response))+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35,
+              colour = 'white')+
+  coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  scale_y_continuous(limits= c(0, 1), breaks = c(0, 0.5, 1))+
+  theme(axis.title.y = element_blank())+
+  ylab("Implied prevalence rating")
+
+ggsave(fig.genint.interpretation.ci, 
+       file = paste(fig.path, "genint_priates.pdf", sep =""),
+       width = 9, height = 10)
+```
+
+
+```{r}
+fig.genint.interpretation.modelss <- md.impprev %>% 
+  filter((parameter == "posterior") | (semantics == "uncertain")) %>%
+  mutate(src = paste(parameter, "_", semantics, sep =""),
+         src = factor(src, levels = c("prior_uncertain", "posterior_some",
+                                      "posterior_most", "posterior_uncertain"),
+                      labels = c("Prevalence prior mean",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"most" + noise\n(threshold = 0.5)',
+                                 'generic\n(uncertain threshold)'))) %>%
+  ggplot(., aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3, color = 'white')+
+  geom_errorbar(alpha = 0.3, color = 'white')+
+  geom_errorbarh(alpha = 0.3, color = 'white')+
+  geom_point(shape = 21, alpha = 1, fill = 'black',
+             color = 'white')+
+  facet_wrap(~src, nrow = 1)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()+
+  xlab("Model prediction")+
+  ylab("Human implied prevalence")
+fig.genint.interpretation.modelss
+
+ggsave(fig.genint.interpretation.modelss, 
+       file = paste(fig.path, "genint_modelscatters.pdf", sep =""),
+       width = 6, height = 4)
+```
+
+
