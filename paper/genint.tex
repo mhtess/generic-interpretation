@@ -1,4 +1,4 @@
-\documentclass[floatsintext,man]{apa6}
+\documentclass[floatsintext,doc]{apa6}
 
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -193,8 +193,7 @@ line.}
 \section{Introduction}\label{introduction}
 
 Learning from language is uniquely powerful because language can convey
-information that is abstract, difficult to observe, or information that
-otherwise does not have a way of being safely acquired (e.g., learning
+information that is difficult or dangerous to observe (e.g., learning
 that certain plants are poisonous, staring at the sun causes blindness;
 Gelman, 2009). The premier example of language's ability to transmit
 abstract knowledge comes in the form of statements that convey
@@ -207,7 +206,7 @@ Rosengren, Hartman, \& Pappas, 1998; Gelman, Goetz, Sarnecka, \& Flukes,
 2008; Gelman, Taylor, Nguyen, Leaper, \& Bigler, 2004), and learning
 from generics is thought to be central to conceptual development
 (Cimpian \& Markman, 2009; Gelman, 2004). Understanding how beliefs are
-updated from generic language is thus a central question in cognitive
+updated from generic language is thus an important question for cognitive
 science.
 
 Abelson and Kanouse (1966) argued that generics, \enquote{\ldots{}once
@@ -221,8 +220,7 @@ members (e.g., the percentage of bears that like to eat ants) was high
 (\(\sim 85\%\)). Similarly strong interpretations were reported using
 novel categories with biological properties (e.g., ``Lorches have purple
 feathers''; Cimpian, Brandone, \& Gelman, 2010, Expt. 1). The fact that
-generics seem to convey strong implications provides some explanations
-as to why social stereotypes get propagted and maintained (Rhodes,
+generics seem to convey strong implications may explain why social stereotypes are propagated and maintained (Rhodes,
 Leslie, \& Tworek, 2012).
 
 Do all generics carry strong implications? \enquote{Mosquitos carry
@@ -238,32 +236,34 @@ laying eggs). Using a similar implied prevalence task as Gelman et al.
 interpretations for features that could be construed as accidental
 (e.g., ``Crullets have fungus-covered claws''; see also Khemlani,
 Leslie, \& Glucksberg, 2009, 2012 for evidence for weak inferences from
-generics). Such property-specific interpretations have been explained as
-theory-based expectations (Cimpian, Gelman, \& Brandone, 2010; Leslie,
-2008; Prasada, Khemlani, Leslie, \& Glucksberg, 2013), but these notions
-have not been made sufficiently precise to provide a quantative,
-predictive account of how generics update beliefs. In addition, in these
+generics). 
+In these
 previous studies, the actual implied prevalence from \enquote{weak}
 generics is still quite high (in Cimpian et al., 2010 Expt. 3, mean
 implied prevalence \(= 70\%\)), leaving open the question of whether
 generics can actually have weak interpretations (e.g., minority
 interpretations: \(< 50\%\)).
+There are also open theoretical questions:
+property-specific generic interpretations have been explained as
+theory-based expectations (Cimpian, Gelman, \& Brandone, 2010; Leslie,
+2008; Prasada, Khemlani, Leslie, \& Glucksberg, 2013), but these notions
+have not been made sufficiently precise to provide a quantitive,
+predictive account of how beliefs will be updated given a specific generic statement. 
 
 Tessler and Goodman (under review) proposed a quantitative model of
-generic language, which combines the tools of formal semantics with a
-Bayesian model to show a generic statement can update a listener's prior
-beliefs. This model accounted for truth judgments (e.g., is
+generic language, which combines tools from formal semantics and Bayesian modeling. 
+This model accounted for truth judgments or endorsements (e.g., is
 \enquote{Mosquitos cary malaria} true or false?) about a wide range of
 linguistic stimuli including generics about animals, habitual statements
 about actions (e.g., \enquote{John runs}), and causal language (e.g.,
 \enquote{This herb makes animals sleepy}). This endorsement model is
-cast a speaker deciding whether or not to assert a generic statement to
-a naive listener, who is able to update its beliefs from the generic
-statement. The generic listener model, which provides a mapping from a
-generic statement to implied prevalence, is such a quantitative account
-of how generics update beliefs. This paper tests the predictions of this
-model. To do so, we also look for evidence for \emph{weak generics},
-which provide the strongest test of a unified quantitative account.
+cast as a speaker deciding whether or not to assert a generic statement to
+a listener, who will update her beliefs from the generic
+statement. The listener model used therein provides a mapping from a
+generic statement to implied prevalence---it is a quantitative account
+of how generics update beliefs. This paper tests the predictions of this listener
+model directly. In doing so, we also look for evidence for \emph{weak generics},
+which are predicted by the model and provide the strongest test of our unified quantitative account.
 
 The paper is organized as follows. First, we review Tessler and Goodman
 (under review)'s computational model of generic interpretation. In Expt.
@@ -273,12 +273,12 @@ interpretations. In Expt. 2, we extend these findings using a larger and
 more diverse stimulus set better able to test the quantitative
 predictions of our model and explore the existence of \enquote{weak
 generics}. In Expt. 3, we experimentally manipulate the background
-knowledge (the prevalence prior) and test its effect on interpretations
+knowledge (the feature prevalence prior distirbution) and test its effect on interpretations
 of novel generics. In each experiment, we compare our model's
-predictions to alternative models, finding that our quantitative model
-is best able to account for context-sensitive generic interpretations.
-Together, these results provide strong evidence for an quantitative
-understanding of generic language.
+predictions to alternative models, \ndg{say briefly what the alternative models are} finding that our quantitative model
+is best able to account for generic interpretations across conditions.
+Together, these results provide strong evidence for a quantitative
+understanding of generic language. \ndg{that last sentence sounds somewhat vacuous... rephrase to be more contentfull?}
 
 \section{Computational model}\label{computational-model}
 
@@ -286,7 +286,7 @@ Generic language conveys generalizations about categories (Carlson,
 1977; Leslie, 2008). Probability is a useful representation for human
 generalization from observational data (Shepard, 1987; Tenenbaum, Kemp,
 Griffiths, \& Goodman, 2011), and so it makes sense that probability
-would be at the core of the meaning of generalizations from language.
+would be at the core of the meaning of generalizations conveyed in language.
 Tessler and Goodman (under review) formalize such a hypothesis, positing
 that the semantics of generics has to do with probability but in an
 underspecified or vague way.
@@ -294,24 +294,24 @@ underspecified or vague way.
 Using the truth-functional tools of formal semantics (Montague, 1973),
 the literal meaning of a generic statement can be modeled as a threshold
 function operating on the prevalence \(r\) of the feature in the
-category (e.g., the proportion of mosquitos that carry malaria):
+category (e.g., the proportion of mosquitos that carry malaria) \ndg{might want to add the footnote that r doesn't have to be empirical frequency, but can be taken to be subjective probability?}:
 \(\denote{generic} = \{r > \theta\}\). The literal meaning of
 quantifiers can also be described by a threshold-function (e.g.,
 \(\denote{some} = \{r > 0\}\), \(\denote{most} = \{r > 0.5\}\),
 \(\denote{all} = \{r = 1\}\)). Tessler and Goodman (under review) posit
 that the corresponding threshold for the generic \(\theta\) is \emph{a
 priori} uncertain---formally, is drawn from a context-invariant, uniform
-prior distribution thresholds \(P(\theta)\)---and is resolved by
+prior distribution on thresholds \(P(\theta)\)---and is resolved by
 context.
 
-In order for a statement to update beliefs about prevalence, a listener
-must have prior beliefs about prevalence. To interpret a generic
+In order for a statement to update beliefs about prevalence in a given category, a listener
+must have prior beliefs about prevalence across categories. To interpret a generic
 sentence, a listener draws upon abstract knowledge about properties,
 formalized by a prior distribution over likely prevalence levels
-\(P(p)\).\footnote{Though not the direct focus of this work, the
+\(P(r)\).\footnote{Though not the direct focus of this work, the
   prevalence prior distribution can be seen as a relatively shallow
   formalization of theory-based expectations. Different theory-based
-  relationships between kinds and properties will give rise different
+  relationships between kinds and properties will give rise to different
   prior distributions over prevalence. The prevalence prior, thus, acts
   as a statistical layer between conceptual knowledge and natural
   language semantics.} Thus the quantitative model for generic
@@ -323,7 +323,7 @@ L(r, \theta \mid u) &\propto& {\delta_{\denote{u}(r, \theta)} \cdot P(r) \cdot P
 
 Formally, the truth-functional meaning is represented by the Kronecker
 delta function \(\delta_{\denote{u}(r, \theta)}\) that returns
-probabilities proportional to \(1\) when the utterance is true (i.e.,
+\(1\) when the utterance is true (i.e.,
 when \(r > \theta\)) and \(0\) otherwise.
 
 \begin{eqnarray}
@@ -345,9 +345,9 @@ model returns a non-uniform posterior that favors higher prevalence
 levels (Figure~\ref{fig:modelSimulations}B; top row, right-most column).
 This behavior is consistent with the intuition that, without strong
 background knowledge, generics imply that most or all of the category
-have the property.
+has the property.
 
-Context-sensitive interpretations come from different prior
+In this model, different interpretations come from different prior
 distributions over prevalence \(P(r)\). The prevalence prior for a
 purely abstract property may be given by a uniform distribution, while
 prevalence priors for familiar properties may display interesting
@@ -356,7 +356,7 @@ Figure~\ref{fig:modelSimulations}A shows hypothetical prevalence priors
 for the features \emph{fly} and \emph{carry malaria} as well as an
 abstract property \emph{Y} without structured background knowledge. The
 distribution over a biological property like \emph{fly} (which would
-give rise to interpreting generics like \enquote{Ducks fly}) is bimodal
+be used in interpreting generics like \enquote{Ducks fly}) is bimodal
 with modes near 0\% and 100\%, reflecting the idea that for an arbitrary
 category, it is likely that 0\% of them fly (e.g., dogs, rabbits,
 etc\ldots{}); however, among categories with at least some members who
@@ -375,13 +375,15 @@ The generic interpretation model balances the prior probability of
 different prevalence levels with the overall preference for higher
 prevalence levels (as described above), producing interpretations that
 appear similar to different quantified statements depending on the
-context (Figure~\ref{fig:modelSimulations}B). For the biological
+property in question (Figure~\ref{fig:modelSimulations}B). For the biological
 property prior, \enquote{Xs fly} is interpreted most similarly to
 \enquote{Most Xs fly} and not \enquote{Some Xs fly}. For the accidental
 property prior, \enquote{Xs carry malaria} is more similar to
 \enquote{Some Xs carry malaria} than \enquote{Most Xs carry malaria}. We
-test these context-sensitive interpretations in the following
+test these property-sensitive interpretations in the following
 experiments.
+
+\ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
 
 \begin{figure}
 \centering
@@ -410,7 +412,7 @@ elaborated the stimulus set from Cimpian et al. (2010) to include three
 types of biological properties: body parts (e.g., \emph{fur}), body
 parts of a particular color (e.g., \emph{yellow fur}) and body parts
 described with a vague adjective (e.g., \emph{curly fur}). Here, we
-empirically measure the prevalence priors using a structured prior
+empirically measure the prevalence priors for these properties using a structured prior
 elicitation task (Expt. 1a) and use our interpretation model to predict
 the prevalence implied by a generic statement about a novel category
 (e.g., \enquote{Wugs have yellow fur}; Expt. 1b).
@@ -449,6 +451,7 @@ interpretation model. We used eight exemplars of each of the three
 non-accidental properties (parts, colored parts, vague parts), and
 sixteen exemplars of accidental properties, building on a stimulus set
 from Cimpian et al. (2010).
+\ndg{list properties and other materials in appendix or supplement?}
 
 In previous work, we have found that prevalence priors are well-modeled
 by a mixture of two Beta distributions.\footnote{The Beta distribution
@@ -477,6 +480,8 @@ of null prevalence distribution and stable prevalence distribution
 \(P(\text{feature is present}) = P(r > 0)\)), and (2) prevalence among
 kinds where the property is present (\emph{prevalence when present} or
 \(P(r \mid r > 0)\))).
+
+\ndg{i feel like this part comes off as kind of complex and ad-hoc. how about waiting until next subsection to talk about betas, and here saying direct ellicitation is hard because there is generally a big component near zero, due to categories that lack any causal mechanism, so we to elicitation in two steps....}
 
 Participants were first introduced to a \enquote{data-collection robot}
 that was tasked with learning about properties of animals. Participants
@@ -542,7 +547,7 @@ r & \sim \begin{cases}
         \end{cases}
 \end{align}
 
-We assume participants' responses to both questions
+For data analysis, we assume participants' responses to both questions
 (\(i \in \{\text{Question 1}, \text{Question 2}\}\)) are generated from
 Beta distributions: \(d_{i} \sim \text{Beta}(\gamma_i, \xi_i)\), and put
 uninformative priors over the parameters of each:
@@ -577,7 +582,7 @@ predictions.}
 interpretation}\label{experiment-1b-generic-interpretation}
 
 This experiment measures the prevalence implied by a generic statement
-about a novel category in order to compare to the predictions of the
+about a novel category, which we then compare to the predictions of the
 generic interpretation model \(L(p \mid u)\) (Eq. \ref{eq:L0}).
 
 \subsubsection{Method}\label{method-1}
@@ -646,8 +651,8 @@ generic interpretation data. We embedded our generic interpretation
 model into the Bayesian data analysis model used to infer the priors; we
 used the joint cognitive--data-analytic model to predict both the
 prevalence prior data and the generic interpretation data
-simultaneously. We ran the model using 3 chains of an incrementalized
-version of MCMC for 750,000 iterations, the first 250,000 of which were
+simultaneously. \ndg{that last sentence may confuse people?}
+We ran the model using 3 chains of MCMC for 750,000 iterations, the first 250,000 of which were
 discarded for burn-in. Figure~\ref{fig:cimpian-modelingResults}B shows
 the generics model predictions and the human data for each of the four
 types of properties (collapsing across items within a property-type). We
@@ -659,14 +664,14 @@ between.
 We compare our generic interpretation to two lesioned versions of the
 model, both of which lack the uncertain threshold. The first is a model
 of the quantifier \enquote{some} which rules out the lowest possible
-prevalence level. The second is analagous to \enquote{most}, with a
+prevalence level. The second is analogous to \enquote{most}, with a
 threshold at 50\% prevalence. However, a fixed threshold at 50\% is a
 very restricted model; it places zero probability on any response less
 than 50\%. Because there are many ratings in the data set that are less
 than 50\%, we need to supplement the \enquote{most} model with an
 extrinsic noise process in order for this model to actually generate
 predictions for these data; with some probability, participants respond
-at random. We infer this probability for the \enquote{most} model from
+at random. We infer this noise probability parameter from
 the data.
 
 Figure~\ref{fig:cimpian-modelingResults}C shows the model predictions in
@@ -690,11 +695,13 @@ mean squared error (\(MSE =\) 0.00229).
 We replicated Cimpian et al. (2010)'s finding of a difference in the
 implied prevalence between biological properties (e.g., \emph{yellow
 fur}) and accidental properties (e.g., \emph{fungus-covered claws}). We
-extended these findings with a broader stimulus set, discovered even
+extended these findings with a broader stimulus set and discovered even
 more gradability in interpretations of generic statements. We
 empirically measured the prevalence priors and used our generic
 interpretation model to predict prevalence implied by a generic
 statement.
+
+\ndg{it might be worth playing up the fact that structured elicitation of prevalence knowledge gives us a more detailed handle on what differs between these kinds of properties?}
 
 The items that receive the lowest implied prevalence are those of
 accidental or diseased states (e.g., \emph{fungus-covered claws},
@@ -707,7 +714,7 @@ thus, remains a possibility that participants treat statements such as
 here-and-now, analagous to how \enquote{Dogs are on my front lawn}
 describes a particular state of affairs as opposed to something
 generalizable about dogs. We thus aim to replicate these findings of low
-prevalence interpretations using properties that more naturally lend
+prevalence interpretations in the next experiment, using properties that more naturally lend
 themselves to generic interpretation.
 
 \section{Experiment 2}\label{experiment-2}
@@ -715,9 +722,9 @@ themselves to generic interpretation.
 This experiment is designed to measure the prevalence implied by a
 generic about a diverse set of properties (Expt. 2b). In addition, we
 elicit participants' beliefs about the likely prevalence levels expected
-for these different properties (Expt. 2a). We use our computational
-model and alternative models together with the elicited prevalence
-priors to make predictions about the prevalence implied by a generic.
+for these different properties (Expt. 2a). We again use our computational
+model and alternative models, all using the elicited prevalence
+priors, to make predictions about the prevalence implied by a generic.
 
 \subsection{Experiment 2a: Prevalence prior
 elicitation}\label{experiment-2a-prevalence-prior-elicitation}
@@ -748,6 +755,8 @@ a menstrual cycle}), and other miscellaneous behaviors (e.g.,
 circus}); online sources about strange animal behaviors were consulted
 in order to find the more obscure properties.
 
+\ndg{materials in supplement / appendix}
+
 \paragraph{Procedure and materials}\label{procedure-and-materials-2}
 
 On the first trial, participants were asked to list three kinds of
@@ -756,7 +765,7 @@ birds, insects/bugs, amphibeans/reptiles. The five classes of animals
 were presented in a randomized order on the screen and there were three
 text boxes for each in which participants could type an animal kind. On
 subsequent trials, participants were shown a random subset of five
-animal kinds and asked how what percentage each of the categories they
+animal kinds and asked what percentage each of these categories they
 believed had a property (e.g., \enquote{Out of all of the cheetas in the
 world, what percentage do you think attack hikers?}). Pilot results
 indicated similar responses were generated by a question about frequency
@@ -765,6 +774,8 @@ hikers?}). Participants responded using a slider bar with endpoints
 labeled 0\% and 100\%, and the exact number corresponding to their
 slider bar rating was displayed once participants clicked on the slider
 bar. Each participant saw a random selection of twelve properties.
+
+\ndg{say something about why elicitation paradigm is different for this expt than last one? partly to give a non-parametric look at priors?}
 
 As an attention check, at the end of the prior elicitation trials,
 participants were asked to select, from a list of ten, all of the
@@ -860,7 +871,7 @@ percentage do you think \emph{F}?} (e.g., \enquote{Out of all of the
 javs on the planet, what percentage do you think attack hikers?}). Novel
 animal category names were mostly taken from Cimpian et al. (2010) and
 similar studies on generic language. Participants responded using a
-slider bar with endpoints labeled 0\% and 100\$, and the exact number
+slider bar with endpoints labeled 0\% and 100\%, and the exact number
 corresponding to their slider bar rating was displayed once participants
 clicked on the slider bar. Each participant completed thirty-five
 trials, corresponding to a random subset of the full stimulus set.
@@ -931,7 +942,9 @@ applying to 50\% of morseths (38 out of 64 give a response between 45\%
 and 55\%); however, some participants (10 of 64) rate this as applying
 to 100\% of morseths.\footnote{The scientifically correct term for this
   is actually an \enquote{estrous cycle}. We are grateful to one of our
-  MTurk participants for pointing this out to us.} This behavior could
+  MTurk participants for pointing this out to us.} 
+  
+  \ndg{move this to a discussion section:}This behavior could
 result from a participant interpreting the question as pragmatically
 restricting the domain to only the members of that category that
 \emph{could} have the property (e.g., 100\% of female morseths have a
@@ -954,7 +967,7 @@ Bayesian data analysis (BDA) model to jointly predict the prevalence
 prior data (Expt. 2a) and the generic interpretation data (Expt. 2b).
 Such a joint-inference mode allows us to retain the uncertainty in the
 measurement of the prevalence prior data when using it in our model to
-predict the implied prevalence results.
+predict the implied prevalence results. \ndg{that last sentence is very clarifying. put it (also) in expt 1 analysis section?}
 
 The joint cognitive-statistical model attempts to predict both data
 sources (prevalence prior and generic interpretation) simultaneously;
@@ -979,6 +992,8 @@ generate predictions for the generic interpretation data.\footnote{In
 generic interpretation model is fully specified by Eq. \ref{eq:L0} and
 has no free parameters. The model is implememented in the probabilistic
 programming language WebPPL (Goodman \& Stuhlmüller, 2014).
+
+\ndg{it seems like there is a lot of duplication between this data analysis section and that of expt 1, and also that it's kind of long given its location in the narrative. how about a section after model, before expts, outlining our data analysis approach (jointly modeling prior data and interpretation data using beta mixtures and such)?}
 
 To learn about the credible values of the parameters governing the
 prevalence priors as well as generate model predictions for the generic
@@ -1007,7 +1022,9 @@ responding according to their prior beliefs.
 We ran alternative interpretation models using the same data analytic
 approach (i.e., joint cognitive-statistical models) but which had access
 to only a single fixed-threshold rather the uncertain threshold of the
-generic interpretation model. These alternative models correspond to
+generic interpretation model.
+\ndg{similarly, a short section on alternative models at the end of the model section would save having to re-explain the alternatives each time, and give a better flow.}
+ These alternative models correspond to
 models of the quantifier \enquote{some} and \enquote{most} and provide
 strict tests of our generic interpretation model because they too have
 access to the full prior distribution over prevalence as well as the
@@ -1026,7 +1043,7 @@ too weak. Though the model explains a lot of the variance
 
 It is impossible for the model based on the quantifier \enquote{most} to
 accomodate these data: \emph{Most} has a strict threshold at 0.5 and
-thus assigns probability 0 to all responses less than 0.5. In order to
+thus assigns probability 0 to all responses less than 0.5. \ndg{you said this already in expt 1} In order to
 alleviate this issue, we endow the BDA model for \enquote{most} with a
 external noise parameter, which allows the model to randomly guess on
 some proportion of trial (the exact proportion is a parameter to be
@@ -1115,7 +1132,7 @@ Participants were familiarized with one of ten prevalence prior
 distributions, shown in Figure~\ref{fig:priorManipulationExpt}E). Nine
 of the ten distributions are bimodal with modes either at 0\%, 25\%,
 50\%, 75\%, or 100\%; the tenth distribution is uniform over all
-prevalence levels between 0\% and 100\%. The mixture component between
+prevalence levels between 0\% and 100\%. The mixture between
 the two modes was always 50\% (half of samples were from one mode and
 half from the other, as shown in
 Figure~\ref{fig:priorManipulationExpt}B).
@@ -1200,7 +1217,7 @@ observed in the \emph{weak or strong} distribution (25\% or 75\%) and to
 a lesser extent in the other bimodal distributions.
 
 Because our generic interpretation model has no free parameters, we use
-these empirically measured prevalence istributions to generate \emph{a
+these empirically measured prevalence distributions to generate \emph{a
 priori} model predictions using the generic interpretation data. To
 account for our uncertainty in the measurement of the prevalence priors,
 we bootstrap the priors by resampling subjects (with replacement),
@@ -1223,7 +1240,7 @@ Empirical distribution of responses for the prior elicitation task
 distributions, and empirical distributions of responses for the generic
 interpretation task (Expt. 3b). B: Model predicted means for several
 alternative models and empirical means. C: Same as B shown in
-scatterplot.}
+scatterplot. \ndg{why show both ways? also, fix label cut off in C.}}
 \end{figure}
 
 \subsection{Experiment 3b: Generic
@@ -1287,7 +1304,7 @@ model predicting responses with a fixed effect of the prior mean (as
 estimated by the data from Expt. 3a). There was a significant main
 effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\),
 \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship
-between the mean of the prevalence prior and the resulting
+between the mean of the learned prevalence prior and the resulting
 interpretations. Furthermore, there was a significant main effect of
 intercept, indicating that participants' responses were significantly
 greater than the mean of the corresponding prevalence priors
@@ -1307,7 +1324,7 @@ for which the bootstrapped 95\% confidence interval around the generics
 model predictions did not overlap
 (Figure~\ref{fig:priorManipulationResults}B, \enquote{generics model}
 panel). With those criteria in mind, we preregistered the following
-contrast predictions (\{\}s indicate no predicted difference): 0/25
+contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25
 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\)
 \{25/100, 50/100\} \(<\) \{75/100, 0/100\}. To evaluate these
 predictions, we built a Bayesian regression model with the relevant
@@ -1320,7 +1337,7 @@ differences, are shown in Table 1. Each of the five predicted positive
 differences were estimated to be greater than zero, and each of the four
 predicted null differences were not different from zero.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \begingroup\fontsize{9pt}{10pt}\selectfont
 \begin{tabular}{llrl}
@@ -1348,6 +1365,7 @@ The computational models we articulate do more than just predict the
 responses. To quantitatively compare the models in their ability to
 predict the empirical distributions of responses for these ten different
 conditions, we computed the likelihood of the data under each model.
+\ndg{also report correlation and MSE as before, or say why we don't do so. for that matter, we should say why we didn't do BFs for earlier expts?}
 Since the models have no free parameters, the ratio of these likelihood
 values corresponds to the \emph{Bayes Factor} (BF), which quantifies the
 evidence in favor of one model over another. To account for uncertainty
@@ -1381,10 +1399,12 @@ model with noise parameters smaller than 0.01. This is unsurprising
 given that the uncertain threshold model cannot predict responses of
 exactly 0\% prevalence, and decreasing the amount of assumed noise
 further penalizes the model for all the 0\% responses. The important
-result is that even little bit of noise (between 1-5\% of responses),
+result is that given even little bit of noise (between 1-5\% of responses),
 the uncertain threshold model is quantitatively the better model.
 
-\begin{table}[H]
+\ndg{shouldn't we be treating this noise as a param for BDA and integrating it out? (that should be easy if you just treat the noise vals you ran as a discrete approx.) it would simplify the explanation, since no need to talk about different noise levels...}
+
+\begin{table}[h]
 \centering
 \begingroup\fontsize{9pt}{10pt}\selectfont
 \begin{tabular}{ll}
@@ -1411,7 +1431,7 @@ been few quantitative studies of generics and no quantitative models
 that make predictions about how generic language is interpreted. Here we
 test a quantitative model on a broad set of quantitative data, including
 a replication data set from Cimpian et al. (2010). We find reliable,
-fine-grained, context-sensitive differences in interpretations, which
+fine-grained differences in interpretations across properties, which
 only our uncertain threshold model can account for. This work, thus,
 provides the computational formalism necessary to describe how beliefs
 are updated from generic language.
@@ -1422,6 +1442,11 @@ to the problem of generic interpretation can inform an answer to the
 problem of a parallel problem \emph{generic identification}, and
 speculate about the origins of context-sensitive generic
 interpretations.
+
+\ndg{people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).}
+
+
+\ndg{i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.}
 
 \subsection{Domain restriction}\label{domain-restriction}
 
@@ -1565,6 +1590,7 @@ probably via labeling, we may begin to represent multiple distributions
 in our prevalence priors. Such a development would predict that children
 start out interpreting all generics as strong generics, and that the
 understanding of weak generics is later developing ability.
+
 
 \subsection{Conclusion}\label{conclusion}
 

@@ -6,3 +6,4 @@ mturk/
 models/node_modules/utils/node_modules
 paper/*pdf
 paper/*tex
+packrat/lib*/
