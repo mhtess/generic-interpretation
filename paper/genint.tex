@@ -385,6 +385,11 @@ experiments.
 
 \ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
 
+
+\ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.}
+
+\ndg{see comments below that we should have brief discussions of joint BDA analysis strategy and of alternative models up here, to avoid duplication and make the expt sections smoother.}
+
 \begin{figure}
 \centering
 \includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
@@ -1006,6 +1011,8 @@ of three Beta distributions. Often one Beta distribution is devoted to
 accounting for the very small numbers (0\% or near 0\% prevalence
 ratings), while the two other components model the other parts of the
 distribution, the details of which depend upon the property.
+
+\ndg{we should have a brief result reporting the posterior predictive check on the priors data? ie how well does our joint data analysis accommodate the empirical patterns in the prevalence priors.}
 
 As a first attempt to understand the implied prevalence data in a
 quantitative way, we compare the means of the inferred prevalence priors
