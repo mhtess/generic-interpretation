@@ -235,6 +235,10 @@ We test these property-sensitive interpretations in the following experiments.
 
 \ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
 
+\ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.}
+
+\ndg{see comments below that we should have brief discussions of joint BDA analysis strategy and of alternative models up here, to avoid duplication and make the expt sections smoother.}
+
 <!-- Considering different fixed-thresholds in conjunction with structured background knowledge also illuminates the unique behavior of the uncertain threshold model. -->
 
 <!-- The literal interpretation of the quantifier "some" (threshold = 0.01) rules out only the lowest prevalence levels, returning an intuitively compelling interpretation for "Xs carry malaria" (*very few Xs carry malaria*); however, even given strong prior knowledge about the distribution of the property *fly*, "Some Xs fly" leaves open the possibility that very few Xs fly -->
@@ -385,7 +389,7 @@ Our model of generic interpretation (Eq. \ref{eq:L0}) predicts that the interpre
 @Cimpian2010 found a difference in the implied prevalence between biological properties (e.g., *yellow fur*) and accidental properties (e.g., *fungus-covered claws*).
 Classic work in generalization suggests beliefs about the prevalence of properties include relatively fine distinctions among properties that are all biological in nature [@Nisbett1983].
 For this reason, we elaborated the stimulus set from @Cimpian2010 to include three types of biological properties: body parts (e.g., *fur*), body parts of a particular color (e.g., *yellow fur*) and body parts described with a vague adjective (e.g., *curly fur*). 
-Here, we empirically measure the prevalence priors using a structured prior elicitation task (Expt. 1a) and use our interpretation model to predict the prevalence implied by a generic statement about a novel category (e.g., "Wugs have yellow fur"; Expt. 1b). 
+Here, we empirically measure the prevalence priors for these properties using a structured prior elicitation task (Expt. 1a) and use our interpretation model to predict the prevalence implied by a generic statement about a novel category (e.g., "Wugs have yellow fur"; Expt. 1b). 
 
 <!-- %We also coded the accidental properties from Expt.~2a as either ``common'' or ``rare'' using a by-item median split based on \emph{a priori} expected prevalence when present. -->
 <!-- %Most of the materials we used were from \citeauthor{Cimpian2010}.  -->
@@ -414,6 +418,7 @@ We constructed a stimulus set of forty different properties to explore a wide ra
 These items make up four categories of properties: body parts (e.g., *fur*), body parts of a particular color (e.g., *yellow fur*), body parts described with a vague adjective (e.g., *curly fur*), and body parts with in an accidental or disease state (e.g., *wet fur*).
 Because pilot testing revealed more variability for items in the accidental category relative to the other types of properties, we used twice as many exemplars of accidental properties, yielding a more thorough test of the quantitative predictive power of the generic interpretation model. 
 We used eight exemplars of each of the three non-accidental properties (parts, colored parts, vague parts), and sixteen exemplars of accidental properties, building on a stimulus set from @Cimpian2010.
+\ndg{list properties and other materials in appendix or supplement?}
 <!-- All materials are shown in Table X of the Appendix. -->
 
 In previous work, we have found that prevalence priors are well-modeled by a mixture of two Beta distributions. ^[
@@ -426,6 +431,7 @@ This "null distribution" is potentially present for all features in exactly the 
 The second distribution represents kinds of animals who *do have* such a mechanism; we cannot specify the parameters of this second distribution *a priori* as they are likely different for different properties.
 Finally, the relative contribution of these two component distributions can also not be specified *a priori*. 
 Thus, we create an elicitation task to measure these two aspects of the prior: (1) the relative contributions of null prevalence distribution and stable prevalence distribution (i.e., the mixture parameter, or $P(\text{feature is present}) = P(r > 0)$), and (2) prevalence among kinds where the property is present (*prevalence when present* or $P(r \mid r > 0)$)). 
+\ndg{i feel like this part comes off as kind of complex and ad-hoc. how about waiting until next subsection to talk about betas, and here saying direct ellicitation is hard because there is generally a big component near zero, due to categories that lack any causal mechanism, so we to elicitation in two steps....}
 
 Participants were first introduced to a "data-collection robot" that was tasked with learning about properties of animals. 
 Participants were told the robot randomly selected an animal from its memory to ask the participant about (e.g., The robot says: "We recently discovered animals called feps."). 
@@ -463,7 +469,7 @@ r & \sim \begin{cases}
 		\end{cases}
 \end{align}
 
-We assume participants' responses to both questions ($i \in \{\text{Question 1}, \text{Question 2}\}$) are generated from Beta distributions: $d_{i} \sim \text{Beta}(\gamma_i, \xi_i)$, and put uninformative priors over the parameters of each: $\gamma_i \sim \text{Uniform}(0, 1); \xi_i \sim \text{Uniform}(0, 100)$. 
+For data analysis, we assume participants' responses to both questions ($i \in \{\text{Question 1}, \text{Question 2}\}$) are generated from Beta distributions: $d_{i} \sim \text{Beta}(\gamma_i, \xi_i)$, and put uninformative priors over the parameters of each: $\gamma_i \sim \text{Uniform}(0, 1); \xi_i \sim \text{Uniform}(0, 100)$. 
 We implemented this Bayesian mixture-model in the probabilistic programming language WebPPL [@dippl].
 To learn about the credible values of the parameters of the model, we ran MCMC on each item independently for 100,000 iterations, discarding the first 50,000 for burn-in.
 
@@ -567,7 +573,7 @@ cowplot::plot_grid(
 
 ## Experiment 1b: Generic interpretation
 
-This experiment measures the prevalence implied by a generic statement about a novel category in order to compare to the predictions of the generic interpretation model $L(p \mid u)$ (Eq. \ref{eq:L0}).
+This experiment measures the prevalence implied by a generic statement about a novel category, which we then compare to the predictions of the generic interpretation model $L(p \mid u)$ (Eq. \ref{eq:L0}).
 
 <!-- %The full cover story is described in {\it SI Section C} and is the same for Expt.~2c. -->
 
@@ -732,17 +738,18 @@ cowplot::plot_grid(
 
 We now test the quantitative predictions of the model. 
 We use the prevalence priors inferred from Expt. 1a's structured elicitation task as the prevalence prior $P(r)$ in Eq. \ref{eq:L0} to predict the generic interpretation data.
-We embedded our generic interpretation model into the Bayesian data analysis model used to infer the priors; we used the joint cognitive--data-analytic model to predict both the prevalence prior data and the generic interpretation data simultaneously.
-We ran the model using 3 chains of an incrementalized version of MCMC for 750,000 iterations, the first 250,000 of which were discarded for burn-in. 
+We embedded our generic interpretation model into the Bayesian data analysis model used to infer the priors; we used the joint cognitive--data-analytic model to predict both the prevalence prior data and the generic interpretation data simultaneously. \ndg{that last sentence may confuse people?}
+We ran the model using 3 chains of MCMC for 750,000 iterations, the first 250,000 of which were discarded for burn-in. 
 Figure\ \@ref(fig:cimpian-modelingResults)B shows the generics model predictions and the human data for each of the four types of properties (collapsing across items within a property-type).
 We see that the model displays the same sensitivity to the kind of property: Generics about body parts are interpreted the strongest, accidental properties the weakest, with the other two types falling in between.
 
 We compare our generic interpretation to two lesioned versions of the model, both of which lack the uncertain threshold. 
 The first is a model of the quantifier "some" which rules out the lowest possible prevalence level.
-The second is analagous to "most", with a threshold at 50% prevalence. 
+The second is analogous to "most", with a threshold at 50% prevalence. 
 However, a fixed threshold at 50% is a very restricted model; it places zero probability on any response less than 50%. 
 Because there are many ratings in the data set that are less than 50%,  we need to supplement the "most" model with an extrinsic noise process in order for this model to actually generate predictions for these data; with some probability, participants respond at random.
-We infer this probability for the "most" model from the data.
+at random. 
+We infer this noise probability parameter from the data.
 
 Figure\ \@ref(fig:cimpian-modelingResults)C shows the model predictions in the comparison to the behavioral data for each item independently for the generics model, the two alternative fixed threshold models, and the prevalence prior mean.
 The alternative models' defects are apparent visually. 
@@ -757,19 +764,21 @@ Finally, the uncertain threshold generic interpretation model explains practical
 ## Discussion
 
 We replicated @Cimpian2010's finding of a difference in the implied prevalence between biological properties (e.g., *yellow fur*) and accidental properties (e.g., *fungus-covered claws*).
-We extended these findings with a broader stimulus set, discovered even more gradability in interpretations of generic statements. 
+We extended these findings with a broader stimulus set and discovered even more gradability in interpretations of generic statements. 
 We empirically measured the prevalence priors and used our generic interpretation model to predict prevalence implied by a generic statement.
+
+\ndg{it might be worth playing up the fact that structured elicitation of prevalence knowledge gives us a more detailed handle on what differs between these kinds of properties?}
 
 The items that receive the lowest implied prevalence are those of accidental or diseased states (e.g., *fungus-covered claws*, *broken legs*). 
 As @Cimpian2010 noted, "properties of this type do not lend themselves very well to generic predication (Cimpian & Markman, 2008; Gelman, 1988), so generics about broken legs, itchy skin, etc. are infrequent outside the laboratory." (p.1472)
 It, thus, remains a possibility that participants treat statements such as "Lorches have broken legs" as an existential claim about the here-and-now, analagous to how "Dogs are on my front lawn" describes a particular state of affairs as opposed to something generalizable about dogs. 
-We thus aim to replicate these findings of low prevalence interpretations using properties that more naturally lend themselves to generic interpretation. 
+We thus aim to replicate these findings of low prevalence prevalence interpretations in the next experiment, using properties that more naturally lend themselves to generic interpretation.
 
 # Experiment 2
 
 This experiment is designed to measure the prevalence implied by a generic about a diverse set of properties (Expt. 2b). 
 In addition, we elicit participants' beliefs about the likely prevalence levels expected for these different properties (Expt. 2a). 
-We use our computational model and alternative models together with the elicited prevalence priors to make predictions about the prevalence implied by a generic.
+We again use our computational model and alternative models, all using the elicited prevalence priors, to make predictions about the prevalence implied by a generic.
 
 ## Experiment 2a: Prevalence prior elicitation
 
@@ -801,15 +810,18 @@ The experiment took on average `r round(df.prior.3.filtered.meanTime$mean_time, 
 
 We created a stimulus set composed of seventy-five properties.
 Items were generated by the first author by considering six different classes of properties: physical characteristics (e.g., *have brown spots*, *have four legs*), psychological characteristics (e.g., *experience emotions*), dietary habits (e.g., *eat human food*), habitat (e.g., *live in zoos*), disease (e.g., *get cancer*, *carry malaria*), reproductive behavior (e.g., *have a menstrual cycle*), and other miscellaneous behaviors (e.g., *pound their chests to display dominance*, *perform in the circus*); online sources about strange animal behaviors were consulted in order to find the more obscure properties. 
+\ndg{materials in supplement / appendix}
 
 #### Procedure and materials
 
 On the first trial, participants were asked to list three kinds of animals for each of five different classes of animals: mammals, fish, birds, insects/bugs, amphibeans/reptiles. 
 The five classes of animals were presented in a randomized order on the screen and there were three text boxes for each in which participants could type an animal kind.
-On subsequent trials, participants were shown a random subset of five animal kinds and asked how what percentage each of the categories they believed had a property (e.g., "Out of all of the cheetas in the world, what percentage do you think attack hikers?").
+On subsequent trials, participants were shown a random subset of five animal kinds and asked what percentage each of these categories they believed had a property (e.g., "Out of all of the cheetas in the world, what percentage do you think attack hikers?").
 Pilot results indicated similar responses were generated by a question about frequency (e.g., "Out of 100 cheetahs, how many do you think attack hikers?").
 Participants responded using a slider bar with endpoints labeled 0% and 100%, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
 Each participant saw a random selection of twelve properties.
+
+\ndg{say something about why elicitation paradigm is different for this expt than last one? partly to give a non-parametric look at priors?}
 
 As an attention check, at the end of the prior elicitation trials, participants were asked to select, from a list of ten, all of the properties they could remember being tested on. 
 The list included five properties that they had been tested on and five distractors. 
@@ -954,7 +966,7 @@ On each trial, they would be told facts about the new animals and be asked to tr
 On each trial, participants read "You are told: *generic sentence*", where the generic sentence was a bare plural statement about a familiar property $F$ applying to a novel animal category $K$ (e.g., "Javs attack hikers").
 They were then asked "Out of all of the *K*s on the planet, what percentage do you think *F*?" (e.g., "Out of all of the javs on the planet, what percentage do you think attack hikers?").
 Novel animal category names were mostly taken from @Cimpian2010 and similar studies on generic language. 
-Participants responded using a slider bar with endpoints labeled 0% and 100$, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
+Participants responded using a slider bar with endpoints labeled 0% and 100%, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
 Each participant completed thirty-five trials, corresponding to a random subset of the full stimulus set.
 
 After the generic interpretation trials, participants completed the same memory check trial as was done in the prior elicitation. 
@@ -1019,6 +1031,7 @@ Several properties about the reproductive behavior of animals have interpretatio
 For example, "Morseths have a menstrual cycle" is interpreted primarily as applying to 50% of morseths (`r sum(with(filter(df.int.filtered, property == "have a menstrual cycle"), ((response < 0.55) & (response > 0.45))))` out of `r length(with(filter(df.int.filtered, property == "have a menstrual cycle"), response))` give a response between 45% and 55%); however, some participants (`r sum(with(filter(df.int.filtered, property == "have a menstrual cycle"), response ==1 ))` of `r length(with(filter(df.int.filtered, property == "have a menstrual cycle"), response))`) rate this as applying to 100% of morseths.^[
   The scientifically correct term for this is actually an "estrous cycle". We are grateful to one of our MTurk participants for pointing this out to us. 
 ]
+\ndg{move this to a discussion section:}
 This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that *could* have the property (e.g., 100% of female morseths have a menstrual cycle).
 We notice this bimodal interpretation in our prevalence elicitation task (Expt. 2a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0% (the animals that don't have a menstrual cycle), 50% ("only females") and 100% (perhaps, "all females").
 The fact that this multi-modality appears in the prior elicitation task as well means that the generic interpretation model will be well-positioned to predict a bi-modal distribution for the implied prevalence data.
@@ -1027,7 +1040,8 @@ The fact that this multi-modality appears in the prior elicitation task as well 
 
 Our primary analysis concerns how well the uncertain threshold generic interpretation model can accomodate the implied prevalence data in comparison to alternative models. 
 To fit these models, we construct a Bayesian data analysis (BDA) model to jointly predict the prevalence prior data (Expt. 2a) and the generic interpretation data (Expt. 2b). 
-Such a joint-inference mode allows us to retain the uncertainty in the measurement of the prevalence prior data when using it in our model to predict the implied prevalence results. 
+Such a joint-inference model allows us to retain the uncertainty in the measurement of the prevalence prior data when using it in our model to predict the implied prevalence results. 
+\ndg{that last sentence is very clarifying. put it (also) in expt 1 analysis section?}
 
 The joint cognitive-statistical model attempts to predict both data sources (prevalence prior and generic interpretation) simultaneously; the former is modeled as a mixture of three Beta distributions and the latter is modeled by our generic interpretation model (Eq. \ref{eq:L0}).
 Beta is an appropriate choice for the prevalence prior data because it is a distribution over numbers on the unit interval (the same as our slider ratings), and we allow each individual property's prevalence prior to be composed of up to three constituent Betas to allow the statistical model the flexibility to accomodate the complex prevalence prior distributions.
@@ -1039,21 +1053,26 @@ The inferred prevalence prior distributions are then used as $P(r)$ in Eq. \ref{
 The generic interpretation model is fully specified by Eq. \ref{eq:L0} and has no free parameters.
 The model is implememented in the probabilistic programming language WebPPL [@dippl].
 
+\ndg{it seems like there is a lot of duplication between this data analysis section and that of expt 1, and also that it's kind of long given its location in the narrative. how about a section after model, before expts, outlining our data analysis approach (jointly modeling prior data and interpretation data using beta mixtures and such)?}
+
 To learn about the credible values of the parameters governing the prevalence priors as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on the model by running three chains of an incrementalized version of MCMC [@Ritchie2016] for 750,000 iterations, removing the first 250,000 iterations for burn-in.
 A qualitative examination showed that the prevalence prior distributions were well-modeled as a mixture of three Beta distributions. 
 Often one Beta distribution is devoted to accounting for the very small numbers (0% or near 0% prevalence ratings), while the two other components model the other parts of the distribution, the details of which depend upon the property.
+
+\ndg{we should have a brief result reporting the posterior predictive check on the priors data? ie how well does our joint data analysis accommodate the empirical patterns in the prevalence priors.}
 
 As a first attempt to understand the implied prevalence data in a quantitative way, we compare the means of the inferred prevalence priors to the empirical means of the implied prevalence data (Figure\ \@ref(fig:genint-modelingResults)B top facet).
 The means of the prevalence prior distributions do a rather poor job at predicting the implied prevalence ratings, consistently underpredicting the ratings ($r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "prior")[["mse"]], digits = 2)`$).
 The fact that the prevalence prior data does not fit the generic interpretation data is good evidence that participants are actually *updating* their beliefs about the property in the generic interpretation task, as opposed to simply responding according to their prior beliefs.
 
 We ran alternative interpretation models using the same data analytic approach (i.e., joint cognitive-statistical models) but which had access to only a single fixed-threshold rather the uncertain threshold of the generic interpretation model. 
+\ndg{similarly, a short section on alternative models at the end of the model section would save having to re-explain the alternatives each time, and give a better flow.}
 These alternative models correspond to models of the quantifier "some" and "most" and provide strict tests of our generic interpretation model because they too have access to the full prior distribution over prevalence as well as the flexibility endowed by the Bayesian data analysis method.
 Figure\ \@ref(fig:genint-modelingResults)B shows each of the alternative model's predictions (technically, the BDA models' posterior predictive distributions) for the mean implied prevalence of each of the seventy-novel generic sentences, in comparison to the empirical means. 
 We see that the model based on quantifier "some" (i.e., a fixed threshold at the lowest possible value) consistently *underpredicts* the implied prevalence, consistent with the intuition that assigning the semantics of "some" for generics is too weak.
 Though the model explains a lot of the variance $r^2(`r filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["r2"]]`$, it does so with a relatively high mean squared error $MSE = `r format(filter(md.impprev.stats, semantics == "some", parameter == "posterior")[["mse"]], digits = 2)`$.
 
-It is impossible for the model based on the quantifier "most" to accomodate these data: *Most* has a strict threshold at 0.5 and thus assigns probability 0 to all responses less than 0.5.
+It is impossible for the model based on the quantifier "most" to accomodate these data: *Most* has a strict threshold at 0.5 and thus assigns probability 0 to all responses less than 0.5. \ndg{you said this already in expt 1}
 In order to alleviate this issue, we endow the BDA model for "most" with a external noise parameter, which allows the model to randomly guess on some proportion of trial (the exact proportion is a parameter to be inferred from the data).
 The "most" model assigns `r format_empirical_ci(m.samp.most.noise, "MAP", "cred_lower", "cred_upper")` proportion of the data to be noise, because of the high prevalence of minority (i.e., less than 50%) interpretations. 
 A model based on the semantics for "most" is not well-suited for these data $r^2(`r filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["n"]]`) = `r filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["r2"]]`$,  $MSE = `r format(filter(md.impprev.stats, semantics == "most", parameter == "posterior")[["mse"]], digits = 2)`$.
@@ -1140,7 +1159,7 @@ To focus on the influence of our prior manipulation cover story (described below
 
 Participants were familiarized with one of ten prevalence prior distributions, shown in Figure\ \@ref(fig:priorManipulationExpt)E). 
 Nine of the ten distributions are bimodal with modes either at 0%, 25%, 50%, 75%, or 100%; the tenth distribution is uniform over all prevalence levels between 0% and 100%.
-The mixture component between the two modes was always 50% (half of samples were from one mode and half from the other, as shown in Figure\ \@ref(fig:priorManipulationExpt)B).
+The mixture between the two modes was always 50% (half of samples were from one mode and half from the other, as shown in Figure\ \@ref(fig:priorManipulationExpt)B).
 
 #### Procedure
 
@@ -1277,15 +1296,14 @@ These distributions clearly reflect the familiarization distributions supplied t
 The distribution that is most different from the familiarization distribution is the uniform distribution; the empirical predicted distribution is more unimodal with a peak at 50%. 
 Many distributions exhibit a regression to the mean in some participants' predictions: In the *rare or deterministic* distribution (which featured prevalence levels either around 0% or 100%), some participants guess that the next animal will have 50% prevalence; a similar phenomenon can be observed in the *weak or strong* distribution (25% or 75%) and to a lesser extent in the other bimodal distributions. 
 
-Because our generic interpretation model has no free parameters, we use these empirically measured prevalence istributions to generate *a priori* model predictions using the generic interpretation data.
+Because our generic interpretation model has no free parameters, we use these empirically measured prevalence distributions to generate *a priori* model predictions using the generic interpretation data.
 To account for our uncertainty in the measurement of the prevalence priors, we bootstrap the priors by resampling subjects (with replacement), calculating the empirical prevalence distributions (by binning, as above), and generating model predictions. 
 We repeated this procedure 10,000 times to generate distributions of predictions.
 The boostrapped mean and 95% quantiles for each prevalence bin in each distribution are shown in Figure\ \@ref(fig:priorManipulationResults)A (middle row).
 We see that context-sensitive interpretations are predicted, with idiosyncracies that reflect empirically measured distributions.
 We then tested these predictions against interpretations in the same empirical paradigm.
 
-
-```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means. C: Same as B shown in scatterplot.", fig.width = 13.5,fig.asp = 0.6}
+```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means. C: Same as B shown in scatterplot.  \ndg{why show both ways? also, fix label cut off in C.}}", fig.width = 13.5,fig.asp = 0.6}
 load(file = "cached_results/gentInt_manipPriors_dists_expvals.RData")
 # md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
 #      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
@@ -1457,7 +1475,7 @@ Our main qualitative hypothesis is that there would be a difference across condi
 The differences in interpretations are evident in the empirical distributions of responses (Figure \@ref(fig:priorManipulationResults)A, bottom row).
 More specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
 To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 3a).
-There was a significant main effect of prior mean, with a coefficient close to 1 ($\beta_1 = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "t value"]]`$), indicating a strong linear relationship between the mean of the prevalence prior and the resulting interpretations.
+There was a significant main effect of prior mean, with a coefficient close to 1 ($\beta_1 = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "t value"]]`$), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations.
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors ($\beta_0 = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "t value"]]`$).
 These results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
 There is a lot more to be learned from these data, however; this simple linear model explains less than a quarter of the variance in the data $r^2 = `r rs.lm.priorManip.summ[["r.squared"]]`$.
@@ -1465,7 +1483,7 @@ There is a lot more to be learned from these data, however; this simple linear m
 From the generics model, we are able to make a number of *a priori* predictions about quantitative differences in mean implied prevalence ratings across the ten conditions. 
 These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95% confidence interval around the generics model predictions did not overlap (Figure\ \@ref(fig:priorManipulationResults)B, "generics model" panel).
 <!-- For example, Figure\ \@ref(fig:priorManipulationResults)B ("generics model" panel) -->
-With those criteria in mind, we preregistered the following contrast predictions (\{\}s indicate no predicted difference): 0/25 $<$ \{25/50, 0/50\} $<$ \{25/75, *uniform*\} $<$ 25/75 $<$ \{25/100, 50/100\}  $<$ \{75/100, 0/100\}.
+With those criteria in mind, we preregistered the following contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25 $<$ \{25/50, 0/50\} $<$ \{25/75, *uniform*\} $<$ 25/75 $<$ \{25/100, 50/100\}  $<$ \{75/100, 0/100\}.
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a "zero and one inflated beta" linking function to appropriately model the responses of exactly 0% and 100%, which are undefined under the beta distribution.
 The maximum a-posteriori estimates and 95% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 1.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
@@ -1525,6 +1543,7 @@ print(brm.table1, type="latex", comment = F, table.placement = "H", size="\\font
 
 The computational models we articulate do more than just predict the *mean* implied prevalence; they predict the full distribution of responses.
 To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model.
+\ndg{also report correlation and MSE as before, or say why we don't do so. for that matter, we should say why we didn't do BFs for earlier expts?}
 Since the models have no free parameters, the ratio of these likelihood values corresponds to the *Bayes Factor* (BF), which quantifies the evidence in favor of one model over another. 
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
 
@@ -1538,7 +1557,9 @@ We calculate Bayes Factors under a variety of different "noise" probabilities (n
 For all noise probabilities, the uncertain threshold model is preferred over each of the fixed threshold models (Table 2 shows the BFs assuming a noise parameter of 0.05). 
 In comparison to the prior only model, however, the uncertain threshold is equally as good at predicting the data with a noise parameter of 0.01, and the prior is the preferred model with noise parameters smaller than 0.01. 
 This is unsurprising given that the uncertain threshold model cannot predict responses of exactly 0% prevalence, and decreasing the amount of assumed noise further penalizes the model for all the 0% responses.
-The important result is that even little bit of noise (between 1-5% of responses), the uncertain threshold model is quantitatively the better model.
+The important result is that given even a little bit of noise (between 1-5% of responses), the uncertain threshold model is quantitatively the better model.
+
+\ndg{shouldn't we be treating this noise as a param for BDA and integrating it out? (that should be easy if you just treat the noise vals you ran as a discrete approx.) it would simplify the explanation, since no need to talk about different noise levels...}
 
 <!-- For all noise probabilities greater than 0.01, the uncertain threshold model is the preferred model by  -->
 <!-- The conclusions derived from the Bayes Factors are unchanged under different noise probabilities.    -->
@@ -1585,11 +1606,15 @@ Much of what we come to learn about the world comes from other people, often exp
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language.
 Despite its ubiquity and relative morphosyntactic simplicity, there have been few quantitative studies of generics and no quantitative models that make predictions about how generic language is interpreted.
 Here we test a quantitative model on a broad set of quantitative data, including a replication data set from @Cimpian2010.
-We find reliable, fine-grained, context-sensitive differences in interpretations, which only our uncertain threshold model can account for.
+We find reliable fine-grained differences in interpretations across properties, which only our uncertain threshold model can account for.
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
 
 In what follows, we relate our account to a related kind of account based on the idea of *domain restriction*, discuss how our answer to the problem of generic interpretation can inform an answer to the problem of a parallel problem *generic identification*, and speculate about the origins of context-sensitive generic interpretations.
 <!-- - Finer points about the data? Discussion of explanation data? Have relationship to DR theories come here? -->
+
+\ndg{people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).}
+
+\ndg{i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.}
 
 ## Domain restriction
 
