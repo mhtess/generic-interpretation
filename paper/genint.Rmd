@@ -179,17 +179,21 @@ Together, these results provide strong evidence that generics update beliefs in 
 # Computational model
 
 Generic language conveys generalizations about categories [@Carlson1977; @Leslie2008].
-Probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], and so it makes sense that probability would be at the core of the meaning of generalizations from language. 
+Probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], and so it makes sense that probability would be at the core of the meaning of generalizations conveyed in language. 
 @TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics has to do with probability but in an underspecified or vague way.
 
-Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $r$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{r > \theta\}$.
+Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $r$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{r > \theta\}$.^[
+  The prevalence $r$ should be thought as a "prevalence in the mind", or a subjective degree of belief about the property in the category, which may not accurately track the empirical frequency.
+]
 The literal meaning of quantifiers can also be described by a threshold-function (e.g., $\denote{some} = \{r > 0\}$, $\denote{most} = \{r > 0.5\}$, $\denote{all} = \{r = 1\}$).
-@TesslerLangGenUnderReview posit that the corresponding threshold for the generic $\theta$ is *a priori* uncertain---formally, is drawn from a context-invariant, uniform prior distribution thresholds $P(\theta)$---and is resolved by context. 
+@TesslerLangGenUnderReview posit that the corresponding threshold for the generic $\theta$ is *a priori* uncertain---formally, is drawn from a context-invariant, uniform prior distribution on thresholds $P(\theta)$---and is resolved by context.^[
+  Of course, different threshold distributions could be learned over time for different properties. The choice of a uniform distribution here is to explore how well context-sensitive generic interpretations  can be modeled by differences in corresponding prior beliefs about properties, without having to posit semantic differences between different generic sentences.
+]
 
-In order for a statement to update beliefs about prevalence, a listener must have prior beliefs about prevalence.
-To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(p)$. ^[
+In order for a statement to update beliefs about prevalence in a given category, a listener must have prior beliefs about prevalence across categories.
+To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(r)$. ^[
   Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively shallow formalization of theory-based expectations. 
-  Different theory-based relationships between kinds and properties will give rise different prior distributions over prevalence. 
+  Different theory-based relationships between kinds and properties will give rise to different prior distributions over prevalence. 
   The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
 ]
 Thus the quantitative model for generic interpretation is given by:
@@ -198,7 +202,7 @@ Thus the quantitative model for generic interpretation is given by:
 L(r, \theta \mid u) &\propto& {\delta_{\denote{u}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0}
 \end{eqnarray}
 
-Formally, the truth-functional meaning is represented by the Kronecker delta function  $\delta_{\denote{u}(r, \theta)}$ that returns probabilities proportional to $1$ when the utterance is true (i.e., when $r > \theta$) and $0$ otherwise.
+Formally, the truth-functional meaning is represented by the Kronecker delta function  $\delta_{\denote{u}(r, \theta)}$ that returns $1$ when the utterance is true (i.e., when $r > \theta$) and $0$ otherwise.
 
 \begin{eqnarray}
 \delta_{\denote{u_{gen}}(r, \theta)} &\propto  & \begin{cases}
@@ -212,22 +216,24 @@ Given a particular value of $\theta$, the literal semantics rules out all preval
 With a uniform prior over prevalence ($P(r) = \text{Uniform}(0, 1)$), the posterior on prevalence will be uniform over all prevalence levels above $\theta$ (Figure\ \@ref(fig:modelSimulations)B; top row).
 Because higher prevalence levels are consistent with more thresholds, the generic interpretation model returns a non-uniform posterior that favors higher prevalence levels (Figure\ \@ref(fig:modelSimulations)B; top row, right-most column).
 <!-- , which has uncertainty over the threshold and marginalizes over different possible thresholds,  -->
-This behavior is consistent with the intuition that, without strong background knowledge, generics imply that most or all of the category have the property.
+This behavior is consistent with the intuition that, without strong background knowledge, generics imply that most or all of the category has the property.
 
-Context-sensitive interpretations come from different prior distributions over prevalence $P(r)$.
+In this model, different interpretations come from different prior distributions over prevalence $P(r)$.
 The prevalence prior for a purely abstract property may be given by a uniform distribution, while prevalence priors for familiar properties may display interesting structure reflecting domain-specific beliefs about the property.
 Figure\ \@ref(fig:modelSimulations)A shows hypothetical prevalence priors for the features *fly* and *carry malaria* as well as an abstract property *Y* without structured background knowledge. 
-The distribution over a biological property like *fly* (which would give rise to interpreting generics like "Ducks fly") is bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
+The distribution over a biological property like *fly* (which would be used in interpreting generics like "Ducks fly") is bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
 The distribution over prevalence for a somewhat accidental property like *carry malaria* (as in "Mosquitos carry malaria") also has substantial probability mass at or near 0\%, since most categories do not have the property present at all. 
 However, among categories with at least a few members who carry malaria, it is very unlikely that all or even many carry malaria; the second mode of this distribution is near 10\%. 
 In this way, the prevalence prior can be viewed as a distribution over different categories (and their associated prevalence of the feature).
 <!-- which can be thought of as levels of prevalence given different categories within a comparison class. -->
 <!-- For simplicity, we assume the comparison class relevant for interpreting generics about novel animal categories is *other animals*. -->
 
-The generic interpretation model balances the prior probability of different prevalence levels with the overall preference for higher prevalence levels (as described above), producing interpretations that appear similar to different quantified statements depending on the context (Figure\ \@ref(fig:modelSimulations)B). 
+The generic interpretation model balances the prior probability of different prevalence levels with the overall preference for higher prevalence levels (as described above), producing interpretations that appear similar to different quantified statements depending on the property in question (Figure\ \@ref(fig:modelSimulations)B). 
 For the biological property prior, "Xs fly" is interpreted most similarly to "Most Xs fly" and not "Some Xs fly".
 For the accidental property prior, "Xs carry malaria" is more similar to "Some Xs carry malaria" than  "Most Xs carry malaria". 
-We test these context-sensitive interpretations in the following experiments. 
+We test these property-sensitive interpretations in the following experiments. 
+
+\ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
 
 <!-- Considering different fixed-thresholds in conjunction with structured background knowledge also illuminates the unique behavior of the uncertain threshold model. -->
 
