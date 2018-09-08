@@ -72,6 +72,7 @@ theme_set(theme_few())
 remove(list= ls())
 ```
 
+
 ```{r analysis_preferences}
 # Seed for random number generation
 set.seed(42)
@@ -101,6 +102,9 @@ compute_mse <- function(df, v1, v2, sigfigs = 3){
 
 # Introduction
 
+
+<!-- MH: Refer to the model as the "vague quantifier" or "vague threshold" account? Easier to discuss alternative models. -->
+
 <!-- - is there a way to connect to the claims of Cimpian2009 about generics influencing feature-as-cause vs. feature-as-effect explanations? -->
   <!-- - perhaps not due to the generic vs. specific distiction, but to prior beliefs about the property? -->
   
@@ -110,11 +114,11 @@ compute_mse <- function(df, v1, v2, sigfigs = 3){
 <!-- An expert may tolerate onlookers, a demonstrator may slow down when completing a particularly challenging part of the task, and a teacher may actively provide pedagogical examples and describe them with language [@Kline2014; @Csibra2009].  -->
 <!-- Informative demonstrations may be particularly useful for procedural learning (e.g., hunting seals, riding a bicycle).  -->
 
-Learning from language is uniquely powerful because language can convey information that is abstract, difficult to observe, or information that otherwise does not have a way of being safely acquired [e.g., learning that certain plants are poisonous, staring at the sun causes blindness; @Gelman2009]. 
+Learning from language is uniquely powerful because language can convey information that difficult or dangerous to observe [e.g., learning that certain plants are poisonous, staring at the sun causes blindness; @Gelman2009]. 
 The premier example of language's ability to transmit abstract knowledge comes in the form of statements that convey generalizations, otherwise known as *generic language* [e.g., "Birds fly"; @Carlson1977]. 
 One of the most important roles for generic language is to provide learners with information about new or poorly understood categories.
 As such, generics are ubiquitous in everyday conversation and child-directed speech [@Gelman1998; @Gelman2008; @GelmanEtAl2004], and learning from generics is thought to be central to conceptual development [@Gelman2004; @Cimpian2009:explanations].
-Understanding how beliefs are updated from generic language is thus a central question in cognitive science.
+Understanding how beliefs are updated from generic language is thus an important question for cognitive science.
 
 <!-- But unlike statements about concrete events or exemplars  (e.g., "This bird flys"), generics convey information that is not directly observable and, in fact, resilient to counterexamples (e.g., penguins do not fly). -->
 <!-- Here, we investigate how generic language is interpreted  -->
@@ -122,14 +126,15 @@ Understanding how beliefs are updated from generic language is thus a central qu
 @Abelson1966 argued that generics, "...once accepted psychologically, [...] appear to be commonly taken in a rather strong sense, as though the qualifier *always* had implicitly crept into their interpretation" (p. 172).
 @Gelman2002 provided adults with generics about animals with non-obvious properties (e.g., "Bears like to eat ants") and found that the *implied prevalence* of the feature among category members (e.g., the percentage of bears that like to eat ants) was high ($\sim 85\%$). 
 Similarly strong interpretations were reported using novel categories with biological properties [e.g., "Lorches have purple feathers"; @Cimpian2010, Expt. 1].
-The fact that generics seem to convey strong implications provides some explanations as to why social stereotypes get propagted and maintained [@Rhodes2012].
+The fact that generics seem to convey strong implications may explain why social stereotypes are propagted and maintained [@Rhodes2012].
 
 Do all generics carry strong implications?
 "Mosquitos carry malaria" really seems to only have the quantificational force of an existential claim, meaning *some mosquitos carry malaria*.
 This may not be a unique example: @Cohen2004 argues for a panolply of conditions that give rise to *existential generics* (e.g., focus-sensitive additives, as in "Birds lay eggs. Mammals lay eggs too.": the second sentence can be interpreted as true because of the existence of platypuses and echidnas, both of which reproduce by laying eggs).
 Using a similar implied prevalence task as @Gelman2002, @Cimpian2010 (Expt. 3) found somewhat weaker interpretations for features that could be construed as accidental [e.g., "Crullets have fungus-covered claws"; see also @Khemlani2009; @Khemlani2012 for evidence for weak inferences from generics].
-Such property-specific interpretations have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how generics update beliefs.
-In addition, in these previous studies, the actual implied prevalence from "weak" generics is still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can actually have weak interpretations (e.g., minority interpretations: $< 50\%$).
+In these previous studies, the actual implied prevalence from "weak" generics is still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can receive genuinely weak interpretations (e.g., minority interpretations: $< 50\%$).
+There are also open theoretical questions: property-specific generic interpretations have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how beliefs will be updated given a specific generic statement.
+
 
 <!-- Interpreting a generic as *most* can also be too weak: "Triangles have three sides" is a statement about *all triangles*; if a shape does not have three sides, it is not a triangle.  -->
 <!-- Indeed, the differences between quantified statements and generic statements are appreciated by children as young as three years [@Gelman2015genericsQuantifiers]. -->
@@ -137,20 +142,20 @@ In addition, in these previous studies, the actual implied prevalence from "weak
 <!-- Flexible interpretations of generic language may be in part attributed to beliefs about the property [@Nisbett1983]. -->
 <!-- Properties that are biological in nature (e.g., "Wugs have wings") are interpreted as applying to most or all of the category [@Gelman2002; @Brandone2014], while features that could be construed as incidental (e.g., "Crullets have fungus-covered claws") are interpreted as applying to relatively fewer members of the category [@Cimpian2010]. -->
 
-@TesslerLangGenUnderReview proposed a quantitative model of generic language, which combines the tools of formal semantics with a Bayesian model to show a generic statement can update a listener's prior beliefs.
-This model accounted for truth judgments (e.g., is "Mosquitos cary malaria" true or false?) about a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal language (e.g., "This herb makes animals sleepy").
-This endorsement model is cast a speaker deciding whether or not to assert a generic statement to a naive listener, who is able to update its beliefs from the generic statement.
-The generic listener model, which provides a mapping from a generic statement to implied prevalence, is such a quantitative account of how generics update beliefs.
-This paper tests the predictions of this model.
-To do so, we also look for evidence for *weak generics*, which provide the strongest test of a unified quantitative account. 
+@TesslerLangGenUnderReview proposed a quantitative model of generic language as a kind of vague quantifier (or, uncertain threshold model), combining tools from formal semantics and Bayesian modeling.
+This model accounted for truth judgments or endorsements (e.g., is "Mosquitos carry malaria" true or false?) about a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal language (e.g., "This herb makes animals sleepy").
+This endorsement model is cast as a speaker deciding whether or not to assert a generic statement to a listener, who will update her beliefs from the generic statement.
+The listener model used therein provides a mapping from a generic statement to implied prevalence---it is a quantitative account of how generics update beliefs.
+This paper tests the predictions of this listener model directly.
+In doing so, we also look for evidence for *weak generics*, which are predicted by the model and provide the strongest test of the uncertain threshold account. 
 
 The paper is organized as follows.
 First, we review @TesslerLangGenUnderReview's computational model of generic interpretation. 
 In Expt. 1, we replicate and extend the findings of @Cimpian2010 that biological and accidental properties receive differential interpretations. 
 In Expt. 2, we extend these findings using a larger and more diverse stimulus set better able to test the quantitative predictions of our model and explore the existence of "weak generics".
-In Expt. 3, we experimentally manipulate the background knowledge (the prevalence prior) and test its effect on interpretations of novel generics.
-In each experiment, we compare our model's predictions to alternative models, finding that our quantitative model is best able to account for context-sensitive generic interpretations. 
-Together, these results provide strong evidence for an quantitative understanding of generic language.
+In Expt. 3, we experimentally manipulate the background knowledge (the feature prevalence prior distribution) and test its effect on interpretations of novel generics.
+In each experiment, we compare the uncertain threshold model's predictions to alternative models that have the same prior knowledge but which update their beliefs via different semantic mechanisms (e.g., fixed-thresholds); in each case, we find the vague threshold model is best able to account for context-sensitive generic interpretations. 
+Together, these results provide strong evidence that generics update beliefs in a context-sensitive manner, well-modeled as a vague quantifier. 
 
 <!-- First, we test whether or not weak interpretations of generics are possible by testing interpretations of generics about a wide range of properties (Expt. 1a).  -->
 <!-- Then, we measure interlocutors' prior beliefs about the prevalence of the property (Expt. 1b) using the prior elicitation paradigm in @TesslerGenerics.  -->
