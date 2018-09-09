@@ -133,8 +133,16 @@ Do all generics carry strong implications?
 This may not be a unique example: @Cohen2004 argues for a panolply of conditions that give rise to *existential generics* (e.g., focus-sensitive additives, as in "Birds lay eggs. Mammals lay eggs too.": the second sentence can be interpreted as true because of the existence of platypuses and echidnas, both of which reproduce by laying eggs).
 Using a similar implied prevalence task as @Gelman2002, @Cimpian2010 (Expt. 3) found somewhat weaker interpretations for features that could be construed as accidental [e.g., "Crullets have fungus-covered claws"; see also @Khemlani2009; @Khemlani2012 for evidence for weak inferences from generics].
 In these previous studies, the actual implied prevalence from "weak" generics is still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can receive genuinely weak interpretations (e.g., minority interpretations: $< 50\%$).
-There are also open theoretical questions: property-specific generic interpretations have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how beliefs will be updated given a specific generic statement.
 
+There are also open theoretical questions: property-specific generic interpretations have been explained as theory-based expectations [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how beliefs will be updated given a specific generic statement.
+Further, the existence of context-sensitive interpretations has been used as evidence against a quantitative account of generic language *per se* and it has been suggested that the normal tools of formal semantics are inappropriate for studying generics [@Leslie2008].
+\mht{not sure if we want to take up the previous point to add to the contributions of this paper}
+@TesslerLangGenUnderReview proposed a quantitative model of generic language as a kind of vague quantifier (or, uncertain threshold model), combining tools from formal semantics and Bayesian modeling.
+This model accounted for truth judgments or endorsements (e.g., is "Mosquitos carry malaria" true or false?) about a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal sentences (e.g., "This herb makes animals sleepy").
+This endorsement model is cast as a speaker deciding whether or not to assert a generic statement to a listener, who will update her beliefs from the generic statement.
+The listener model used therein provides a mapping from a generic statement to implied prevalence---it is a quantitative account of how generics update beliefs.
+This paper tests the predictions of this listener model directly.
+In doing so, we also look for evidence for *weak generics*, which are predicted to exist and provide the strongest test of the uncertain threshold account. 
 
 <!-- Interpreting a generic as *most* can also be too weak: "Triangles have three sides" is a statement about *all triangles*; if a shape does not have three sides, it is not a triangle.  -->
 <!-- Indeed, the differences between quantified statements and generic statements are appreciated by children as young as three years [@Gelman2015genericsQuantifiers]. -->
@@ -142,15 +150,8 @@ There are also open theoretical questions: property-specific generic interpretat
 <!-- Flexible interpretations of generic language may be in part attributed to beliefs about the property [@Nisbett1983]. -->
 <!-- Properties that are biological in nature (e.g., "Wugs have wings") are interpreted as applying to most or all of the category [@Gelman2002; @Brandone2014], while features that could be construed as incidental (e.g., "Crullets have fungus-covered claws") are interpreted as applying to relatively fewer members of the category [@Cimpian2010]. -->
 
-@TesslerLangGenUnderReview proposed a quantitative model of generic language as a kind of vague quantifier (or, uncertain threshold model), combining tools from formal semantics and Bayesian modeling.
-This model accounted for truth judgments or endorsements (e.g., is "Mosquitos carry malaria" true or false?) about a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal language (e.g., "This herb makes animals sleepy").
-This endorsement model is cast as a speaker deciding whether or not to assert a generic statement to a listener, who will update her beliefs from the generic statement.
-The listener model used therein provides a mapping from a generic statement to implied prevalence---it is a quantitative account of how generics update beliefs.
-This paper tests the predictions of this listener model directly.
-In doing so, we also look for evidence for *weak generics*, which are predicted by the model and provide the strongest test of the uncertain threshold account. 
-
 The paper is organized as follows.
-First, we review @TesslerLangGenUnderReview's computational model of generic interpretation. 
+First, we review @TesslerLangGenUnderReview's computational model of generic interpretation, describe alternative models, and overview our experimental and data analytic approach. 
 In Expt. 1, we replicate and extend the findings of @Cimpian2010 that biological and accidental properties receive differential interpretations. 
 In Expt. 2, we extend these findings using a larger and more diverse stimulus set better able to test the quantitative predictions of our model and explore the existence of "weak generics".
 In Expt. 3, we experimentally manipulate the background knowledge (the feature prevalence prior distribution) and test its effect on interpretations of novel generics.
@@ -179,19 +180,19 @@ Together, these results provide strong evidence that generics update beliefs in 
 # Computational model
 
 Generic language conveys generalizations about categories [@Carlson1977; @Leslie2008].
-Probability is a useful representation for human generalization from observational data [@Shepard1987; @Tenenbaum2011], and so it makes sense that probability would be at the core of the meaning of generalizations conveyed in language. 
-@TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics has to do with probability but in an underspecified or vague way.
+Human generalization from observational data can be well described using the language of probability [@Shepard1987; @Tenenbaum2011], and so it makes sense that probability would be at the core of the meaning of generalizations conveyed in language. 
+@TesslerLangGenUnderReview formalize such a hypothesis, positing that the semantics of generics are concerned with probability but in an underspecified, context-dependent manner.
 
 Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $r$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{r > \theta\}$.^[
-  The prevalence $r$ should be thought as a "prevalence in the mind", or a subjective degree of belief about the property in the category, which may not accurately track the empirical frequency.
+  The prevalence $r$ can be thought as a "prevalence in the mind", or a subjective degree of belief about the property in the category, which may not accurately track the empirical frequency.
 ]
-The literal meaning of quantifiers can also be described by a threshold-function (e.g., $\denote{some} = \{r > 0\}$, $\denote{most} = \{r > 0.5\}$, $\denote{all} = \{r = 1\}$).
+The literal meaning of quantifiers can also be described by threshold functions (e.g., $\denote{some} = \{r > 0\}$, $\denote{most} = \{r > 0.5\}$, $\denote{all} = \{r = 1\}$).
 @TesslerLangGenUnderReview posit that the corresponding threshold for the generic $\theta$ is *a priori* uncertain---formally, is drawn from a context-invariant, uniform prior distribution on thresholds $P(\theta)$---and is resolved by context.^[
   Of course, different threshold distributions could be learned over time for different properties. The choice of a uniform distribution here is to explore how well context-sensitive generic interpretations  can be modeled by differences in corresponding prior beliefs about properties, without having to posit semantic differences between different generic sentences.
 ]
 
-In order for a statement to update beliefs about prevalence in a given category, a listener must have prior beliefs about prevalence across categories.
-To interpret a generic sentence, a listener draws upon abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(r)$. ^[
+In order for a statement to update beliefs about prevalence in a given category, a listener must have prior beliefs about prevalence abstracted across categories.
+To interpret a generic sentence, a listener draws upon her abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(r)$. ^[
   Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively shallow formalization of theory-based expectations. 
   Different theory-based relationships between kinds and properties will give rise to different prior distributions over prevalence. 
   The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
@@ -213,29 +214,51 @@ Formally, the truth-functional meaning is represented by the Kronecker delta fun
 
 The interpretation model computes a posterior distribution on prevalence by considering different possible thresholds $\theta$.
 Given a particular value of $\theta$, the literal semantics rules out all prevalences $r$ below $\theta$.
-With a uniform prior over prevalence ($P(r) = \text{Uniform}(0, 1)$), the posterior on prevalence will be uniform over all prevalence levels above $\theta$ (Figure\ \@ref(fig:modelSimulations)B; top row).
-Because higher prevalence levels are consistent with more thresholds, the generic interpretation model returns a non-uniform posterior that favors higher prevalence levels (Figure\ \@ref(fig:modelSimulations)B; top row, right-most column).
+Consider the model behavior when the prevalence prior is a uniform distribution ($P(r) = \text{Uniform}(0, 1)$).
+Given a particular vlue of $\theta$, the posterior on prevalence will be uniform over all prevalence levels above $\theta$ (Figure\ \@ref(fig:modelSimulations)B; top row);
+in addition, higher prevalence levels $r$ are consistent with more thresholds $\theta$.
+Thus, given a uniform prevalence prior, the generic interpretation model returns a non-uniform posterior that favors higher prevalence levels (Figure\ \@ref(fig:modelSimulations)B; top row, right-most column).
 <!-- , which has uncertainty over the threshold and marginalizes over different possible thresholds,  -->
-This behavior is consistent with the intuition that, without strong background knowledge, generics imply that most or all of the category has the property.
+This behavior captures the intuition that, without strong background knowledge, generics probably imply that most or all of the category has the property.
 
-In this model, different interpretations come from different prior distributions over prevalence $P(r)$.
-The prevalence prior for a purely abstract property may be given by a uniform distribution, while prevalence priors for familiar properties may display interesting structure reflecting domain-specific beliefs about the property.
+
+## The influence and structure of prevalence priors
+
+<!-- \ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.} -->
+
+The generic interpretation model balances the prior probability of different prevalence levels $r$ with the overall preference for higher prevalence levels (as described above), producing interpretations that
+strongly depend on the prior distribution on prevalence $P(r)$.
+The prevalence prior for familiar properties may display interesting structure reflecting domain-specific beliefs about the property.
 Figure\ \@ref(fig:modelSimulations)A shows hypothetical prevalence priors for the features *fly* and *carry malaria* as well as an abstract property *Y* without structured background knowledge. 
-The distribution over a biological property like *fly* (which would be used in interpreting generics like "Ducks fly") is bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
-The distribution over prevalence for a somewhat accidental property like *carry malaria* (as in "Mosquitos carry malaria") also has substantial probability mass at or near 0\%, since most categories do not have the property present at all. 
-However, among categories with at least a few members who carry malaria, it is very unlikely that all or even many carry malaria; the second mode of this distribution is near 10\%. 
+
+The interpretation from the uncertain threshold model (Figure\ \@ref(fig:modelSimulations)B, right-most column) appears similar to different quantified statements depending on the property in question.
+For the biological property prior, "Xs fly" is interpreted most similarly to "Most Xs fly".
+This results from the prior distribution over a biological property like *fly* being bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
+For the accidental property prior, "Xs carry malaria" is more similar to "Some Xs carry malaria" than "Most Xs carry malaria". 
+Similar to the *fly* prevalence prior, the prior distribution over prevalence for a property like *carry malaria* has substantial probability mass at or near 0\%, since most categories do not have the property present at all; however, among categories with at least a few members who carry malaria, it is very unlikely that all or even many carry malaria; the second mode of this prior distribution is near 10\%. 
+
+<!-- We test these property-sensitive interpretations in the following experiments.  -->
+<!-- Different interpretations for this model come from different prior distributions over prevalence $P(r)$, which -->
+
 In this way, the prevalence prior can be viewed as a distribution over different categories (and their associated prevalence of the feature).
+In a more abstract sense, this distribution can reflect causal beliefs about kinds and properties (e.g., there is some internal or external to the entity which causes it to have the property); if such a causal mechanism is believed to exist for some kinds and not others, we would expect the prevalence prior distribution to follow a mixture distribution as we have assumed for the *fly*, *lay eggs*, and *carry malaria* cases. 
+These properties vary by the mixture component (e.g., for how many different kinds does the mechanism exist?) and for the parameters of the component that govern the prevalence for the kinds with the mechanism (i.e., given that there is such a mechanism, how strong do we expect that mechanism to be?).
+In Experiment 1, we assume this structure to the prevalence prior and design a prior elicitation paradigm that takes advantage of this structure.
+In Experiment 2, we measure the prevalence prior in a more direct, nonparametric way, and empirically verify that the mixture of beta-distributions fits reasonably well.
+Finally, in Experiment 3, we directly manipulate the prevalence prior.
+
+
 <!-- which can be thought of as levels of prevalence given different categories within a comparison class. -->
 <!-- For simplicity, we assume the comparison class relevant for interpreting generics about novel animal categories is *other animals*. -->
 
-The generic interpretation model balances the prior probability of different prevalence levels with the overall preference for higher prevalence levels (as described above), producing interpretations that appear similar to different quantified statements depending on the property in question (Figure\ \@ref(fig:modelSimulations)B). 
-For the biological property prior, "Xs fly" is interpreted most similarly to "Most Xs fly" and not "Some Xs fly".
-For the accidental property prior, "Xs carry malaria" is more similar to "Some Xs carry malaria" than  "Most Xs carry malaria". 
-We test these property-sensitive interpretations in the following experiments. 
 
 \ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
+\mht{wonder if we should make those changes more widespread (e.g., the running-head) or have an explicit statement about the kind of context we are considering here...}
 
-\ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.}
+
+
+## Alternative models and Bayesian data analytic strategy
+
 
 \ndg{see comments below that we should have brief discussions of joint BDA analysis strategy and of alternative models up here, to avoid duplication and make the expt sections smoother.}
 
