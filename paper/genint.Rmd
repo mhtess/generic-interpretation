@@ -793,20 +793,13 @@ cowplot::plot_grid(
 
 
 We now test the quantitative predictions of the model. 
-We use the prevalence priors inferred from Expt. 1a's structured elicitation task as the prevalence prior $P(r)$ in Eq. \ref{eq:L0} to predict the generic interpretation data.
-We embedded our generic interpretation model into the Bayesian data analysis model used to infer the priors; we used the joint cognitive--data-analytic model to predict both the prevalence prior data and the generic interpretation data simultaneously. \ndg{that last sentence may confuse people?}
+We use the prevalence priors reconstructed from Expt. 1a's structured elicitation task via Eq. \ref{eq:priorModel} as the prevalence prior $P(r)$ in Eq. \ref{eq:L0} to predict the generic interpretation data.
+We built a joint-inference Bayesian data analysis (BDA) model to predict both the prevalence prior data and the generic interpretation data simultaneously.
 We ran the model using 3 chains of MCMC for 750,000 iterations, the first 250,000 of which were discarded for burn-in. 
 Figure\ \@ref(fig:cimpian-modelingResults)B shows the generics model predictions and the human data for each of the four types of properties (collapsing across items within a property-type).
 We see that the model displays the same sensitivity to the kind of property: Generics about body parts are interpreted the strongest, accidental properties the weakest, with the other two types falling in between.
 
-We compare our generic interpretation to two lesioned versions of the model, both of which lack the uncertain threshold. 
-The first is a model of the quantifier "some" which rules out the lowest possible prevalence level.
-The second is analogous to "most", with a threshold at 50% prevalence. 
-However, a fixed threshold at 50% is a very restricted model; it places zero probability on any response less than 50%. 
-Because there are many ratings in the data set that are less than 50%,  we need to supplement the "most" model with an extrinsic noise process in order for this model to actually generate predictions for these data; with some probability, participants respond at random.
-at random. 
-We infer this noise probability parameter from the data.
-
+We compare our generic interpretation to two lesioned versions of the model, both of which lack the uncertain threshold (a "some" most and a "most" model, described in the **Alternative models** section above). 
 Figure\ \@ref(fig:cimpian-modelingResults)C shows the model predictions in the comparison to the behavioral data for each item independently for the generics model, the two alternative fixed threshold models, and the prevalence prior mean.
 The alternative models' defects are apparent visually. 
 The prevalence prior, though it is highly correlated with the posterior ($r^2(40)=$ `r compute_r2(md.impprev %>% filter(semantics == "uncertain", Parameter == "prior"), "model_MAP", "mean")`), predicts too low values, resulting in a high mean squared error ($MSE=$ `r compute_mse(md.impprev %>% filter(semantics == "uncertain", Parameter == "prior"), "model_MAP", "mean")`).
@@ -814,19 +807,22 @@ The "some" model is similar: It is highly correlated ($r^2(40)=$ `r compute_r2(m
 The "most" + noise model achieves a pretty good fit to the data ($r^2(40) =$ `r compute_r2(md.impprev %>% filter(semantics == "most", Parameter == "posterior"), "model_MAP", "mean")`; $MSE=$ `r compute_mse(md.impprev %>% filter(semantics == "most", Parameter == "posterior"), "model_MAP", "mean")`), but only does so because it predicts about a third of the data set is noise (proportion noise = $0.37 (0.33, 0.42)$).
 Finally, the uncertain threshold generic interpretation model explains practically all of the variance in the data ($r^2(40) =$ `r compute_r2(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`) and achieves an extremely low mean squared error ($MSE =$ `r compute_mse(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`).
 
-
 ## Discussion
 
 We replicated @Cimpian2010's finding of a difference in the implied prevalence between biological properties (e.g., *yellow fur*) and accidental properties (e.g., *fungus-covered claws*).
 We extended these findings with a broader stimulus set and discovered even more gradability in interpretations of generic statements. 
 We empirically measured the prevalence priors and used our generic interpretation model to predict prevalence implied by a generic statement.
 
-\ndg{it might be worth playing up the fact that structured elicitation of prevalence knowledge gives us a more detailed handle on what differs between these kinds of properties?}
+\mht{does this add anything? do we want to speculate a little more about where these differences in parameters might come from?}
+The structured elicitation of prevalence knowledge in Expt. 1a provides a more detailed picture of what differs between these kinds of properties. 
+Properties differ in both the *a priori* probability of being present in a category as well as how widespread the property would be expected to be, given that it is present (Figure\ \@ref(fig:cimpian-prevPrior)).
+It is these differences that give rise to different implied prevalence ratings for generics about different properties.
 
 The items that receive the lowest implied prevalence are those of accidental or diseased states (e.g., *fungus-covered claws*, *broken legs*). 
 As @Cimpian2010 noted, "properties of this type do not lend themselves very well to generic predication (Cimpian & Markman, 2008; Gelman, 1988), so generics about broken legs, itchy skin, etc. are infrequent outside the laboratory." (p.1472)
 It, thus, remains a possibility that participants treat statements such as "Lorches have broken legs" as an existential claim about the here-and-now, analagous to how "Dogs are on my front lawn" describes a particular state of affairs as opposed to something generalizable about dogs. 
 We thus aim to replicate these findings of low prevalence prevalence interpretations in the next experiment, using properties that more naturally lend themselves to generic interpretation.
+In addition, we use more naturalistic properties and measure background knowledge using a more direct elicitation technique that does not presuppose a structured model for the prevalence prior.
 
 # Experiment 2
 
@@ -860,8 +856,7 @@ The experiment took on average `r round(df.prior.3.filtered.meanTime$mean_time, 
 #### Materials
 
 We created a stimulus set composed of seventy-five properties.
-Items were generated by the first author by considering six different classes of properties: physical characteristics (e.g., *have brown spots*, *have four legs*), psychological characteristics (e.g., *experience emotions*), dietary habits (e.g., *eat human food*), habitat (e.g., *live in zoos*), disease (e.g., *get cancer*, *carry malaria*), reproductive behavior (e.g., *have a menstrual cycle*), and other miscellaneous behaviors (e.g., *pound their chests to display dominance*, *perform in the circus*); online sources about strange animal behaviors were consulted in order to find the more obscure properties. 
-\ndg{materials in supplement / appendix}
+Items were generated by the first author by considering eight different classes of properties: physical characteristics (e.g., *have brown spots*, *have four legs*), psychological characteristics (e.g., *experience emotions*), dietary habits (e.g., *eat human food*), habitat (e.g., *live in zoos*), disease (e.g., *get cancer*, *carry malaria*), reproductive behavior (e.g., *have a menstrual cycle*), aggressive behaviors (e.g., *pound their chests to display dominance*, *hunt other animals*), and other miscellaneous behaviors (e.g., *perform in the circus*, *sing beautiful songs*); online sources about strange animal behaviors were consulted in order to find the more obscure properties. Full list of materials can be found in \red{Table X} in Appendix.
 
 #### Procedure and materials
 
