@@ -224,14 +224,12 @@ This behavior captures the intuition that, without strong background knowledge, 
 
 ## The influence and structure of prevalence priors
 
-<!-- \ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.} -->
-
 The generic interpretation model balances the prior probability of different prevalence levels $r$ with the overall preference for higher prevalence levels (as described above), producing interpretations that
 strongly depend on the prior distribution on prevalence $P(r)$.
 The prevalence prior for familiar properties may display interesting structure reflecting domain-specific beliefs about the property.
 Figure\ \@ref(fig:modelSimulations)A shows hypothetical prevalence priors for the features *fly* and *carry malaria* as well as an abstract property *Y* without structured background knowledge. 
 
-The interpretation from the uncertain threshold model (Figure\ \@ref(fig:modelSimulations)B, right-most column) appears similar to different quantified statements depending on the property in question.
+The interpretation from the uncertain threshold model (Figure\ \@ref(fig:modelSimulations)B, right-most column) is similar to different quantified statements for different properties in question.
 For the biological property prior, "Xs fly" is interpreted most similarly to "Most Xs fly".
 This results from the prior distribution over a biological property like *fly* being bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
 For the accidental property prior, "Xs carry malaria" is more similar to "Some Xs carry malaria" than "Most Xs carry malaria". 
@@ -241,26 +239,52 @@ Similar to the *fly* prevalence prior, the prior distribution over prevalence fo
 <!-- Different interpretations for this model come from different prior distributions over prevalence $P(r)$, which -->
 
 In this way, the prevalence prior can be viewed as a distribution over different categories (and their associated prevalence of the feature).
-In a more abstract sense, this distribution can reflect causal beliefs about kinds and properties (e.g., there is some internal or external to the entity which causes it to have the property); if such a causal mechanism is believed to exist for some kinds and not others, we would expect the prevalence prior distribution to follow a mixture distribution as we have assumed for the *fly*, *lay eggs*, and *carry malaria* cases. 
-These properties vary by the mixture component (e.g., for how many different kinds does the mechanism exist?) and for the parameters of the component that govern the prevalence for the kinds with the mechanism (i.e., given that there is such a mechanism, how strong do we expect that mechanism to be?).
-In Experiment 1, we assume this structure to the prevalence prior and design a prior elicitation paradigm that takes advantage of this structure.
-In Experiment 2, we measure the prevalence prior in a more direct, nonparametric way, and empirically verify that the mixture of beta-distributions fits reasonably well.
+In a more abstract sense, this distribution can reflect causal beliefs about kinds and properties (e.g., there is something internal or external to the entity which causes it to have the property); if such a causal mechanism is believed to exist for some kinds and not others, we would expect the prevalence prior distribution to follow a mixture distribution (e.g., a mixture of Beta distributions as is shown for the *fly*, *lay eggs*, and *carry malaria* cases above). ^[
+  This assumption is similar in spirit to that employed by *Hurdle Models* of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson [e.g., when modeling adverse reactions to vaccines; @hurdleModels]
+]
+Such a structured prior distribution could vary by the mixture component (e.g., for how many different kinds does the mechanism exist?) as well as for the parameters of the component(s) that govern the prevalence for the kinds with the mechanism (i.e., given that there is such a mechanism, how strong do we expect that mechanism to be?).
+In Experiment 1, we assume this mixture-distribution structure to the prevalence prior in order to measure beliefs about relatively obscure properties.
+In Experiment 2, we measure the prevalence prior for more familiar properties in a more direct, nonparametric way, and empirically verify that the mixture of beta-distributions fits reasonably well.
 Finally, in Experiment 3, we directly manipulate the prevalence prior.
 
 
 <!-- which can be thought of as levels of prevalence given different categories within a comparison class. -->
 <!-- For simplicity, we assume the comparison class relevant for interpreting generics about novel animal categories is *other animals*. -->
 
+<!-- \ndg{i think we should have a little (sub)section here on the structure of the prevalence priors. since one of the main things that changes between the three experiments is the prior elicitation / manipulation, we want to set the stage. so we could talk a bit about how different causal mechanisms would give rise to different mixture components and how a beta-mixture model should be a good approximation to that. then maybe set the stage saying in the first expt we assume this and design elicitation accordingly, in the second expt we measure the prevalence prior in a more direct (non parametric) way and show that a beta-mixture fits reasonably, in the third experiment we directly manipulate the prior.} -->
 
 \ndg{note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.}
 \mht{wonder if we should make those changes more widespread (e.g., the running-head) or have an explicit statement about the kind of context we are considering here...}
 
+## Alternative models and Bayesian data-analytic strategy
 
+The uncertain threshold generic interpretation model presented here and in @TesslerLangGenUnderReview is the first cognitive model to make quantitative predictions about human interpretations of generic statements.
+In order to assess the predictive capabilities of this model, we construct a number of alternatives for comparison.
+Foremost, we compare the uncertain threshold model to a model of just the prior distribution $P(r)$. 
+This comparison informs us as to whether or not participants actually *update* their beliefs based on the generic statement.
+In addition, we construct two alternatives models by removing the model's uncertainty about the threshold, corresponding to models of quantifier interpretation.
+The first is a model of the quantifier "some" which rules out the lowest possible prevalence level:
 
-## Alternative models and Bayesian data analytic strategy
+\begin{eqnarray}
+L_{some}(r \mid u) &\propto&  P(r \mid r > 0)  \label{eq:someModel}
+\end{eqnarray}
 
+The second is analogous to "most", with a threshold at 50% prevalence:
 
-\ndg{see comments below that we should have brief discussions of joint BDA analysis strategy and of alternative models up here, to avoid duplication and make the expt sections smoother.}
+\begin{eqnarray}
+L_{most}(r \mid u) &\propto&  P(r \mid r > 0.5)  \label{eq:mostModel}
+\end{eqnarray}
+
+A model that assumes a fixed threshold at 50% is a very restricted model; it places zero probability on any response less than 50%. 
+In case there are ratings in the experimental data sets that are less than 50%, we must supplement the "most" model with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
+at random. 
+We infer this noise probability parameter for the "most" model from the data.
+
+Our primary analyses ask how well the various interpretation models accomodate the human generic interpretation data given our corresponding measurements of the prevalence priors.
+To fit these models, we build Bayesian data analysis (BDA) models to jointly predict the prevalence prior data and the generic interpretation data.
+Such a joint-inference model allows us to retain the uncertainty in the measurement of the prevalence prior data when using it in our generics model to predict the generic interpretation results.
+
+<!-- \ndg{see comments below that we should have brief discussions of joint BDA analysis strategy and of alternative models up here, to avoid duplication and make the expt sections smoother.} -->
 
 <!-- Considering different fixed-thresholds in conjunction with structured background knowledge also illuminates the unique behavior of the uncertain threshold model. -->
 
@@ -441,36 +465,36 @@ We constructed a stimulus set of forty different properties to explore a wide ra
 These items make up four categories of properties: body parts (e.g., *fur*), body parts of a particular color (e.g., *yellow fur*), body parts described with a vague adjective (e.g., *curly fur*), and body parts with in an accidental or disease state (e.g., *wet fur*).
 Because pilot testing revealed more variability for items in the accidental category relative to the other types of properties, we used twice as many exemplars of accidental properties, yielding a more thorough test of the quantitative predictive power of the generic interpretation model. 
 We used eight exemplars of each of the three non-accidental properties (parts, colored parts, vague parts), and sixteen exemplars of accidental properties, building on a stimulus set from @Cimpian2010.
-\ndg{list properties and other materials in appendix or supplement?}
-<!-- All materials are shown in Table X of the Appendix. -->
+<!-- \ndg{list properties and other materials in appendix or supplement?} -->
+List of properties is shown in Table 1 of the Appendix.
 
-In previous work, we have found that prevalence priors are well-modeled by a mixture of two Beta distributions. ^[
-  The Beta distribution is chosen because the support of this distribution is numerical values between 0 - 1, which is the appropriate support for a distribution over prevalence.
-]
-One of these distributions represents kinds of animals who *do not have* a stable causal mechanism that could give rise to the property (e.g., *lions* do not have a stable mechanism by which they could *lay eggs*), which results in prevalence levels close to or equal to 0.^[
-  This assumption is similar in spirit to that employed by *Hurdle Models* of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson [e.g., when modeling adverse reactions to vaccines; @hurdleModels]
-]
-This "null distribution" is potentially present for all features in exactly the same way (i.e., the lack of producing the feature).
-The second distribution represents kinds of animals who *do have* such a mechanism; we cannot specify the parameters of this second distribution *a priori* as they are likely different for different properties.
-Finally, the relative contribution of these two component distributions can also not be specified *a priori*. 
-Thus, we create an elicitation task to measure these two aspects of the prior: (1) the relative contributions of null prevalence distribution and stable prevalence distribution (i.e., the mixture parameter, or $P(\text{feature is present}) = P(r > 0)$), and (2) prevalence among kinds where the property is present (*prevalence when present* or $P(r \mid r > 0)$)). 
-\ndg{i feel like this part comes off as kind of complex and ad-hoc. how about waiting until next subsection to talk about betas, and here saying direct ellicitation is hard because there is generally a big component near zero, due to categories that lack any causal mechanism, so we to elicitation in two steps....}
+Direct elicitation of background knowledge about the properties used in @Cimpian2010 (e.g., by asking about prevalence in familiar categories) is difficult because many of the properties are fantastical or obscure (e.g., pink teeth, silver legs, fungus-covered fur) leading to a large component of the distribution at zero prevalence.
+Therefore, we assume a mixture distribution structure and create an elicitation task to measure two aspects of the prior: (1) the relative contribution of zero-prevalence distribution (e.g., for how many categories is the property expected to be present at all) and (2) the prevalence among kinds where the property is present (*prevalence when present*). 
 
 Participants were first introduced to a "data-collection robot" that was tasked with learning about properties of animals. 
 Participants were told the robot randomly selected an animal from its memory to ask the participant about (e.g., The robot says: "We recently discovered animals called feps."). 
-To measure the mixture parameter ($P(\text{feature is present})$), the robot asked how likely it was that there *was a fep with property* (e.g., "How likely is it that there is a fep that has wings?"), to which participants reported on a scale from *unlikely* to *likely*.
-To measure *prevalence when present* ($P(r \mid r > 0)$), the robot then asked the likely prevalence assuming that at least one has the property (e.g., "Suppose there is a fep that has wings. What percentage of feps do you think have wings?"). 
-
+To measure the relative contribution of the zero-prevalence distribution, the robot asked how likely it was that there *was a fep with property* (e.g., "How likely is it that there is a fep that has wings?"), to which participants reported on a scale from *unlikely* to *likely*.
+To measure *prevalence when present*, the robot then asked the likely prevalence assuming that at least one has the property (e.g., "Suppose there is a fep that has wings. What percentage of feps do you think have wings?"). 
 Participants completed a practice trial using the property *are female* to make sure they understood the meanings of these two questions.
 For example, it is very likely that there is a fep that is female because almost all animals have female members (high $P(\text{feature is present})$).
 Additionally, when present, the property is only expected in about 50\% of the category.
 
 
+<!-- In previous work, we have found that prevalence priors are well-modeled by a mixture of two Beta distributions. ^[ -->
+<!--   The Beta distribution is chosen because the support of this distribution is numerical values between 0 - 1, which is the appropriate support for a distribution over prevalence. -->
+<!-- ] -->
+<!-- One of these distributions represents kinds of animals who *do not have* a stable causal mechanism that could give rise to the property (e.g., *lions* do not have a stable mechanism by which they could *lay eggs*), which results in prevalence levels close to or equal to 0. -->
+<!-- This "null distribution" is potentially present for all features in exactly the same way (i.e., the lack of producing the feature). -->
+<!-- The second distribution represents kinds of animals who *do have* such a mechanism; we cannot specify the parameters of this second distribution *a priori* as they are likely different for different properties. -->
+<!-- Finally, the relative contribution of these two component distributions can also not be specified *a priori*.  -->
+<!-- \ndg{i feel like this part comes off as kind of complex and ad-hoc. how about waiting until next subsection to talk about betas, and here saying direct ellicitation is hard because there is generally a big component near zero, due to categories that lack any causal mechanism, so we to elicitation in two steps....} -->
+
+
 ### Data analysis and results
 
-Question 1 elicits the potential for a property to be present in a kind (the mixture parameter of a 2-Betas mixture model). 
+Question 1 elicits the mixture parameter of a 2-distribution mixture model ($P(\text{feature is present})$). 
 Question 2 elicits the prevalence in a kind where the property is present.
-The priors elicited display a range of possible parameter values Figure\ \@ref(fig:cimpian-prevPrior)A.
+These elicited parameters of the priors display a range of possible values Figure\ \@ref(fig:cimpian-prevPrior)A.
 <!-- Figure \ref{fig:prior2}a shows a summary of the elicited priors, in terms of the diversity of $d_{potential}$ and $d_{expected}$. -->
 Biological properties are likely to be present and when present, are likely to be widespread (top right corner of scatter plot).
 More specific properties (either using gradable adjectives or color adjectives) are expected to be slightly less prevalent among the kinds where the property is present, perhaps reflecting the fact that the same kind of animal can come in many different colors or that gradable properties (e.g., *big claws*) might not be ubiquitous in a category.
@@ -518,9 +542,18 @@ load("cached_results/cimpian-prevPrior-interpretations.Rdata")
      # df.c.prior.bs.wide, 
      # df.c.int.bs,
 
-fig.prevPriors <- ggplot(m.rs.priors.reconstructed.subset, 
+fig.prevPriors <- m.rs.priors.reconstructed.subset %>%
+  mutate(stim_type = as.character(stim_type),
+         stim_type_fixed = ifelse(stim_type == "color adj + part", "gradable adj + part",
+                                  ifelse(stim_type == "gradable adj + part", "color adj + part",stim_type)),
+         stim_type_fixed = factor(stim_type_fixed,
+                                         levels = c("body part",
+                                                    "gradable adj + part",
+                                                    "color adj + part",
+                                                    "accidental"))) %>%  
+  ggplot(., 
        aes( x = prevalence,
-                                    fill = stim_type))+
+                                    fill = stim_type_fixed))+
     stat_density ( aes(y = ..scaled.. ), color = 'black')+
     facet_wrap(~property, nrow = 2)+
     scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
@@ -568,8 +601,8 @@ cowplot::plot_grid(
       #legend.title = element_text(size = 16)
                            )
     ), ncol = 1, rel_heights = c(1, .2))
-
 ```
+
 
 
 
@@ -782,8 +815,6 @@ The "most" + noise model achieves a pretty good fit to the data ($r^2(40) =$ `r 
 Finally, the uncertain threshold generic interpretation model explains practically all of the variance in the data ($r^2(40) =$ `r compute_r2(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`) and achieves an extremely low mean squared error ($MSE =$ `r compute_mse(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`).
 
 
-
-
 ## Discussion
 
 We replicated @Cimpian2010's finding of a difference in the implied prevalence between biological properties (e.g., *yellow fur*) and accidental properties (e.g., *fungus-covered claws*).
@@ -814,9 +845,6 @@ load(file = "cached_results/genint_priors_metaData.RData")
 #      expt2.prior.n.passCatch.English,
 #      df.prior.3.filtered.meanTime, 
 #     df.prior.3.filtered.n_subj_per_item
-
-
-
 ```
 
 
@@ -954,10 +982,7 @@ cowplot::plot_grid(
 
 ```
 
-
-
 ## Experiment 2b: Generic interpretation
-
 
 ```{r load expt2b meta data}
 load(file = "cached_results/genint_int_metaData.RData")
@@ -1423,7 +1448,6 @@ cowplot::plot_grid(
 )
 ```
 
-
 ## Experiment 3b: Generic interpretation
 
 ### Methods
@@ -1710,12 +1734,17 @@ Such a development would predict that children start out interpreting all generi
 
 ## Conclusion
 
-# References
+\newpage
 
+# References 
 
-```{r create_r-references}
-r_refs(file = "generics.bib")
+<!-- \setlength{\parindent}{-0.1in}  -->
+<!-- \setlength{\leftskip}{0.125in} -->
+<!-- \noindent -->
+
+<div id = 'refs'></div>
+
+\newpage
+
+```{r child = 'appendix_items.Rmd'}
 ```
-
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
