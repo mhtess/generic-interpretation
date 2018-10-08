@@ -1,0 +1,60 @@
+
+# Appendix: Items
+
+```{r expt1items, results="asis"}
+tab1 <- xtable::xtable(
+  df.c.prior.bs.wide %>% 
+  distinct(stim_property, stim_type) %>%
+    select(stim_property, stim_type) %>%
+    rename(Property = stim_property,
+           `Property type` = stim_type), 
+                       caption = "Items used in Expt. 1", 
+                       align=c('p{2in}',' |p{1in}|',' |p{1in}|'))
+
+
+addtorow          <- list()
+addtorow$pos      <- list()
+addtorow$pos[[1]] <- c(0)
+addtorow$command  <- c(paste("\\hline \n",
+                             "\\endhead \n",
+                             "\\hline \n",
+                             "{\\footnotesize \\em{continued on next page}} \n",
+                             "\\endfoot \n",
+                             "\\endlastfoot \n",sep=""))
+
+large <- function(x){ paste0('{\\Large ', x, '}')
+}
+bold <- function(x){
+paste0('{\\bfseries ', x, '}') }
+
+print(tab1, type="latex", 
+      comment = F,
+       #table.placement = "h", 
+      tabular.environment = "longtable",
+      hline.after=-1:nrow(tab1),
+      size="\\fontsize{9pt}{10pt}\\selectfont", 
+      include.rownames=FALSE,
+      sanitize.colnames.function = bold
+      #add.to.row = addtorow
+      )
+```
+
+```{r expt2items, results="asis"}
+tab2 <- xtable::xtable(
+  df.prior.prevalence.3.isZero.conditionalEv %>% 
+  distinct(property), 
+  caption = "Items used in Expt. 2",
+  align=c('p{2in}',' |p{3in}|'))
+
+
+print(tab2, type="latex", 
+      comment = F,
+       #table.placement = "h", 
+      tabular.environment = "longtable",
+      hline.after=-1:nrow(tab2),
+      size="\\fontsize{9pt}{10pt}\\selectfont", 
+      include.rownames=FALSE,
+      sanitize.colnames.function = bold
+      #add.to.row = addtorow
+      )
+```
