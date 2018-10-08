@@ -1,5 +1,5 @@
-\documentclass[floatsintext,doc]{apa6}
-
+\documentclass[,man,floatsintext]{apa6}
+\usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
@@ -9,170 +9,134 @@
 \else % if luatex or xelatex
   \ifxetex
     \usepackage{mathspec}
-    \usepackage{xltxtra,xunicode}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-  \newcommand{\euro}{€}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
-\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Generic statements have weak (and strong) implications},
+            pdfauthor={Michael Henry Tessler~\& Noah D. Goodman},
+            pdfkeywords={keywords},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
 
-% Table formatting
-\usepackage{longtable, booktabs}
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+
+  \title{Generic statements have weak (and strong) implications}
+    \author{Michael Henry Tessler\textsuperscript{1}~\& Noah D.
+Goodman\textsuperscript{1}}
+    \date{}
+  
+\shorttitle{Context-sensitive generic interpretations}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} Department of Psychology, Stanford University}
+\keywords{keywords\newline\indent Word count: X}
+\usepackage{csquotes}
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+\usepackage{longtable}
 \usepackage{lscape}
-% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
-\usepackage{multirow}		% Table styling
-\usepackage{tabularx}		% Control Column width
-\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
-\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{threeparttablex}
 
-% Create new environments so endfloat can handle them
-% \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
-\newenvironment{lltable}
-  {\begin{landscape}\begin{center}\begin{ThreePartTable}}
-  {\end{ThreePartTable}\end{center}\end{landscape}}
-
-
-
-
-% The following enables adjusting longtable caption width to table width
-% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
 \newcommand\LastLTentrywidth{1em}
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
-\newcommand\getlongtablewidth{%
- \begingroup
-  \ifcsname LT@\roman{LT@tables}\endcsname
-  \global\longtablewidth=0pt
-  \renewcommand\LT@entry[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}%
-  \@nameuse{LT@\roman{LT@tables}}%
-  \fi
-\endgroup}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
 
 
-  \usepackage{graphicx}
-  \makeatletter
-  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-  \makeatother
-  % Scale images if necessary, so that they will not overflow the page
-  % margins by default, and it is still possible to overwrite the defaults
-  % using explicit options in \includegraphics[width, height, ...]{}
-  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex]{hyperref}
-\else
-  \usepackage[unicode=true]{hyperref}
-\fi
-\hypersetup{breaklinks=true,
-            pdfauthor={},
-            pdftitle={Generic statements have weak (and strong) implications},
-            colorlinks=true,
-            citecolor=blue,
-            urlcolor=blue,
-            linkcolor=black,
-            pdfborder={0 0 0}}
-\urlstyle{same}  % don't use monospace font for urls
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
 
-\setlength{\parindent}{0pt}
-%\setlength{\parskip}{0pt plus 0pt minus 0pt}
+\authornote{This manuscript is currently in prep. Comments or
+suggestions should be directed to MH Tessler.
 
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
+Correspondence concerning this article should be addressed to Michael
+Henry Tessler, 450 Serra Mall, Bldg. 420, Rm. 316, Stanford, CA 94305.
+E-mail:
+\href{mailto:mhtessler@stanford.edu}{\nolinkurl{mhtessler@stanford.edu}}}
+
+\abstract{
+Enter abstract here. Each new line herein must be indented, like this
+line.
 
 
-% Manuscript styling
-\captionsetup{font=singlespacing,justification=justified}
-\usepackage{csquotes}
-\usepackage{upgreek}
-
-
-
-\usepackage{tikz} % Variable definition to generate author note
-
-% fix for \tightlist problem in pandoc 1.14
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-% Essential manuscript parts
-  \title{Generic statements have weak (and strong) implications}
-
-  \shorttitle{Context-sensitive generic interpretations}
-
-
-  \author{Michael Henry Tessler\textsuperscript{1}~\& Noah D. Goodman\textsuperscript{1}}
-
-  % \def\affdep{{"", ""}}%
-  % \def\affcity{{"", ""}}%
-
-  \affiliation{
-    \vspace{0.5cm}
-          \textsuperscript{1} Department of Psychology, Stanford University  }
-
-  \authornote{
-    This manuscript is currently in prep. Comments or suggestions should be
-    directed to MH Tessler.
-    
-    Correspondence concerning this article should be addressed to Michael
-    Henry Tessler, 450 Serra Mall, Bldg. 420, Rm. 316, Stanford, CA 94305.
-    E-mail:
-    \href{mailto:mhtessler@stanford.edu}{\nolinkurl{mhtessler@stanford.edu}}
-  }
-
-
-  \abstract{Enter abstract here. Each new line herein must be indented, like this
-line.}
-  \keywords{keywords \\
-
-    \indent Word count: X
-  }
-
-
-
-
-  \usepackage{tabularx}
-  \usepackage{multicol}
-  \usepackage{wrapfig}
-  \usepackage{caption}
-  \usepackage{booktabs}
-  \usepackage{amsmath}
-  \usepackage{graphicx}
-  \usepackage{subcaption}
-  \usepackage{longtable}
-  \usepackage{array}
-  \usepackage{multirow}
+}
 
 \usepackage{amsthm}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem{proposition}{Proposition}
-\newtheorem{conjecture}{Conjecture}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
 \theoremstyle{definition}
-\newtheorem{example}{Example}
+\newtheorem{example}{Example}[section]
 \theoremstyle{definition}
-\newtheorem{exercise}{Exercise}
+\newtheorem{exercise}{Exercise}[section]
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 \newtheorem*{solution}{Solution}
 \begin{document}
-
 \maketitle
-
-\setcounter{secnumdepth}{0}
-
-
 
 \newcommand{\denote}[1]{\mbox{ $[\![ #1 ]\!]$}}
 \newcommand*\diff{\mathop{}\!\mathrm{d}}
@@ -192,84 +156,76 @@ line.}
 
 \section{Introduction}\label{introduction}
 
-Learning from language is uniquely powerful because language can convey
-information that difficult or dangerous to observe (e.g., learning that
-certain plants are poisonous, staring at the sun causes blindness;
-Gelman, 2009). The premier example of language's ability to transmit
-abstract knowledge comes in the form of statements that convey
-generalizations, otherwise known as \emph{generic language} (e.g.,
-``Birds fly''; Carlson, 1977). One of the most important roles for
-generic language is to provide learners with information about new or
-poorly understood categories. As such, generics are ubiquitous in
-everyday conversation and child-directed speech (Gelman, Coley,
-Rosengren, Hartman, \& Pappas, 1998; Gelman, Goetz, Sarnecka, \& Flukes,
-2008; Gelman, Taylor, Nguyen, Leaper, \& Bigler, 2004), and learning
-from generics is thought to be central to conceptual development
-(Cimpian \& Markman, 2009; Gelman, 2004). Understanding how beliefs are
-updated from generic language is thus an important question for
-cognitive science.
+Much of what we learn about the world comes not from our own experience
+but by learning from others, often with language. Using language, a
+teacher can go beyond direct experience, conveying information that is
+itself a generalization. Generalizations about categories are conveyed
+using \emph{generic language} {[}e.g., ``Birds have hollow bones{]}, the
+premier case study of abstract knowledge transmitted via language
+(Carlson, 1977; Gelman, 2009). Generics are ubiquitous in everyday
+conversation and child-directed speech (Gelman, Coley, Rosengren,
+Hartman, \& Pappas, 1998; Gelman, Goetz, Sarnecka, \& Flukes, 2008;
+Gelman, Taylor, Nguyen, Leaper, \& Bigler, 2004), and learning from
+generics is thought to be central to conceptual development (Cimpian \&
+Markman, 2009; Gelman, 2004). Understanding how beliefs are updated from
+generic language is thus an important question for cognitive science.
 
 Abelson and Kanouse (1966) argued that generics, \enquote{\ldots{}once
 accepted psychologically, {[}\ldots{}{]} appear to be commonly taken in
 a rather strong sense, as though the qualifier \emph{always} had
-implicitly crept into their interpretation} (p.~172). Gelman, Star, and
-Flukes (2002) provided adults with generics about animals with
-non-obvious properties (e.g., \enquote{Bears like to eat ants}) and
-found that the \emph{implied prevalence} of the feature among category
-members (e.g., the percentage of bears that like to eat ants) was high
-(\(\sim 85\%\)). Similarly strong interpretations were reported using
-novel categories with biological properties (e.g., ``Lorches have purple
-feathers''; Cimpian, Brandone, \& Gelman, 2010, Expt. 1). The fact that
-generics seem to convey strong implications may explain why social
-stereotypes are propagted and maintained (Rhodes, Leslie, \& Tworek,
-2012).
+implicitly crept into their interpretation} (p.~172). Indeed, adults
+learning from generics about both familiar and novel animals (e.g.,
+\enquote{Bears like to eat ants}; \enquote{Lorches have purple
+feathers}) rate the \emph{implied prevalence} of the feature (e.g., the
+percentage of bears that like to eat ants) as quite high (Cimpian,
+Brandone, \& Gelman, 2010, Expt. 1; \(\sim 85\%\); Gelman, Star, \&
+Flukes, 2002). The fact that generics seem to convey strong implications
+may explain why social stereotypes are propagated and maintained
+(Rhodes, Leslie, \& Tworek, 2012).
 
-Do all generics carry strong implications? \enquote{Mosquitos carry
-malaria} really seems to only have the quantificational force of an
-existential claim, meaning \emph{some mosquitos carry malaria}. This may
-not be a unique example: Cohen (2004) argues for a panolply of
-conditions that give rise to \emph{existential generics} (e.g.,
-focus-sensitive additives, as in \enquote{Birds lay eggs. Mammals lay
-eggs too.}: the second sentence can be interpreted as true because of
-the existence of platypuses and echidnas, both of which reproduce by
-laying eggs). Using a similar implied prevalence task as Gelman et al.
-(2002), Cimpian et al. (2010) (Expt. 3) found somewhat weaker
-interpretations for features that could be construed as accidental
-(e.g., ``Crullets have fungus-covered claws''; see also Khemlani,
-Leslie, \& Glucksberg, 2009, 2012 for evidence for weak inferences from
-generics). In these previous studies, the actual implied prevalence from
+Do all generics carry strong implications? Philosophers and linguists
+have noted that statements like \enquote{Mosquitos carry malaria} seem
+only to have the quantificational force of an existential claim, meaning
+\emph{some mosquitos carry malaria}. Cohen (2004) argues for a panolply
+of conditions that give rise to so-called \emph{existential generics}
+(e.g., focus-sensitive additives, as in \enquote{Birds lay eggs. Mammals
+lay eggs too.}: the second sentence can be interpreted as true because
+of the existence of platypuses and echidnas, both of which reproduce by
+laying eggs). Some empirical evidence corroborates these intuitions:
+Cimpian et al. (2010) (Expt. 3) found somewhat weaker interpretations
+for features that could be construed as accidental (e.g., ``Crullets
+have fungus-covered claws''; see also Khemlani, Leslie, \& Glucksberg,
+2009, 2012 for evidence for weak inferences from generics). In these
+previous studies, however, the actual implied prevalence from
 \enquote{weak} generics is still quite high (in Cimpian et al., 2010
 Expt. 3, mean implied prevalence \(= 70\%\)), leaving open the question
 of whether generics can receive genuinely weak interpretations (e.g.,
 minority interpretations: \(< 50\%\)).
 
 There are also open theoretical questions: property-specific generic
-interpretations have been explained as theory-based expectations
-(Cimpian, Gelman, \& Brandone, 2010; Leslie, 2008; Prasada, Khemlani,
-Leslie, \& Glucksberg, 2013), but these notions have not been made
-sufficiently precise to provide a quantative, predictive account of how
-beliefs will be updated given a specific generic statement. Further, the
-existence of context-sensitive interpretations has been used as evidence
-against a quantitative account of generic language \emph{per se} and it
-has been suggested that the normal tools of formal semantics are
-inappropriate for studying generics (Leslie, 2008).
-\mht{not sure if we want to take up the previous point to add to the contributions of this paper}
-Tessler and Goodman (under review) proposed a quantitative model of
-generic language as a kind of vague quantifier (or, uncertain threshold
-model), combining tools from formal semantics and Bayesian modeling.
+interpretations (e.g., \enquote{Lorches have purple feathers} vs.
+\enquote{\ldots{} fungus-covered claws}) have been explained as
+differences in \emph{theory-based expectations} (Cimpian, Gelman, \&
+Brandone, 2010; Leslie, 2008; Prasada, Khemlani, Leslie, \& Glucksberg,
+2013), but these notions have not been made sufficiently precise to
+provide a quantative, predictive account of how beliefs will be updated
+given a specific generic statement. Tessler and Goodman (under review)
+proposed a quantitative model of generic language as a kind of vague
+quantifier, combining tools from formal semantics and Bayesian modeling.
 This model accounted for truth judgments or endorsements (e.g., is
-\enquote{Mosquitos carry malaria} true or false?) about a wide range of
+\enquote{Mosquitos carry malaria} true or false?) among a wide range of
 linguistic stimuli including generics about animals, habitual statements
 about actions (e.g., \enquote{John runs}), and causal sentences (e.g.,
-\enquote{This herb makes animals sleepy}). This endorsement model is
+\enquote{This herb makes animals sleepy}). Their endorsement model is
 cast as a speaker deciding whether or not to assert a generic statement
-to a listener, who will update her beliefs from the generic statement.
-The listener model used therein provides a mapping from a generic
-statement to implied prevalence---it is a quantitative account of how
-generics update beliefs. This paper tests the predictions of this
-listener model directly. In doing so, we also look for evidence for
-\emph{weak generics}, which are predicted to exist and provide the
-strongest test of the uncertain threshold account.
+to a listener, who updates their beliefs about the prevalence of the
+feature in the category from the generic statement. Their listener model
+used therein provides a mapping from a generic statement to implied
+prevalence---it is a quantitative account of how generics update
+beliefs. This paper tests the predictions of this listener model
+directly. In doing so, we also look for evidence for \emph{weak
+generics}, which are predicted to exist and provide the strongest test
+of the uncertain threshold account.
 
 The paper is organized as follows. First, we review Tessler and Goodman
 (under review)'s computational model of generic interpretation, describe
@@ -1386,7 +1342,7 @@ zero. Overall, the uncertain threshold model predicts much of the
 variance in the means of these empirical distributions:
 \(r^2(10) = 0.89; MSE = 0.00427\)
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begingroup\fontsize{9pt}{10pt}\selectfont
 \begin{tabular}{llrl}
@@ -1440,7 +1396,7 @@ model predictions by resampling the prior. As if shown in Table 2, the
 uncertain threshold model is by far the best model at predicting these
 data.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begingroup\fontsize{9pt}{10pt}\selectfont
 \begin{tabular}{llll}
@@ -1460,24 +1416,28 @@ Threshold = 0.01 & -70.7 (-56.2, -85.5) & r\textsuperscript{2}(10) = 0.91; MSE =
 
 \section{General Discussion}\label{general-discussion}
 
-Much of what we come to learn about the world comes from other people,
-often expressed in language. Generic language is the foremost case study
-of how abstract, generalizable knowledge is transmitted in language.
-Despite its ubiquity and relative morphosyntactic simplicity, there have
-been few quantitative studies of generics and no quantitative models
-that make predictions about how generic language is interpreted. Here we
-test a quantitative model on a broad set of quantitative data, including
-a replication data set from Cimpian et al. (2010). We find reliable
-fine-grained differences in interpretations across properties, which
-only our uncertain threshold model can account for. This work, thus,
-provides the computational formalism necessary to describe how beliefs
-are updated from generic language. In what follows, we provide further
-exposition about the empirical data, relate our account to a related
-kind of account based on the idea of \emph{domain restriction}, discuss
-how our answer to the problem of generic interpretation can inform an
-answer to the problem of a parallel problem \emph{generic
-identification}, and speculate about the origins of context-sensitive
-generic interpretations.
+Generic language is the foremost case study of how abstract,
+generalizable knowledge is transmitted in language, and it is often
+thought that generics carry strong interpretations (analogous to the
+quantifier \enquote{most} or \enquote{all}). Despite its ubiquity and
+relative morphosyntactic simplicity, there have been few quantitative
+studies of generics and no quantitative models that make predictions
+about how generic language updates beliefs. Here, we tested a
+quantitative model of generic language on interpretations of a broad set
+of stimuli, including a replication data set from Cimpian et al. (2010)
+and show that the generic interpretations can be predicted with
+high-quantitative accuracy as a function of background knowledge about
+the property. We also find that generics can carry weak interpretations,
+when background knowledge would make a strong interpretation
+implausible. This work, thus, provides the computational formalism
+necessary to describe how beliefs are updated from generic language.
+
+In what follows, we provide further exposition about the empirical data,
+relate our account to a related kind of account based on the idea of
+\emph{domain restriction}, discuss how our answer to the problem of
+generic interpretation can inform an answer to the problem of a parallel
+problem \emph{generic identification}, and speculate about the origins
+of context-sensitive generic interpretations.
 
 \ndg{i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.}
 
@@ -1485,47 +1445,50 @@ generic interpretations.
 interpretations}\label{the-relationship-between-prevalence-priors-and-generic-interpretations}
 
 Across our three experiments, we measured participants' background
-knowledge about the property using knowledge elicitation tasks that rely
-upon the usage of language (e.g., in the instructions and the
-elicitation questions). That is, in both the prior elicitation and
-generic interpretation task we measure participants' beliefs using
-language tasks. The concern for circularity in our argument warrants
-further discussion.
+knowledge about the property using knowledge elicitation tasks. These
+background knowledge or prior elicitation tasks involve language in the
+instructions and the elicitation questions. That is, in both the prior
+elicitation and generic interpretation task we measure participants'
+beliefs using language tasks. Thus, there is potential for circularity
+in our argument, which warrants further discussion.
 
 The potential for circularity is most apparent with the structured
-elicitation task in Expt. 1a. In Expt. 1, we assumed a particular
-structure to the prevalence prior and elicited participants' knowledge
-about the property using questions that we assumed tapped into this
-structure. One question concerned the relative probability mass of the
-prevalence distribution around 0\% prevalence (or, equivalently, the
-proportion of categories for whom the property is expected to be present
-at some non-zero level of prevalence) by asking \enquote{How likely is
-it that \emph{there is a K with F}?} Intuitively, the response to this
-question should be very high for properties that exist in many
+elicitation task in Expt. 1a. In Expt. 1, we assumed a particular model
+of the prevalence prior (i.e., a mixture of Betas) and elicited
+participants' knowledge about the property using questions that we
+assumed tapped into this model. One question concerned the probability
+that a kind would have 0\% prevalence of the feature (or, equivalently,
+the proportion of categories for whom the property is expected to be
+present at some non-zero level of prevalence) by asking \enquote{How
+likely is it that \emph{there is a K with F}?} Intuitively, the response
+to this question should be very high for properties that exist in many
 categories (e.g., \emph{is female}) and low for properties that only
 exist in a few categories (e.g., \emph{has purple feathers}). The second
-question concerned the shape of the non-zero prevalence aspects of the
-prior distribution; this was measured by asking \enquote{\emph{Suppose
-there is a K with F}, how many Ks do you think have F?}. This question
+question concerned the shape of the conditional, non-zero distribution
+of prevalence; this was measured by asking \enquote{\emph{Suppose there
+is a K with F}, how many Ks do you think have F?}. This question
 measures the projectibility of the property given a single, positive
-exemplar. Because this question does not include the generic statement
-inside of it, the predictions of the \enquote{some} model (which rules
-out 0\% prevalence) are derived from background knowledge in the correct
-way: They are the inferences upon learning that at least one member of
-the category has the property.
+exemplar. Thus, the predictions of the alternative, fixed-threhsold
+\enquote{some} model (which rules out 0\% prevalence) correspond to the
+inferences upon learning that at least one member of the category has
+the property.
 
-The patterns of data we observe in our three generic interpretation
-experiments are unlikely to be the same as if participants heard
-\enquote{Some Ks have F} rather than \enquote{Ks have F}. Though we did
-not empirically measure judgments given the existentially quantified
-statements, the alternative model that assumes a fixed-threshold at
-0\%-prevalence provides insight into what should be expected for those
-data.\footnote{Note that the fixed-threshold models are \enquote{literal
-  interpretation} models and do not compute scalar implicatures.} Across
-our three experiments, we found that the \enquote{some} model provided
-too weak of interpretations, consistent with the intuition that generic
-statements convey stronger prevalence implications that the existential
-statement.
+The generic interpretation data are distinct from those of the
+conditional, non-zero distributioun of prevalence, as evidenced by the
+\enquote{some} model comparisons. Learning from a generic carries
+stronger interpretations than just learning the existential information
+that a property exists in the category. Similarly, the patterns of data
+we observe in our three generic interpretation experiments are unlikely
+to be the same as if participants heard \enquote{Some Ks have F} rather
+than \enquote{Ks have F}. Though we did not empirically measure
+judgments given the existentially quantified statements, the alternative
+model that assumes a fixed-threshold at 0\%-prevalence provides insight
+into what should be expected for those data.\footnote{Note that the
+  fixed-threshold models are \enquote{literal interpretation} models and
+  do not compute scalar implicatures.} Across our three experiments, we
+found that the \enquote{some} model provided too weak of
+interpretations, consistent with the intuition that generic statements
+convey stronger prevalence implications that the existential statement.
 
 \ndg{people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).}
 \mht{does that address it?}
@@ -1699,8 +1662,8 @@ likely to have generated the observed 1 out of 10 heads.
 
 If we take the pseudo-counts as indices of worldly experience, it is
 interesting to note what happens as the pseudo-counts approach 0. As the
-parameters approach zero, the Beta probability distribution increasingly
-prefers extreme values: 0 or 1. If our knowledge about predictive
+parameters approach zero, the Beta probability distribution increasi
+ngly prefers extreme values: 0 or 1. If our knowledge about predictive
 probabilities are represented by Beta distributions, then early on, our
 belief distributions would favor categorical thinking. However, once we
 start to learn about different kinds of categories and properties,
@@ -2134,10 +2097,6 @@ use tools \\
 \end{longtable}
 
 \endgroup
-
-
-
-
 
 
 \end{document}

@@ -27,6 +27,7 @@ header-includes:
   - \usepackage{longtable}
   - \usepackage{array}
   - \usepackage{multirow}
+  - \usepackage{xcolor}
   
 author_note: >
   This manuscript is currently in prep. Comments or suggestions should be directed to MH Tessler.
@@ -70,6 +71,7 @@ library(ggthemes)
 library(RColorBrewer)
 library(ggpirate)
 library(viridis)
+library(brms)
 theme_set(theme_few())
 remove(list= ls())
 ```
@@ -1139,8 +1141,10 @@ The generic interpretation model is able to flexibly adjust the threshold depend
 fig.genint.interpretation.ci <- df.int.filtered %>%
   mutate(property = factor(property, 
                            levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
-  ggplot(., aes( x = property, y = response))+
-  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35)+
+  ggplot(., aes( x = property, y = response, fill = property))+
+  #geom_point()+
+  #geom_pirate()+
+  geom_pirate(violins = F, bars = F)+
   coord_flip()+
   #scale_color_viridis(discrete = T)+
   scale_y_continuous(limits= c(0, 1), breaks = c(0, 0.5, 1))+
@@ -1717,12 +1721,15 @@ print(tab1, type="latex", comment = F, table.placement = "H", size="\\fontsize{9
 <!-- Further, the existence of property-sensitive interpretations has been used as evidence against a quantitative account of generic language *per se* and it has been suggested that the normal tools of formal semantics are inappropriate for studying generics [@Leslie2008]. -->
 <!-- \mht{not sure if we want to take up the previous point to add to the contributions of this paper} -->
 
-Much of what we come to learn about the world comes from other people, often expressed in language.
-Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language.
+<!-- Much of what we come to learn about the world comes from other people, often expressed in language. -->
+
+Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language, and it is often thought that generics carry strong interpretations (analogous to the quantifier "most" or "all").
 Despite its ubiquity and relative morphosyntactic simplicity, there have been few quantitative studies of generics and no quantitative models that make predictions about how generic language updates beliefs.
-Here we test a quantitative model on a broad set of stimuli, including a replication data set from @Cimpian2010.
-We find reliable fine-grained differences in interpretations across properties, which only our uncertain threshold model can account for.
+Here, we tested a quantitative model of generic language on interpretations of a broad set of stimuli, including a replication data set from @Cimpian2010 and show that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property. 
+We also find that generics can carry weak interpretations, when background knowledge would make a strong interpretation implausible.
+<!-- We find reliable fine-grained differences in interpretations across properties, which only our uncertain threshold model can account for. -->
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
+
 In what follows, we provide further exposition about the empirical data, relate our account to a related kind of account based on the idea of *domain restriction*, discuss how our answer to the problem of generic interpretation can inform an answer to the problem of a parallel problem *generic identification*, and speculate about the origins of context-sensitive generic interpretations.
 
 \ndg{i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.}
@@ -1730,19 +1737,23 @@ In what follows, we provide further exposition about the empirical data, relate 
 
 ## The relationship between prevalence priors and generic interpretations
 
-Across our three experiments, we measured participants' background knowledge about the property using knowledge elicitation tasks that rely upon the usage of language (e.g., in the instructions and the elicitation questions).
+Across our three experiments, we measured participants' background knowledge about the property using knowledge elicitation tasks.
+These background knowledge or prior elicitation tasks involve language in the instructions and the elicitation questions.
 That is, in both the prior elicitation and generic interpretation task we measure participants' beliefs using language tasks.
-The concern for circularity in our argument warrants further discussion.
+Thus, there is potential for circularity in our argument, which warrants further discussion.
 
 The potential for circularity is most apparent with the structured elicitation task in Expt. 1a.
-In Expt. 1, we assumed a particular structure to the prevalence prior and elicited participants' knowledge about the property using questions that we assumed tapped into this structure. 
-One question concerned the relative probability mass of the prevalence distribution around 0% prevalence (or, equivalently, the proportion of categories for whom the property is expected to be present at some non-zero level of prevalence) by asking "How likely is it that *there is a K with F*?"
+In Expt. 1, we assumed a particular model of the prevalence prior (i.e., a mixture of Betas) and elicited participants' knowledge about the property using questions that we assumed tapped into this model. 
+One question concerned the probability that a kind would have 0% prevalence of the feature (or, equivalently, the proportion of categories for whom the property is expected to be present at some non-zero level of prevalence) by asking "How likely is it that *there is a K with F*?"
 Intuitively, the response to this question should be very high for properties that exist in many categories (e.g., *is female*) and low for properties that only exist in a few categories (e.g., *has purple feathers*).
-The second question concerned the shape of the non-zero prevalence aspects of the prior distribution; this was measured by asking "*Suppose there is a K with F*, how many Ks do you think have F?".
+The second question concerned the shape of the conditional, non-zero distribution of prevalence; this was measured by asking "*Suppose there is a K with F*, how many Ks do you think have F?".
 This question measures the projectibility of the property given a single, positive exemplar.
-Because this question does not include the generic statement inside of it, the predictions of the "some" model (which rules out 0% prevalence) are derived from background knowledge in the correct way: They are the inferences upon learning that at least one member of the category has the property.
+Thus, the predictions of the alternative, fixed-threhsold "some" model (which rules out 0% prevalence) correspond to the inferences upon learning that at least one member of the category has the property.
 
-The patterns of data we observe in our three generic interpretation experiments are unlikely to be the same as if participants heard "Some Ks have F" rather than "Ks have F".
+The generic interpretation data are distinct from those of the conditional, non-zero distributioun of prevalence, as evidenced by the "some" model comparisons.
+Learning from a generic carries stronger interpretations than just learning the existential information that a property exists in the category.
+<!-- are derived from the background knowledge in the correct way: They  -->
+Similarly, the patterns of data we observe in our three generic interpretation experiments are unlikely to be the same as if participants heard "Some Ks have F" rather than "Ks have F".
 Though we did not empirically measure judgments given the existentially quantified statements, the alternative model that assumes a fixed-threshold at 0%-prevalence provides insight into what should be expected for those data.^[
   Note that the fixed-threshold models are "literal interpretation" models and do not compute scalar implicatures.
 ]
@@ -1833,7 +1844,8 @@ For example, a Beta(1, 9) distribution describes beliefs about the weight of the
 This probability distribution heavily favors numbers around 0.1, as a coin of that weight is most likely to have generated the observed 1 out of 10 heads. 
 
 If we take the pseudo-counts as indices of worldly experience, it is interesting to note what happens as the pseudo-counts approach 0. 
-As the parameters approach zero, the Beta probability distribution increasingly prefers extreme values: 0 or 1. 
+As the parameters approach zero, the Beta probability distribution increasi
+ngly prefers extreme values: 0 or 1. 
 If our knowledge about predictive probabilities are represented by Beta distributions, then early on, our belief distributions would favor categorical thinking. 
 However, once we start to learn about different kinds of categories and properties, probably via labeling, we may begin to represent multiple distributions in our prevalence priors. 
 Such a development would predict that children start out interpreting all generics as strong generics, and that the understanding of weak generics is later developing ability.
