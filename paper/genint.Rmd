@@ -33,7 +33,7 @@ author_note: >
   This manuscript is currently in prep. Comments or suggestions should be directed to MH Tessler.
 
 abstract: |
-  Enter abstract here. Each new line herein must be indented, like this line.
+  Generic language (e.g., "Birds have hollow bones") conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Interpreting generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Recently, @TesslerLangGenUnderReview proposed a model for the meaning of generics as a vague quantifier operating over rich prior knowledge about properties, which predicted human generic truth judgments with high quantitative accuracy. Here, we test the adequacy of this model to account for the belief-updating mechanism of generic statements: How novel generics are interpreted. This model uniquely predicts the existence of generics with *weak interpretations*, which with we confirm with behavioral experiments. *Weak generics* pose a new challenge for theories that only view generics as conveying strong implications. 
   
 keywords          : "keywords"
 wordcount         : "X"
@@ -1148,13 +1148,13 @@ fig.genint.interpretation.ci <- df.int.filtered %>%
   ggplot(., aes( x = property, y = response, fill = property))+
   #geom_point()+
   #geom_pirate()+
-  geom_pirate(violins = F, bars = F)+
+  #geom_pirate(violins = F, bars = F)+
+  geom_pirate(bars = F, violins = F, width_points = 0.2, alpha_points = 0.35)+
   coord_flip()+
   #scale_color_viridis(discrete = T)+
   scale_y_continuous(limits= c(0, 1), breaks = c(0, 0.5, 1))+
   theme(axis.title.y = element_blank())+
   ylab("Implied prevalence rating")
-
 
 fig.genint.interpretation.modelss <- md.impprev %>% 
   filter((parameter == "posterior") | (semantics == "uncertain")) %>%
@@ -1372,7 +1372,7 @@ The boostrapped mean and 95% quantiles for each prevalence bin in each distribut
 We see that context-sensitive interpretations are predicted, with idiosyncracies that reflect empirically measured distributions.
 We then tested these predictions against interpretations in the same empirical paradigm.
 
-```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means. C: Same as B shown in scatterplot.", fig.width = 13.5,fig.asp = 0.6}
+```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means.", fig.width = 13.5,fig.asp = 0.5}
 load(file = "cached_results/gentInt_manipPriors_dists_expvals.RData")
 # md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
 #      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
@@ -1400,6 +1400,14 @@ distribution.order.labels <- gsub("_", " ", distribution.order.levels)
 
 distribution.order.labels <- gsub(" ", "/", gsub(" or", "", gsub("deterministic", "100", gsub("strong", "75", gsub("half", "50", gsub("weak", "25", gsub("rare","0", distribution.order.labels)))))))
 
+
+my_label_parsed <- function (variable, value) {
+  if (variable %in% c("prior", "model")) {
+    return(as.character(value))
+  } else {
+    llply(as.character(value), function(x) parse(text = x))    
+  }
+}
 
 
 fig.int.dists.bs <- md.pm.int.3.filtered.dists.bs.summary %>%
@@ -1429,12 +1437,14 @@ fig.int.expval.bs <- md.pm.int.3.filtered.expvals.bs.summary %>%
   filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
   mutate(distribution = factor(distribution,  levels = distribution.order.levels, labels = distribution.order.labels),
          model = factor(model,
-                        levels = c("prior", "uncertain", "data",
+                        levels = c("prior", 
                                    "fixed_0.0175", "fixed_0.125",
-                                   "fixed_0.375"),
-                        labels = c("prevalence prior", "generics model", "data",
-                                   '"some" (threshold = 0.01)', '"not rare" (threshold = 0.10)', 
-                                   '"more than third" (threshold= 0.33)'))) %>%
+                                   "fixed_0.375", "uncertain", "data"),
+                        labels = c("prevalence_prior",
+                                   expression(paste('"some" (', theta, '=0.01)')), 
+                                   expression(paste('"not rare" (', theta, '=0.10)')), 
+                                   expression(paste('"more than third" (', theta, '=0.33)')), 
+                                   "generics_model", "data"))) %>%
   ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
   geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
   geom_errorbar(position = position_dodge())+
@@ -1442,7 +1452,8 @@ fig.int.expval.bs <- md.pm.int.3.filtered.expvals.bs.summary %>%
   ylab("Mean implied prevalence")+
   theme(axis.text.x = element_blank(),
         axis.title.x = element_blank())+
-  facet_wrap(~model, nrow = 2)+ guides(fill = guide_legend(reverse=T))
+  facet_wrap(~model, nrow = 1, labeller = label_parsed)+ 
+  guides(fill = guide_legend(reverse=F, ncol = 2))
 
 
 
@@ -1472,17 +1483,19 @@ fig.int.expval.bs.scatters <- md.pm.int.3.filtered.expvals.bs.summary.wide %>%
 cowplot::plot_grid(
   fig.int.dists.bs + theme(plot.margin = unit(c(6, 6, 6, 0), "pt"),
                          legend.position = 'none'), 
-  cowplot::plot_grid(
-    fig.int.expval.bs + theme(plot.margin = unit(c(6, 6, 6, 6), "pt"),
-                         legend.position = 'none'),
-    fig.int.expval.bs.scatters + theme(plot.margin = unit(c(6, 0, 0, 0), "pt"),
-                           legend.position = 'none'),
-    get_legend(fig.int.expval.bs), rel_widths = c(1, 0.65,0.3),
-    nrow = 1,  labels = c("B", "C", "")
-  ),
+  fig.int.expval.bs + theme(plot.margin = unit(c(6, 6, 6, 6), "pt")),
+  # cowplot::plot_grid(
+  #   fig.int.expval.bs + theme(plot.margin = unit(c(6, 6, 6, 6), "pt")),
+  #   # fig.int.expval.bs.scatters + theme(plot.margin = unit(c(6, 0, 0, 0), "pt"),
+  #   #                        legend.position = 'none'),
+  #   # get_legend(fig.int.expval.bs), rel_widths = c(1, #0.65,
+  #   #                                               0.2),
+  #   # nrow = 1,  labels = c("B", "")
+  # ),
   nrow = 2,
   labels = c("A", "B"),
-  rel_widths = c(3.5, 1, 1)
+  rel_heights = c(2,1)
+  #rel_widths = c(3.5, 1, 1)
 )
 ```
 
