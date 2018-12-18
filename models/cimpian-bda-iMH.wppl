@@ -1,10 +1,13 @@
-// time ~/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils uncertain 1
+// time ~/tools/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils pragmatic_unlifted uncertain 1
+// time ~/tools/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils pragmatic uncertain 1
+// time ~/tools/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils literal uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
+var modelName = process.argv[process.argv.length - 3]
 var semantics = process.argv[process.argv.length - 2]
 
 var AllNullDistributions = [
@@ -17,7 +20,7 @@ var NullDistributionObj = AllNullDistributions[(chain-1) % AllNullDistributions.
 var NullDistribution = NullDistributionObj.dist;
 var NullDistributionName = NullDistributionObj.name;
 
-console.log(" semantics = " + semantics + " ___ null dist = " + NullDistributionName)
+console.log("model = " + modelName+ " ___ semantics = " + semantics + " ___ null dist = " + NullDistributionName)
 
 var dataPath = "../data/asymmetry/",
     priorFilePrefix = "asymmetry-prior-4",
@@ -76,6 +79,8 @@ var model = function(){
 
     // var fixedThreshold = semantics == "fixed" ? uniformDraw(thetaBins) : -99
     var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
+    var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
+    var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
 
     var nullParams = betaShape({
       g: uniformDrift({a: 0, b: 0.1, width: 0.01}),
@@ -122,18 +127,65 @@ var model = function(){
       )
   	}});
 
-  	/// RSA model
-  	var listener0 = cache(function(utterance) {
-  	  Infer({model: function(){
-  	    var state = sample(statePrior);
-        var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
-  	    var m = meaning(utterance, state, theta)
-  	    condition(m)
-  	    return state
-  	 }})}, 10000)
+     /// RSA model
+   	var listener0 = cache(function(utterance) {
+   	  Infer({model: function(){
+   	    var state = sample(statePrior);
+         var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+   	    var m = meaning(utterance, state, theta)
+   	    condition(m)
+   	    return state
+   	 }})}, 10000)
 
-    var L0 = listener0("generic")
-    var interpretationPrediction = addNoise(L0, noise)
+      /// LIFTED PRAGMATIC
+    	var listener0_forL1 = cache(function(utterance, theta) {
+    	  Infer({model: function(){
+    	    var state = sample(statePrior);
+    	    var m = meaning(utterance, state, theta)
+    	    condition(m)
+    	    return state
+    	 }})}, 10000)
+
+      var speaker1 = cache(function(state, theta) {
+       Infer({model: function(){
+         var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+         var L0 = listener0_forL1(utterance, theta);
+         factor(speakerOptimality * L0.score(state))
+         return utterance
+       }})}, 10000)
+
+     var listener1 = cache(function(utterance) {
+       Infer({model: function(){
+         var state = sample(statePrior);
+         var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+         var S1 = speaker1(state, theta)
+         observe(S1, utterance)
+         return state
+       }})}, 10000)
+
+       /// UNLIFTED PRAGMATIC
+
+        var speaker1_unlifted = cache(function(state) {
+         Infer({model: function(){
+           var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+           var L0 = listener0(utterance);
+           factor(speakerOptimality * L0.score(state))
+           return utterance
+         }})}, 10000)
+
+       var listener1_unlifted = cache(function(utterance) {
+         Infer({model: function(){
+           var state = sample(statePrior);
+           var S1 = speaker1_unlifted(state)
+           observe(S1, utterance)
+           return state
+         }})}, 10000)
+
+    var L = modelName == "literal" ? listener0("generic") :
+    modelName == "unlifted_pragmatic" ? listener1_unlifted("generic") :
+    listener1("generic")
+
+    var interpretationPrediction = addNoise(L, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -153,14 +205,15 @@ var model = function(){
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
    semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
+   modelName == "literal"? null: query.add(["optimality", -99, -99, -99], speakerOptimality)
 
 	return query
 }
 
-var totalIterations = 2500, lag =  1;
+var totalIterations = 250, lag =  1;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'pilot-results-cimpian-L0-structuredPrior_'+semantics+'-semantics-nullDist_' + NullDistributionName + "_" + totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+var outfile = 'results-cimpian-'+modelName+'-structuredPrior_'+semantics+'-semantics-nullDist_' + NullDistributionName + "_" + totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
 
 var posterior = Infer({
   model: model,
