@@ -1,6 +1,6 @@
 // time webppl cimpian-bda-ais.wppl --require utils --require webppl-json pragmatic_unlifted uncertain 1
-// time webppl cimpian-bda-L0-iMH.wppl --require utils pragmatic uncertain 1
-// time webppl cimpian-bda-L0-iMH.wppl --require utils literal uncertain 1
+// time webppl cimpian-bda-ais.wppl --require utils --require webppl-json pragmatic uncertain 1
+// time webppl cimpian-bda-ais.wppl --require utils --require webppl-json literal uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -37,6 +37,8 @@ var interpretationWorkerids = levels(d_interpretation, "workerid")
 
 var data = {
 	prior: map(function(d){ return extend(d, {
+    binnedResponse0: utils.closest( midBins, d.response0),
+    binnedResponse1: utils.closest( midBins, d.response1),
 		response0_avoidedEndval: avoidEnds(d.response0),
     response1_avoidedEndval: avoidEnds(d.response1)
   })}, d_prior),
@@ -59,13 +61,12 @@ var meaning = function(utt,state, theta) {
          true
 }
 //
-var properties = levels(data.interpretation, "stim_property");
 
+var properties = levels(data.interpretation, "stim_property");
 
 var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
   (semantics == "most") ? 0.5 :
   false
-
 
 // properties
 
@@ -75,17 +76,40 @@ var addNoise = function(dist, noise){
   }})
 }
 
+var priors = _.fromPairs(map(function(p){
+  var property_data = _.filter(data.prior, {stim_property: p})
+
+  var distProbs = _.fromPairs(map(function(r){
+    // var response_data = _.map(property_data, r)
+    // return [r, listMean(response_data)]
+
+    return r == "binnedResponse0" ?
+      [r, map(function(b){ _.filter(property_data, {binnedResponse0: b}).length + 1}, midBins)] :
+      [r, map(function(b){ _.filter(property_data, {binnedResponse1: b}).length + 1}, midBins)]
+
+  }, ["binnedResponse0", "binnedResponse1"]))
+
+  return [p, Infer({model: function(){
+    sample(
+      flip(
+        categorical({vs: midBins, ps: distProbs.binnedResponse0})
+      ) ?
+      Categorical({vs: midBins, ps: distProbs.binnedResponse1}) :
+      NullDistribution
+    )
+  }})]
+
+}, properties))
+
+// priors["big claws"]
+// data.prior
+
 var marginalLikelihood = function(){
 
     // var fixedThreshold = semantics == "fixed" ? uniformDraw(thetaBins) : -99
     var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
     var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
     var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
-
-    var nullParams = betaShape({
-      g: uniformDrift({a: 0, b: 0.1, width: 0.01}),
-      d: uniformDrift({a: 0, b: 500, width: 50})
-    })
 
 
   foreach(properties, function(item){
@@ -95,37 +119,33 @@ var marginalLikelihood = function(){
         interpretation: _.filter(data.interpretation, {stim_property: item})
     };
 
-    var mixture_params = betaShape({
-          g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
-    })
-
-    mapData({data: propertyData.prior}, function(d){
-      observe( Beta(mixture_params), d.response0_avoidedEndval )
-    })
-
-    var prevalence_when_present = betaShape({
-          g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
-    })
-
-    mapData({data: propertyData.prior}, function(d){
-      observe( Beta(prevalence_when_present), d.response1_avoidedEndval )
-    })
-
-    // query.add(["prevPriorParams", item, "mixtureParam", "alpha"], mixture_params.a)
-    // query.add(["prevPriorParams", item, "mixtureParam", "beta"], mixture_params.b)
+    // var mixture_params = betaShape({
+    //       g: uniformDrift({a: 0, b: 1, width: 0.2}),
+    //       d: uniformDrift({a: 0, b: 100, width: 5})
+    // })
     //
-    // query.add(["prevPriorParams", item, "prevWhenPresent", "alpha"], prevalence_when_present.a)
-    // query.add(["prevPriorParams", item, "prevWhenPresent", "beta"], prevalence_when_present.b)
+    // mapData({data: propertyData.prior}, function(d){
+    //   observe( Beta(mixture_params), d.response0_avoidedEndval )
+    // })
+    //
+    // var prevalence_when_present = betaShape({
+    //       g: uniformDrift({a: 0, b: 1, width: 0.2}),
+    //       d: uniformDrift({a: 0, b: 100, width: 5})
+    // })
+    //
+    // mapData({data: propertyData.prior}, function(d){
+    //   observe( Beta(prevalence_when_present), d.response1_avoidedEndval )
+    // })
+    //
+  	// var statePrior = Infer({model: function(){
+    //   sample(
+    //     flip(sample(DiscretizedBeta(mixture_params))) ?
+    //     DiscretizedBeta(prevalence_when_present) :
+    //     NullDistribution
+    //   )
+  	// }});
 
-  	var statePrior = Infer({model: function(){
-      sample(
-        flip(sample(DiscretizedBeta(mixture_params))) ?
-        DiscretizedBeta(prevalence_when_present) :
-        NullDistribution
-      )
-  	}});
+    var statePrior = priors[item]
 
      /// RSA model
    	var listener0 = cache(function(utterance) {
@@ -215,7 +235,7 @@ var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
 var resultsOutFile = 'results/marginal_likelihood/ais-cimpian-'+
-modelName+'-structuredPrior_'+semantics+'-semantics-nullDist_' +
+modelName+'-empiricalPrior_'+semantics+'-semantics-nullDist_' +
 NullDistributionName + "_steps" + steps+'iter'+chain+'.json';
 
 // // postOut
