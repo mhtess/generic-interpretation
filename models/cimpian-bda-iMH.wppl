@@ -182,7 +182,7 @@ var model = function(){
          }})}, 10000)
 
     var L = modelName == "literal" ? listener0("generic") :
-    modelName == "unlifted_pragmatic" ? listener1_unlifted("generic") :
+    modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
     listener1("generic")
 
     var interpretationPrediction = addNoise(L, noise)
@@ -210,7 +210,7 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 250, lag =  1;
+var totalIterations = 500000, lag =  150;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 var outfile = 'results-cimpian-'+modelName+'-structuredPrior_'+semantics+'-semantics-nullDist_' + NullDistributionName + "_" + totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';

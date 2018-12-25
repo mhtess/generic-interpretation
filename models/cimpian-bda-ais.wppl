@@ -202,7 +202,7 @@ var marginalLikelihood = function(){
          }})}, 10000)
 
     var L = modelName == "literal" ? listener0("generic") :
-    modelName == "unlifted_pragmatic" ? listener1_unlifted("generic") :
+    modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
     listener1("generic")
 
     var interpretationPrediction = addNoise(L, noise)
@@ -230,7 +230,7 @@ var marginalLikelihood = function(){
 	// return query
 }
 
-var steps = 200
+var steps = 10000
 var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 

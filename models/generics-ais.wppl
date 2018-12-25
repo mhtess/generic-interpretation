@@ -1,4 +1,4 @@
-// time webppl generics-bda-L0-bdmc.wppl --require utils --require webppl-json literal uncertain 1
+// time webppl generics-ais.wppl --require utils --require webppl-json pragmatic_unlifted uncertain 4
 
 
 // modelName: pragmatic, pragmatic_unlifted, literal
@@ -7,7 +7,7 @@
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
-var semantics = process.argv[process.argv.length - 2]
+// var semantics = process.argv[process.argv.length - 2]
 // console.log(semantics)
 
 var arguments = process.argv
@@ -232,7 +232,7 @@ var marginalLikelihood = function(){
         }})}, 10000)
 
       var interpretationPrediction = modelName == "literal" ? listener0("generic") :
-      modelName == "unlifted_pragmatic" ? listener1_unlifted("generic") :
+      modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
       listener1("generic")
 
 
@@ -286,12 +286,12 @@ var marginalLikelihood = function(){
 
 
 // data.endorsement
-var steps = 5
+var steps = 10000
 var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
 
-var resultsOutFile = 'results/marginal_likelihood/ais-'+modelName+
+var resultsOutFile = 'results/marginal_likelihood/ais-genint-'+modelName+
   '-fixedPriors-steps'+steps +'-iter'+iter+'.json'
 
 // // postOut
