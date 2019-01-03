@@ -289,7 +289,7 @@ var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
 
-var resultsOutFile = 'results/marginal_likelihood/ais-genint-'+modelName+
+var resultsOutFile = 'results/marginal_likelihood/ais-genint-wCost-'+modelName+
   '-fixedPriors-steps'+steps +'-iter'+iter+'.json'
 
 // // postOut

@@ -286,11 +286,11 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 250000, lag =  75;
-var totalIterations = 250, lag =  1;
+var totalIterations = 250000, lag =  75;
+// var totalIterations = 250, lag =  1;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-int6-prior3-3Components_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+var outfile = 'results-genint-wCost-int6-prior3-3Components_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
 
 var posterior = Infer({
   model: model,
