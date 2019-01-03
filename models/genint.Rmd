@@ -1,0 +1,62 @@
+---
+title: "Single model simulations"
+output: html_notebook
+---
+
+
+```{r libraries}
+library(tidyverse)
+library(forcats)
+library(rwebppl)
+library(jsonlite)
+library(ggthemes)
+theme_set(theme_few())
+
+```
+
+```{r}
+expectation <- function(dist){
+  return(sum(dist$probs*dist$support))
+}
+```
+
+
+
+```{r}
+params <- expand.grid(
+  speakerOptimality = seq(0.5, 30, 2),
+  cost = c(0, 0.5, 1, 3, 5, 10),
+  modelName = c("literal", "pragmatic_unlifted", "pragmatic"),
+  prior = c("uniform", "biological_rare", "biological_common",
+            "accidental_common", "accidental_rare",
+            "gendered_rare")
+  )
+```
+
+```{r}
+wp.rs <- webppl(program_file = "genint.wppl",
+       packages = c("./node_modules/utils"),
+       data = params)
+```
+
+
+
+```{r}
+ggplot(wp.rs, aes( x = speakerOptimality, y = expectation_prediction,
+                   color = modelName, group = modelName))+
+  geom_line()+
+  facet_grid(priorName~cost)+
+  scale_x_continuous(breaks = c(0, 15, 30))+
+  scale_y_continuous(breaks = c(0, 0.5, 1))+
+  ylab("listener expectation of prevalence")+
+  theme(legend.position = 'bottom',
+        strip.text.y = element_text(angle = 0))
+```
+
+*1/2/18*
+
+- Cost and speakerOptimality contribute differently (at least, assuming cost=0 and varying speakerOptimality doesn't seem to get you enough dynamic range)
+- speakerOptimality above 10 doesn't seem to matter: as speakerOptimality increases, interpretation strengthens and then weakens after about speakerOptimality of 5
+- unlifted model usually can get stronger interpretation than lifted pragmatic, though as cost > 5, lifted pragmatic gets stronger interpretation
+- priors have (desired) effect: interpretations are not arbitrarily strong
+

@@ -1,8 +1,6 @@
 // time webppl generics-ais.wppl --require utils --require webppl-json pragmatic_unlifted uncertain 4
 
-
 // modelName: pragmatic, pragmatic_unlifted, literal
-
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
@@ -121,11 +119,11 @@ var priors = _.fromPairs(map(function(p){
 
 var marginalLikelihood = function(){
 
-  var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
-  var speakerOptimality = (modelName == "literal") ? 1:
-    uniform(0, 30)
+  var noise = (semantics == "most") ? uniform(0, 1) : 0
+  var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
+  var cost = uniform(0, 10)
 
-  var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
+  var cost_uttProb = Math.exp(-cost)
 
   var numberOfComponents = 3;//poisson(1) + 1;
 
@@ -231,7 +229,7 @@ var marginalLikelihood = function(){
           return state
         }})}, 10000)
 
-      var interpretationPrediction = modelName == "literal" ? listener0("generic") :
+    var interpretationPrediction = modelName == "literal" ? listener0("generic") :
       modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
       listener1("generic")
 

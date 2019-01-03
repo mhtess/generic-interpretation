@@ -1,5 +1,4 @@
-// time ~/tools/webppl-fork/webppl generics-bda.wppl --require utils --require webppl-json pragmatic_unlifted uncertain 1
-
+// time ~/tools/webppl-fork/webppl generics-bda.wppl --require utils pragmatic_unlifted uncertain 1
 
 // modelName: pragmatic, pragmatic_unlifted, literal
 
@@ -120,14 +119,14 @@ var priors = _.fromPairs(map(function(p){
   return [p, map(function(b){ _.filter(property_data, {binnedResponse: b}).length + 1}, midBins)]
 }, properties))
 
-
 var model = function(){
 
   var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
   var speakerOptimality = (modelName == "literal") ? 1:
     uniformDrift({a: 0, b: 30, width:2})
 
-  var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
+  var cost = uniformDrift({a: 0, b: 10, width: 2})
+  var cost_uttProb = Math.exp(-cost)
 
   var numberOfComponents = 3;//poisson(1) + 1;
 
@@ -237,7 +236,6 @@ var model = function(){
     modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
     listener1("generic")
 
-
   // var L0 = listener0("generic")
   var interpretationPrediction = addNoise(modelPrediction, noise)
 
@@ -283,11 +281,13 @@ var model = function(){
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
    semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
    modelName == "literal" ? null : query.add(["speakerOptimality", -99, -99, -99], speakerOptimality)
+   modelName == "literal" ? null : query.add(["cost", -99, -99, -99], cost)
 
-	// return query
+	return query
 }
 
-var totalIterations = 250000, lag =  75;
+// var totalIterations = 250000, lag =  75;
+var totalIterations = 250, lag =  1;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 var outfile = 'results-genint-int6-prior3-3Components_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
