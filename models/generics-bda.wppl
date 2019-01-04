@@ -137,46 +137,46 @@ var model = function(){
         interpretation: _.filter(data.interpretation, {property: item})
     };
 
-    var weights = normalize(repeat(numberOfComponents,
-      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    ))
+    // var weights = normalize(repeat(numberOfComponents,
+    //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    // ))
+    //
+    // var componentParameters = repeat(numberOfComponents,
+    //  function(){
+    //   return betaShape({
+    //       g: uniformDrift({a: 0, b: 1, width: 0.2}),
+    //       d: uniformDrift({a: 0, b: 100, width: 5})
+    //     })
+    // })
+    //
+  	// mapData({data: propertyData.prior}, function(d){
+    //   var componentLogLikelihood = map2(function(w, params){
+    //     Math.log(w) + Beta(params).score(d.avoided_endval)
+    //   }, weights, componentParameters)
+    //   var scr = util.logsumexp(componentLogLikelihood)
+    //   scr == -Infinity ? displayObj(d) : null
+  	// 	factor(scr)
+  	// })
+    //
+    // foreach(_.range(numberOfComponents), function(i){
+    //
+    //   query.add(["componentParameters", item, i, "weight"],
+    //     weights[i]
+    //   )
+    //   query.add(["componentParameters", item, i, "alpha"],
+    //     componentParameters[i]["a"]
+    //   )
+    //
+    //   query.add(["componentParameters", item, i, "beta"],
+    //     componentParameters[i]["b"]
+    //   )
+    //
+    // })
 
-    var componentParameters = repeat(numberOfComponents,
-     function(){
-      return betaShape({
-          g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
-        })
-    })
-
-  	mapData({data: propertyData.prior}, function(d){
-      var componentLogLikelihood = map2(function(w, params){
-        Math.log(w) + Beta(params).score(d.avoided_endval)
-      }, weights, componentParameters)
-      var scr = util.logsumexp(componentLogLikelihood)
-      scr == -Infinity ? displayObj(d) : null
-  		factor(scr)
-  	})
-
-    foreach(_.range(numberOfComponents), function(i){
-
-      query.add(["componentParameters", item, i, "weight"],
-        weights[i]
-      )
-      query.add(["componentParameters", item, i, "alpha"],
-        componentParameters[i]["a"]
-      )
-
-      query.add(["componentParameters", item, i, "beta"],
-        componentParameters[i]["b"]
-      )
-
-    })
-
-    // var statePrior = Categorical({vs: midBins, ps: priors[item]})
-  	var statePrior = Infer({model: function(){
-      sample(DiscretizedBeta(componentParameters[discrete(weights)]))
-  	}});
+    var statePrior = Categorical({vs: midBins, ps: priors[item]})
+  	// var statePrior = Infer({model: function(){
+    //   sample(DiscretizedBeta(componentParameters[discrete(weights)]))
+  	// }});
 
   	/// RSA model
   	var listener0 = cache(function(utterance) {
@@ -287,14 +287,16 @@ var model = function(){
 }
 
 var totalIterations = 250000, lag =  75;
-// var totalIterations = 250, lag =  1;
+// var totalIterations = 30, lag =  1;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-wCost-int6-prior3-3Components_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+var outfile = 'results-genint-wCost-int6-prior3-fixedPrior_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+// var outfile = 'results-genint-wCost-int6-prior3-3Components_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
 
 var posterior = Infer({
   model: model,
-	method: "incrementalMH",
+	// method: "incrementalMH",
+  method: "MCMC",
   samples: samples, burn: burn, lag: lag,
   verbose: T,
   verboseLag: totalIterations / 20,
