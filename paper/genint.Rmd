@@ -1,6 +1,6 @@
 ---
-title             : "Generic statements have weak (and strong) implications"
-shorttitle        : "Context-sensitive generic interpretations"
+title             : "Learning from generic language"
+shorttitle        : "Learning from generic language"
 
 author: 
   - name          : "Michael Henry Tessler"
@@ -33,7 +33,7 @@ author_note: >
   This manuscript is currently in prep. Comments or suggestions should be directed to MH Tessler.
 
 abstract: |
-  Generic language (e.g., "Birds have hollow bones") conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Interpreting generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Recently, @TesslerLangGenUnderReview proposed a model for the meaning of generics as a vague quantifier operating over rich prior knowledge about properties, which predicted human truth judgments with high quantitative accuracy. Here, we test the adequacy of this model to account for the belief-updating mechanism of generic statements: How novel generics are interpreted. Additionally, this model uniquely predicts the existence of generics with *weak interpretations*, which with we confirm with behavioral experiments. *Weak generics* pose a new challenge for theories that only view generics as conveying strong implications. 
+  Generic language (e.g., "Birds have hollow bones") conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Understanding generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Here, we formalize the null hypothesis that generics convey a single, positive observation to the listener and show that it is mathematically equivalent to a recent proposal by  @TesslerLangGenUnderReview that generics are a kind of vague quantifier. Here, we test the adequacy of this model to account for the belief-updating mechanism of generic statements---how novel generics are interpreted---and compare it to a model wherein understanding a generic involves reasoning about the intentions of the speaker. We find that generics are best modeled as single positive observations sampled with a pedagogical intent. The results are consistent with a recent proposal that generics can be understood as non-linguistic phenomenon.
   
 keywords          : "keywords"
 wordcount         : "X"
@@ -135,25 +135,35 @@ Understanding how beliefs are updated from generic language is thus an important
 <!-- But unlike statements about concrete events or exemplars  (e.g., "This bird flys"), generics convey information that is not directly observable and, in fact, resilient to counterexamples (e.g., penguins do not fly). -->
 <!-- Here, we investigate how generic language is interpreted  -->
 
-@Abelson1966 argued that generics, "...once accepted psychologically, [...] appear to be commonly taken in a rather strong sense, as though the qualifier *always* had implicitly crept into their interpretation" (p. 172).
-Indeed, adults learning from generics about both familiar and novel animals (e.g., "Bears like to eat ants"; "Lorches have purple feathers") rate the *implied prevalence* of the feature (e.g., the percentage of bears that like to eat ants) as quite high [$\sim 85\%$; @Gelman2002; @Cimpian2010, Expt. 1]. 
+The standard model of generic sentences is that they communicate about categories as a whole, while permitting exceptions.
+For example, @Abelson1966 argued that generics, "...once accepted psychologically, [...] appear to be commonly taken in a rather strong sense, as though the qualifier *always* had implicitly crept into their interpretation" (p. 172).
+Indeed, adults learning from generics about both familiar and novel animals (e.g., "Bears like to eat ants"; "Lorches have purple feathers") rate the *implied prevalence* of the feature (e.g., the percentage of bears that like to eat ants) as very high [$\sim 85\%$; @Gelman2002; @Cimpian2010, Expt. 1].
 The fact that generics seem to convey strong implications may explain why social stereotypes are propagated and maintained [@Rhodes2012].
 
-Do all generics carry strong implications?
-Philosophers and linguists have noted that statements like "Mosquitos carry malaria" seem only to have the quantificational force of an existential claim, meaning *some mosquitos carry malaria* or *mosquitos can carry malaria*.
-@Cohen2004 argues for a panolply of conditions that give rise to existential interpretations (e.g., focus-sensitive additives, as in "Birds lay eggs. Mammals lay eggs too.").^[
- At least two mammals, Platypuses and echidnas, reproduce by laying eggs.
-]
-Some empirical evidence points to the existence of *weak generics*: @Cimpian2010 (Expt. 3) found lower implied prevalence from generics about features that could be construed as accidental [e.g., "Crullets have fungus-covered claws"; see also @Khemlani2009; @Khemlani2012 for evidence for weak inferences from generics].
+The simple "category + exceptions" view of generics cannot apply to all generics, however.
+"Mosquitos carry malaria" only has the quantificational force of an existential claim, meaning *some mosquitos carry malaria* or *mosquitos can carry malaria*.
+<!-- Some empirical evidence points to the existence of such *weak generics*:  -->
+@Cimpian2010 (Expt. 3) found lower implied prevalence from generics about features that could be construed as accidental [e.g., "Crullets have fungus-covered claws"; see also @Khemlani2009; @Khemlani2012 for evidence for weak inferences from generics].
 In these previous studies, however, the actual implied prevalence from weak generics was still quite high [in @Cimpian2010 Expt. 3, mean implied prevalence $= 70\%$], leaving open the question of whether generics can receive genuinely weak interpretations (e.g., minority interpretations: $< 50\%$).
 
-There are also open theoretical questions: property-specific generic interpretations (e.g., "Lorches have purple feathers" vs. "... fungus-covered claws") have been explained as differences in *theory-based expectations* [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how beliefs will be updated given a specific generic statement.
-@TesslerLangGenUnderReview proposed a quantitative model of generic language as a kind of vague quantifier, combining tools from formal semantics and Bayesian modeling.
-This model accounted for truth judgments or endorsements (e.g., is "Mosquitos carry malaria" true or false?) among a wide range of linguistic stimuli including generics about animals, habitual statements about actions (e.g., "John runs"), and causal sentences (e.g., "This herb makes animals sleepy").
-Their endorsement model is cast as a speaker deciding whether or not to assert a generic statement to a listener, who updates their prior beliefs about the prevalence of the feature in the category from the generic statement.
-The listener model used therein provides a mapping from a generic statement to implied prevalence---it is a quantitative account of how generics update beliefs.
-This paper tests the predictions of this listener model directly.
-In doing so, we also look for evidence for weak generics, which are predicted to exist and provide the strongest test of the uncertain threshold account. 
+There are open theoretical questions about how the putative difference between *weak* and *strong* generics comes about.
+Property-specific generic interpretations (e.g., "Lorches have purple feathers" vs. "... fungus-covered claws") have been explained as differences in *theory-based expectations* [@Leslie2008; @Cimpian2010theory; @Prasada2013], but these notions have not been made sufficiently precise to provide a quantative, predictive account of how beliefs will be updated given a specific generic statement.
+@Cohen2004 argues for a panolply of conditions that give rise to existential interpretations of generics (e.g., focus-sensitive additives, as in "Birds lay eggs. Mammals lay eggs too.")^[
+ At least two mammals, Platypuses and echidnas, reproduce by laying eggs.
+], but the empirical support for these factors influencing interpretations is limited.
+
+We explore a null hypothesis that understanding a generic statement is equivalent to observing a single positive instance of a category with a property and updating one's beliefs according to Bayes rule. 
+We show that this model is mathematically equivalant to a listener model proposed @TesslerLangGenUnderReview, wherein generics operated as a kind of vague quantifier. 
+The @TesslerLangGenUnderReview model was used not used to predict interpretations but rather endorsements (e.g., is "Mosquitos carry malaria" true or false?), modeled as speaker deciding whether or not to produce a generic statement to a listener.
+The adequacy for the belief-updating component model of the model (the listener) has not yet been tested.
+We compare the single positive observation model from a bonafide communicative model wherein generics are understood with a pedagogical intent. 
+This model connects to a recent proposal by @Csibra2015 that generics can be understood nonverbally but with a communicative intent. 
+
+<!-- proposed a quantitative model of generic language as a kind of vague quantifier operating on inductive beliefs, combining tools from formal semantics with Bayesian cognitive modeling. -->
+<!-- This endorsement model is cast as a speaker deciding whether or not to produce a generic statement to a listener, who updates their prior beliefs about the prevalence of the feature in the category using a vague, quantificational meaning for a generic. -->
+<!-- The listener model thus provides a mapping from a generic statement to implied prevalence---it is a quantitative account of how generics update beliefs. -->
+<!-- This paper tests the predictions of this listener model directly. -->
+<!-- In doing so, we also look for evidence for weak generics, which are predicted to exist and provide the strongest test of the uncertain threshold account.  -->
 
 <!-- Interpreting a generic as *most* can also be too weak: "Triangles have three sides" is a statement about *all triangles*; if a shape does not have three sides, it is not a triangle.  -->
 <!-- Indeed, the differences between quantified statements and generic statements are appreciated by children as young as three years [@Gelman2015genericsQuantifiers]. -->
@@ -162,12 +172,11 @@ In doing so, we also look for evidence for weak generics, which are predicted to
 <!-- Properties that are biological in nature (e.g., "Wugs have wings") are interpreted as applying to most or all of the category [@Gelman2002; @Brandone2014], while features that could be construed as incidental (e.g., "Crullets have fungus-covered claws") are interpreted as applying to relatively fewer members of the category [@Cimpian2010]. -->
 
 The paper is organized as follows.
-First, we review @TesslerLangGenUnderReview's computational model of generic interpretation, describe alternative models, and overview our experimental and data analytic approach. 
-In Expt. 1, we replicate and extend the findings of @Cimpian2010 that biological and accidental properties receive differential interpretations. 
-In Expt. 2, we extend these findings using a larger and more diverse stimulus set better able to test the quantitative predictions of our model and explore the existence of weak generics.
-In Expt. 3, we experimentally manipulate background knowledge and test the model-predicted effects on interpretations of novel generics.
-In each experiment, we compare the uncertain threshold model's predictions to alternative models that have the same prior knowledge but which update their beliefs via different semantic mechanisms (e.g., fixed-thresholds); in each case, we find the vague threshold model is best able to account for property-specific generic interpretations. 
-Together, these results provide strong evidence that generics update beliefs in a context-sensitive manner, well-modeled as a vague quantifier. 
+First, we present a model that interprets generics as conveying a single positive observative, show its equivalence to the listener model used by @TesslerLangGenUnderReview, provide an alternative wherein generics are interpreted with a pedagogy intent, and spell-out additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms (e.g., fixed-thresholds). 
+In Experiment 1, we replicate and extend the findings of @Cimpian2010 that biological and accidental properties receive differential interpretations and show that simple models of quantifiers, even when coupled with substantive prior knowledge, are unable to capture the gradience in interpretation judgments. 
+In Experiment 2, we use a larger and more diverse stimulus set better able to disambiguate the single positive observation from the pedagogical observation model.
+In Experiment 3, we experimentally manipulate background knowledge and test the model-predicted effects on interpretations of novel generics.
+Together, these results provide strong evidence that generics update beliefs in a context-sensitive manner and are best modeled as a pedagogically-transmitted observation. 
 
 <!-- First, we test whether or not weak interpretations of generics are possible by testing interpretations of generics about a wide range of properties (Expt. 1a).  -->
 <!-- Then, we measure interlocutors' prior beliefs about the prevalence of the property (Expt. 1b) using the prior elicitation paradigm in @TesslerGenerics.  -->
@@ -204,11 +213,11 @@ The choice of a uniform distribution here is to explore how well context-sensiti
 
 In order for a statement to update beliefs about prevalence in a given category, a listener must have prior beliefs about prevalence abstracted across categories.
 To interpret a generic sentence, a listener draws upon her abstract knowledge about properties, formalized by a prior distribution over likely prevalence levels $P(r)$.
-Though not the direct focus of this work, the prevalence prior distribution can be seen as a relatively minimal formalization of theory-based expectations. 
+Though not the direct focus of this paper, the prevalence prior distribution can be seen as a relatively minimal formalization of theory-based expectations. 
 Different theory-based relationships between kinds and properties will give rise to different prior distributions over prevalence. 
 The prevalence prior, thus, acts as a statistical layer between conceptual knowledge and natural language semantics. 
   
-Thus the quantitative model for generic interpretation is given by:
+The quantitative model for generic interpretation is given by:
 
 \begin{eqnarray}
 L(r, \theta \mid u) &\propto& {\delta_{\denote{u}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0}
@@ -681,12 +690,100 @@ There is a clear positive relationship between the prevalence prior mean and the
 
 ## Model-based analysis and results
 
+
+```{r}
+load(file = "cached_results/cimpian-prevPriorParam_dists.RData")
+
+fig.param.uncertain <- md.prevPriorParams %>%
+  filter(src %in% c("data", "uncertain")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+fig.param.most <- md.prevPriorParams %>%
+  filter(src %in% c("data", "most")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+fig.param.some <- md.prevPriorParams %>%
+  filter(src %in% c("data", "some")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+cowplot::plot_grid(
+  fig.param.some+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.x = element_blank()
+    ),
+  fig.param.most+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()),
+  fig.param.uncertain+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank()
+    ),
+  nrow = 1
+)
+```
+
+
 ```{r cimpian-modelingResults, fig.width = 10, fig.asp = 0.57, fig.cap="Implied prevalence data and model predictions for items from Cimpian et al. (2010). A: Mean implied prevalence ratings for forty stimuli. B: Implied prevalence and generics model prections collapsed across property type. C: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions."}
 
 load(file = "cached_results/cimpian-modelFits-interpretations.RData")
 load(file = "cached_results/cimpian-interpretations-95ci.RData")
 
-
+load(file = "cached_results/cimpian-prevPriorParam_dists.RData")
+# md.prevPriorParams
 
 fig.cimpian.interpretation.95ci <- df.c.int.bs %>%
   ungroup() %>%
