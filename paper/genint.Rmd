@@ -202,24 +202,25 @@ Together, these results provide strong evidence that generics update beliefs in 
 # Computational model
 
 Generic language conveys generalizations about categories [@Carlson1977; @Leslie2008].
+<!-- We propose that generics convey generalizations by providing a minimal example---a single positive observation---communicated with a social force.  -->
 Human generalization from observational data can be well described using the language of probability [@Shepard1987] and Bayesian belief-updating with structured, prior knowledge [@Tenenbaum2011].
-We propose a null hypothesis that generics convey the same information-content as a single, positive observation interpreted with respect to structured background konwledge. 
+We propose a null hypothesis that generics convey the same information-content as a single, positive observation interpreted with respect to structured background konwledge.
 Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property $r \in [0, 1]$ with a single positive observation according to Bayes' rule, the model is:
 
 \begin{align}
-L(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \diff r'}}  \nonumber \\
- &:= \frac{P(x = 1 \mid r; n =1) \cdot P(r)}{\int_0^1 {P(x = 1 \mid r'; n=1) \cdot P(r') \diff r'}}  \nonumber \\
+L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \diff r'}}  \nonumber \\
+ &:= \frac{P(x = 1 \mid r; n = 1) \cdot P(r)}{\int_0^1 {P(x = 1 \mid r'; n = 1) \cdot P(r') \diff r'}}  \nonumber \\
  &= \frac{r \cdot P(r)}{\int_0^1 {r' \cdot P(r') \diff r'}}  \label{eq:L0}
 \end{align}
 
 \noindent where $x$ denotes the number of positive examples and $n$ denotes the number of observed examples. 
-We take the conditional probability of the generic utterance $u$ given some prevalence $r$---$P(u\mid r)$---to represent the literal semantic content of the generic utterance [@Frank2012], which we define to be belief-updating according to a single positive observation:$P(x =1 \mid r; n = 1)$. 
+We take the conditional probability of the generic utterance $u$ given some prevalence $r$---$P(u\mid r)$---to represent the literal semantic content of the generic utterance [@Frank2012], which we define to be belief-updating from a single positive observation:$P(x =1 \mid r; n = 1)$. 
 The latter is simply the probability of a coin with weight $r$ landing on hands once, given that was flipped once, which is simply $r$.
 Belief-updating based on a single positive observation is mathematically equivalent to a belief-updating based on a threshold-function (e.g., $\denote{gen} = x > \theta$), whose threshold value is uncertain and is drawn from a uniform prior ($\theta \sim \text{Uniform}(0, 1)$).
 Consider the uncertain-threshold model of @TesslerLangGenUnderReview:
 
 \begin{align}
-L(r, \theta \mid u) &\propto& {\delta_{\denote{u}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0a}
+L_0(r, \theta \mid u) \propto {\delta_{\denote{u}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0a}
 \end{align}
 
 Here, the truth-functional meaning of a generic is a threshold-function stating that the prevalence $r$ is greater than the threshold $\theta$, represented by the Kronecker delta  $\delta_{\denote{u}(r, \theta)}$ that returns $1$ when the utterance is true (i.e., when $r > \theta$) and $0$ otherwise.
@@ -241,28 +242,22 @@ P(r) & \text{if } r > \theta \\
 \end{cases}\label{eq:delta2}
 \end{align}
 
-\noindent since $P(\theta) \propto 1$.
-
+\noindent since $P(\theta) \propto 1$. To arrive at $L(r \mid u)$ from $L(r, \theta \mid u)$, we integrate out $\theta$.
 
 <!-- \noindent and $\mathbbm{1}_{r > \theta} \sim \text{Bernoulli}(P(r > \theta))$. -->
-
-To arrive at $L(r \mid u)$ from $L(r, \theta \mid u)$, we need to integrate out $\theta$.
-
 <!-- \begin{array} -->
 <!-- L(r, \mid u) &=& \int_{0}^{1} P(r, \theta \mid u) \diff \theta \nonumber \\ -->
 <!-- &\propto& \int_{0}^{1} P(r) \cdot \mathbbm{1}_{r > \theta} \diff \theta \nonumber \\ -->
 <!-- &=& \int_{0}^{x} P(r) \cdot \mathbbm{1}_{r > \theta} \diff \theta + \int_{x}^{1} P(r) \cdot \mathbbm{1}_{r > \theta} \diff \theta  \label{eq:L0c} -->
 <!-- \end{array} -->
-
 \begin{align}
-L(r, \mid u) &= \int_{0}^{1} P(r, \theta \mid u) \diff \theta \nonumber \\
-&\propto& \int_{0}^{1} P(u \mid r, \theta)  \diff \theta \nonumber \\
-&=& \int_{0}^{r} P(u \mid r, \theta) \diff \theta + \int_{r}^{1}P(u \mid r, \theta) \diff \theta \nonumber \\
-&=& \int_{0}^{r} P(r) \diff \theta + \int_{r}^{1} 0 \diff \theta  \nonumber  \\ 
-  & = &  P(r) \int_{0}^{r} \diff \theta \nonumber \\
-    & = &  P(r) \cdot r \label{eq:L0d}
+L_0(r, \mid u) &= \int_{0}^{1} P(r, \theta \mid u) \diff \theta \nonumber \\
+\propto& \int_{0}^{1} P(u \mid r, \theta)  \diff \theta \nonumber \\
+=& \int_{0}^{r} P(u \mid r, \theta) \diff \theta + \int_{r}^{1}P(u \mid r, \theta) \diff \theta \nonumber \\
+=& \int_{0}^{r} P(r) \diff \theta + \int_{r}^{1} 0 \diff \theta  \nonumber  \\ 
+   = &  P(r) \int_{0}^{r} \diff \theta \nonumber \\
+     =&   P(r) \cdot r \label{eq:L0d}
 \end{align}
-
 
 <!-- The second integral is for $\theta$ for values between $r$ and $1$, which is equal to 0 because the threshold is greater than the prevalence. Thus, it is simply: -->
 
@@ -276,18 +271,19 @@ L(r, \mid u) &= \int_{0}^{1} P(r, \theta \mid u) \diff \theta \nonumber \\
 
 The model of @TesslerLangGenUnderReview thus makes the strong claim that the literal contribution of a generic sentence is informationally equivalent to observing a single, positive example.
 In context, however, generics could convey quantitatively more information (i.e., higher prevalence) if listeners reason that speakers intentionally produced the generic. 
-We model this in the Rational Speech Act framework [@Frank2012, @Goodman2016, @Scontras2018], wherein a listener $L_1$ reasons about why a speaker $S_1$ produced an utterance:
+We model this in the Rational Speech Act framework [@Frank2012; @Goodman2016; @Scontras2018], wherein a listener $L_1$ reasons about why a speaker $S_1$ produced an utterance:
 
 \begin{eqnarray}
-L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \\ \label{eq:L1}
+L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}  \\ 
 S_1(u \mid r) &\propto& \exp{(\alpha \cdot \ln L_0(r \mid u) - \text{cost}(u))} \label{eq:S1}
 \end{eqnarray}
 
 
-Equation \ref{eq:S1} is the model of @TesslerLangGenUnderReview, where an approximately-rational speaker decides whether or not to produce a generic utterance to convey information to a literal listener (Equation \ref{eq:L0}).
-Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker. 
+Equation \ref{eq:S1} is the endorsement model of @TesslerLangGenUnderReview, where an approximately-rational speaker decides whether or not to produce a generic utterance to convey information to a literal listener (Equation \ref{eq:L0}).
+Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker $S_1$. 
 Following @TesslerLangGenUnderReview, we assume the speaker's only alternative utterance is an information-less silent utterance and we allow the act of producing the generic to incur some production cost to the speaker (plausibly, $\text{cost}(generic) > \text{cost}(silence)$).
-For purposes of quantitative modeling, we allow both the cost of the generic ($\text{cost}(generic)$) and the speaker's rationality parameter $\alpha$ to be free parameter that we will infer from the behavioral data. 
+Under the interpretation of a generic sentence as communicating a single, positive observation, the alterantive is the *not* producing that observation. 
+For purposes of quantitative modeling, we allow both the cost of the generic ($\text{cost}(generic)$) and the speaker's rationality parameter $\alpha$ to be free parameters that we infer from the behavioral data. 
 
 <!-- Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $r$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{r > \theta\}$.^[ -->
 <!--   The prevalence $r$ can be thought as a "prevalence in the mind", or a subjective degree of belief about the property in the category, which may not accurately track the empirical frequency. -->
@@ -312,18 +308,18 @@ For purposes of quantitative modeling, we allow both the cost of the generic ($\
 <!-- This behavior captures the intuition that, without strong background knowledge, generics probably imply that most or all of the category has the property. -->
 
 
-## The influence and structure of prevalence priors
+## The influence of prevalence priors and pragmatic reasoning
 
-The generic interpretation model balances the prior probability of different prevalence levels $r$ with the overall preference for higher prevalence levels because they are consistent with more thresholds $\theta$ (as described above).
-This updating mechanism results in interpretations that strongly depend on the prevalence prior $P(r)$.
+Both the literal and the pragmatic generic interpretation models (Equations \label{eq:L0} and \label{eq:L1}, respectively) balance the prior probability of different prevalence levels $P(r)$ with the overall preference for higher prevalence levels $r$.
+Thus, interpretations strongly depend on the prevalence prior $P(r)$.
 The prevalence prior for familiar properties may display interesting structure reflecting domain-specific beliefs about the property.
 Figure\ \@ref(fig:modelSimulations)A shows hypothetical prevalence priors for the features *fly* and *carry malaria* as well as an abstract property *Y* without structured background knowledge. 
 
-Interpretations from the uncertain threshold model (Figure\ \@ref(fig:modelSimulations)B, right-most column) are similar to different quantified statements for different properties in question.
+Interpretations from the literal generic interpretation model (Figure\ \@ref(fig:modelSimulations)B) are similar to different quantified statements for different properties in question.
 For the biological property prior, a generic ("Xs fly") is interpreted most similarly to "Most Xs fly".
 This results from the prior distribution over a biological property like *fly* being bimodal with modes near 0\% and 100\%, reflecting the idea that for an arbitrary category, it is likely that 0\% of them fly (e.g., dogs, rabbits, etc...); however, among categories with at least some members who fly, we would expect all or nearly all of them to fly (hence, the second mode near 100\%).
 For the accidental property prior, "Xs carry malaria" is most similar to "Some Xs carry malaria" because the property is expected to be rare both within- and across-categories.
-If a listener knows the existence of the property depends upon the sex of the creature (e.g., *lays eggs*), the prevalence interpretation from a generic ("Xs lay eggs") should be roughly that 50% of the m lay eggs (only the females).
+If a listener knows the existence of the property depends upon the sex of the creature (e.g., *lays eggs*), the prevalence interpretation from a generic ("Xs lay eggs") should be roughly that 50% of the Xs lay eggs (only the females).
 <!-- Similar to the *fly* prevalence prior, the prior distribution over prevalence for a property like *carry malaria* has substantial probability mass at or near 0\%, since most categories do not have the property present at all; however, among categories with at least a few members who carry malaria, it is very unlikely that all or even many carry malaria; the second mode of this prior distribution is near 10\%.  -->
 
 <!-- We test these property-sensitive interpretations in the following experiments.  -->
@@ -335,9 +331,16 @@ In a more abstract sense, this distribution can reflect causal beliefs about kin
 ]
 Such a structured prior distribution could vary by the mixture component (e.g., for how many different kinds does the mechanism exist?) as well as for the parameters of the component(s) that govern the prevalence for the kinds with the mechanism (i.e., given that there is such a mechanism, how strong do we expect that mechanism to be?).
 In Experiment 1, we assume this mixture-distribution structure to the prevalence prior in order to measure beliefs about relatively obscure properties.
-In Experiment 2, we measure the prevalence prior for more familiar properties in a nonparametric way, and empirically verify that the mixture of Beta distributions fits reasonably well.
-Finally, in Experiment 3, we directly manipulate the prevalence prior.
+In Experiment 2, we directly manipulate the prevalence prior.
 
+Interpreting a generic sentence as providing a single positive observation to the listener provides a way to understand generics in a property-specific manner. 
+Listeners may derive a stronger interpretation of a generic, however, by reasoning about the communicative nature of the sentence they hear [@Grice1975; @Clark1996].
+That is, a generic sentence is produced by a speaker who has the goal of conveying information to the listener. 
+The rightmost column of Figure\ \@ref(fig:modelSimulations)B shows the predictions of Eq. \ref{eq:L1}.
+The primary difference between a literal and a pragmatic generic interpretation model is that the pragmatic model is able to derive stronger interpretations of a generic sentence. 
+When learning about an abstract property with a uniform prevalence prior (top-row), the pragmatic model infers more strongly that most of the category have the property. 
+For the other prevalence priors, the pragmatic model makes stronger predictions by predicting lower-variance interpretations.
+In Experiment 3, we conduct a generic interpretation study with seventy-five items designed to elicit a wide range of variability in interpretations; we measure the prevalence priors in a nonparametric way that allows to quantitatively distinguish the literal from the pragmatic generic interpretation model.
 
 <!-- which can be thought of as levels of prevalence given different categories within a comparison class. -->
 <!-- For simplicity, we assume the comparison class relevant for interpreting generics about novel animal categories is *other animals*. -->
@@ -349,23 +352,22 @@ Finally, in Experiment 3, we directly manipulate the prevalence prior.
 
 ## Alternative models and Bayesian data-analytic strategy
 
-The uncertain threshold generic interpretation model presented here and in @TesslerLangGenUnderReview is the first cognitive model to make quantitative predictions about human interpretations of generic statements.
-In order to assess the predictive capabilities of this model, we construct a number of alternatives for comparison.
-Foremost, we compare the uncertain threshold model to a model that does not update beliefs and predicts prevalence ratings according to the prior distribution $P(r)$. 
+In order to assess the predictive capabilities of the generic interpretation models, we construct a number of alternatives for comparison.
+Foremost, we compare the generic interpretation models to a model that does not update beliefs and predicts prevalence ratings according to the prior distribution $P(r)$. 
 This comparison informs us as to whether or not participants actually *update* their beliefs based on the generic statement.
-In addition, we construct two alternatives models by removing the model's uncertainty about the threshold, roughly corresponding to models of quantifier interpretation.^[
-  Note that a more accurate model of quantifier interpretation would include their pragmatic interpretations (e.g., that "some" often implies "not all"). Such a model can be implemented in the same probabilistic modeling framework [@Goodman2013] but does not directly address our question of what threshold best corresponds to a model of generic interpretation.
+In addition, we construct two alternatives models to elucidate the belief-updating claims of the generic interpretation model; these alternative models use fixed-threshold functions to update beliefs, corresponding to models of quantifier semantics.^[
+  Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that "some" often implies "not all"). Such a model can be implemented in the same probabilistic modeling framework [@Goodman2013] but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.
 ]
 The first is a model of the quantifier "some" which rules out the lowest possible prevalence level:
 
 \begin{eqnarray}
-L_{some}(r \mid u) &\propto&  P(r \mid r > 0)  \label{eq:someModel}
+L_0^{some}(r \mid u) &\propto&  P(r \mid r > 0)  \label{eq:someModel}
 \end{eqnarray}
 
 The second is analogous to "most", with a threshold at 50% prevalence:
 
 \begin{eqnarray}
-L_{most}(r \mid u) &\propto&  P(r \mid r > 0.5)  \label{eq:mostModel}
+L_0^{most}(r \mid u) &\propto&  P(r \mid r > 0.5)  \label{eq:mostModel}
 \end{eqnarray}
 
 A model that assumes a fixed threshold at 50% is a very restricted model; it places zero probability on any response less than 50%. 
@@ -396,8 +398,8 @@ Such a joint-inference model allows us to retain the uncertainty in the measurem
 <!-- The endorsement model inverts the interpretation model and predicts higher rates of endorsement as the speaker's belief about the prevalence (referent-prevalence) increases. -->
 
 
-```{r modelSimulations, fig.width = 10, fig.asp = 0.6, fig.cap="Model simulations. A: Prevalence priors reflect knowledge about properties. An abstract property could be given a uniform distribution, while familiar properties display more complex structure. B: Posterior distributions over prevalence (interpretations) given different fixed-threshold quantifiers and the uncertain threshold generic."}
-load(file = "cached_results/modelSims-priors_fixedT_uncertainT.RData")
+```{r modelSimulations, fig.width = 11, fig.asp = 0.6, fig.cap="Model simulations. A: Prevalence priors reflect knowledge about properties. An abstract property could be given a uniform distribution, while familiar properties display more complex structure. B: Posterior distributions over prevalence (interpretations) given different fixed-threshold quantifiers and the uncertain threshold generic."}
+load(file = "cached_results/modelSims-priors_fixedT_uncertainT_L1.RData")
 get.colors <- function(pal) brewer.pal(brewer.pal.info[pal, "maxcolors"], pal)
 spectrum.color.palette <- get.colors("Blues")
 
@@ -407,7 +409,8 @@ fig.sims.priors <- ggplot(sims.combined %>%
            PriorShape %in% c("uniform", "biological_rare", "sexed_rare","accidental_rare"),
            src %in% c("priors")
            ) %>%
-         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare",  "sexed_rare","accidental_rare"),
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare",  
+                                                           "sexed_rare","accidental_rare"),
                                     labels = c("Xs Y (uniform)", "Xs fly (biological)", 
                                                "Xs lay eggs (sexed)", 
                                                "Xs carry malaria (accidental)")),
@@ -433,20 +436,20 @@ fig.sims.priors <- ggplot(sims.combined %>%
 fig.sims.distributions <- ggplot(sims.combined %>%
          filter(
            PriorShape %in% c("uniform", "biological_rare","sexed_rare", "accidental_rare"),
-           src %in% c("fixed_0.1", "fixed_0.33", "fixed_0.5", "posteriors")
+           src %in% c("fixed_0.1", "fixed_0.33", "fixed_0.5", "literal", "pragmaticUnlifted")
            ) %>%
          mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "sexed_rare", "accidental_rare"),
                                     labels = c("Xs Y\n[uniform]", "Xs fly\n[biological]",
                                                "Xs lay eggs\n[sexed]", "Xs carry malaria \n [accidental]")),
                 src = factor(src, levels = c( "fixed_0.1", "fixed_0.33",
-                                              "fixed_0.5", "posteriors"),
+                                              "fixed_0.5", "literal", "pragmaticUnlifted"),
                              labels = c(
                            #    'prevalence prior',
                                '"some"\n(threshold = 0.01)',
                                '"more than a third"\n(threshold = 0.33)',
                               '"most"\n(threshold = 0.5)',
-                               'generic\n(uncertain threshold)'
-                                        ))), 
+                               'literal generic',
+                              'pragmatic generic'))), 
        aes(x = state, fill = src, color = src))+
     geom_density(aes(y = ..scaled..), 
                  color ='black', size = 0.6, alpha = 0.7, adjust = 1.1)+
@@ -457,8 +460,8 @@ fig.sims.distributions <- ggplot(sims.combined %>%
     xlab("Implied Prevalence")+
     # scale_fill_brewer(palette=2, type = "seq", direction = -1)+
     # scale_color_brewer(palette=2, type = "seq", direction = -1)+
-    scale_color_manual( values =  c(spectrum.color.palette[c(8,5,2)], "#238b45"))+
-    scale_fill_manual( values = c(spectrum.color.palette[c(8,5,2)], "#238b45") )+
+    scale_color_manual( values =  c(spectrum.color.palette[c(9, 6, 3)], "#99d8c9", "#2ca25f"))+
+    scale_fill_manual( values = c(spectrum.color.palette[c(9, 6, 3)], "#99d8c9", "#2ca25f") )+
     facet_grid(PriorShape~src, scales = 'free')+
     theme(strip.text.y = element_text(angle = 0, size = 12),
           legend.position = "none",
@@ -467,7 +470,7 @@ fig.sims.distributions <- ggplot(sims.combined %>%
 sims.combined.summary <- sims.combined %>%
          filter(
            PriorShape %in% c("uniform","biological_rare", "accidental_rare"),
-           src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+           src %in% c("fixed_0.1", "fixed_0.5", "literal", "pragmaticUnlifted")
            ) %>%
          mutate(PriorShape = factor(PriorShape, 
                                     levels = c( "accidental_rare", "biological_rare","sexed_rare", "uniform"),
@@ -476,11 +479,12 @@ sims.combined.summary <- sims.combined %>%
                                                "Xs fly\n[biological]")),
                 src = factor(src, 
                              levels = c( 
-                               "fixed_0.1", "fixed_0.5", "posteriors"),
+                               "fixed_0.1", "fixed_0.5", "literal", "pragmaticUnlifted"),
                              labels = c(
                                '"some" (threshold = 0.01)',
                               '"most" (threshold = 0.5)',
-                               'generic (uncertain threshold)'
+                               'literal generic',
+                              'pragmatic generic'
                                         ))) %>%
     group_by(PriorShape, src) %>%
     summarize(expval = mean(state))
