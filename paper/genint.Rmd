@@ -1913,12 +1913,28 @@ print(tab1, type="latex", comment = F, table.placement = "H", size="\\fontsize{9
 
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted in language, and it is commonly believed that generics carry strong interpretations (analogous to the quantifier "most" or "all").
 Despite their ubiquity and relative morphosyntactic simplicity, generics have been the examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
-Here, we tested a quantitative model of generic interpretation using a diverse set of stimuli, including a replication data set from @Cimpian2010, and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property. 
-Additionally, the model accurately predicted which generic statements would carry the weakest interpretations.
+Here, we explored the hypothesis that a generic statement can be literally thought of as conveying a single positive observation to a listener. 
+We showed how this model is mathematically equivalent to the interpretation model assumed by @Tessler and we articulated a more elaborate model which understands generics as intentional utterances.
+We tested the models using a diverse set of stimuli, including a replication data set from @Cimpian2010, and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property. 
+<!-- Additionally, the model accurately predicted which generic statements would carry the weakest interpretations. -->
+Furthermore, we found that a model that interprets generics pragmatically provides a better explanation of the observed data.
 <!-- Because generic interpretations are heavily sensitive to background knowledge, generics can carry weak interpretations. -->
 <!-- We also find that generics can carry weak interpretations, when background knowledge would make a strong interpretation implausible. -->
 <!-- We find reliable fine-grained differences in interpretations across properties, which only our uncertain threshold model can account for. -->
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
+
+The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property and that interpretation is best modeled as a communicatively relevant observation suggests a very primitive foundation to generic language. 
+Bayesian belief-updating based on observations is a plausible learning mechanism for any animal \red{(is there some citation for bayes in other animals?)}.
+The work here suggests that the human unique component of understanding generic language comes not from understanding
+syntax or the meaning of the words but from understanding the communicative intent of the speaker \red{(cite tomasello?)}.
+@Csibra2015 argues that individual objects are interpreted by infants as symbolic representations of the object kind.
+In that way, it is possible to interpret a pedagogically presented exemplar from a category as a "nonverbal generic".
+The pedagogical example is thus an indexical that refers to the category. 
+Indeed, @Sterken2015 argues the context-sensitivity of generic language should be understood linguisitically as an indexical. 
+The computational model presented here provides the computational unification of these ideas: 
+
+
+<!-- It has been argued that object labels denote kind concepts as soon as a child begins to understand words [@Gelman2004; @WaxmanGelamn2009] -->
 
 Other semantic theories of generics make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted [e.g., @Cohen1999; @Declerck1991].
 In such a theory, the statement "Morseths have a menstrual cycle" gets evaluated as "Female morseths have a menstrual cycle"; under such an account, the implied prevalence of the feature would be 100% (or near 100%) because 100% of the *relevant lorches* (i.e., the females) have a menstrual cycle.^[
@@ -2042,6 +2058,12 @@ Deriving such a prediction would necessarily involve a model of compositional ge
 
 ## Implications for stereotype propogation
 
+The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication or deceit when using generics. 
+A speaker might endorse a generic when the prevalence is quite low [see @TesslerGoodmanInPress] believing that they and the listener share the background assumptions that the property is a low-prevalence property in general. 
+The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication. 
+For many properties, the difference in implied prevalence may be inconsequential. 
+For features of social categories, which have difficult-to-understand statistical properties \red{(cite something about how people misunderstand the distributions of properties within social categories?)}, the misalignment of background believes can lead to the propogation of stereotypes. 
+
 The experimental data we present provides strong evidence for the existence of "weak generics", which we operationalize here as generic statements that imply a prevalence less than 50%. 
 Statements like "Lorches live in zoos", "Feps perform in the circus", and "Wugs have seizures" all received average implied prevalence ratings below 50%, with many individual participants providing ratings of 10% or less (Expt. 2b).
 When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0% or aroud 25%, participants readily interpret the statement "Ks know when earthquakes are about to happen" to mean about 25% (Expt. 3b). 
@@ -2049,7 +2071,7 @@ This is an aspect of generic language understanding often swept under the rug: G
 Here, we show that generics also carry weak implications.
 
 Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., "I thought that there would be many more Dobles in the wild than in zoos").
-At the same time, the uncertain threshold mechanism encodes a pressure for higher prevalence interpretations (e.g., without strong prior knowledge, generics imply high prevalence).
+At the same time, the communicative force of a generic encodes a pressure for higher prevalence interpretations (e.g., without strong prior knowledge, generics imply high prevalence).
 Thus, listeners who do not have the substantial prior knowledge to restrict an interpretation of generics to a weak interpretation (e.g., young children) might derive a high-prevalence interpretation and furthermore posit abstract relations that would make a high-prevalence interpretation more likely.
 For example, upon learning "Dobles live in zoos", a naive learner might infer that there is something about Dobles that causes them to live in zoos [cf., @Prasada2013]. 
 This is potentially problematic for language about social categories (e.g., "Tall people are good at basketball") for which an adult speaker might wish to convey a relatively low prevalence interpretation (e.g., *some tall people...* because most people are not good at basketball) but which a naive listener might derive a higher prevalence interpretation.
@@ -2086,7 +2108,7 @@ This points to an aspect of generic meaning that might differ between adults and
 ## Conclusion
 
 An easy way to acquire abstract knowledge is to interpret a novel generic statement but heretofore no quantitative models have accounted for this belief updating processs.
-The uncertain threshold model proposed by @TesslerLangGenUnderReview is able to predict the large variability in generic interpretations, even predicting the existence of "weak generics", or generics that only apply to a minority of the category.
+A computational model that understands generics as conveying communicatively relevant observations is able to predict the large variability in generic interpretations, even predicting the existence of "weak generics", or generics that only apply to a minority of the category.
 This work opens the door to understanding how abstract knowledge is learned from language.
 
 \newpage
