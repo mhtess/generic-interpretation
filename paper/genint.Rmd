@@ -312,6 +312,12 @@ Following @Tessler2019psychrev, we assume the speaker's only alternative utteran
 Under the interpretation of a generic sentence as communicating a single, positive observation, the alternative is *not* producing that observation. 
 For purposes of quantitative modeling, we allow both the cost of the generic ($\text{cost}(generic)$) and the speaker's rationality parameter $\alpha$ to be free parameters that we infer from the behavioral data. 
 
+
+```{r cartoon, fig.cap="Generic interpretation model", fig.width = 6, cache=F}
+ggdraw() + draw_image("figs/cartoon.png")
+```
+
+
 <!-- Using the truth-functional tools of formal semantics [@Montague1973], the literal meaning of a generic statement can be modeled as a threshold function operating on the prevalence $r$ of the feature in the category (e.g., the proportion of mosquitos that carry malaria): $\denote{generic} = \{r > \theta\}$.^[ -->
 <!--   The prevalence $r$ can be thought as a "prevalence in the mind", or a subjective degree of belief about the property in the category, which may not accurately track the empirical frequency. -->
 <!-- ] -->
@@ -381,10 +387,11 @@ In Experiment 3, we conduct a generic interpretation study with seventy-five ite
 
 ## Alternative models and Bayesian data-analytic strategy
 
-In order to assess the predictive capabilities of the generic interpretation models, we construct a number of alternatives for comparison.
-Foremost, we compare the generic interpretation models to a model that does not update beliefs and predicts prevalence ratings according to the prior distribution $P(r)$. 
-This comparison informs us as to whether or not participants actually *update* their beliefs based on the generic statement.
-In addition, we construct two alternatives models to elucidate the belief-updating claims of the generic interpretation model; these alternative models use fixed-threshold functions to update beliefs, corresponding to models of quantifier semantics.^[
+Both the literal and the pragmatic generic interpretation models treat the literal meaning of a generic as equivalent to observing a single positive example from the category.
+We compare these to alternative models that update beliefs according to a different literal meaning for the generic.
+This comparison allows us to better understand how necessary the literal meaning is for the model predictions. 
+In order to permit this comparison, we endow the alternative models with the same background knowledge in the form of the prevalence prior distribution $P(r)$. 
+The alternative models take the literal meaning of a generic to be a fixed-threshold function, corresponding to models of quantifier semantics.^[
   Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that "some" often implies "not all"). Such a model can be implemented in the same probabilistic modeling framework [@Goodman2013] but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.
 ]
 The first is a model of the quantifier "some" which rules out the lowest possible prevalence level:
@@ -402,6 +409,8 @@ L_0^{most}(r \mid u) &\propto&  P(r \mid r > 0.5)  \label{eq:mostModel}
 A model that assumes a fixed threshold at 50% is a very restricted model; it places zero probability on any response less than 50%. 
 In case there are ratings in the experimental data sets that are less than 50%, we must supplement the "most" model with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
 We infer this noise probability parameter for the "most" model from the data.
+Finally, we will compare the generic interpretation models to a model that does not update beliefs and predicts prevalence ratings according to the prior distribution $P(r)$. 
+This comparison informs us as to whether or not participants actually *update* their beliefs based on the generic statement.
 
 Our primary analyses ask how well the various interpretation models accomodate the human generic interpretation data given our corresponding measurements of the prevalence priors.
 To fit these models, we build Bayesian data analysis (BDA) models to jointly predict the prevalence prior data and the generic interpretation data.
@@ -542,7 +551,7 @@ cowplot::plot_grid(
   #fig.sims.bars+ theme(plot.margin = unit(c(6, 0, 0, 0), "pt")),
   nrow = 1,
   labels = c("A", "B"),
-  rel_widths = c(0.25, 1)
+  rel_widths = c(0.2, 1)
 )
 ```
 
