@@ -1955,21 +1955,25 @@ Here, we explored the hypothesis that a generic statement can be literally thoug
 We showed how this model is mathematically equivalent to the interpretation model assumed by @Tessler2019psychrev and we articulated a more elaborate model which understands generics as intentional utterances.
 We tested the models using a diverse set of stimuli, including a replication data set from @Cimpian2010, and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property. 
 <!-- Additionally, the model accurately predicted which generic statements would carry the weakest interpretations. -->
-Furthermore, we found that a model that interprets generics pragmatically provides a better explanation of the observed data.
+Furthermore, we found that a model that interprets generics pragmatically provides a better explanation of the observed data than a literal interpretation model.
 <!-- Because generic interpretations are heavily sensitive to background knowledge, generics can carry weak interpretations. -->
 <!-- We also find that generics can carry weak interpretations, when background knowledge would make a strong interpretation implausible. -->
 <!-- We find reliable fine-grained differences in interpretations across properties, which only our uncertain threshold model can account for. -->
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
 
-The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property and that interpretation is best modeled as a communicatively relevant observation suggests a very primitive foundation to generic language. 
-Bayesian belief-updating based on observations is a plausible learning mechanism for any animal \red{(is there some citation for bayes in other animals?)}.
+The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property suggests a very primitive foundation to generic language. 
+Bayesian belief-updating based on observations is a general learning mechanism for any animal \red{(is there some citation for bayes in other animals?)}.
 The work here suggests that the human unique component of understanding generic language comes not from understanding
 syntax or the meaning of the words but from understanding the communicative intent of the speaker \red{(cite tomasello?)}.
-@Csibra2015 argues that individual objects are interpreted by infants as symbolic representations of the object kind.
-In that way, it is possible to interpret a pedagogically presented exemplar from a category as a "nonverbal generic".
-The pedagogical example is thus an indexical that refers to the category. 
-Indeed, @Sterken2015 argues the context-sensitivity of generic language should be understood linguisitically as an indexical. 
-The computational model presented here provides the computational unification of these ideas: 
+@Csibra2015 argues that individual objects are interpreted by infants as symbolic representations of the object kindm, and thus that it is possible to interpret a pedagogically presented exemplar from a category as a "nonverbal generic".
+The pedagogical example acts as an indexical to the category, and @Sterken2015 argues that the context-sensitivity exhibited by indexicals is the exact kind we need to model generics.
+The model we present that interprets generics as communicatively relevant single observations is a very natural formalization of the nonverbal generic / indexical view.
+Further the fact that an underspecified quantifier semantics is equivalent to an observation model provides an obvious route to learning the belief-updating properties of natural language semantics from more general learning mechanisms. 
+
+<!-- Indeed, @Sterken2015 argues the context-sensitivity of generic language should be understood linguisitically as an indexical.  -->
+<!-- The computational model presented here provides the computational unification of these ideas:  -->
+
+<!-- and that interpretation is best modeled as a communicatively relevant observation  -->
 
 
 <!-- It has been argued that object labels denote kind concepts as soon as a child begins to understand words [@Gelman2004; @WaxmanGelamn2009] -->
@@ -1996,26 +2000,29 @@ In what follows, we elaborate the assumptions in our modeling framework, describ
 ## The relationship between prevalence priors and generic interpretations
 
 Across our three experiments, we measured participants' background knowledge about the property using knowledge elicitation tasks.
-These background knowledge elicitation tasks involve reasoning about alternative categories of animals.
+These background knowledge elicitation tasks involve reasoning about the properties of alternative categories of animals.
 Conveying the instructions and questions of such prior elictation tasks require language. 
 Thus, there is the potential for circularity in our argument: We are predicting beliefs updated from language via beliefs measured from language.
-Our argument is, however, not circular because of the combination of the nature of the prior elicitation questions and our control quantitative models.
+Our argument is not circular, however, because of the combination of the nature of the prior elicitation questions and our control quantitative models, which we describe below.
 
 Consider first the nonparametric elicitation task of Expt. 2a. 
 Here, we asked participants to generate different animal categories and later rate prevalence for different properties for those animals.
-It is possible that participants answer the prevalence question (e.g., "What percentage of dogs develop phobias?") by first asking themselves a generic question ("Do dogs develop phobias?") and then rating their personal generic interpreted prevalence if the answer to the this question is yes and rating 0% prevalence if the answer to the generic question is no.
-In this hypothetical, there are only two possibilities for participants' beliefs---the category either does or does not (generically) have the property---and a quantitative study of generic interpretations would reduce based on such a knowledge elicitation would be circular.
+It is possible that participants answer the prevalence question (e.g., "What percentage of dogs develop phobias?") by first asking themselves a generic question ("Do dogs develop phobias?") and then rating their personal generic-interpreted prevalence if the answer to this question was yes and rating 0% prevalence if the answer to the generic question was no.
+In this hypothetical, there are only two possibilities for participants' beliefs---the category either does or does not (generically) have the property---and the generic interpretation task reduces to simply reporting back the part of the prior distribution that was generated when participants answered "yes" to their internally-directed generic question ("Do dogs develop phobias?").
 If this were the strategy participants employed, however, the most accurate model for the generic interpretation data would be the "some" model, which rules out the 0% component of the distribution. 
 The fact that the "some" model consistently underpredicts the generic interpretation data argues against the circularity in our measurements of the prevalence prior and generic interpretations.
 
-A similar defense can be made for the structured elicitation task in Expt. 1a.
+<!-- a quantitative study of generic interpretations would reduce based on such a knowledge elicitation would be circular. -->
+
+A similar argument can be made for the structured elicitation task in Expt. 1a.
 In Expt. 1, we assumed a particular model of the prevalence prior (i.e., a mixture of Betas) and elicited participants' knowledge about the property using questions that we assumed tapped into this structure. 
 One question concerned the probability that a kind would have 0% prevalence of the feature (or, equivalently, the proportion of categories for whom the property is expected to be present at some non-zero level of prevalence) by asking "How likely is it that *there is a K with F*?"
 Intuitively, the response to such a question should be that it is very likely for properties that exist in many categories (e.g., *is female*) and very unlikely for properties that only exist in a few categories (e.g., *has purple feathers*).
 The second question concerned the shape of the non-zero conditional distribution of prevalence; this was measured by asking "*Suppose there is a K with F*, how many Ks do you think have F?".
 This question measures the projectibility of the property given a single, positive exemplar.
-Thus, the predictions of the alternative, fixed-threhsold "some" model (which rules out 0% prevalence) for this experiment correspond to the inferences upon learning that *at least one member of the category has the property*.
+Thus, the predictions of the alternative, fixed-threshold "some" model (which rules out 0% prevalence) for this experiment correspond to the inferences upon learning that *at least one member of the category has the property*.
 In Expt. 1, we again find the generic interpretation data are distinct from those of the conditional, non-zero distributioun of prevalence, as evidenced by the "some" model comparisons.
+The fact that we use this "single, positive observation" question to elicit prior knowledge may in fact have blurred the distinction between the literal and the pragmatic model, which is why we Expt. 2 was conducted. 
 <!-- Learning from a generic carries stronger interpretations than just learning the existential information that a property exists in the category. -->
 <!-- are derived from the background knowledge in the correct way: They  -->
 
@@ -2024,6 +2031,13 @@ Though we did not empirically measure judgments given the existentially quantifi
   Recall the fixed-threshold models are "literal interpretation" models and do not compute scalar implicatures.
 ]
 Across our three experiments, we found that the "some" model provided too weak of interpretations, consistent with the intuition that generic statements convey stronger prevalence implications that the existential statement.
+
+Another interesting question is whether the same pattern of data could arise from a bonafide pedagogically sampled observation [cf., @Csibra2015]. 
+Given the success of the pragmatic model, we suspect this is possible.
+We also suspect, however, an interaction with the alternative actions available to the speaker or teacher. 
+That is, we do not expect bonafide generic interpretations from pedagogical observations when the speaker could have said a generic. 
+Finally, it should be noted that many of the properties used in our experimental stimuli are not directly observable either due to the nature of the property (e.g., "transmit HIV") or to the habituality of the predicate (e.g., "fly into building windows").
+
 
 \ndg{people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).}
 \mht{does that address it?}
