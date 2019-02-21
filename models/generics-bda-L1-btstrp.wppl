@@ -1,0 +1,79 @@
+// time webppl generics-bda-L1-btstrp.wppl --require utils --require webppl-json uncertain 1
+
+var chain = last(process.argv) // load index as last command line index
+
+var bootstrappedPriors = json.read('generics-bda-L0-btstrp1000-genint-priors3-n200-notPretty.json')
+var iterations = levels(bootstrappedPriors, "i")
+var priorsNames = levels(bootstrappedPriors, "property")
+// display(priorsNames)
+var chunkLength = 10
+var chunks = _.range(0, iterations.length, chunkLength)
+// var chunks = _.range(5000, iterations.length, chunkLength)
+
+// run in chunks to parallelize and decrease file sizes
+foreach(chunks, function(startingIteration){
+
+  var subsetIterations = iterations.slice(startingIteration, startingIteration + chunkLength)
+  var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L1unlifted-btstrp-results_chunk" + startingIteration + ".csv")
+  utils.writeLine(resultsHandle, ["model", "distribution", "iteration", "state", "prob"])
+
+  foreach(subsetIterations, function(i){
+
+    var iterationPriors = _.filter(bootstrappedPriors, {i: i})
+
+    foreach(priorsNames, function(distribution){
+      var distributionPriorsObj = _.filter(iterationPriors, {property: distribution} )[0]
+      var distributionPriors = _.omit(distributionPriorsObj, ["property", "i"])
+      // display(distributionPriors)
+      var vs = sort(map(function(x){utils.wpParseFloat(x)}, _.keys(distributionPriors)))
+      var ps = map(function(v){distributionPriors[v]}, vs)
+      var statePrior = Infer({model: function(){ categorical({vs, ps}) } })
+
+      // MAP estimates taken from expt 2
+      var cost = 3.6
+      var speakerOptimality = 2;
+      var cost_uttProb = Math.exp(-cost)
+
+      var listener0 = function(utterance, threshold) {
+        Infer({model: function(){
+        var state = sample(statePrior)
+        var theta = threshold ? threshold : sample(thetaPrior)
+        condition( utterance == "generic" ? state > theta : true )
+        return state
+      }})}
+
+      var speaker1 = cache(function(state) {
+       Infer({model: function(){
+         var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+         var L0 = listener0(utterance, false);
+         factor(speakerOptimality * L0.score(state))
+         return utterance
+       }})}, 10000)
+
+     var listener1 = cache(function(utterance) {
+       Infer({model: function(){
+         var state = sample(statePrior);
+         var S1 = speaker1(state)
+         observe(S1, utterance)
+         return state
+       }})}, 10000)
+
+      var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
+
+      utils.saveERP(statePrior, ["prior", distribution, i], resultsHandle)
+
+      foreach(all_thresholds, function(t){
+
+        var posterior = t ? listener0("generic", t) : listener1("generic")
+        var modelName = t ? "fixed_" + t : "pragmatic_unlifted"
+        utils.saveERP(posterior, [modelName, distribution, i], resultsHandle)
+
+      })
+
+    })
+
+  })
+
+  utils.closeFile(resultsHandle)
+  console.log("iteration = " + (startingIteration + chunkLength) + " complete")
+})

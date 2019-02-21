@@ -8,6 +8,19 @@ output: html_notebook
 library(rwebppl)
 library(tidyverse)
 library(knitr)
+library(coda)
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+hdi_upper<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+hdi_lower<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
 ```
 
 ```{r}
@@ -25,8 +38,8 @@ readCatchInfo = function(folder, proj){
     )
 }
 
-priorDataLabel = "prior-2"
-interpretationDataLabel = "interpretation-4"
+priorDataLabel = "prior-3"
+interpretationDataLabel = "interpretation-6"
 ```
 
 ## Load data
@@ -81,7 +94,351 @@ df.int.filtered <- df.int %>% filter(pass == 1) %>%
   mutate(response = as.numeric(response))
 ```
 
-## RSA/BDA Model
+## Load model results
+
+```{r}
+#null.dists <- c("beta1_100", "beta1_1000", "delta")
+semantics <- c("most", "some", "uncertain")
+models <- c("literal", "pragmatic", "pragmatic_unlifted")
+#modelName <- "pragmatic_unlifted"
+
+m.samp <- data.frame()
+
+for (sem in semantics){
+  model.path <- paste("../models/results/genint/", sem, sep = "")
+  if (sem == "uncertain") {
+      for (modelName in models){
+    
+        
+        model.prefix <-if (modelName == "literal"){
+          "results-genint-L0-int6-prior3n200-3Components_uncertain-semantics_"
+        } else if (modelName == "pragmatic_unlifted") {
+          "results-genint-wCost-int6-prior3-3Components_pragmatic_unlifted-uncertain-"
+        } else {
+          "results-genint-wCost-int6-prior3-3Components_pragmatic-uncertain-"
+        }
+    
+        #  FIXING PRIORS TO BE RAW EMPIRICAL DIISTRIBUUTIONS
+        # model.prefix <-if (modelName == "literal"){
+        #   "results-genint-wCost-int6-prior3-fixedPrior_literal-uncertain-"
+        # } else if (modelName == "pragmatic_unlifted") {
+        #   "results-genint-wCost-int6-prior3-fixedPrior_pragmatic_unlifted-uncertain-"
+        # } else {
+        #   "results-genint-wCost-int6-prior3-fixedPrior_pragmatic-uncertain-"
+        # }
+        
+        n_samples <- if (modelName == "literal") { 500000 } else { 250000 }
+        n_burn <- n_samples / 2
+        lg <- if (modelName == "literal") { 150 } else { 75 }
+    
+        # n_samples <- if (modelName == "literal") { 1 } else { 10000 }
+        # n_burn <- n_samples / 2
+        # lg <- if (modelName == "pragmatic_unlifted") { 2 } else { 1 }
+        
+        model.files <- list.files(
+          path = model.path,
+          pattern = paste(model.prefix, format(n_samples, scientific = F), 
+                          "_burn", n_burn, 
+                      "_lag", lg, "_chain", sep = "")
+          #paste(model.prefix, n_samples, "_burn", n_burn,
+          #            "_lag", lg, "_chain", sep = "")
+        )
+        
+        for (modfile in model.files){
+          
+          m.item <- read_csv(paste(model.path, modfile, sep = "/"))
+    
+          
+          # FIXED PRIORR MODELLS JJUST USE THE "ELSE"  CODING SCHEME
+          if (modelName == "literal"){
+            m.item <- m.item %>%
+              rename(component = property,
+                     property = param,
+                     parameter = category
+                     )
+          } else {
+            m.item <- m.item %>% 
+              rename(component = param,
+                     parameter = category
+                     )
+         }
+    
+          m.samp <- bind_rows(
+            m.samp,
+            m.item %>% 
+              mutate(
+                src = modelName,
+                semantics = sem,
+                chain = match(modfile, model.files)
+                )
+          )
+        }
+      }
+  } else {
+
+    model.prefix <- paste(
+     "results-genint-L0-int6-prior3n200-3Components_",sem,"-semantics_",
+     sep = ""
+    )
+      
+
+       n_samples <- 500000
+        n_burn <- n_samples / 2
+        lg <- 150
+
+        model.files <- list.files(
+          path = model.path,
+          pattern = paste(model.prefix, format(n_samples, scientific = F), 
+                          "_burn", n_burn, 
+                      "_lag", lg, "_chain", sep = "")
+          #paste(model.prefix, n_samples, "_burn", n_burn,
+          #            "_lag", lg, "_chain", sep = "")
+        )
+        
+        for (modfile in model.files){
+          
+          m.item <- read_csv(paste(model.path, modfile, sep = "/"))
+    
+          
+          m.item <- m.item %>%
+              rename(component = property,
+                     property = param,
+                     parameter = category)
+          m.samp <- bind_rows(
+            m.samp,
+            m.item %>% 
+              mutate(
+                src = "literal",
+                semantics = sem,
+                chain = match(modfile, model.files)
+                )
+          )
+        }
+  }
+
+}
+m.samp <- m.samp %>%
+  mutate(property = gsub("&quotechar", "", property))
+#m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
+
+```
+
+
+### Speaker optimality parameter
+
+```{r}
+m.samp %>%
+  #filter(type == "parameter") %>%
+  filter(type %in% c("speakerOptimality","cost")) %>%
+  ggplot(., aes( x = val, fill = factor(chain)))+
+  geom_histogram(position = position_dodge())+
+  facet_grid(type~src + semantics, scales = 'free')
+
+# ggsave(paste("figs/", model.prefix, "speakerOptimality.pdf", sep = ""),
+#        width = 4, height = 4)
+```
+```{r}
+m.samp %>%
+  filter(type %in% c("speakerOptimality","cost")) %>%
+  group_by(type, src) %>%
+  summarize(MAP = estimate_mode(val),
+            cred_upper = hdi_upper(val),
+            cred_lower = hdi_lower(val))
+```
+
+
+### Prevalence prior parameters
+
+#### Forward sample prevalence priors
+
+Add iteration number back in.
+
+```{r}
+m.samp.iter <- m.samp %>%
+  #filter(type %in% c("componentParameters")) %>%
+  filter(parameter %in% c("weight", "alpha", "beta")) %>%
+  # mutate(parameter = paste(type, param, property, category, sep = "_")) %>%
+  # select(-type, -param, -property, -category) %>%
+  mutate(parameter = paste(parameter, property, component, sep = "_")) %>%
+  select(-property, -component) %>%
+  group_by(parameter) %>%
+  mutate(iteration = ave(parameter==parameter, parameter, FUN=cumsum)) %>%
+  ungroup() %>%
+#  separate(parameter, into = c("parameter", "property", "componentID", "componentParam"), sep= "_")
+  separate(parameter, into = c("parameter", "property", "componentID"), 
+           sep= "_")
+
+m.rs.prior.parameters <- m.samp.iter %>% 
+  #mutate(componentParam = paste(componentParam, "_", componentID, sep = "")) %>% select(-componentID) %>%
+  mutate(componentParam = paste(parameter, "_", componentID, sep = "")) %>% select(-componentID, -parameter) %>%
+  spread(componentParam, val) %>%
+  rowwise() %>%
+  mutate(component = LaplacesDemon::rcat(1, c(`weight_0`, `weight_1`, `weight_2`)) - 1,
+         shape1_param = ifelse(component == 0, alpha_0, ifelse(component == 1, alpha_1, alpha_2)),
+         shape2_param = ifelse(component == 0, beta_0, ifelse(component == 1, beta_1, beta_2)),
+         prev = rbeta(shape1 = shape1_param, shape2 = shape2_param, n = 1))
+
+```
+
+##### Marginal distributions on prevalence
+
+```{r gen-prevprior2-marginals, fig.width = 8, fig.height = 5}
+md.prevpriors <- bind_rows(
+  df.prior.filtered %>% 
+    filter(property %in% levels(factor(m.rs.prior.parameters$property))) %>%
+    select(property, response) %>%
+    rename(prev = response) %>% 
+    mutate(src = 'data'),
+  m.rs.prior.parameters %>% 
+    select(property, prev, src) %>%
+    mutate(src = paste(src, semantics, sep = "_")) 
+  )
+
+ggplot(md.prevpriors , aes( x = prev, color = src))+
+  geom_density(size = 1, aes( y = ..scaled.. ), adjust = 0.5)+
+  facet_wrap( ~ property)+
+  scale_color_solarized()+
+  scale_x_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  theme(strip.text.y = element_text(angle = 0))
+
+# ggsave(paste("figs/", model.prefix, "prevPriorsPDFs.pdf", sep = ""),
+#        width = 14, height = 8)
+```
+
+##### Cumulative Density Functions
+
+```{r gen-prevprior2-cdf, fig.width = 8, fig.height = 5}
+fig.prevprior.cdf.collapse <- ggplot(md.prevpriors, aes( x = prev, color = src))+
+    stat_ecdf()+
+    facet_wrap(~property)+
+    #scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))+
+    coord_fixed()
+
+ggsave(paste("joint_prevPriorsCDFs.pdf", sep = ""),
+       width = 5.5, height = 3.5)
+
+ggsave(paste("individual_prevPriorsCDFs.pdf", sep = ""),
+       width = 14, height = 8)
+```
+
+### Implied prevalence
+
+```{r}
+df.int.filtered.bs <-   df.int.filtered %>%
+    #filter(property %in% levels(factor(m.samp$param))) %>%
+    group_by(property) %>%
+    tidyboot::tidyboot_mean(column = response)
+
+md.impprev <- left_join(
+  bind_rows(
+   m.samp %>%
+    #filter(parameter %in% c("prior", "posterior"), src != "literal") %>% #FIXEDPRIORRs
+    filter(type == "prediction",  src != "literal") %>%
+    #rename(component = property, property = param, parameter = category) %>%
+    group_by(src, semantics, property, parameter) %>%
+    summarize(model_MAP = estimate_mode(val),
+            model_upper = hdi_upper(val),
+            model_lower = hdi_lower(val)),
+   m.samp %>%
+    filter(src == "literal", parameter %in% c("prior", "posterior")) %>%
+    group_by(src,semantics, property, parameter) %>%
+    # summarize(model_MAP = val,
+    #         model_upper = val,
+    #         model_lower = val)
+   summarize(model_MAP = estimate_mode(val),
+      model_upper = hdi_upper(val),
+      model_lower = hdi_lower(val))
+  ),
+  df.int.filtered.bs
+)
+
+# save(df.int.filtered, df.int.filtered.bs, md.impprev,
+#      file = "../paper/cached_results/genInt_interpretation6_prior3_modelData2.RData")
+```
+
+```{r}
+ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2)+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  facet_wrap(~src + parameter)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()
+
+# ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
+#        width = 6, height = 4)
+```
+```{r}
+md.impprev %>%
+  filter(src %in% c("literal", "pragmatic_unlifted"), parameter == "posterior") %>%
+  select(src, property, model_MAP) %>%
+  unique() %>%
+  spread(src, model_MAP) %>%
+  ggplot(., aes( x = literal, y = pragmatic_unlifted))+
+  geom_abline(intercept  = 0 , slope = 1)+
+  geom_point()
+```
+
+```{r}
+md.impprev %>%
+  #filter(!is.na(mean)) %>%
+  group_by(src, parameter) %>%
+  summarize( mse  = mean((model_MAP-mean)^2),
+             r2 = cor(model_MAP, mean)^2) %>% 
+  kable()
+```
+
+
+
+
+```{r wip}
+m.samp.iter.weight <- m.samp.iter %>%
+  filter((componentParam == "weight") | (parameter == "numberOfComponents")) %>%
+  mutate(componentID = paste("component", componentID, sep = "")) %>%
+  spread(componentID, val)
+
+m.samp.iter.param <- m.samp.iter %>%
+  filter(componentParam %in% c("alpha", "beta")) %>%
+  spread(componentParam, val)
+
+# for (p in levels(factor(m.samp.iter$property))){
+#   for (i in seq(1, n_samples){
+#     
+#   }
+# }
+# 
+# m.samp.iter.weight.i <- m.samp.iter.weight %>% 
+  filter(iteration == 10, property == 'develop phobias')
+
+indices <- paste("component", 
+                 seq(0, 
+                     filter(m.samp.iter.weight.i, 
+                            parameter == 'numberOfComponents')[[1, "component-99"]]), 
+                 sep ="")
+
+ps <- as.numeric(as.vector(
+  filter(m.samp.iter.weight.i, 
+         componentParam == 'weight')[1,indices]
+  ))
+
+componentId <- LaplacesDemon::rcat(1, ps)
+
+m.samp.iter.param %>%
+  filter(property == p, iteration == i, componentID == componentId) %>%
+  mutate(prev = rbeta(shape1 = alpha, shape2 = beta, n = 1))
+
+```
+
+
+
+
+## (not working) RWebPPL RSA/BDA Model
 
 ### RWebPPL model (not working)
 
@@ -296,223 +653,6 @@ ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper,
 ```
 
 
-
-
-
-
-## Load model results
-
-```{r}
-model.path <- "../models/results/"
-#model.prefix <- "pilot-results-genint-L1-3Components_"
-#model.prefix <- "pilot-results-genint-L0-3Components_fixed-semantics_"
-#model.prefix <- "pilot-results-genint-L1-3Components_fixed-semantics_"
-#model.prefix <- "pilot-predict-results-genint-L0-3Components_uncertain-semantics_"
-n_samples <- 250000
-n_burn <- n_samples / 2
-lg <- 75
-chain <- 1
-
-model.files <- list.files(
-  path = model.path, 
-  pattern = paste(model.prefix, n_samples, "_burn", n_burn, 
-                  "_lag", lg, "_chain", sep = "")
-  )
-m.samp <- data.frame()
-for (modfile in model.files){
-  m.item <- read_csv(paste(model.path , modfile, sep = ""))
-  
-  m.samp <- bind_rows(
-    m.samp,
-    m.item %>% mutate(chain = match(modfile, model.files))
-  )
-    
-}
-```
-
-```{r}
-m.samp <- read_csv(paste(model.path,
-                         "hmc/pilot-results-genint-L1-3Components_hmc1000_burn500_stepSize0.000025_steps5_chain10.csv", sep = ""))
-
-m.samp <- get_samples(m.samp, 1000)
-```
-
-
-
-### Speaker optimality parameter
-
-```{r}
-m.samp %>%
-  #filter(type == "parameter") %>%
-  filter(parameter == "speakerOptimality") %>%
-  ggplot(., aes( x = val ))+
-  geom_histogram()#+
-  #facet_wrap(~chain, scales = 'free')
-
-# ggsave(paste("figs/", model.prefix, "speakerOptimality.pdf", sep = ""),
-#        width = 4, height = 4)
-```
-
-
-### Prevalence prior parameters
-
-#### Forward sample prevalence priors
-
-Add iteration number back in.
-
-```{r}
-m.samp.iter <- m.samp %>%
-  #filter(type %in% c("componentParameters")) %>%
-  filter(parameter %in% c("weight", "alpha", "beta")) %>%
-  # mutate(parameter = paste(type, param, property, category, sep = "_")) %>%
-  # select(-type, -param, -property, -category) %>%
-  mutate(parameter = paste(parameter, property, component, sep = "_")) %>%
-  select(-property, -component) %>%
-  group_by(parameter) %>%
-  mutate(iteration = ave(parameter==parameter, parameter, FUN=cumsum)) %>%
-  ungroup() %>%
-#  separate(parameter, into = c("parameter", "property", "componentID", "componentParam"), sep= "_")
-  separate(parameter, into = c("parameter", "property", "componentID"), 
-           sep= "_")
-
-m.rs.prior.parameters <- m.samp.iter %>% 
-  #mutate(componentParam = paste(componentParam, "_", componentID, sep = "")) %>% select(-componentID) %>%
-  mutate(componentParam = paste(parameter, "_", componentID, sep = "")) %>% select(-componentID, -parameter) %>%
-  spread(componentParam, val) %>%
-  rowwise() %>%
-  mutate(component = LaplacesDemon::rcat(1, c(`weight_0`, `weight_1`, `weight_2`)) - 1,
-         shape1_param = ifelse(component == 0, alpha_0, ifelse(component == 1, alpha_1, alpha_2)),
-         shape2_param = ifelse(component == 0, beta_0, ifelse(component == 1, beta_1, beta_2)),
-         prev = rbeta(shape1 = shape1_param, shape2 = shape2_param, n = 1))
-
-```
-
-##### Marginal distributions on prevalence
-
-```{r gen-prevprior2-marginals, fig.width = 8, fig.height = 5}
-md.prevpriors <- bind_rows(
-  df.prior.filtered %>% 
-    filter(property %in% levels(factor(m.rs.prior.parameters$property))) %>%
-    select(property, response) %>%
-    rename(prev = response) %>% 
-    mutate(src = 'data'),
-  m.rs.prior.parameters %>% 
-    select(property, prev) %>%
-    mutate(src = 'model') 
-  )
-
-ggplot(md.prevpriors , aes( x = prev, color = src))+
-  geom_density(size = 1, aes( y = ..scaled.. ), adjust = 0.5)+
-  facet_wrap( ~ property)+
-  scale_color_solarized()+
-  scale_x_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
-  scale_y_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
-  theme(strip.text.y = element_text(angle = 0))
-
-# ggsave(paste("figs/", model.prefix, "prevPriorsPDFs.pdf", sep = ""),
-#        width = 14, height = 8)
-```
-
-##### Cumulative Density Functions
-
-```{r gen-prevprior2-cdf, fig.width = 8, fig.height = 5}
-ggplot(md.prevpriors, aes( x = prev, color = src))+
-    stat_ecdf()+
-    facet_wrap(~property)+
-    scale_color_solarized()+
-    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-    theme(strip.text.y = element_text(angle = 0))
-
-ggsave(paste("figs/", model.prefix, "prevPriorsCDFs.pdf", sep = ""),
-       width = 14, height = 8)
-```
-
-### Implied prevalence
-
-```{r}
-
-md.impprev <- left_join(
-   m.samp %>%
-    filter(parameter %in% c("prior", "posterior")) %>%
-    #filter(type == "prediction") %>%
-    #rename(component = property, property = param, parameter = category) %>%
-    group_by(property, parameter) %>%
-    summarize(model_MAP = estimate_mode(val),
-            model_upper = hdi_upper(val),
-            model_lower = hdi_lower(val)),
-  df.int.filtered %>%
-    #filter(property %in% levels(factor(m.samp$param))) %>%
-    group_by(property) %>%
-    tidyboot::tidyboot_mean(column = response)
-)
-
-```
-
-```{r}
-ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
-                        y = mean, ymin = ci_lower, ymax = ci_upper))+
-  geom_abline(intercept = 0, slope = 1, lty = 2)+
-  geom_point()+
-  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
-  facet_wrap(~parameter)+
-  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-  coord_fixed()
-
-# ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
-#        width = 6, height = 4)
-```
-
-```{r}
-md.impprev %>%
-  filter(!is.na(mean)) %>%
-  group_by(Parameter) %>%
-  summarize( mse  = mean((model_MAP-mean)^2),
-             r2 = cor(model_MAP, mean)^2) %>% 
-  kable()
-```
-
-
-
-
-```{r wip}
-m.samp.iter.weight <- m.samp.iter %>%
-  filter((componentParam == "weight") | (parameter == "numberOfComponents")) %>%
-  mutate(componentID = paste("component", componentID, sep = "")) %>%
-  spread(componentID, val)
-
-m.samp.iter.param <- m.samp.iter %>%
-  filter(componentParam %in% c("alpha", "beta")) %>%
-  spread(componentParam, val)
-
-# for (p in levels(factor(m.samp.iter$property))){
-#   for (i in seq(1, n_samples){
-#     
-#   }
-# }
-# 
-# m.samp.iter.weight.i <- m.samp.iter.weight %>% 
-  filter(iteration == 10, property == 'develop phobias')
-
-indices <- paste("component", 
-                 seq(0, 
-                     filter(m.samp.iter.weight.i, 
-                            parameter == 'numberOfComponents')[[1, "component-99"]]), 
-                 sep ="")
-
-ps <- as.numeric(as.vector(
-  filter(m.samp.iter.weight.i, 
-         componentParam == 'weight')[1,indices]
-  ))
-
-componentId <- LaplacesDemon::rcat(1, ps)
-
-m.samp.iter.param %>%
-  filter(property == p, iteration == i, componentID == componentId) %>%
-  mutate(prev = rbeta(shape1 = alpha, shape2 = beta, n = 1))
-
-```
 
 
 

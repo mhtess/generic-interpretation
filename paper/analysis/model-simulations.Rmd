@@ -167,6 +167,64 @@ condition(state > theta)
   }, method: "enumerate"})}
 '
 
+l1.unlifted.model <- '
+
+var literalListener = cache(function(utt) {
+  Infer({model: function(){
+   var state = sample(statePrior)
+   var theta = sample(thetaPrior);
+  condition(utt == "generic" ? state > theta : true)
+    return state
+  }, method: "enumerate"})}, 10000)
+
+var alpha = 1000000
+var speaker = cache(function(state) {
+  Infer({model: function(){
+   var utterance = flip(0.1) ? "generic" : "silence"
+    var L0 = literalListener(utterance);
+    factor(alpha * L0.score(state))
+    return utterance
+}, method: "enumerate"})}, 10000)
+  
+var pragmaticListener = cache(function() {
+  Infer({model: function(){
+     var state = sample(statePrior)
+    var S1 = speaker(state)
+    observe(S1, "generic")
+    return {state}
+}, method: "enumerate"})}, 10000)
+  
+'
+
+l1.lifted.model <- '
+
+var literalListener = cache(function(utt, theta) {
+  Infer({model: function(){
+   var state = sample(statePrior)
+  condition(utt == "generic" ? state > theta : true)
+    return state
+  }, method: "enumerate"})}, 10000)
+
+var alpha = 1000000
+var speaker = cache(function(state, theta) {
+  Infer({model: function(){
+   var utterance = flip(0.1) ? "generic" : "silence"
+    var L0 = literalListener(utterance, theta);
+    factor(alpha * L0.score(state))
+    return utterance
+}, method: "enumerate"})}, 10000)
+  
+var pragmaticListener = cache(function() {
+  Infer({model: function(){
+     var state = sample(statePrior)
+   var theta = sample(thetaPrior);
+    var S1 = speaker(state, theta)
+    observe(S1, "generic")
+    return {state}
+}, method: "enumerate"})}, 10000)
+  
+'
+
 ```
 
 ```{r simulationCalls}
@@ -180,6 +238,10 @@ no.utterance.call <- '
 uncertain.threshold.call <- '
   uncertainThresholdInterpreter()
 '
+
+pragmatic.call <- '
+  pragmaticListener()
+'
 ```
 
 ```{r simulationRuns, eval = F}
@@ -188,7 +250,8 @@ priorNames <- c(
 #  "uniform_rare", 
   #"biological_common", 
   "biological_rare",
-  #"accidental_common",
+  "sexed_rare",
+  "accidental_common",
   "accidental_rare"
 )
 
@@ -200,6 +263,10 @@ priorShapes <- list(
   uniform_rare =  list(params = list(
     c1 = data.frame(a = 1, b = 1), 
     c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4),
+  sexed_rare =  list(params = list(
+    c1 = data.frame(a = 10, b = 10), 
+    c2 = data.frame(a = 1, b = 200)
   ), mix = 0.4), 
   biological_common =  list(params = list(
     c1 = data.frame(a = 30, b = 1), 
@@ -210,7 +277,7 @@ priorShapes <- list(
     c2 = data.frame(a = 1, b = 200)
   ), mix = 0.4), 
   accidental_common =  list(params = list(
-    c1 = data.frame(a = 2, b = 10), 
+    c1 = data.frame(a = 1, b = 5), 
     c2 = data.frame(a = 1, b = 200)
   ), mix = 1),
   accidental_rare =  list(params = list(
@@ -223,12 +290,20 @@ priorShapes <- list(
 sims.fixed.thresholds <- data.frame()
 sims.priors <- data.frame()
 sims.uncertain.thresholds <- data.frame()
+sims.pragmatic.unlifted <- data.frame()
+sims.pragmatic.lifted <- data.frame()
 
 for (p in priorNames){
 
   inputData = list(prior = priorShapes[[p]])
   rs.fixed.threshold.model <- webppl(paste(rsaHelpers, statePrior, fixed.threshold.model, fixed.threshold.calls, sep = '\n'), data = inputData, data_var = "data")
+  
   rs.uncertain.threshold.model <- webppl(paste(rsaHelpers, statePrior, uncertain.threshold.model, uncertain.threshold.call, sep = '\n'), data = inputData, data_var = "data")
+
+  rs.pragmatic.unlifted.model <- webppl(paste(rsaHelpers, statePrior, l1.unlifted.model, pragmatic.call, sep = '\n'), data = inputData, data_var = "data")
+  
+  rs.pragmatic.lifted.model <- webppl(paste(rsaHelpers, statePrior, l1.lifted.model, pragmatic.call, sep = '\n'), data = inputData, data_var = "data")
+    
   rs.prior <- webppl(paste(rsaHelpers, statePrior, no.utterance.model, no.utterance.call, sep = '\n'), data = inputData, data_var = "data")
 
   sims.fixed.thresholds <- bind_rows(sims.fixed.thresholds,
@@ -248,6 +323,20 @@ for (p in priorNames){
     #rs.uncertain.threshold.model %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
     )
   
+  sims.pragmatic.unlifted <- bind_rows(
+    sims.pragmatic.unlifted, 
+    get_samples(rs.pragmatic.unlifted.model, 20000) %>% mutate(PriorShape = p)
+    #rs.uncertain.threshold.model %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+  
+  
+  sims.pragmatic.lifted <- bind_rows(
+    sims.pragmatic.lifted, 
+    get_samples(rs.pragmatic.lifted.model, 20000) %>% mutate(PriorShape = p)
+    #rs.uncertain.threshold.model %>% select(value) %>% rename(state = value) %>% mutate(PriorShape = p)
+    )
+    
+  
   
   sims.priors <- bind_rows(
     sims.priors, 
@@ -261,16 +350,17 @@ for (p in priorNames){
 
 sims.combined <- bind_rows(
     sims.priors %>% mutate(src = 'priors'),
-    sims.uncertain.thresholds %>% mutate(src = 'posteriors'),
+    sims.uncertain.thresholds %>% mutate(src = 'literal'),
+    sims.pragmatic.unlifted %>% mutate(src = 'pragmaticUnlifted'),
+    sims.pragmatic.lifted %>% mutate(src = 'pragmaticLifted'),
     sims.fixed.thresholds %>%
       mutate(src = paste('fixed', threshold, sep = "_")) %>%
       select(-threshold)
     )
 
-#save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT_L1.RData")
 
-
-#save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
+#save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT_L1.RData")
 ```
 
 ```{r}
@@ -279,7 +369,7 @@ sims.combined <- bind_rows(
 
 fig.sims.priors <- ggplot(sims.combined %>%
          filter(
-           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
+           PriorShape %in% c("uniform", "biological_rare", "accidental_rare", "accidental_common"),
            src %in% c("priors")
            ) %>%
          mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
@@ -321,18 +411,18 @@ fig.sims.priors <- ggplot(sims.combined %>%
 
 fig.sims.distributions <- ggplot(sims.combined %>%
          filter(
-           PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
-           src %in% c("fixed_0.1", "fixed_0.5", "posteriors")
+           PriorShape %in% c("uniform", "biological_rare", "accidental_rare", "accidental_common"),
+           src %in% c("fixed_0.1", "fixed_0.5", "literal", "pragmaticUnlifted", "pragmaticLifted")
            ) %>%
-         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare"),
-                                    labels = c("Xs Y    \n[uniform]", "Xs fly      \n[biological]", "Xs carry malaria \n [accidental]         ")),
-                src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", "posteriors"),
+         mutate(PriorShape = factor(PriorShape, levels = c("uniform", "biological_rare", "accidental_rare", "accidental_common"),
+                                    labels = c("Xs Y    \n[uniform]", "Xs fly      \n[biological]", "Xs carry malaria \n [accidental]         ", "accidental_common")),
+                src = factor(src, levels = c( "fixed_0.1", "fixed_0.5", 
+                                              "literal", "pragmaticUnlifted", "pragmaticLifted"),
                              labels = c(
                            #    'prevalence prior',
                                '"some" (threshold = 0.01)',
                               '"most" (threshold = 0.5)',
-                               'generic (uncertain threshold)'
-                                        ))), 
+                               'literal uncertain threshold', 'pragmatic uncertain threshold', "pragmaticLifted"))), 
        aes(x = state, fill = src, color = src))+
     #geom_density_ridges(scale = 0.9, alpha = 0.7)+
     geom_density(aes(y = ..scaled..), size = 0.6, alpha = 0.7, adjust = 1.1)+
@@ -353,7 +443,7 @@ fig.sims.distributions <- ggplot(sims.combined %>%
           axis.title.y = element_blank()
           #plot.margin=unit(c(0.5,0.5,1.5,0.5),"cm")
           )
-
+fig.sims.distributions
 ```
 
 ```{r fig.width = 6, fig.asp = 0.6}
