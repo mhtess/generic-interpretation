@@ -1,0 +1,418 @@
+## Experiment 1a: Prior elicitation
+
+This experiment measures the prevalence prior $P(r)$ in Eq. \ref{eq:L0} using a structured, prior elicitation procedure.
+
+### Method
+
+#### Participants
+
+We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk (MTurk). We chose this number of participants based on intuition from similar experiments which were designed primarily to test a quantitative model.
+Participants were restricted to those with US IP addresses and with at least a 95\% MTurk work approval rating. 
+All participants were native English speakers. 
+The experiment took about 5-7 minutes and participants were compensated \$0.75.
+
+#### Procedure and materials
+
+We constructed a stimulus set of forty different properties to explore a wide range of *a priori* beliefs about prevalence. 
+These items make up four categories of properties: body parts (e.g., *fur*), body parts of a particular color (e.g., *yellow fur*), body parts described with a vague adjective (e.g., *curly fur*), and body parts with in an accidental or disease state (e.g., *wet fur*).
+Because pilot testing revealed more variability for items in the accidental category relative to the other types of properties, we used twice as many exemplars of accidental properties, yielding a more thorough test of the quantitative predictive power of the generic interpretation model. 
+We used eight exemplars of each of the three non-accidental properties (parts, colored parts, vague parts), and sixteen exemplars of accidental properties, building on a stimulus set from @Cimpian2010.
+<!-- \ndg{list properties and other materials in appendix or supplement?} -->
+List of properties is shown in Table 1 of the Appendix.
+
+Direct elicitation of background knowledge about the properties used in @Cimpian2010 (e.g., by asking about prevalence in familiar categories) is difficult because many of the properties are fantastical or obscure (e.g., pink teeth, silver legs, fungus-covered fur) leading to a large component of the distribution at zero prevalence.
+Therefore, we assume a mixture distribution structure and create an elicitation task to measure two aspects of the prior: (1) the relative contribution of zero-prevalence distribution (e.g., for how many categories is the property expected to be present at all) and (2) the prevalence among kinds where the property is present (*prevalence when present*). 
+
+Participants were first introduced to a "data-collection robot" that was tasked with learning about properties of animals. 
+Participants were told the robot randomly selected an animal from its memory to ask the participant about (e.g., The robot says: "We recently discovered animals called feps."). 
+To measure the relative contribution of the zero-prevalence distribution, the robot asked how likely it was that there *was a fep with property* (e.g., "How likely is it that there is a fep that has wings?"), to which participants reported on a scale from *unlikely* to *likely*.
+To measure *prevalence when present*, the robot then asked the likely prevalence assuming that at least one has the property (e.g., "Suppose there is a fep that has wings. What percentage of feps do you think have wings?"). 
+Participants completed a practice trial using the property *are female* to make sure they understood the meanings of these two questions.
+For example, it is very likely that there is a fep that is female because almost all animals have female members (high $P(\text{feature is present})$).
+Additionally, when present, the property is only expected in about 50\% of the category.
+
+
+<!-- In previous work, we have found that prevalence priors are well-modeled by a mixture of two Beta distributions. ^[ -->
+<!--   The Beta distribution is chosen because the support of this distribution is numerical values between 0 - 1, which is the appropriate support for a distribution over prevalence. -->
+<!-- ] -->
+<!-- One of these distributions represents kinds of animals who *do not have* a stable causal mechanism that could give rise to the property (e.g., *lions* do not have a stable mechanism by which they could *lay eggs*), which results in prevalence levels close to or equal to 0. -->
+<!-- This "null distribution" is potentially present for all features in exactly the same way (i.e., the lack of producing the feature). -->
+<!-- The second distribution represents kinds of animals who *do have* such a mechanism; we cannot specify the parameters of this second distribution *a priori* as they are likely different for different properties. -->
+<!-- Finally, the relative contribution of these two component distributions can also not be specified *a priori*.  -->
+<!-- \ndg{i feel like this part comes off as kind of complex and ad-hoc. how about waiting until next subsection to talk about betas, and here saying direct ellicitation is hard because there is generally a big component near zero, due to categories that lack any causal mechanism, so we to elicitation in two steps....} -->
+
+
+### Data analysis and results
+
+Question 1 elicits the mixture parameter of a 2-distribution mixture model ($P(\text{feature is present})$). 
+Question 2 elicits the prevalence in a kind where the property is present.
+These elicited parameters of the priors display a range of possible values Figure\ \@ref(fig:cimpian-prevPrior)A.
+<!-- Figure \ref{fig:prior2}a shows a summary of the elicited priors, in terms of the diversity of $d_{potential}$ and $d_{expected}$. -->
+Biological properties are likely to be present and when present, are likely to be widespread (top right corner of scatter plot).
+More specific properties (either using gradable adjectives or color adjectives) are expected to be slightly less prevalent among the kinds where the property is present, perhaps reflecting the fact that the same kind of animal can come in many different colors or that gradable properties (e.g., *big claws*) might not be ubiquitous in a category.
+Finally, accidental properties are as likely to be present in a category as the color or gradable properties (same $P(\text{feature is present})$), but are not expected to be widespread even when present in the category (low *prevalence when present*).
+
+From these two elicitation questions, we can reconstruct what the prevalence priors should look like. 
+We assume that kinds for which the property is absent have prevalence levels sampled from a Beta distribution that heavily favors numbers close to 0: $\text{Beta}(\gamma = 0.01; \xi = 100)$.^[
+  Note that we use the noncanonical mean $\gamma$ and concentration $\xi$ (or, inverse-variance) parameterization of the Beta distribution rather than the canonical shape (or pseudocount) parameterization for ease of posterior inference. The shape parameterization can be recovered using: $\alpha = \gamma \cdot \xi; \beta = (1 - \gamma) \cdot \xi$.
+]
+With that assumption, the prevalence distribution is given by:^[
+All modeling results hold when this null distribution is assumed to be even more left-skewed $\text{Beta}(\gamma = 0.001; \xi = 1000)$ or just a delta-function at zero $\delta_{p=0}$.
+]
+
+\begin{align}
+\phi & \sim \text{Beta}(\gamma_1, \xi_1) \nonumber \\ 
+r & \sim \begin{cases}
+		\text{Beta}(\gamma_2, \xi_2) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{T} \label{eq:priorModel}  \\
+		\text{Beta}(\gamma = 0.01; \xi = 100) &\mbox{if } \text{Bernoulli}(\phi) = \textsc{F} \\
+		\end{cases}
+\end{align}
+
+For data analysis, we assume participants' responses to both questions ($i \in \{\text{Question 1}, \text{Question 2}\}$) are generated from Beta distributions: $d_{i} \sim \text{Beta}(\gamma_i, \xi_i)$, and put uninformative priors over the parameters of each: $\gamma_i \sim \text{Uniform}(0, 1); \xi_i \sim \text{Uniform}(0, 100)$. 
+We implemented this Bayesian mixture-model in the probabilistic programming language WebPPL [@dippl].
+To learn about the credible values of the parameters of the model, we ran MCMC on each item independently for 100,000 iterations, discarding the first 50,000 for burn-in.
+
+<!-- This mixture model specifies the correct way to combine our two prior-elicitation questions. -->
+Figure\ \@ref(fig:cimpian-prevPrior)B shows example reconstructed priors.
+Biological properties (*biological*, *vague*, and *color* body parts) have prevalence distributions that are bimodal with peaks at 0\% and near-100\% prevalence, but differ in their variance around the 100\%-mode. 
+By contrast, accidental properties do not have a substantial second mode.
+This variability in prevalence priors leads the generic interpretation model to predict different prevalence levels implied by the generic.
+
+<!-- predicting weaker and more variable interpretations of novel generics for these properties.  -->
+<!-- \mht{will you plot prevalence posteriors as well? probably...} -->
+<!-- Interpretations of generics about these properties ($L$ model, Eq. \ref{eq:L0}) update these distributions to concave posteriors peaked at 100\% (Figure \ref{fig:prior2}a; red, blue and green insets); the model predicts these novel generics will be interpreted as implying the property is widespread in the category. -->
+
+
+
+
+<!-- To construct prevalence prior distributions, we built a Bayesian mixture-model for this prior elicitation task. -->
+
+
+```{r cimpian-prevPrior, fig.width = 9, fig.asp = 0.4, fig.cap="Prevalence priors for items from Cimpian et al. (2010). A: Latent parameters governing prevalence priors are different for different kinds of properties. B: The diversity in parameters gives rise to different underlying distributions over prevalence, which the generic interpretation model uses to make predictions."}
+load("cached_results/cimpian-prevPrior-interpretations.Rdata")
+# m.rs.priors.reconstructed.subset,
+     # df.c.prior.bs.wide, 
+     # df.c.int.bs,
+
+fig.prevPriors <- m.rs.priors.reconstructed.subset %>%
+  mutate(stim_type = as.character(stim_type),
+         stim_type_fixed = ifelse(stim_type == "color adj + part", "gradable adj + part",
+                                  ifelse(stim_type == "gradable adj + part", "color adj + part",stim_type)),
+         stim_type_fixed = factor(stim_type_fixed,
+                                         levels = c("body part",
+                                                    "gradable adj + part",
+                                                    "color adj + part",
+                                                    "accidental"))) %>%  
+  ggplot(., 
+       aes( x = prevalence,
+                                    fill = stim_type_fixed))+
+    stat_density ( aes(y = ..scaled.. ), color = 'black')+
+    facet_wrap(~property, nrow = 2)+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+    theme(strip.text.y = element_text(angle = 0))+   guides(fill=guide_legend(title="Property type"))+
+  ylab("Probability density (scaled)")+
+  xlab("Prevalence")
+
+fig.prevParams <- ggplot(df.c.prior.bs.wide %>%
+         mutate("Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "gradable adj + part",
+                                                    "color adj + part",
+                                                    "accidental"))), 
+       aes( x = mixture_mean, xmin = mixture_lower, xmax = mixture_upper,
+            y = pwp_mean, ymin = pwp_lower, ymax = pwp_upper,
+            fill = `Property type`))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+
+
+
+cowplot::plot_grid( 
+  cowplot::plot_grid(
+    fig.prevParams + theme(plot.margin = unit(c(6, 6, 0, 0), "pt"),
+                           legend.position = 'none'),
+    fig.prevPriors + theme(plot.margin = unit(c(6, 0, 0, 0), "pt"),
+                           legend.position = 'none'), 
+    nrow = 1,
+    labels = c("A", "B"),
+    rel_widths = c(0.33, 0.66)
+  ), 
+  cowplot::get_legend(
+    fig.prevPriors + theme(
+      legend.position="bottom"
+      #legend.text = element_text(size = 16),
+      #legend.title = element_text(size = 16)
+                           )
+    ), ncol = 1, rel_heights = c(1, .2))
+```
+
+
+<!-- We first explore a qualitative trend predicted by the interpretation model, before proceeding to a quantitative model analysis. -->
+<!-- Prevalence implied by a generic is predicted to vary according to the prevalence prior, which we can summarize by its mean. -->
+<!-- We ran a Bayesian mixed-effects beta regression model with fixed-effects of intercept and slope (scaled prior mean) with random by-participant effects of intercept and slope. -->
+<!-- There is a clear positive relationship between the prevalence prior mean and the implied prevalence ($\beta_{\text{prev prior mean}}=$ `r format_regression_effects(brm.c.int.prior_mean.summary, "scaled_prior_mean")`). -->
+
+
+<!-- In addition to specifying the correct way to combine our two prior-elicitation questions, using this inferred prior resolves two technical difficulties. -->
+<!-- First, it smooths effects that are clearly results of the response format.  -->
+<!-- For example, a very common rating for certain events is \emph{1 time per year}. -->
+<!-- Presumably participants would be just as happy reporting \emph{approximately} 1 time per year (e.g., on average, 1.2 times per year); the raw data does not reflect this due to demands of the dependent measure. -->
+<!-- Second, this methodology better captures the tails of the prior distribution (i.e., very frequent or very infrequent rates) which have relatively little data and need to be regularized by the analysis. -->
+
+
+
+<!-- We used the same structured, statistical model for the prior data from Expt.~1. -->
+<!-- The only difference from Expt.~1a. is that our experimental data comes from inquiring about the parameters of the priors directly, as opposed to asking about particular samples from the prior (i.e. particular kinds) as was done in Expt.~1a.  -->
+<!-- <!-- %For Expt.~2a, participants are asked questions directly targeting $\theta$ and $\gamma$ in the above model (see {\it Expt. 2a}). -->
+<!-- We assume these two measurements follow Beta distributions ($d_{potential} \sim \text{Beta}(\gamma_{1}, \xi_{1})$; $ -->
+<!-- d_{expected} \sim \text{Beta}(\gamma_{2}, \xi_{2})$), and construct single prevalence distributions, $P(x)$, by sampling from the posterior predictive distribution of prevalence as we did before: $P(x) = \int [ \phi\cdot \text{Beta} (x \mid \gamma_{2}, \xi_{2}) + (1 -  \phi) \cdot \delta_{x=0} ] \cdot \text{Beta}(\phi \mid \gamma_{1}, \xi_{1}) d\phi$. -->
+<!-- We used the same uninformative priors over parameters $\phi, \gamma_{i}, \xi_{i}$ as in Expt.~1a. -->
+
+
+<!-- %These convex posteriors show that generics about accidental or temporary properties come with highly uncertain interpretations, plausibly as a consequence of theory-driven considerations \cite{Cimpian2010c}.  -->
+
+
+
+
+## Model-based analysis and results
+
+
+```{r}
+load(file = "cached_results/cimpian-prevPriorParam_dists.RData")
+
+fig.param.uncertain <- md.prevPriorParams %>%
+  filter(src %in% c("data", "uncertain")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+fig.param.most <- md.prevPriorParams %>%
+  filter(src %in% c("data", "most")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+fig.param.some <- md.prevPriorParams %>%
+  filter(src %in% c("data", "some")) %>%
+  mutate(src = ifelse(src == "data", "data", "model"),
+         src = factor(src),
+         param = factor(param, levels = c("mixtureParam",
+                                          "prevWhenPresent"),
+                        labels = c("Mixture parameter",
+                                   "Expected prevalence (when present)"))) %>%
+  ggplot(., aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    xlab("Parameter value")+
+    ylab("Cumulative probability")+
+    scale_x_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), 
+                       breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+
+cowplot::plot_grid(
+  fig.param.some+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.x = element_blank()
+    ),
+  fig.param.most+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()),
+  fig.param.uncertain+ theme(
+    plot.margin = unit(c(0, 6, 0, 6), "pt"),
+    legend.position = 'none',
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank()
+    ),
+  nrow = 1
+)
+```
+
+
+```{r cimpian-modelingResults, fig.width = 10, fig.asp = 0.57, fig.cap="Implied prevalence data and model predictions for items from Cimpian et al. (2010). A: Mean implied prevalence ratings for forty stimuli. B: Implied prevalence and generics model prections collapsed across property type. C: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions."}
+
+load(file = "cached_results/cimpian-modelFits-interpretations.RData")
+load(file = "cached_results/cimpian-interpretations-95ci.RData")
+
+load(file = "cached_results/cimpian-prevPriorParam_dists.RData")
+# md.prevPriorParams
+
+fig.cimpian.interpretation.95ci <- df.c.int.bs %>%
+  ungroup() %>%
+  mutate(stim_property = factor(stim_property, 
+                           levels =  with(df.c.int.bs, stim_property[order(-mean)])),
+         stim_type = ifelse(stim_type == "disease", "accidental", stim_type),
+          "Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental"))) %>%
+  ggplot(., aes( x = stim_property, y = mean, ymin = ci_lower, ymax = ci_upper, 
+                 fill = `Property type`))+
+  geom_col(position = position_dodge(), color = 'black')+
+  geom_errorbar(position = position_dodge(), alpha = 0.3)+
+  #geom_pirate(bars = F, violins = F, width_points = 0.2)+
+  #coord_flip()+
+  #scale_color_viridis(discrete = T)+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        axis.title.x = element_blank())+
+  ylab("Implied prevalence")
+
+
+fig.cimpian.interpretation.stimtype <- md.impprev.type %>%
+  mutate("Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental")),
+         src  = factor(src, levels = c("data","model"),
+                       labels = c("data", "generics model"))) %>%
+  ggplot(., aes( x = src,
+                        y = mean, ymin = ci_lower, ymax = ci_upper,
+                 fill = `Property type`))+
+  geom_col(position = position_dodge(0.7), width = 0.7, color = 'black')+
+  #geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.7, position = position_dodge(0.7), width = 0.3)+
+  #geom_point(shape = 21, size = 2.6, color = 'black')+
+  #facet_wrap(~src, nrow = 1)+
+  #scale_x_continuous(limits = c(0,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(0,1.01), breaks = c(0,0.5, 1)) +
+  #coord_fixed()+
+  #xlab("Model prediction")+
+  ylab("Implied prevalence")+
+  theme(axis.title.x = element_blank())
+
+
+md.impprev.plotting <- md.impprev %>% 
+  filter((Parameter == "posterior") | (semantics == "uncertain")) %>%
+  mutate(src = paste(Parameter, "_", semantics, sep =""),
+         src = factor(src, levels = c("prior_uncertain", "posterior_some",
+                                      "posterior_most", "posterior_uncertain"),
+                      labels = c("Prevalence prior mean",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"most" + noise\n(threshold = 0.5)',
+                                 'generic\n(uncertain threshold)')),
+         "Property type" = factor(stim_type,
+                                         levels = c("part",
+                                                    "vague",
+                                                    "color",
+                                                    "accidental"),
+                                         labels = c("body part",
+                                                    "color adj + part",
+                                                    "gradable adj + part",
+                                                    "accidental")))
+
+
+
+fig.cimpian.interpretation.models <- ggplot(md.impprev.plotting, 
+       aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper,
+                 fill = `Property type`))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  geom_point(shape = 21, size = 2.6, color = 'black')+
+  facet_wrap(~src, nrow = 1)+
+  scale_x_continuous(limits = c(0,1.01), breaks = c(0, 1)) +
+  scale_y_continuous(limits = c(0,1.01), breaks = c(0, 1)) +
+  coord_fixed()+
+  xlab("Model prediction")+
+  ylab("Implied prevalence")+
+  theme(legend.position = 'right')
+
+cowplot::plot_grid( 
+  fig.cimpian.interpretation.95ci + theme(
+    plot.margin = unit(c(30, 6, 0, 6), "pt"),
+                         legend.position = 'none'),
+  cowplot::plot_grid(
+    fig.cimpian.interpretation.stimtype + theme(plot.margin = unit(c(20, 6, 12, 6), "pt"),
+                           legend.position = 'none'),
+    fig.cimpian.interpretation.models + theme(plot.margin = unit(c(0, 6, 0, 6), "pt"),
+                           legend.position = 'none'), 
+    nrow = 1,
+    labels = c("B", "C"),
+    rel_widths = c(1, 2.5)
+  ), 
+  cowplot::get_legend(
+    fig.cimpian.interpretation.stimtype + theme(
+      legend.position="bottom"
+      #legend.text = element_text(size = 16),
+      #legend.title = element_text(size = 16)
+                           )
+    ), ncol = 1, rel_heights = c(1.2, 1.2, 0.2),
+  labels = c("A", "", "")
+  )
+
+```
+
+```{r cimpian regression}
+load("cached_results/cimpian_interpretation_brms_prevPrior.RData")
+brm.c.int.prior_mean.summary <- summary(brm.c.int.prior_mean)
+```
+
+We now test the quantitative predictions of the model. 
+We use the prevalence priors reconstructed from Expt. 1a's structured elicitation task via Eq. \ref{eq:priorModel} as the prevalence prior $P(r)$ in Eq. \ref{eq:L0} to predict the generic interpretation data.
+We built a joint-inference Bayesian data analysis (BDA) model to predict both the prevalence prior data and the generic interpretation data simultaneously.
+We ran the model using 3 chains of MCMC for 750,000 iterations, the first 250,000 of which were discarded for burn-in. 
+Figure\ \@ref(fig:cimpian-modelingResults)B shows the generics model predictions and the human data for each of the four types of properties (collapsing across items within a property-type).
+We see that the model displays the same sensitivity to the kind of property: Generics about body parts are interpreted the strongest, accidental properties the weakest, with the other two types falling in between.
+
+We compare our generic interpretation to two lesioned versions of the model, both of which lack the uncertain threshold (a "some" most and a "most" model, described in the **Alternative models** section above). 
+Figure\ \@ref(fig:cimpian-modelingResults)C shows the model predictions in the comparison to the behavioral data for each item independently for the generics model, the two alternative fixed threshold models, and the prevalence prior mean.
+The alternative models' defects are apparent visually. 
+The prevalence prior, though it is highly correlated with the posterior ($r^2(40)=$ `r compute_r2(md.impprev %>% filter(semantics == "uncertain", Parameter == "prior"), "model_MAP", "mean")`), predicts too low values, resulting in a high mean squared error ($MSE=$ `r compute_mse(md.impprev %>% filter(semantics == "uncertain", Parameter == "prior"), "model_MAP", "mean")`).
+The "some" model is similar: It is highly correlated ($r^2(40)=$ `r compute_r2(md.impprev %>% filter(semantics == "some", Parameter == "posterior"), "model_MAP", "mean")`) but underpredicts the data ($MSE=$ `r compute_mse(md.impprev %>% filter(semantics == "some", Parameter == "posterior"), "model_MAP", "mean")`).
+The "most" + noise model achieves a pretty good fit to the data ($r^2(40) =$ `r compute_r2(md.impprev %>% filter(semantics == "most", Parameter == "posterior"), "model_MAP", "mean")`; $MSE=$ `r compute_mse(md.impprev %>% filter(semantics == "most", Parameter == "posterior"), "model_MAP", "mean")`), but only does so because it predicts about a third of the data set is noise (proportion noise = $0.37 (0.33, 0.42)$).
+Finally, the uncertain threshold generic interpretation model explains practically all of the variance in the data ($r^2(40) =$ `r compute_r2(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`) and achieves an extremely low mean squared error ($MSE =$ `r compute_mse(md.impprev %>% filter(semantics == "uncertain", Parameter == "posterior"), "model_MAP", "mean")`).
+
