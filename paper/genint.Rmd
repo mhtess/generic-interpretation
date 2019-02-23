@@ -988,6 +988,9 @@ The experimental paradigm can be viewed at http://stanford.edu/~mtessler/generic
 load(file = "cached_results/genInt_interpretation6_prior3_modelData2.RData")
 #df.int.filtered, df.int.filtered.bs, md.impprev
 load(file = "cached_results/genInt_interpretation6_prior3_mostNoise.RData")
+
+load(file = "cached_results/genint_L1_params.RData") # m.genint.params.l1
+load(file = "cached_results/genint_BF_results.RData") #rs.mll.formatted
 format_empirical_ci <- function(
   df, estimate = "mean", low = "ci_lower",
   high = "ci_upper", sigfigs = 2){
@@ -1068,40 +1071,74 @@ Convergence was checked qualitatively by confirming the similarity of the result
 
 #### Model criticism
 
-A qualitative examination showed that the prevalence prior distributions were well-modeled as a mixture of three Beta distributions. 
+A qualitative examination of the inferred prevalence prior distributions showed that they well-modeled as a mixture of three Beta distributions. 
 Often one Beta distribution is devoted to accounting for the very small numbers (0% or near 0% prevalence ratings), while the two other components model the other parts of the distribution, the details of which depend upon the property.
 To provide a quantitative examination of the fit to the priors data, we look at the posterior predictive distribution discretized to bins in increments of 10% prevalence (i.e., categorical distributions over the bins of 0%, 10%, ..., 90%, 100% prevalence) and compare the model's inferred priors to the empirical counts that fell into those bins. 
 The joint data analysis model accomodates the empirical patterns in the prevalence priors very well: $r^2(`r md.prevprior.stats[["n"]]`) = `r format(md.prevprior.stats[["r2"]], digits = 3)`$, $MSE = `r format(md.prevprior.stats[["mse"]], digits = 2)`$.
 \ndg{we should have a brief result reporting the posterior predictive check on the priors data? ie how well does our joint data analysis accommodate the empirical patterns in the prevalence priors.}
 \mht{above. okay?}
 
-As a first attempt to understand the implied prevalence data in a quantitative way, we compare the means of the inferred prevalence priors to the empirical means of the implied prevalence data (Figure\ \@ref(fig:genint-modelingResults) left-most facet).
-The means of the prevalence prior distributions do a rather poor job at predicting the implied prevalence ratings, consistently underpredicting the ratings ($r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["mse"]], digits = 2)`$).
-The fact that the prevalence prior data underpredicts the generic interpretation data is good evidence that participants are actually *updating* their beliefs about the property in the generic interpretation task, as opposed to simply responding according to their prior beliefs.
+To evaluate how well each model can accomodate the implied prevalence data, we compare the Maximum A-Posteriori value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items (Figure\ \@ref(fig:genint-modelingResults)).
+Table\ \@ref(tab:genint-modelTable) shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal "some" model, a literal "most" model (which includes an additional fit noise parameter), a literal generics (single positive observation) model, and the pragmatic generics model. 
+We see that the models based on the prevalence prior and the quantifier "some" (i.e., a fixed threshold at the lowest possible value) consistently *underpredict* the implied prevalence, consistent with the intuition that assigning the semantics of "some" for generics is too weak.
+Though the model based on a semantics for "most" (i.e., a fixed thrshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the "most" model assigns `r format_empirical_ci(m.samp.most.noise, "MAP", "cred_lower", "cred_upper")` proportion of the data to be noise, because of the high rate of implied prevalence ratings below 50\%. 
+<!-- The literal generic interpretation model updates its beliefs as if the listener had observed a single, positive example of the category with the property, and the pragmatic generic interpretation model sees that single observation as one that was intentionally transmitted by the speaker. -->
+Unlike each of the alternative semantic models, the two models based on belief updating according to a single, positive observation (literal and pragmatic generics models) can accomodate the highly variable generic interpretation data with a high degree of quantitative accuracy, with the pragmatic model slightly outperforming the literal generics model.
+<!-- The literal meaning of a generic provides a weak semantics which makes interpretation heavily determined by the prevalence prior; pragmatic reasoning can then strengthen the weak meaning of a generic to derive stronger interpretations. -->
 
-The alternative semantic models use the same data analytic approach but update beliefs according to a fixed-threshold semantics.
+Figure\ \@(fig:genint-modelingResults-bars) shows empirical means and model predictions for ten example items covering the range of responses. 
+Both the literal and pragmatic generic interpretation models track the quantitative variance across the items.
+The pragmatic model model provides a stronger quantitative fit for items that receive high but not at-ceiling implied prevalence ratings (e.g., *have spots*, *hunt other animals*). 
+For these items, a single positive observation, even with structured background knowledge, is not enough to sufficiently update beliefs according to the generic sentence. 
+The pragmatic model is able to strengthen the interpretation beyond the literal meaning, drawing inferences that are quantitatively more consistent with human judgments.
+
+<!-- As a first attempt to understand the implied prevalence data in a quantitative way, we compare the means of the inferred prevalence priors to the empirical means of the implied prevalence data  left-most facet). -->
+<!-- The means of the prevalence prior distributions do a rather poor job at predicting the implied prevalence ratings, consistently underpredicting the ratings ($r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "prior", src == "pragmatic_unlifted")[["mse"]], digits = 2)`$). -->
+<!-- The fact that the prevalence prior data underpredicts the generic interpretation data is good evidence that participants are actually *updating* their beliefs about the property in the generic interpretation task, as opposed to simply responding according to their prior beliefs. -->
+
+<!-- The alternative semantic models use the same data analytic approach but update beliefs according to a fixed-threshold semantics. -->
 <!-- \ndg{similarly, a short section on alternative models at the end of the model section would save having to re-explain the alternatives each time, and give a better flow.} -->
 <!-- These alternative models correspond to models of the quantifier "some" and "most" and provide strict tests of our generic interpretation model because they too have access to the full prior distribution over prevalence as well as the flexibility endowed by the Bayesian data analysis method. -->
-Figure\ \@ref(fig:genint-modelingResults) shows each of the alternative model's predictions (technically, the BDA models' posterior predictive distributions) for the mean implied prevalence of each of the seventy-five novel generic sentences, in comparison to the empirical means. 
-We see that the model based on quantifier "some" (i.e., a fixed threshold at the lowest possible value) consistently *underpredicts* the implied prevalence, consistent with the intuition that assigning the semantics of "some" for generics is too weak.
-Though the model explains a lot of the variance $r^2(`r filter(md.impprev.stats, semantics == "some", parameter == "posterior", src == "literal")[["n"]]`) = `r filter(md.impprev.stats, semantics == "some", parameter == "posterior", src == "literal")[["r2"]]`$, it does so with a relatively high mean squared error $MSE = `r format(filter(md.impprev.stats, semantics == "some", parameter == "posterior", src == "literal")[["mse"]], digits = 2)`$.
+<!-- Figure\ \@ref(fig:genint-modelingResults) shows each of the alternative model's predictions (technically, the BDA models' posterior predictive distributions) for the mean implied prevalence of each of the seventy-five novel generic sentences, in comparison to the empirical means.  -->
 <!-- It is impossible for the model based on the quantifier "most" to accomodate these data: *Most* has a strict threshold at 0.5 and thus assigns probability 0 to all responses less than 0.5. \ndg{you said this already in expt 1} -->
 <!-- In order to alleviate this issue, we endow the BDA model for "most" with a external noise parameter, which allows the model to randomly guess on some proportion of trial (the exact proportion is a parameter to be inferred from the data). -->
-The "most" model assigns `r format_empirical_ci(m.samp.most.noise, "MAP", "cred_lower", "cred_upper")` proportion of the data to be noise, because of the high prevalence of minority (i.e., less than 50%) interpretations. 
-A model based on the semantics for "most" is also not well-suited for these data $r^2(`r filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["n"]]`) = `r filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["r2"]]`$,  $MSE = `r format(filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["mse"]], digits = 2)`$.
+<!-- A model based on the semantics for "most" is also not well-suited for these data $r^2(`r filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["n"]]`) = `r filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["r2"]]`$,  $MSE = `r format(filter(md.impprev.stats, semantics == "most", parameter == "posterior", src == "literal")[["mse"]], digits = 2)`$. -->
 
-The literal generic interpretation model updates its beliefs as if the listener had observed a single, positive example of the category with the property, and the pragmatic generic interpretation model sees the single observation as one that was intentionally transmitted by the speaker.
-Unlike each of the alternative models, the literal generic model can accomodate the highly variable generic interpretation data with a high degree of quantitative accuracy $r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "literal")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "literal")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "literal")[["mse"]], digits = 2)`$.
-The pragmatic generic interpretation model can provide an even stronger quantitative fit to the empirical data $r^2(`r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "pragmatic_unlifted")[["n"]]`) = `r filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "pragmatic_unlifted")[["r2"]]`$, $MSE = `r format(filter(md.impprev.stats, semantics == "uncertain", parameter == "posterior", src == "pragmatic_unlifted")[["mse"]], digits = 2)`$.
-The literal meaning of a generic provides a weak semantics which makes interpretation heavily determined by the prevalence prior; pragmatic reasoning can then strengthen the weak meaning of a generic to derive stronger interpretations.
+```{r genint-modelTable, results="asis"}
+md.impprev.stats.tab <- md.impprev.stats %>%
+  filter(parameter == "posterior" | (src == "pragmatic_unlifted"), !src == "pragmatic") %>%
+  mutate(Model = ifelse(semantics == "uncertain", 
+                        ifelse(parameter == "prior", "Prior", 
+                               ifelse(src == "literal", "Literal Generic", "Pragmatic Generic")),
+                        ifelse(semantics == "some", '"Some"', '"Most"'))) %>%
+  ungroup() %>%
+  select(Model, mse, r2) %>%
+  left_join(., rs.mll.formatted)
+              
+
+md.impprev.stats.tab <- md.impprev.stats.tab[with(md.impprev.stats.tab, order(-mse)),] %>%
+  mutate(mse = format(mse, digits = 2),
+         r2 = format(r2, digits = 3),
+         mll = format(mll, digits = 1))
+
+colnames(md.impprev.stats.tab) <- c("Model", "MSE" ,"$r^2$", "Log marginal likelihood")
+print(xtable::xtable(md.impprev.stats.tab,
+                     caption = "Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item averages. Marginal likelihood is computed over the full distribution of responses."),sanitize.text.function=function(x){x}, 
+      type="latex", comment = F, table.placement = "H", size="\\fontsize{9pt}{10pt}\\selectfont", include.rownames=FALSE)
+
+```
 
 
 #### Model comparison
 
-Our second data analytic strategy is a formal model comparison to arbitrate between the literal and the pragmatic generic interpretation models. 
-Comparing these models using a fully Bayesian strategy (analogous to what is performed in the model criticism section) is computationally challenging. 
-Therefore, we compute the likelihood of the data under each model by fixing the prevalence priors to be the raw empirical distributions; fixing the prevalence priors reduces the overall flexibility of the models, but it does so in a way that penalizes both models to an equal extent.
-To deal with the additional flexibility of the pragmatic model afforded by its two additional free parameters, we used an Annealed Importance Sampling algorithm implemented in the probabilistic programming language WebPPL to calculate the marginal likelihood of the data under the pragmatic model. 
+Our second data analytic strategy is a formal model comparison to determine if the improved quantitative fit exhibited by the pragmatic generic interpretation model is a meaningful difference and justifies its use of additional free parameters.
+To do this, we compute Bayes Factors which compare the likelihood of the observed data under each of the models, averaging across all values of the free parameters in the model. 
+This form of model comparisons penalizes models with extra free parameters if, in fact, the model's predictions are highly sensitive to exact values of those parameters.
+Comparing our models using a fully Bayesian strategy with uncertainty over the values of the parameters of prevalence priors (analogous to what is performed in the model criticism section) is computationally challenging. 
+Therefore, we compute the likelihood of the data under each model by fixing the prevalence priors to be the raw empirical distributions; fixing the prevalence priors reduces the overall flexibility of the models, but it does so in a way that penalizes all models to an equal extent.
+To deal with the additional flexibility of the pragmatic model afforded by its two additional free parameters, we used an Annealed Importance Sampling algorithm [@Neal2008] implemented in the probabilistic programming language WebPPL to calculate the marginal likelihood of the data under the pragmatic model. 
+The results are shown in Table 1: The pragmatic model is on the order of $e^{60}$ times better at accounting for the implied prevalence data, even taking into the model's slight additional complexity. 
+This is extremely strong evidence that the best model for how generics update beliefs is as a single positive example understood as being produced with a pedagogical intent.
 
 ```{r genint-empiricalData, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence ratings for a broad set of seventy-four items. Vertical lines denote means, points are individual empirical judgments. Error bars denote bootstrapped 95% confidence intervals.", cache = F}
 df.int.filtered <- df.int.filtered %>% 
@@ -1289,17 +1326,17 @@ fig.litprag.scatter
 ```
 
 
-## Discussion
+<!-- ## Discussion -->
 
-In Expt. 1, we extended the findings the preliminary study to a larger and more diverse set of stimuli. 
-We uncovered a continuum of interpretations of novel generic statements, and were able to predict the gradience in interpretation using the uncertain threshold generics model. 
-Graded interpretations of generic statements result from diverse prior beliefs about properties operated over using an underspecified threshold criterion.
-In our final experiment, we experimentally manipulate these prior beliefs to test their causal role in governing generic interpretations.
+<!-- In Expt. 1, we extended the findings the preliminary study to a larger and more diverse set of stimuli.  -->
+<!-- We uncovered a continuum of interpretations of novel generic statements, and were able to predict the gradience in interpretation using the uncertain threshold generics model.  -->
+<!-- Graded interpretations of generic statements result from diverse prior beliefs about properties operated over using an underspecified threshold criterion. -->
+<!-- In our final experiment, we experimentally manipulate these prior beliefs to test their causal role in governing generic interpretations. -->
 
 
 # Experiment 2: Prior Manipulation
 
-In the previous experiments, we saw how participants' prior beliefs about the prevalence of the property, either measured by asking about alternative categories (Expt. 2) or abstract questions about the distribution of the property (Expt. 1), related to the prevalence implied by a novel generic via a model that reasons about an uncertain threshold on prevalence (Eq. \ref{eq:L0}).
+In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property measured by asking about alternative categories (Expt. 1) related to the prevalence implied by a novel generic via a model that reasons about an uncertain threshold on prevalence (Eq. \ref{eq:L0}).
 In both of the previous experiments, we measured both generic interpretation and the prevalence prior and related the two via the uncertain threshold model. 
 Though our model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational. 
 We have shown that the two are related but not that intervening on the prevalence prior can change interpretations.
