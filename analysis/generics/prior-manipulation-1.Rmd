@@ -1013,9 +1013,12 @@ df.pm.3.filtered.priors.bs %>%
   write(., "../../models/generics-bda-L0-btstrp-priors-notPretty.json")
 ```
 
+# MAIN RESULTS BEGIN
+
 ```{r read in (boostrapped) model predictions}
 model.path <- "../../models/results/bootstrap/"
-model.prefix <- "generics-bda-L0-btstrp-results_chunk"
+#model.prefix <- "generics-bda-L0-btstrp-results_chunk"
+model.prefix <- "generics-bda-priormanip-L1unlifted-btstrp-results_chunk"
 
 model.files <- list.files(
   path = model.path,
@@ -1045,7 +1048,8 @@ m.preds.zeroPadded.expectations <- m.preds.zeroPadded %>%
   summarize(expval = sum(prob*state))
 
 m.pred.uncertain.expvals <- m.preds.zeroPadded.expectations %>%
-  filter(model == "uncertain") %>%
+  #filter(model == "uncertain") %>%
+  filter(model == "pragmatic_unlifted") %>%
   group_by(distribution) %>%
   summarize(mean_expval = mean(expval))
 
@@ -1093,9 +1097,7 @@ m.preds.zeroPadded.bins.boostrapped %>%
   xlab("prevalence")
 ```
 
-# Prior manipulation 3 interpretation
-
-full data collection
+# FULL DATA COLLECTION: Prior manipulation 3 interpretation
 
 ```{r load catch data pm int 3}
 df.pm.3.int.catch <- readCatchInfo("prior-manipulation-3-interpretation")
@@ -1294,7 +1296,8 @@ md.pm.int.3.filtered.expvals.bs.summary %>% ungroup() %>%
   filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
   mutate(distribution = factor(distribution, levels = property.order),
          model = factor(model,
-                        levels = c("prior", "uncertain", "data",
+                        levels = c("prior", "literal","pragmatic_unlifted",
+                                   "data",
                                    "fixed_0.0175", "fixed_0.125",
                                    "fixed_0.375"))) %>%
   ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
@@ -1487,14 +1490,14 @@ ggplot(md.pm.int.3.filtered.dists.bs.summary.wide, aes(fill = state,
   theme(legend.position = 'bottom')
   
 
-# save(md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
-#      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide,
-#      file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals.RData")
+save(md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+     md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide,
+     file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals2.RData")
 
 ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
 
 
-md.int3.binned.boostrapped %>%
+md.pm.int.3.filtered.dists.bs.summary.wide %>%
   group_by(model) %>%
   summarize(r2 = cor(model_mean, data_mean) ^2,
             mse = mean((model_mean-data_mean)^2),
@@ -1503,8 +1506,8 @@ md.int3.binned.boostrapped %>%
 ```
 
 ```{r scatters binned_posteriors 3 models}
-md.int3.binned.boostrapped %>%
-  filter(model %in% c("prior", "uncertain", "fixed_0.125"),
+md.pm.int.3.filtered.dists.bs.summary.wide %>%
+  filter(model %in% c("prior", "literal", "pragmatic_unlifted", "fixed_0.125"),
          data_mean < 0.25) %>%
 ggplot(., aes(fill = state,
                 x = model_mean, xmin = model_lower, xmax = model_upper,

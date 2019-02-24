@@ -1532,8 +1532,8 @@ The distribution that is most different from the familiarization distribution is
 Many distributions exhibit a regression to the mean in some participants' predictions: In the *rare or deterministic* distribution (which featured prevalence levels either around 0% or 100%), some participants guess that the next animal will have 50% prevalence; a similar phenomenon can be observed in the *weak or strong* distribution (25% or 75%) and to a lesser extent in the other bimodal distributions. 
 
 
-```{r priorManipulationResults, fig.cap="Experiment 3 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 3a), generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for several alternative models and empirical means.", fig.width = 13.5,fig.asp = 0.5}
-load(file = "cached_results/gentInt_manipPriors_dists_expvals.RData")
+```{r priorManipulationResults, fig.cap="Experiment 2 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 2a), literal and pragmatic generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for alternative models and empirical means.", fig.width = 14.2,fig.asp = 0.5}
+load(file = "cached_results/gentInt_manipPriors_dists_expvals2.RData")
 # md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
 #      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
 
@@ -1555,7 +1555,7 @@ md.pm.int.3.filtered.expvals.bs.summary.wide.summarized <- left_join(
 
 
 distribution.order.levels <- with(md.pm.int.3.filtered.expvals.bs.summary %>%
-                         filter(model == "uncertain"), distribution[order(mean)])
+                         filter(model == "literal"), distribution[order(mean)])
 distribution.order.labels <- gsub("_", " ", distribution.order.levels)
 
 distribution.order.labels <- gsub(" ", "/", gsub(" or", "", gsub("deterministic", "100", gsub("strong", "75", gsub("half", "50", gsub("weak", "25", gsub("rare","0", distribution.order.labels)))))))
@@ -1571,19 +1571,22 @@ my_label_parsed <- function (variable, value) {
 
 
 fig.int.dists.bs <- md.pm.int.3.filtered.dists.bs.summary %>%
-  filter(model %in% c("prior", "uncertain", "data")) %>%
+  filter(model %in% c("prior", "literal", "pragmatic_unlifted", "data")) %>%
   mutate(distribution = factor(distribution,  levels = distribution.order.levels, labels = distribution.order.labels),
-         model = factor(model, levels = c("prior", "uncertain", "data"),
-                        labels = c("prevalence prior", "generics model", "data"))) %>%
+         model = factor(model, levels = c("prior","literal", "pragmatic_unlifted", "data"),
+                        labels = c("prevalence prior", "literal generic", 
+                                   "pragmatic generic", "data"))) %>%
   ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
   geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
-  geom_errorbar(position = position_dodge(),  alpha = 0.3)+
-  geom_text(data = data.frame(model = c("prevalence prior", "generics model", "data"),
-    x = c(0.5, 0.5, 0.5),
-    y = c(0.4, 0.5, 0.6),
-    distribution = c("0/100","0/100","0/100")), 
-    aes( x= x ,y =y, label = model), inherit.aes = F)+
-  facet_grid(model~distribution, scales = 'free')+
+  geom_linerange(position = position_dodge(),  alpha = 0.6)+
+  geom_text(data = data.frame(model = c("prevalence prior", "literal generic",
+                                        "pragmatic generic", "data"),
+    x = c(0.5, 0.5, 0.5, 0.5),
+    y = c(0.5, 0.5, 0.6, 0.45),
+    distribution = c("0/100","0/100","0/100","0/100")), 
+    aes( x= x ,y =y, label = model), inherit.aes = F,
+    size = 3.25)+
+  facet_grid(model~distribution)+
   scale_x_continuous(breaks = c(0, 1))+
   scale_fill_viridis(discrete = T)+
   ylab("predicted / empirical probability")+
@@ -1599,15 +1602,17 @@ fig.int.expval.bs <- md.pm.int.3.filtered.expvals.bs.summary %>%
          model = factor(model,
                         levels = c("prior", 
                                    "fixed_0.0175", "fixed_0.125",
-                                   "fixed_0.375", "uncertain", "data"),
-                        labels = c("prevalence_prior",
+                                   "fixed_0.375", "literal", "pragmatic_unlifted","data"),
+                        labels = c(expression(paste("prevalence prior")),
                                    expression(paste('"some" (', theta, '=0.01)')), 
                                    expression(paste('"not rare" (', theta, '=0.10)')), 
                                    expression(paste('"more than third" (', theta, '=0.33)')), 
-                                   "generics_model", "data"))) %>%
+                                   expression(paste("literal generic")),
+                                   expression(paste("pragmatic generic")), 
+                                   "data"))) %>%
   ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
   geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
-  geom_errorbar(position = position_dodge())+
+  geom_linerange(position = position_dodge())+
   scale_fill_viridis(discrete = T)+
   ylab("Mean implied prevalence")+
   theme(axis.text.x = element_blank(),
@@ -1620,9 +1625,9 @@ fig.int.expval.bs <- md.pm.int.3.filtered.expvals.bs.summary %>%
 fig.int.expval.bs.scatters <- md.pm.int.3.filtered.expvals.bs.summary.wide %>%
   filter(!(model %in% c("fixed_0.625", "fixed_0.875","fixed_0.375"))) %>%
   mutate(distribution = factor(distribution, levels = distribution.order.levels),
-         model = factor(model, levels = c("prior", "fixed_0.0175", "fixed_0.125", "uncertain"),
+         model = factor(model, levels = c("prior", "fixed_0.0175", "fixed_0.125", "literal","pragmatic_unlifted"),
                         labels = c("prevalence prior", '"some"\n(fixed threshold = 0.01)', '"not rare" (fixed threshold = 0.10)',
-                                   "generics model \n (uncertain threshold)"))) %>%
+                                   "literal generic \n (single positive observation)", "pragmatic generic"))) %>%
   ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = distribution))+
   geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
   geom_errorbar(position = position_dodge(), alpha = 0.8)+
