@@ -1532,7 +1532,7 @@ The distribution that is most different from the familiarization distribution is
 Many distributions exhibit a regression to the mean in some participants' predictions: In the *rare or deterministic* distribution (which featured prevalence levels either around 0% or 100%), some participants guess that the next animal will have 50% prevalence; a similar phenomenon can be observed in the *weak or strong* distribution (25% or 75%) and to a lesser extent in the other bimodal distributions. 
 
 
-```{r priorManipulationResults, fig.cap="Experiment 2 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 2a), literal and pragmatic generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for alternative models and empirical means.", fig.width = 14.2,fig.asp = 0.5}
+```{r priorManipulationResults, fig.cap="Experiment 2 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 2a), literal and pragmatic generics model predictions based on those empirical distributions, and empirical distributions of responses for the generic interpretation task (Expt. 3b). B: Model predicted means for alternative models and empirical means.", fig.width = 14.2,fig.asp = 0.5, cache = F}
 load(file = "cached_results/gentInt_manipPriors_dists_expvals2.RData")
 # md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
 #      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
@@ -1676,7 +1676,7 @@ To account for our uncertainty in the measurement of the prevalence priors, we b
 We repeated this procedure 10,000 times to generate distributions of predictions.
 The boostrapped mean and 95% quantiles for each prevalence bin in each distribution are shown in Figure\ \@ref(fig:priorManipulationResults)A (middle row).
 We see that context-sensitive interpretations are predicted, with idiosyncracies that reflect empirically measured distributions.
-We then tested these predictions against interpretations in the same empirical paradigm.
+In this experiment, we test these predictions against interpretations in the same empirical paradigm as Expt. 2a.
 
 ### Methods
 
@@ -1753,16 +1753,18 @@ To test this, we ran a linear model predicting responses with a fixed effect of 
 There was a significant main effect of prior mean, with a coefficient close to 1 ($\beta_1 = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["prior_mean", "t value"]]`$), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations.
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors ($\beta_0 = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Estimate"]]`$, $SE=`r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "Std. Error"]]`$, $t = `r rs.lm.priorManip.summ[["coefficients"]][["(Intercept)", "t value"]]`$).
 These results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
-Still, there is much more to say about these data; this simple linear model explains less than a quarter of the variance in the data $r^2 = `r rs.lm.priorManip.summ[["r.squared"]]`$.
+Still, there is much more to say about these data; this simple linear model explains less than a quarter of the variance in the data ($r^2 = `r rs.lm.priorManip.summ[["r.squared"]]`$).
 
 From the generics models, we are able to make a number of *a priori* predictions about quantitative differences in mean implied prevalence ratings across the ten conditions. 
-These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95% confidence interval around the generics model predictions did not overlap (Figure\ \@ref(fig:priorManipulationResults)B, "generics model" panel).
+These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95% confidence interval around the generics model predictions did not overlap (Figure\ \@ref(fig:priorManipulationResults)B, "literal generic" panel).^[
+  These predictions were derived from the literal generic interpretation model. The experiment was planned before we developed the pragmatic generic interpretation model. Still, many of these predictions would have been derived from the pragmatic model following the same decision rule.
+]
 <!-- For example, Figure\ \@ref(fig:priorManipulationResults)B ("generics model" panel) -->
 With those criteria in mind, we preregistered the following contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25 $<$ \{25/50, 0/50\} $<$ \{25/75, *uniform*\} $<$ 25/75 $<$ \{25/100, 50/100\}  $<$ \{75/100, 0/100\}.
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a "zero and one inflated beta" linking function to appropriately model the responses of exactly 0% and 100%, which are undefined under the beta distribution.
 The maximum a-posteriori estimates and 95% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 2.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
-Overall, the generic interpretation model predicts much of the variance in the means of these empirical distributions: $r^2(`r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "uncertain")[["ev_n"]]`) = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "uncertain")[["ev_r2"]]`; MSE = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "uncertain")[["ev_mse"]]`$
+Overall, the literal and pragmatic generic interpretation model predicts a lot of the variance in the means of these empirical distributions: (literal results: $r^2(`r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "literal")[["ev_n"]]`) = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "literal")[["ev_r2"]]`; MSE = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "literal")[["ev_mse"]]`$; pragmatic results: $r^2(`r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "pragmatic_unlifted")[["ev_n"]]`) = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "pragmatic_unlifted")[["ev_r2"]]`; MSE = `r filter(md.pm.int.3.filtered.expvals.bs.summary.wide.summarized, model == "pragmatic_unlifted")[["ev_mse"]]`$). 
 
 <!-- We compare these predictions to those made by three fixed threshold models: a literal "some" model (fixed threshold at 0.01), and fixed threshold models with thresholds at 0.1 and 0.35. -->
 <!-- The fixed thresholds of 0.1 and 0.35 were chosen to lie in between the 0% and 25% distributions, and the 25% and 50% distributions, respectively. -->
@@ -1823,15 +1825,15 @@ The model fits in terms of variance-explained and mean squared errors for the fu
 <!-- Unlike in Expt. 1, it is not obvious which of these models accounts best for the data.  -->
 To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model by discretizing the empirical distributions and model predictions into ten equally spaced bins.
 <!-- \ndg{also report correlation and MSE as before, or say why we don't do so. for that matter, we should say why we didn't do BFs for earlier expts?} -->
-As is evident from Figure\ \@ref(fig:priorManipulationResults)A (bottom row, "data"), however, a number of participants responded that 0% of Ks had the property. 
-Examining these participants' explanations revealed that the majority of these respondents believed they were answering a question more akin to the prior elicitation / manipulation check task: Predict the next animal. 
-This is a source of noise in the data and one that affects all models (execept the prior only model) to an equal degree. 
+As is evident from Figure\ \@ref(fig:priorManipulationResults)A (bottom row, "data"), however, a number of participants responded that 0% of Ks knew when earthquakes were about to happen when they read "Ks know when earthquakes are about to happen". 
+Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question like in the prior elicitation task: Predict the next animal. 
+These "prior-type" responses are a source of noise in the data and one that affects all models (execept the prior only model) to an equal degree. 
 All of the models we articulate have no way to account for 0% responses, which are literally impossible given the utterance of the form "Ks F". 
-To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to the model and responding according to the prior. 
+To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior. 
 We calculate Bayes Factors assuming a uniform distribution of noise between 0-20% (approximated using the following discretization $= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}$). 
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 4, the uncertain threshold model is by far the best model at predicting these data.
-
+As is shown in Table 4, the pragmatic generics model is by far the best model at predicting these data.
+Thus, the prevalence prior is causally related to interpretations of novel generics in the way predicted by the pragmatic generics model.
 <!-- Since the models have no free parameters, the ratio of these likelihood values corresponds to the *Bayes Factor* (BF), which quantifies the evidence in favor of one model over another.  -->
 
 
@@ -1846,14 +1848,10 @@ As is shown in Table 4, the uncertain threshold model is by far the best model a
 <!-- For all noise probabilities greater than 0.01, the uncertain threshold model is the preferred model by  -->
 <!-- The conclusions derived from the Bayes Factors are unchanged under different noise probabilities.    -->
 
-```{r bayes factors, results="asis"}
-load("cached_results/genint_manipPriors_bf.RData") # model.likelihoodRatios.summarized
+```{r bayes factors, results="asis", cache = F}
+load("cached_results/genint_manipPriors_bf2.RData") # model.likelihoodRatios.summarized
 
-
-
-
-tab1 <- xtable::xtable(
-  left_join(
+md.priorManip.summary.table <-left_join(
      left_join(
       md.pm.int.3.filtered.expvals.bs.summary.wide %>%
       group_by(model) %>%
@@ -1873,22 +1871,32 @@ tab1 <- xtable::xtable(
       summarize(expected_log_bf = log(mean(exp(expected_log_bf))),
             lower_log_bf =  log(mean(exp(lower_log_bf))),
             upper_log_bf =  log(mean(exp(upper_log_bf)))) %>% 
-      ungroup() %>% rename(model = alternative_model)) %>%
-      filter(model %in% c("uncertain", "prior", "fixed_0.05", "fixed_0.125", "fixed_0.375")) %>%
+      ungroup() %>% rename(model = alternative_model) %>%
+    mutate(model = ifelse(model == "uncertain", "literal", model))
+  ) %>%
+          filter(model %in% c("literal", "pragmatic_unlifted",
+                          "prior", "fixed_0.05", "fixed_0.125", "fixed_0.375")) %>%
     mutate(`Model` = factor(model, levels = c("prior", "fixed_0.05",
-                                              "fixed_0.125", "fixed_0.375", "uncertain"),
+                                              "fixed_0.125", "fixed_0.375", "literal",
+                                              "pragmatic_unlifted"),
                                     labels = c("Prior", 
                                                "Threshold = 0.01",
                                                "Threshold = 0.1",
                                                "Threshold = 0.35",
-                                               "Uncertain threshold")),
+                                               "Literal Generic",
+                                               "Pragmatic Generic")),
     `log Bayes Factor` = paste(
     round(-expected_log_bf, 1), " (", round(-lower_log_bf,1), ", ", round(-upper_log_bf,1), ")", sep=""
   )) %>% 
-    mutate(`log Bayes Factor` = ifelse(Model == "Uncertain threshold", "0", `log Bayes Factor`)) %>%
+    mutate(`log Bayes Factor` = ifelse(Model == "Pragmatic Generic", "0", `log Bayes Factor`)) %>%
     
-    select(`Model`, `log Bayes Factor`, `expected value statistics`, `full distribution statistics`),
-  caption = "Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the uncertain threshold generics model. Numbers less than 0 indicate evidence in favor of the uncertain threshold model. Summary statistics disaplyed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions.")
+    select(`Model`, `log Bayes Factor`, `expected value statistics`, `full distribution statistics`)
+
+
+
+
+tab1 <- xtable::xtable(md.priorManip.summary.table[c(6,1,2,3,4, 5), ], 
+                       caption = "Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the uncertain threshold generics model. Numbers less than 0 indicate evidence in favor of the uncertain threshold model. Summary statistics disaplyed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions.")
 
 print(tab1, type="latex", comment = F, table.placement = "H", size="\\fontsize{9pt}{10pt}\\selectfont",
       sanitize.text.function = identity, include.rownames=FALSE)
