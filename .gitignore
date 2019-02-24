@@ -7,3 +7,9 @@ models/node_modules/utils/node_modules
 paper/*pdf
 paper/*tex
 packrat/lib*/
+*.DS_Store
+*.aux
+*.log
+*.out
+*~
+paper/genint_cache/
