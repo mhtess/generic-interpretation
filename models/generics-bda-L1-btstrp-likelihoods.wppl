@@ -9,7 +9,9 @@ var priorsNames = levels(bootstrappedPriors, "distribution")
 
 // var chunkLength = 1000
 // var chunks = _.range(5000, iterations.length, chunkLength)
-var sampleFromPrior = 0.05;
+// var sampleFromPrior = 0.001;
+// var sampleFromPrior = 0.15;
+var sampleFromPrior = 0.2;
 
 // run in chunks to parallelize and decrease file sizes
 var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb"+sampleFromPrior+".csv")
@@ -78,7 +80,7 @@ foreach(iterations, function(i){
        return state
      }})}, 10000)
 
-    var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
+    var all_thresholds = [false, 0.05, 0.125, 0.375, 0.625, 0.875]
     // console.log(data_counts)
     var priorLikelihood = Multinomial({
         ps: normalize(ps),

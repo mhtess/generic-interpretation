@@ -33,6 +33,8 @@ params <- expand.grid(
   )
 ```
 
+Notes...
+
 ```{r}
 wp.rs <- webppl(program_file = "genint.wppl",
        packages = c("./node_modules/utils"),
@@ -43,9 +45,9 @@ wp.rs <- webppl(program_file = "genint.wppl",
 
 ```{r}
 ggplot(wp.rs, aes( x = speakerOptimality, y = expectation_prediction,
-                   color = modelName, group = modelName))+
+                   color = factor(cost), group = factor(cost)))+
   geom_line()+
-  facet_grid(priorName~cost)+
+  facet_grid(priorName~modelName)+
   scale_x_continuous(breaks = c(0, 15, 30))+
   scale_y_continuous(breaks = c(0, 0.5, 1))+
   ylab("listener expectation of prevalence")+
@@ -60,3 +62,17 @@ ggplot(wp.rs, aes( x = speakerOptimality, y = expectation_prediction,
 - unlifted model usually can get stronger interpretation than lifted pragmatic, though as cost > 5, lifted pragmatic gets stronger interpretation
 - priors have (desired) effect: interpretations are not arbitrarily strong
 
+
+
+```{r}
+ggplot(wp.rs, aes( x = expectation_prediction, fill = modelName))+
+  geom_histogram(position = position_dodge(), bins = 20)+
+  facet_grid(.~priorName, scales = 'free')+
+  #scale_x_continuous(breaks = c(0, 15, 30))+
+  #scale_y_continuous(breaks = c(0, 5, 10))+
+  theme(legend.position = 'bottom',
+        strip.text.y = element_text(angle = 0))
+```
+
+
+it appears that the pragmatic_unlifted is just a more flexible model..

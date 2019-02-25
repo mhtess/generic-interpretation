@@ -1017,18 +1017,40 @@ df.pm.3.filtered.priors.bs %>%
 
 ```{r read in (boostrapped) model predictions}
 model.path <- "../../models/results/bootstrap/"
-#model.prefix <- "generics-bda-L0-btstrp-results_chunk"
-model.prefix <- "generics-bda-priormanip-L1unlifted-btstrp-results_chunk"
 
-model.files <- list.files(
+## all of the fixed threshold model predictions in the L1 file are erroneous
+## because of a coding error, they are simply the prior
+## use L0 file (above) for the fixed_threshold model predictions
+#model.prefix.l1 <- "generics-bda-priormanip-L1unlifted-btstrp-results_chunk"
+#model.prefix.l0 <- "generics-bda-L0-btstrp-results_chunk"
+model.prefix.l1 <- "generics-bda-priormanip-L1unlifted-fixTheFixeds-btstrp-results_chunk"
+
+L1.model.files <- list.files(
   path = model.path,
-  pattern = model.prefix
+  pattern = model.prefix.l1
 )
 
-m.preds <- bind_rows(lapply(model.files, function(modfile){
+# L0.model.files <- list.files(
+#   path = model.path,
+#   pattern = model.prefix.l0
+# )
+
+# m.preds <- bind_rows(lapply(L0.model.files, function(modfile){
+#   read_csv(paste(model.path, modfile, sep = ""))
+# }))
+
+m.preds <-  bind_rows(lapply(L1.model.files, function(modfile){
   read_csv(paste(model.path, modfile, sep = ""))
 }))
 
+# m.preds <- bind_rows(
+#   m.preds.L1 %>% 
+#     filter(model %in% c("literal", "prior", "pragmatic_unlifted")), 
+#   m.preds %>%
+#      filter(!(model %in% c("prior", "uncertain")))# %>%
+#     # mutate(model = ifelse(model == "prior", "prior_1",
+#                    # ifelse(model == "uncertain", "literal_1", model)))
+# )
 
 m.preds.zeroPadded <- left_join(
   expand.grid(
@@ -1289,17 +1311,18 @@ md.pm.int.3.filtered.expvals.bs.summary <- bind_rows(
     mutate(model = 'data'),
   m.preds.zeroPadded.expectations.summary %>%
     rename(ci_lower = lower, ci_upper = upper)
-) 
+)
 
 
-md.pm.int.3.filtered.expvals.bs.summary %>% ungroup() %>%
-  filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
+md.pm.int.3.filtered.expvals.bs.summary %>% 
+  ungroup() %>%
+  #filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
   mutate(distribution = factor(distribution, levels = property.order),
          model = factor(model,
                         levels = c("prior", "literal","pragmatic_unlifted",
                                    "data",
-                                   "fixed_0.0175", "fixed_0.125",
-                                   "fixed_0.375"))) %>%
+                                   "fixed_0.05", "fixed_0.1",
+                                   "fixed_0.3"))) %>%
   ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
   geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
   geom_errorbar(position = position_dodge())+
@@ -1571,7 +1594,8 @@ md.int3.binned.boostrapped %>%
 model.path <- "../../models/results/bootstrap/"
 model.prefix <- "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb"
 
-sample_from_prior_probs <- c(0.0001,0.0005,0.001,0.005, 0.01, 0.05, 0.1, 0.15)
+sample_from_prior_probs <- c(0.0001,0.0005,0.001,
+                             0.005, 0.01, 0.05, 0.1, 0.15)
 
 
 m.ll <- data.frame()

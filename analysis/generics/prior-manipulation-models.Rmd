@@ -1,0 +1,247 @@
+---
+title: "Manipulated prior experiment modeling results"
+output: html_notebook
+---
+
+```{r read in (boostrapped) model predictions}
+model.path <- "../../models/results/bootstrap/"
+
+## all of the fixed threshold model predictions in the L1 file are erroneous
+## because of a coding error, they are simply the prior
+## use L0 file (above) for the fixed_threshold model predictions
+# model.prefix <- "generics-bda-priormanip-L1unlifted-btstrp-results_chunk"
+model.prefix <- "generics-bda-L0-btstrp-results_chunk"
+
+model.files <- list.files(
+  path = model.path,
+  pattern = model.prefix
+)
+
+m.preds <- bind_rows(lapply(model.files, function(modfile){
+  read_csv(paste(model.path, modfile, sep = ""))
+}))
+
+# m.preds.L1 <- m.preds %>% filter(model %in% c("literal", "prior", "pragmatic_unlifted"))
+
+m.preds <- bind_rows(
+  m.preds.L1, 
+  m.preds %>%
+     filter(!(model %in% c("prior", "uncertain")))# %>%
+    # mutate(model = ifelse(model == "prior", "prior_1",
+                   # ifelse(model == "uncertain", "literal_1", model)))
+)
+
+m.preds.zeroPadded <- left_join(
+  expand.grid(
+  model = unique(m.preds$model),
+  distribution = unique(m.preds$distribution),
+  iteration = unique(m.preds$iteration),
+  state = unique(m.preds$state)
+  ), m.preds)
+
+m.preds.zeroPadded[is.na(m.preds.zeroPadded)] <- 0
+# summary(m.preds.zeroPadded)
+```
+
+```{r model expvals, fig.width = 11}
+m.preds.zeroPadded.expectations <- m.preds.zeroPadded %>%
+  group_by(model, distribution, iteration) %>%
+  summarize(expval = sum(prob*state))
+
+m.pred.uncertain.expvals <- m.preds.zeroPadded.expectations %>%
+  #filter(model == "uncertain") %>%
+  filter(model == "pragmatic_unlifted") %>%
+  group_by(distribution) %>%
+  summarize(mean_expval = mean(expval))
+
+property.order <- with(m.pred.uncertain.expvals, distribution[order(mean_expval)])
+
+m.preds.zeroPadded.expectations.summary <- m.preds.zeroPadded.expectations %>%
+  group_by(model, distribution) %>%
+  summarize( lower = quantile(expval, 0.025),
+             mean = mean(expval),
+             upper = quantile(expval, 0.975)) %>%
+  ungroup() %>%
+  mutate(distribution = factor(distribution, levels = property.order))
+
+ggplot(m.preds.zeroPadded.expectations.summary, 
+       aes( x = distribution, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  facet_wrap(~model)
+
+ggplot(m.preds.zeroPadded.expectations, aes(x = expval))+
+  geom_histogram(bins = 20, fill = 'white', color = 'black')+
+  facet_wrap(~model + distribution, scales = 'free')
+```
+
+```{r model posteriors, fig.width = 20, fig.height = 8}
+m.preds.zeroPadded.bins.boostrapped <- m.preds.zeroPadded %>%
+  #filter(threshold %in% c("prior", "generic")) %>%
+  group_by(model, distribution, state) %>%
+  summarize( lower = quantile(prob, 0.025),
+             mean = mean(prob),
+             upper = quantile(prob, 0.975)) %>%
+  ungroup()
+
+m.preds.zeroPadded.bins.boostrapped %>%
+  #mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 1)+
+  facet_grid(model~distribution, scales = 'free')+
+  scale_x_continuous(breaks = c(0, 0.5 , 1))+
+  scale_fill_viridis(discrete = T)+
+  ylab("predicted probability")+
+  xlab("prevalence")
+```
+
+### Model likelhoods / model comparison
+
+```{r load model likelihood results}
+#model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
+
+
+
+model.path <- "../../models/results/bootstrap/"
+model.prefixes <- c(
+  "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb",
+  "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb"
+)
+
+sample_from_prior_probs <- c(0.001, 0.01, 0.05, 0.1, 0.15, 0.2)
+#sample_from_prior_probs <- c(0.01, 0.05, 0.1)
+
+
+m.ll <- data.frame()
+for (model.prefix in model.prefixes){
+  for (sfpp in sample_from_prior_probs){
+    
+    model.files <- list.files(
+      path = model.path,
+      pattern = paste(model.prefix, sfpp, ".csv", sep = "")
+    )
+  
+    for (modfile in model.files){
+      m.item <- read_csv(paste(model.path , modfile, sep = ""))
+    
+      if (model.prefix == "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb") {
+        #m.item <- m.item %>% filter(model == "pragmatic_unlifted")
+        m.item <- m.item %>% mutate(model = ifelse(model == "prior", "prior_1", model))
+      }
+      m.ll <- bind_rows(
+        m.ll,
+        m.item %>% mutate(noiseProb = sfpp)
+      ) 
+    }
+  }  
+}
+
+```
+
+
+```{r model likelihoods summarized}
+model.likelihoods.summarized <- m.ll %>%
+  # filter(distribution %in% c("rare_weak", "rare_strong",
+  #                            "rare_half", "rare_deterministic")) %>%
+  group_by(model, noiseProb, iteration) %>%
+  summarize(sum_likelihood = sum(likelihood)) %>%
+  ungroup() %>%
+  group_by(model, iteration) %>%
+  summarize(marginalized_ll = log(mean(exp(sum_likelihood)))) %>%
+  ungroup() %>%
+  group_by(model) %>%
+  summarize(lower_likelihood = quantile(marginalized_ll, 0.025),
+            mean_likelihood = mean(marginalized_ll),
+            upper_likelihood = quantile(marginalized_ll, 0.975))
+
+model.likelihoods.summarized %>% kable()
+```
+
+Marginalize across noise levels within iteration
+
+```{r bayes factors}
+model.likelihoodRatios.summarized <- m.ll %>%
+  #filter(noiseProb <= 0.1) %>%
+  # filter(distribution %in% c("rare_weak", "rare_strong",
+  #                            "rare_half", "rare_deterministic")) %>%
+  group_by(model, noiseProb, iteration) %>%
+  summarize(sum_likelihood = sum(likelihood)) %>%
+  ungroup() %>%
+  group_by(model, iteration) %>%
+  summarize(marginalized_ll = log(mean(exp(sum_likelihood)))) %>%
+  ungroup() %>%
+  spread(model, marginalized_ll) %>%
+  gather(alternative_model, alternative_model_sum_likelihood, 
+         -iteration, 
+         -uncertain,
+         #-pragmatic_unlifted, 
+         #-noiseProb
+         ) %>%
+  #mutate(log_bf_uncertain_alternative = pragmatic_unlifted - alternative_model_sum_likelihood) %>%
+  mutate(log_bf_uncertain_alternative = uncertain - alternative_model_sum_likelihood) %>%
+  #filter(!is.na(log_bf_uncertain_alternative)) %>%
+  #group_by(alternative_model, noiseProb) %>%
+  group_by(alternative_model) %>%
+  summarize(lower_log_bf = quantile(log_bf_uncertain_alternative, 0.025),
+            expected_log_bf= mean(log_bf_uncertain_alternative),
+            upper_log_bf = quantile(log_bf_uncertain_alternative, 0.975))
+
+model.likelihoodRatios.summarized
+
+# save(model.likelihoods.summarized, model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf_marginalizeWithinIteration.RData")
+```
+
+Old way of marginalizing over noise value after everything else
+
+```{r OLD bayes factors}
+model.likelihoodRatios.summarized <- m.ll %>%
+  # filter(distribution %in% c("rare_weak", "rare_strong",
+  #                            "rare_half", "rare_deterministic")) %>%
+  group_by(model, noiseProb, iteration) %>%
+  summarize(sum_likelihood = sum(likelihood)) %>%
+  ungroup() %>%
+  spread(model, sum_likelihood) %>%
+  gather(alternative_model, alternative_model_sum_likelihood, 
+         -iteration, 
+         -uncertain,
+         #-pragmatic_unlifted, 
+         -noiseProb) %>%
+  #mutate(log_bf_uncertain_alternative = pragmatic_unlifted - alternative_model_sum_likelihood) %>%
+  mutate(log_bf_uncertain_alternative = uncertain - alternative_model_sum_likelihood) %>%
+  #filter(!is.na(log_bf_uncertain_alternative)) %>%
+  group_by(alternative_model, noiseProb) %>%
+  summarize(lower_log_bf = quantile(log_bf_uncertain_alternative, 0.025),
+            expected_log_bf= mean(log_bf_uncertain_alternative),
+            upper_log_bf = quantile(log_bf_uncertain_alternative, 0.975))
+
+
+model.likelihoodRatios.summarized %>%
+  # mutate(alternative_model = factor(alternative_model, levels = alternative_model[with(model.likelihoodRatios.summarized, order(expected_log_bf))])) %>%
+  ggplot(., aes( x = alternative_model, y = expected_log_bf, ymin = lower_log_bf, ymax = upper_log_bf, fill = alternative_model))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), width = 0.3)+
+  scale_fill_viridis(discrete = T)+
+  facet_wrap(~noiseProb)+
+  ylim(-50, 50)+
+  ylab("log [ p (d | generics model) / p (d | alternative model) ]")+
+  theme(axis.text.x = element_blank())
+
+
+model.likelihoodRatios.summarized %>% kable(.)
+
+save(model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf2.RData")
+```
+
+```{r}
+  model.likelihoodRatios.summarized %>%
+      group_by(alternative_model) %>%
+      summarize(expected_log_bf = log(mean(exp(expected_log_bf))),
+            lower_log_bf =  log(mean(exp(lower_log_bf))),
+            upper_log_bf =  log(mean(exp(upper_log_bf)))) %>% 
+  kable(.)
+```
+
+

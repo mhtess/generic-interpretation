@@ -36,7 +36,7 @@ foreach(iterations, function(i){
 
     // var addNoise = function(dist){
     //   return Infer({
-    //     model: function(){ 
+    //     model: function(){
     //       flip(noiseParam) ? uniformDraw(vs) : sample(dist) }
     //     })
     // }
@@ -50,7 +50,7 @@ foreach(iterations, function(i){
       return state
     }})}
 
-    var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
+    var all_thresholds = [false, 0.05, 0.125, 0.375, 0.625, 0.875]
     // console.log(data_counts)
     var priorLikelihood = Multinomial({
         ps: normalize(ps),

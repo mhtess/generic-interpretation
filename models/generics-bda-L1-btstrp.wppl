@@ -2,19 +2,19 @@
 
 var chain = last(process.argv) // load index as last command line index
 
-var bootstrappedPriors = json.read('generics-bda-L0-btstrp1000-genint-priors3-n200-notPretty.json')
+var bootstrappedPriors = json.read('generics-bda-priormanip-btstrp-priors.json')
 var iterations = levels(bootstrappedPriors, "i")
-var priorsNames = levels(bootstrappedPriors, "property")
+var priorsNames = levels(bootstrappedPriors, "distribution")
 // display(priorsNames)
 var chunkLength = 10
-var chunks = _.range(0, iterations.length, chunkLength)
-// var chunks = _.range(5000, iterations.length, chunkLength)
+// var chunks = _.range(0, iterations.length / 2, chunkLength)
+var chunks = _.range(5000, iterations.length, chunkLength)
 
 // run in chunks to parallelize and decrease file sizes
 foreach(chunks, function(startingIteration){
 
   var subsetIterations = iterations.slice(startingIteration, startingIteration + chunkLength)
-  var resultsHandle = utils.openFile("results/bootstrap/generics-bda-L1unlifted-btstrp-results_chunk" + startingIteration + ".csv")
+  var resultsHandle = utils.openFile("results/bootstrap/generics-bda-priormanip-L1unlifted-fixTheFixeds-btstrp-results_chunk" + startingIteration + ".csv")
   utils.writeLine(resultsHandle, ["model", "distribution", "iteration", "state", "prob"])
 
   foreach(subsetIterations, function(i){
@@ -22,8 +22,8 @@ foreach(chunks, function(startingIteration){
     var iterationPriors = _.filter(bootstrappedPriors, {i: i})
 
     foreach(priorsNames, function(distribution){
-      var distributionPriorsObj = _.filter(iterationPriors, {property: distribution} )[0]
-      var distributionPriors = _.omit(distributionPriorsObj, ["property", "i"])
+      var distributionPriorsObj = _.filter(iterationPriors, {distribution: distribution} )[0]
+      var distributionPriors = _.omit(distributionPriorsObj, ["distribution", "i"])
       // display(distributionPriors)
       var vs = sort(map(function(x){utils.wpParseFloat(x)}, _.keys(distributionPriors)))
       var ps = map(function(v){distributionPriors[v]}, vs)
@@ -58,14 +58,19 @@ foreach(chunks, function(startingIteration){
          return state
        }})}, 10000)
 
-      var all_thresholds = [false, _.min(thetaBins), 0.125, 0.375, 0.625, 0.875]
+      var all_thresholds = ["literal", "pragmatic", 0.05, 0.1, 0.3]
 
       utils.saveERP(statePrior, ["prior", distribution, i], resultsHandle)
 
       foreach(all_thresholds, function(t){
 
-        var posterior = t ? listener0("generic", t) : listener1("generic")
-        var modelName = t ? "fixed_" + t : "pragmatic_unlifted"
+        var posterior = t == "literal" ? listener0("generic", false) :
+          t == "pragmatic" ? listener1("generic") :
+          listener0("generic", t)
+        var modelName = t == "literal" ? "literal" :
+          t == "pragmatic" ? "pragmatic_unlifted":
+          "fixed_" + t
+
         utils.saveERP(posterior, [modelName, distribution, i], resultsHandle)
 
       })
