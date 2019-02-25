@@ -227,7 +227,7 @@ L_0(r, \mid u) =& \int_{0}^{1} L_0(r, \theta \mid u) \mathop{}\!\mathrm{d}\theta
 
 The generic interpretation model used by Tessler and Goodman (2019) makes the strong claim that the literal contribution of a generic sentence is informationally equivalent to observing a single, positive example.
 In context, however, generics could convey a stronger generalization than that implied by just a single example, if the listener reasons that the speaker intentionally produced the generic.
-We model this in the Rational Speech Act framework ({\textbf{???}}; Frank \& Goodman, 2012; Goodman \& Frank, 2016), wherein a listener \(L_1\) reasons about why a speaker \(S_1\) produced an utterance:
+We model this in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016; Scontras, Tessler, \& Franke, 2018), wherein a listener \(L_1\) reasons about why a speaker \(S_1\) produced an utterance:
 
 \begin{eqnarray}
 L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}\\ 
@@ -320,6 +320,7 @@ We begin our experiments by first replicating this result; this study serves to 
 Experiment 1 is a larger scale version of Cimpian et al. (2010)\enquote{s \emph{implied prevalence} task, with sufficien measurements on the by-item level to reveal graded, quantitative variability between generics; additionally, we measure participants} prior beliefs and compare our generic interpretation models and control models.
 Experiment 2 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors in 10 different between-participants conditions.
 The sample size, exclusion criteria, and planned statistical contrasts for each study were pre-registered on the Open Science Framework.
+All cognitive and Bayesian data analytic models were implemented in the probabilistic programming language WebPPL (Goodman \& Stuhlmüller, 2014).
 Link to experiments, data, analysis scripts, and models can be found at \url{www.github.com/mhtess/generic-interpretation}.
 
 \hypertarget{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}{%
@@ -427,7 +428,7 @@ The property \emph{get erections} is only expected to be present in 50\% of the 
 
 Most of the elicited prevalence prior distributions are at least bi-modal.
 To visualize all properties simultaneously, we represent each distribution by its relative probability mass at 0\%---\(P(\text{feature is present})\), or \(P(r > 0)\)---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---\(\mathbb{E}[P(r \mid r>0)]\) or the its \emph{prevalence when present} (Figure~\ref{fig:genInt-prevPrior}B).
-Our stimulus set covers a wide range of possible values of both of these parameters; the set of parameters that summarize these priors is also largely non-overlapping with those of Expt. 1 (compare with Figure~\ref{fig:cimpian-prevPrior}A).
+Our stimulus set covers a wide range of possible values of both of these parameters.
 This suggests we have sampled items with priors that exhibit a lot of quantitative variability.
 Given these priors, our model makes quantitative predictions about the prevalence implied by a novel generic sentence (e.g., \enquote{Lorches live in zoos}).
 
@@ -480,7 +481,7 @@ Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 c
 In addition, we excluded participants who self-reported a native language other than English (\(n = 8\)).
 This left a total of \(n = 132\) participants, with items receiving on average 62 responses (range = {[}50, 77{]}).
 
-As in the replication of ({\textbf{???}}), we observe a clear gradient in the implied prevalence ratings across our seventy-five items (Figure~\ref{fig:genint-empiricalData}).
+As in the replication of Cimpian et al. (2010), we observe a clear gradient in the implied prevalence ratings across our seventy-five items (Figure~\ref{fig:genint-empiricalData}).
 On one end of the continuum, there is a generic like \enquote{Wugs have four legs}, which is interpreted as a universal---applying to exactly 100\% of wugs---by 36 out of 70 participants and which received a mean implied prevalence rating of \(0.96 [0.93, 0.98]\).\footnote{Note the novel category term is randomized for each participant and property.
   We use particular novel category terms in the text for ease of exposition.}
 On the other end is \enquote{Glippets perform in the circus}, which is interpreted as applying to less than 25\% of glippets by 35 out of 61 participants and which receives a mean rating below 50\% (\(0.31 [0.23, 0.39]\)).
@@ -494,7 +495,7 @@ The empirical by-item means between these data and the original data are highly 
 \subsubsection{Model-based analyses}\label{model-based-analyses}}
 
 Our model-based analyses ask how well the various semantics models accommodate the human generic interpretation data and which model provides the most parsimonous view of the data.
-We estimate various model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how the both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in ({\textbf{???}}) provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that the prevalence priors are not significantly distorted by this method in order to provide a stronger quantitative fit to the generic interpretation data.}
+We estimate various model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how the both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in Tessler and Goodman (2019) provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that the prevalence priors are not significantly distorted by this method in order to provide a stronger quantitative fit to the generic interpretation data.}
 That is, we ask if there is some reasonable setting of the prevalence priors that, together with a particular model of generic interpretation, could give rise to the generic interpretation results.
 We also compare the generic interpretation models to each other and a number of control models using the standard Bayesian model comparison metric: marginal likelihoods, or Bayes factors.
 
@@ -504,12 +505,12 @@ The only other parameters we introduce are specific to certain generic interpret
 The model that assumes a literal semantics identical to the quantifier \enquote{most} (threshold at 0.5) must be outfitting with an extrinsic noise parameter in order to accomodate responses that are literally false under this interpretation of a generic (i.e., implied prevalence ratings below 0.5).
 The pragmatic generic interpretation model posits that listeners interpret generics by strengthening a literal meaning equivalent to a single positive example of the category with the communicative force of an utterance produced by an intentional speaker.
 This model thus has two additional free parameters: The implicit cost of producing a generic in comparison to staying silent (\emph{utterance cost}) and the degree of information-theoretic optimality with which the speaker behaves (\emph{speaker optimality}).
-Comparing models using the marginal likelihood of the data will penalize the pragmatic model because of these additional degrees of freedom ({\textbf{???}}).
+Comparing models using the marginal likelihood of the data will penalize the pragmatic model because of these additional degrees of freedom (Lee \& Wagenmakers, 2014).
 
 \hypertarget{model-definition-and-inference}{%
 \paragraph{Model definition and inference}\label{model-definition-and-inference}}
 
-For each candidate model of generic interpretation (literal, pragmatic, \enquote{some}, \enquote{most}), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 1a) and the generic interpretation data (Expt. 1b), similar to the methods of ({\textbf{???}}).
+For each candidate model of generic interpretation (literal, pragmatic, \enquote{some}, \enquote{most}), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 1a) and the generic interpretation data (Expt. 1b), similar to the methods of Tessler and Goodman (2019).
 We model the prevalence prior data as coming from a mixture of three Beta distributions and we model the generic interpretation data as being generated from the candidate computational model of generic interpretation.
 Each prevalence prior has eight parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\) for each of the three Beta components and two parameters \(\phi_1\), \(\phi_2\) that describe the relative weighting among the three components.
 We put uninformative priors over these parameters \(\gamma \sim \text{Uniform}(0, 1)\), \(\xi \sim \text{Uniform}(0, 100)\), \(\phi \sim \text{Dirichlet}(1,1,1)\).\footnote{Another reasonable, less structured model of the prevalence prior data would be a Dirichlet over discretizes bins along the prevalence scale. We choose this formulation because it assumes some correlation between near values along the scale and has fewer parameters. }
@@ -527,19 +528,19 @@ Convergence was checked qualitatively by confirming the similarity of the result
 {\textcolor{Blue}{[mht: this paragraph okay?]}}
 
 A qualitative examination of the inferred prevalence prior distributions showed that they were well-modeled as a mixture of three Beta distributions.
-Often one Beta distribution is devoted to accounting for the very small numbers (0\% or near 0\% prevalence ratings, for all the categories for which the property is absent), while the two other components account for the other parts of the distribution of responses, the details of which depend upon the property (see Figure~\ref{fig:genint-prevPriors} for examples of priors of different shapes).
+Often one Beta distribution is devoted to accounting for the very small numbers (0\% or near 0\% prevalence ratings, for all the categories for which the property is absent), while the two other components account for the other parts of the distribution of responses, the details of which depend upon the property (see Figure~\ref{fig:genInt-prevPrior} for examples of priors of different shapes).
 To provide a quantitative examination of the fit to the priors data, we look at the posterior predictive distribution discretized to bins in increments of 10\% prevalence (i.e., categorical distributions over the bins of 0\%, 10\%, \ldots{}, 90\%, 100\% prevalence) and compare the model's inferred priors to the empirical counts that fell into those bins in the prior elicitation task.
 The joint data analysis model accomodates the empirical patterns in the prevalence priors very well: \(r^2(825) = 0.99\), \(MSE = 0.00052\).
 
 To evaluate how well each model can accomodate the implied prevalence data, we compare the Maximum A-Posteriori value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
-Table~\ref{tab:genint-modelTable} shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal \enquote{some} model, a literal \enquote{most} model (which includes an additional fit noise parameter), a literal generics model (single positive observation), and the pragmatic generics model.
+Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal \enquote{some} model, a literal \enquote{most} model (which includes an additional fit noise parameter), a literal generics model (single positive observation), and the pragmatic generics model.
 Figure~\ref{fig:genint-modelingResults} reveals that the models based on the prevalence prior and the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
 Though the model based on a semantics for \enquote{most} (i.e., a fixed thrshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the \enquote{most} model assigns 0.57 {[}0.55, 0.59{]} proportion of the data to be noise, because of the high number of responses below 50\%.
 Unlike each of the alternative semantic models, the two models based on belief updating according to a single, positive observation (literal and pragmatic generics models) can accomodate the highly variable generic interpretation data with a high degree of quantitative accuracy.
 The pragmatic model slightly outperforms the literal generics model in terms of both mean squared error and variance explained at the level of average responses.
 The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1.82, 2.18{]} and the generic cost parameter \(c\) was 3.6 {[}3.16, 4.27{]}.
 
-Figure~@(fig:genint-modelingResults-bars) shows empirical means and model predictions for ten example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
+Figure~\ref{fig:genint-modelingResults-bars} shows empirical means and model predictions for ten example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
 All models exhibit some sensitivity to the variance in implied prevalence ratings, because they all have the prevalence prior in their definition.
 It is the actual magnitude of the stength of the generalization implied by the utterance that is predicted to be different, with the prior and \enquote{some} models predicting too weak of an interpretation.
 \enquote{Most} is handicapped by its high inferred rate of noise and does not make dramatically different predictions across the items.
@@ -573,14 +574,14 @@ To do this, we compute Bayes Factors which compare the likelihood of the observe
 This form of model comparisons penalizes models with extra free parameters if, in fact, the model's predictions are highly sensitive to exact values of those parameters.
 Comparing our models using a fully Bayesian strategy with uncertainty over the prevalence priors (analogous to what is performed in the model criticism section) is computationally challenging.
 Therefore, we compute the likelihood of the data under each model by fixing the prevalence priors to the raw empirical distributions; fixing the prevalence priors reduces the overall flexibility of the models, but does so in a way that penalizes all models to an equal extent.
-To estimate the marginal likelihood of the data under each model, we used an Annealed Importance Sampling algorithm ({\textbf{???}}) implemented in the probabilistic programming language WebPPL.
+To estimate the marginal likelihood of the data under each model, we used an Annealed Importance Sampling algorithm (Neal, 2001) implemented in the probabilistic programming language WebPPL.
 The results are shown in Table 1: The pragmatic model is on the order of \(e^{60}\) times better at accounting for the implied prevalence data, even taking into the model's additional flexibility.
 This is extremely strong evidence that the best model for how generics update beliefs is as a single positive example understood as being produced with a pedagogical intent.
 
 \begin{figure}
 \centering
 \includegraphics{genint_files/figure-latex/genint-empiricalData-1.pdf}
-\caption{\label{fig:genint-empiricalData}Implied prevalence ratings for a broad set of seventy-four items. Vertical lines denote means, points are individual empirical judgments. Error bars denote bootstrapped 95\% confidence intervals.}
+\caption{\label{fig:genint-empiricalData}Implied prevalence ratings for a diverse set of seventy-five items. Vertical lines denote means, points are individual empirical judgments. Error bars denote bootstrapped 95\% confidence intervals.}
 \end{figure}
 
 \begin{figure}
@@ -689,7 +690,7 @@ To account for our uncertainty in the measurement of the prevalence priors, we b
 We repeated this procedure 10,000 times to generate distributions of predictions.
 The boostrapped mean and 95\% quantiles for each prevalence bin in each distribution are shown in Figure~\ref{fig:priorManipulationResults}A (middle row).
 We see that context-sensitive interpretations are predicted, with idiosyncracies that reflect empirically measured distributions.
-We then tested these predictions against interpretations in the same empirical paradigm.
+In this experiment, we test these predictions against interpretations in the same empirical paradigm as Expt. 2a.
 
 \hypertarget{methods-3}{%
 \subsubsection{Methods}\label{methods-3}}
@@ -733,15 +734,15 @@ To test this, we ran a linear model predicting responses with a fixed effect of 
 There was a significant main effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\), \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations.
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors (\(\beta_0 = 0.16\), \(SE=0.04\), \(t = 4.44\)).
 These results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
-Still, there is much more to say about these data; this simple linear model explains less than a quarter of the variance in the data \(r^2 = 0.24\).
+Still, there is much more to say about these data; this simple linear model explains less than a quarter of the variance in the data (\(r^2 = 0.24\)).
 
 From the generics models, we are able to make a number of \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten conditions.
-These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95\% confidence interval around the generics model predictions did not overlap (Figure~\ref{fig:priorManipulationResults}B, \enquote{generics model} panel).
+These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95\% confidence interval around the generics model predictions did not overlap (Figure~\ref{fig:priorManipulationResults}B, \enquote{literal generic} panel).\footnote{These predictions were derived from the literal generic interpretation model. The experiment was planned before we developed the pragmatic generic interpretation model. Still, many of these predictions would have been derived from the pragmatic model following the same decision rule.}
 With those criteria in mind, we preregistered the following contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\}.
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a \enquote{zero and one inflated beta} linking function to appropriately model the responses of exactly 0\% and 100\%, which are undefined under the beta distribution.
 The maximum a-posteriori estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 2.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
-Overall, the generic interpretation model predicts much of the variance in the means of these empirical distributions: \$r\^{}2() = ; MSE = \$
+Overall, the literal and pragmatic generic interpretation model predicts a lot of the variance in the means of these empirical distributions: (literal results: \(r^2(10) = 0.89; MSE = 0.00429\); pragmatic results: \(r^2(10) = 0.82; MSE = 0.0162\)).
 
 \begin{table}[H]
 \centering
@@ -767,16 +768,19 @@ Intercept &  & 0.32 & [ 0.221, 0.418] \\
 \end{table}
 
 The computational models we articulate do more than just predict the \emph{mean} implied prevalence; they predict the full distribution of responses.
+Again recall for this analysis, there are no free parameters in any of these models.
 The model fits in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
 To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model by discretizing the empirical distributions and model predictions into ten equally spaced bins.
-As is evident from Figure~\ref{fig:priorManipulationResults}A (bottom row, \enquote{data}), however, a number of participants responded that 0\% of Ks had the property.
-Examining these participants' explanations revealed that the majority of these respondents believed they were answering a question more akin to the prior elicitation / manipulation check task: Predict the next animal.
-This is a source of noise in the data and one that affects all models (execept the prior only model) to an equal degree.
+As is evident from Figure~\ref{fig:priorManipulationResults}A (bottom row, \enquote{data}), however, a number of participants responded that 0\% of Ks knew when earthquakes were about to happen when they read \enquote{Ks know when earthquakes are about to happen}.
+Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question like in the prior elicitation task: Predict the next animal.
+These \enquote{prior-type} responses are a source of noise in the data and one that affects all models (execept the prior only model) to an equal degree.
 All of the models we articulate have no way to account for 0\% responses, which are literally impossible given the utterance of the form \enquote{Ks F}.
-To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to the model and responding according to the prior.
+To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
 We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 4, the uncertain threshold model is by far the best model at predicting these data.
+As is shown in Table 3, both the literal and pragmatic generic interpretation models are the best at predicting these data.
+Because this experiment was designed to test the causal influence of the prevalence priors and not directly to compare these two models, the data do not definitively distinguish these two models from each other, owing to the relatively small differences in overall predictions for the two experimental conditions.
+We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
 
 \begin{table}[H]
 \centering
@@ -785,11 +789,12 @@ As is shown in Table 4, the uncertain threshold model is by far the best model a
   \hline
 Model & log Bayes Factor & expected value statistics & full distribution statistics \\ 
   \hline
-Threshold = 0.01 & -70.7 (-56.2, -85.5) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\textsuperscript{2}(200) = 0.49; MSE = 0.00383 \\ 
-  Threshold = 0.1 & -92 (-79.4, -105.2) & r\textsuperscript{2}(10) = 0.79; MSE = 0.0063 & r\textsuperscript{2}(200) = 0.57; MSE = 0.00322 \\ 
-  Threshold = 0.35 & -615.3 (-597.4, -632.5) & r\textsuperscript{2}(10) = 0.49; MSE = 0.0225 & r\textsuperscript{2}(200) = 0.37; MSE = 0.00531 \\ 
-  Prior & -53.8 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\textsuperscript{2}(200) = 0.49; MSE = 0.00383 \\ 
-  Uncertain threshold & 0 & r\textsuperscript{2}(10) = 0.89; MSE = 0.00427 & r\textsuperscript{2}(200) = 0.63; MSE = 0.00277 \\ 
+Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\textsuperscript{2}(200) = 0.49; MSE = 0.00381 \\ 
+  Threshold = 0.01 & -48.6 (-39, -58.4) & r\textsuperscript{2}(10) = 0.83; MSE = 0.00887 & r\textsuperscript{2}(200) = 0.53; MSE = 0.00358 \\ 
+  Threshold = 0.1 & -26.4 (-17.9, -35.4) & r\textsuperscript{2}(10) = 0.76; MSE = 0.00865 & r\textsuperscript{2}(200) = 0.56; MSE = 0.00334 \\ 
+  Threshold = 0.35 & -48.6 (-39.3, -57.9) & r\textsuperscript{2}(10) = 0.7; MSE = 0.0114 & r\textsuperscript{2}(200) = 0.39; MSE = 0.00485 \\ 
+  Literal Generic & 0 & r\textsuperscript{2}(10) = 0.89; MSE = 0.00429 & r\textsuperscript{2}(200) = 0.64; MSE = 0.00275 \\ 
+  Pragmatic Generic & -2.1 (1.5, -5.6) & r\textsuperscript{2}(10) = 0.82; MSE = 0.0162 & r\textsuperscript{2}(200) = 0.55; MSE = 0.00352 \\ 
    \hline
 \end{tabular}
 \endgroup
@@ -909,7 +914,7 @@ Deriving such a prediction would necessarily involve a model of compositional ge
 \subsection{Implications for stereotype propogation}\label{implications-for-stereotype-propogation}}
 
 The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication or deceit when using generics.
-A speaker might endorse a generic when the prevalence is quite low (see {\textbf{???}}) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
+A speaker might endorse a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
 The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
 For many properties, the difference in implied prevalence may be inconsequential.
 For features of social categories, which have difficult-to-understand statistical properties {\textcolor{Red}{(cite something about how people misunderstand the distributions of properties within social categories?)}}, the misalignment of background believes can lead to the propogation of stereotypes.
@@ -1000,6 +1005,9 @@ Goodman, N. D., \& Frank, M. C. (2016). Pragmatic language interpretation as pro
 \leavevmode\hypertarget{ref-Goodman2013}{}%
 Goodman, N. D., \& Stuhlmüller, A. (2013). Knowledge and implicature: Modeling language understanding as social cognition. \emph{Topics in Cognitive Science}.
 
+\leavevmode\hypertarget{ref-dippl}{}%
+Goodman, N. D., \& Stuhlmüller, A. (2014). The Design and Implementation of Probabilistic Programming Languages. \url{http://dippl.org}.
+
 \leavevmode\hypertarget{ref-Grice1975}{}%
 Grice, H. P. (1975). Logic and conversation. In \emph{Readings in language and mind}. Blackwell.
 
@@ -1008,6 +1016,9 @@ Khemlani, S., Leslie, S.-J., \& Glucksberg, S. (2009). Generics, prevalence, and
 
 \leavevmode\hypertarget{ref-Khemlani2012}{}%
 Khemlani, S., Leslie, S.-J., \& Glucksberg, S. (2012). Inferences about members of kinds: The generics hypothesis. \emph{Language and Cognitive Processes}, \emph{27}(6), 887--900. doi:\href{https://doi.org/10.1080/01690965.2011.601900}{10.1080/01690965.2011.601900}
+
+\leavevmode\hypertarget{ref-LeeWagenmakers2014}{}%
+Lee, M. D., \& Wagenmakers, E. (2014). \emph{Bayesian cognitive modeling: A practical course}. Cambridge: Cambridge University Press.
 
 \leavevmode\hypertarget{ref-Leslie2008}{}%
 Leslie, S.-J. (2008). Generics: Cognition and acquisition. \emph{Philosophical Review}, \emph{117}(1).
@@ -1018,6 +1029,9 @@ Levinson, S. (2000). \emph{Presumptive meanings: The theory of generalized conve
 \leavevmode\hypertarget{ref-Montague1973}{}%
 Montague, R. (1973). The Proper Treatment of Quantification in Ordinary English. In \emph{Philosophy, language, and artificial intelligence} (pp. 141-----162). Springer. Retrieved from \url{http://semantics.uchicago.edu/kennedy/classes/s08/semantics2/montague73.pdf}
 
+\leavevmode\hypertarget{ref-neal2001annealed}{}%
+Neal, R. M. (2001). Annealed importance sampling. \emph{Statistics and Computing}, \emph{11}(2), 125--139.
+
 \leavevmode\hypertarget{ref-Prasada2013}{}%
 Prasada, S., Khemlani, S., Leslie, S.-J., \& Glucksberg, S. (2013). Conceptual distinctions amongst generics. \emph{Cognition}, \emph{126}(3), 405--22. doi:\href{https://doi.org/10.1016/j.cognition.2012.11.010}{10.1016/j.cognition.2012.11.010}
 
@@ -1026,6 +1040,9 @@ Ritchie, D., Stuhlmüller, A., \& Goodman, N. D. (2016). C3: Lightweight increme
 
 \leavevmode\hypertarget{ref-hurdleModels}{}%
 Rose, C. E., Martin, S. W., Wannemuehler, K. A., \& Plikaytis, B. D. (2006). On the use of zero-inflated and hurdle models for modeling vaccine adverse event count data. \emph{Journal of Biopharmaceutical Statistics}, \emph{16}(4), 463--481.
+
+\leavevmode\hypertarget{ref-problang}{}%
+Scontras, G., Tessler, M. H., \& Franke, M. (2018). Probabilistic language understanding: An introduction to the Rational Speech Act framework.
 
 \leavevmode\hypertarget{ref-Shepard1987}{}%
 Shepard, R. N. (1987). Toward a universal law of generalization for psychological science. \emph{Science (New York, N.Y.)}, \emph{237}(4820), 1317--1323. doi:\href{https://doi.org/10.1126/science.3629243}{10.1126/science.3629243}
@@ -1043,96 +1060,6 @@ Tessler, M. H., \& Goodman, N. D. (2019). The language of generalization. \emph{
 
 \hypertarget{appendix-items}{%
 \section{Appendix: Items}\label{appendix-items}}
-
-\begingroup\fontsize{9pt}{10pt}\selectfont
-\begin{longtable}{ |p{1in}| |p{1in}|}
-  \hline
-{\bfseries Property} & {\bfseries Property type} \\ 
-  \hline
-broken legs & accidental \\ 
-   \hline
-burned skin & accidental \\ 
-   \hline
-cracked claws & accidental \\ 
-   \hline
-dusty skin & accidental \\ 
-   \hline
-fungus-covered fur & accidental \\ 
-   \hline
-infected ears & accidental \\ 
-   \hline
-itchy tails & accidental \\ 
-   \hline
-muddy feathers & accidental \\ 
-   \hline
-rotten teeth & accidental \\ 
-   \hline
-sore legs & accidental \\ 
-   \hline
-sore teeth & accidental \\ 
-   \hline
-swollen ears & accidental \\ 
-   \hline
-torn feathers & accidental \\ 
-   \hline
-torn tails & accidental \\ 
-   \hline
-wet fur & accidental \\ 
-   \hline
-worn-out claws & accidental \\ 
-   \hline
-blue claws & color \\ 
-   \hline
-orange ears & color \\ 
-   \hline
-orange tails & color \\ 
-   \hline
-pink teeth & color \\ 
-   \hline
-purple feathers & color \\ 
-   \hline
-silver legs & color \\ 
-   \hline
-violet skin & color \\ 
-   \hline
-yellow fur & color \\ 
-   \hline
-claws & part \\ 
-   \hline
-ears & part \\ 
-   \hline
-feathers & part \\ 
-   \hline
-fur & part \\ 
-   \hline
-legs & part \\ 
-   \hline
-skin & part \\ 
-   \hline
-tails & part \\ 
-   \hline
-teeth & part \\ 
-   \hline
-big claws & vague \\ 
-   \hline
-curly fur & vague \\ 
-   \hline
-long legs & vague \\ 
-   \hline
-long tails & vague \\ 
-   \hline
-long teeth & vague \\ 
-   \hline
-rough skin & vague \\ 
-   \hline
-small ears & vague \\ 
-   \hline
-smooth feathers & vague \\ 
-   \hline
-\hline
-\caption{Items used in Expt. 1} 
-\end{longtable}
-\endgroup
 
 \begingroup\fontsize{9pt}{10pt}\selectfont
 \begin{longtable}{ |p{3in}|}
