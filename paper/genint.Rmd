@@ -1837,6 +1837,7 @@ print(brm.table1, type="latex", comment = F, table.placement = "H", size="\\font
   <!-- - The type of the weaker distribution and the type of the stronger distribution? -->
 
 The computational models we articulate do more than just predict the *mean* implied prevalence; they predict the full distribution of responses.
+Again recall for this analysis, there are no free parameters in any of these models.
 The model fits in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
 <!-- Unlike in Expt. 1, it is not obvious which of these models accounts best for the data.  -->
 To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model by discretizing the empirical distributions and model predictions into ten equally spaced bins.
@@ -1848,8 +1849,9 @@ All of the models we articulate have no way to account for 0% responses, which a
 To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior. 
 We calculate Bayes Factors assuming a uniform distribution of noise between 0-20% (approximated using the following discretization $= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}$). 
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 4, the pragmatic generics model is by far the best model at predicting these data.
-Thus, the prevalence prior is causally related to interpretations of novel generics in the way predicted by the pragmatic generics model.
+As is shown in Table 3, both the literal and pragmatic generic interpretation models are the best at predicting these data.
+Because this experiment was designed to test the causal influence of the prevalence priors and not directly to compare these two models, the data do not definitively distinguish these two models from each other, owing to the relatively small differences in overall predictions for the two experimental conditions.
+We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
 <!-- Since the models have no free parameters, the ratio of these likelihood values corresponds to the *Bayes Factor* (BF), which quantifies the evidence in favor of one model over another.  -->
 
 
