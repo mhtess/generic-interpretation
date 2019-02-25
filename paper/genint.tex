@@ -177,10 +177,16 @@ Human generalization from observational data can be well described using the lan
 We propose a null hypothesis that generics convey the same information-content as a single, positive observation interpreted with respect to structured background knowledge.
 Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property \(r \in [0, 1]\) with a single positive observation according to Bayes' rule, the model is:
 
+%\begin{align}
+%L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
+% &= \frac{P(x = 1 \mid n = 1; r) \cdot P(r)}{\int_0^1 {P(x = 1 \mid n = 1; r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
+% &= \frac{r \cdot P(r)}{\int_0^1 {r' \cdot P(r') \mathop{}\!\mathrm{d}r'}} \label{eq:L0}
+%\end{align}
+
 \begin{align}
-L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
- &= \frac{P(x = 1 \mid n = 1; r) \cdot P(r)}{\int_0^1 {P(x = 1 \mid n = 1; r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
- &= \frac{r \cdot P(r)}{\int_0^1 {r' \cdot P(r') \mathop{}\!\mathrm{d}r'}} \label{eq:L0}
+L_0(r, \mid u = u_{gen}) &\propto P(u = u_{gen} \mid r) \cdot P(r)  \nonumber \\
+ &= P(x = 1 \mid n = 1; r) \cdot P(r) \nonumber \\
+ &= r \cdot P(r) \label{eq:L0}
 \end{align}
 
 \noindent where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples.
@@ -194,14 +200,14 @@ L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P
 \end{align}
 
 Here, the truth-functional meaning of a generic is a threshold-function mandating that the prevalence \(r\) is greater than the threshold \(\theta\), represented by the Kronecker delta \(\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)}\) that returns \(1\) when the utterance is true (i.e., when \(r > \theta\)) and \(0\) otherwise.
-
-\begin{align}
-\delta_{\mbox{ $[\![ u_{gen} ]\!]$}(r, \theta)} &\propto  \begin{cases}
-1 & \text{if } r > \theta \\
-0 & \text{otherwise}
-\end{cases}\label{eq:delta}
-\end{align}
-
+%
+%\begin{align}
+%\delta_{\mbox{ $[\![ u_{gen} ]\!]$}(r, \theta)} &\propto  \begin{cases}
+%1 & \text{if } r > \theta \\
+%0 & \text{otherwise}
+%\end{cases}\label{eq:delta}
+%\end{align}
+%
 This version of the model uses the standard truth-functional tools of formal semantics (Montague, 1973) and relates to the literal semantics of quantifiers, which can also be described by threshold functions (e.g., \(\mbox{ $[\![ some ]\!]$} = \{r > 0\}\), \(\mbox{ $[\![ most ]\!]$} = \{r > 0.5\}\), \(\mbox{ $[\![ all ]\!]$} = \{r = 1\}\)).
 Note that Equation \ref{eq:L0a} can be rewritten as: \(L_0(r, \theta \mid u) \propto P(u \mid r, \theta)\) where
 
@@ -242,7 +248,7 @@ For purposes of quantitative modeling, we allow both the cost of the generic (\(
 
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/cartoon-1.pdf}
+\includegraphics{figs/cartoon.pdf}
 \caption{\label{fig:cartoon}Sketch of the pragmatic generic interpretation model. The literal contribution of a generic (e.g., \enquote{Dorbs have yellow crests}) is equivalent to observing a single positive example (i.e., observing an actual dorb with a yellow crest). A pragmatic listener interprets the utterance as coming from a speaker who intentionally produced the utterance in order to convey information to a naive listener (\(L_0\)). The literal listener interprets the utterance on drawing on their prior knowledge about other categories and properties.}
 \end{figure}
 
@@ -315,9 +321,9 @@ This comparison informs us as to whether or not participants actually \emph{upda
 \section{Overview Of Experiments}\label{overview-of-experiments}}
 
 Our models of generic interpretation predict that the interpretations of generics in terms of prevalence should vary as a function of the prevalence prior.
-Cimpian et al. (2010) found a difference in the implied prevalence between biological properties (e.g., \emph{yellow fur}) and accidental properties (e.g., \emph{fungus-covered claws}).
-We begin our experiments by first replicating this result; this study serves to validate our measurement, which we will use in our main two experiments.
-Experiment 1 is a larger scale version of Cimpian et al. (2010)\enquote{s \emph{implied prevalence} task, with sufficien measurements on the by-item level to reveal graded, quantitative variability between generics; additionally, we measure participants} prior beliefs and compare our generic interpretation models and control models.
+Cimpian et al. (2010) found a difference in the implied prevalence between biological properties described with color adjectives (e.g., \emph{yellow fur}) and accidental properties (e.g., \emph{fungus-covered claws}).
+We begin our experiments by first replicating and extending this result; this study serves to validate our measurement, which we will use in our main two experiments.
+Experiment 1 is a larger scale version of Cimpian et al. (2010)\enquote{s \emph{implied prevalence} task, with sufficient measurements on the by-item level to reveal graded, quantitative variability between generics; additionally, we measure participants} prior beliefs and compare our generic interpretation models and control models.
 Experiment 2 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors in 10 different between-participants conditions.
 The sample size, exclusion criteria, and planned statistical contrasts for each study were pre-registered on the Open Science Framework.
 All cognitive and Bayesian data analytic models were implemented in the probabilistic programming language WebPPL (Goodman \& Stuhlmüller, 2014).
@@ -326,19 +332,19 @@ Link to experiments, data, analysis scripts, and models can be found at \url{www
 \hypertarget{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}{%
 \section{Preliminary Study: Replication and Extension of Cimpian et al. (2010)}\label{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}}
 
-\hypertarget{method}{%
-\subsection{Method}\label{method}}
+%\hypertarget{method}{%
+%\subsection{Method}\label{method}}
 
 \hypertarget{participants}{%
-\subsubsection{Participants}\label{participants}}
+\subsection{Participants, procedure, and materials}\label{participants}}
 
 We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk.
 The experimental design is very similar to Cimpian et al. (2010), and we chose to have a sample size at least twice as large as the original study (original n=15).
 All participants were native English speakers.
 The experiment took about 5 minutes and participants were compensated \$0.60.
 
-\hypertarget{procedure-and-materials}{%
-\subsubsection{Procedure and materials}\label{procedure-and-materials}}
+%\hypertarget{procedure-and-materials}{%
+%\subsubsection{Procedure and materials}\label{procedure-and-materials}}
 
 In order to get participants motivated to reason about novel kinds, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals.
 Participants were supplied with a bare plural about a novel category (e.g., \enquote{Feps have yellow fur}) and asked to judge prevalence: \enquote{What percentage of feps do you think have yellow fur?}
@@ -349,8 +355,14 @@ The experiment in full can be viewed at \url{http://stanford.edu/~mtessler/gener
 \subsection{Results and discussion}\label{results-and-discussion}}
 
 Interpreting a novel generic sentence \enquote{Ks have F} often has the possibility of being understood as a universal or near-universal claim (\emph{all or almost all Ks Fs)}.
-Across our the forty items in this experiment, however, we observe a gradient in the implied prevalence ratings, mostly clustered by the type of property (Figure~\ref{fig:cimpian-modelingResults}A)
-At the level of property type, the results are consistent with Cimpian et al. (2010)'s findings of generally strong interpretations of novel generic statements, but that also exhibit a sensitivity to theory-based expectations such that generics about accidental properties (e.g., \emph{fungus-covered claws}) are interpreted relatively weakly (Figure~\ref{fig:cimpian-modelingResults}B).
+Across our the forty items in this experiment, however, we observe a gradient in the implied prevalence ratings, mostly clustered by the type of property (Figure~\ref{fig:cimpian-modelingResults}A).
+At the level of property type, Cimpian et al. (2010) found a difference between the implied prevalence of generics about biological parts described with color adjectives (e.g., \emph{purple feathers}) and accidental properties (e.g., \emph{fungus-covered claws});  we replicate this result and extend it to show further gradability among types of properties (Figure~\ref{fig:cimpian-modelingResults}B).
+
+\begin{figure}
+\centering
+\includegraphics{genint_files/figure-latex/cimpian-modelingResults-1.pdf}
+\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\enquote{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
+\end{figure}
 
 Broadly, these results validate the measurement as one that can elicit variability, and it is this variability that is of primary concern to us.
 The items that elicited the most variability in implied prevalence ratings were those of accidental or diseased states (e.g., \enquote{Lorches have broken legs}, \enquote{Wugs have fungus-covered claws}).
@@ -358,11 +370,7 @@ As Cimpian et al. (2010) noted, \enquote{properties of this type do not lend the
 Not only are these kinds of statements infrequent outside the laboratory, bare plurals about accidental or diseased states (\enquote{Lorches have broken legs}) can easily be interpreted as non-generic, existential claims about the here-and-now, analogous to how \enquote{Dogs are on my front lawn} describes a particular state of affairs as opposed to something generalizable about dogs.
 Since the strongest test of our models of generic interpretation will come from having to predict variability in implied prevalence ratings, we aim to elicit high variability in Experiment 1 using naturalistic properties that more easily lend themselves to generic predication (i.e., you could imagine a speaker saying the sentence).
 
-\begin{figure}
-\centering
-\includegraphics{genint_files/figure-latex/cimpian-modelingResults-1.pdf}
-\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\enquote{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type.}
-\end{figure}
+
 
 \hypertarget{experiment-1}{%
 \section{Experiment 1}\label{experiment-1}}
