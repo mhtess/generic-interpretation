@@ -557,6 +557,13 @@ Often one Beta distribution is devoted to accounting for the very small numbers 
 To provide a quantitative examination of the fit to the priors data, we look at the posterior predictive distribution discretized to bins in increments of 10\% prevalence (i.e., categorical distributions over the bins of 0\%, 10\%, \ldots{}, 90\%, 100\% prevalence) and compare the model's inferred priors to the empirical counts that fell into those bins in the prior elicitation task.
 The joint data analysis model accommodates the empirical patterns in the prevalence priors very well: \(r^2(825) = 0.99\), \(MSE = 0.00052\).
 
+To evaluate how well each model can accommodate the implied prevalence data, we compare the Maximum A-Posteriori value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
+Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal \enquote{some} model, a literal \enquote{most} model (which includes an additional fit noise parameter), a literal generics model (single positive observation), and the pragmatic generics model.
+Figure~\ref{fig:genint-modelingResults} reveals that the models based on the prevalence prior and the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
+Though the model based on a semantics for \enquote{most} (i.e., a fixed threshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the \enquote{most} model assigns 0.57 {[}0.55, 0.59{]} proportion of the data to be noise, because of the high number of responses below 50\%.
+Unlike each of the alternative semantic models, the two models based on belief updating according to a single, positive observation (literal and pragmatic generics models) can accommodate the highly variable generic interpretation data with a high degree of quantitative accuracy.
+The pragmatic model slightly outperforms the literal generics model in terms of both mean squared error and variance explained at the level of average responses.
+The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1.82, 2.18{]} and the generic cost parameter \(c\) was 3.6 {[}3.16, 4.27{]}.
 
 \begin{figure}
 \centering
@@ -567,28 +574,16 @@ Both generic models closely track the implied prevalence ratings, but the pragma
 \end{figure}
 
 
-To evaluate how well each model can accommodate the implied prevalence data, we compare the Maximum A-Posteriori value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
-Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal \enquote{some} model, a literal \enquote{most} model (which includes an additional fit noise parameter), a literal generics model (single positive observation), and the pragmatic generics model.
-Figure~\ref{fig:genint-modelingResults} reveals that the models based on the prevalence prior and the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
-Though the model based on a semantics for \enquote{most} (i.e., a fixed threshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the \enquote{most} model assigns 0.57 {[}0.55, 0.59{]} proportion of the data to be noise, because of the high number of responses below 50\%.
-Unlike each of the alternative semantic models, the two models based on belief updating according to a single, positive observation (literal and pragmatic generics models) can accommodate the highly variable generic interpretation data with a high degree of quantitative accuracy.
-The pragmatic model slightly outperforms the literal generics model in terms of both mean squared error and variance explained at the level of average responses.
-The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1.82, 2.18{]} and the generic cost parameter \(c\) was 3.6 {[}3.16, 4.27{]}.
-
-\begin{figure}
-\centering 
-\includegraphics[width=0.4\textwidth]{genint_files/figure-latex/genint-litPrag-scatter-1} 
-\caption{Comparison of implied prevalence predictions for the literal~vs.~pragmatic generic interpretation models. The pragmatic model shows stronger interpretations for items that have intermediate implied prevalence.}
-\label{fig:genint-litPrag-scatter}
-\end{figure}
-
-Figure~\ref{fig:genint-modelingResults-bars} shows empirical means and model predictions for ten example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
+Figure~\ref{fig:genint-modelingResults-bars} shows empirical means and model predictions for eight example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
 All models exhibit some sensitivity to the variance in implied prevalence ratings, because they all have the prevalence prior in their definition.
 It is the actual magnitude of the strength of the generalization implied by the utterance that is predicted to be different, with the prior and \enquote{some} models predicting too weak of an interpretation.
 \enquote{Most} is handicapped by its high inferred rate of noise and does not make dramatically different predictions across the items.
 Both the literal and pragmatic generic interpretation models track the quantitative variance across these items.
 The evidence for pragmatic interpretations is most apparent for items that receive high but not at-ceiling implied prevalence ratings (e.g., \emph{have spots}, \emph{hunt other animals}; Figure~\ref{fig:genint-litPrag-scatter}), suggesting that interpretations are most in dangerous of being strengthened beyond a speaker's intent for properties for which the listener is most uncertain about their distribution (cf., the asymmetry reported in Cimpian et al., 2010).
 {\textcolor{Blue}{[mht: could do a regression comparing whether or not the pragmatic model is better than the literal model (or the difference in sq.err) vs. the entropy of the prior... to see if pragmatics is most visible under conditions of uncertainty]}}
+
+
+
 
 \begin{table}[h]
 \centering
@@ -607,6 +602,14 @@ Prior & 0.2578 & 0.578 & -18006 \\
 \endgroup
 \caption{Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item averages. Marginal likelihood is computed over the full distribution of responses.} 
 \end{table}
+
+\begin{figure}
+\centering 
+\includegraphics[width=0.4\textwidth]{genint_files/figure-latex/genint-litPrag-scatter-1} 
+\caption{Comparison of implied prevalence predictions for the literal~vs.~pragmatic generic interpretation models. The pragmatic model shows stronger interpretations for items that have intermediate implied prevalence.}
+\label{fig:genint-litPrag-scatter}
+\end{figure}
+
 
 \hypertarget{model-comparison}{%
 \paragraph{Model comparison}\label{model-comparison}}
