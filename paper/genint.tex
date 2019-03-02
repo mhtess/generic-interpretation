@@ -119,9 +119,7 @@
 Correspondence concerning this article should be addressed to Michael Henry Tessler, 450 Serra Mall, Bldg. 420, Rm. 316, Stanford, CA 94305. E-mail: \href{mailto:tessler@mit.edu}{\nolinkurl{tessler@mit.edu}}}
 
 \abstract{
-Generic language (e.g., ``Birds have hollow bones'') conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Understanding generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Here, we formalize a new null hypothesis about the meaning of generics:  Generics convey a single, positive example to the listener. We show this model is mathematically equivalent to a recent proposal by Tessler and Goodman (2019) for generics as a kind of vague quantifier. We enrich this null hypothesis with a mechanism for pragmatic interpretation and test these model in their ability account for the belief-updating mechanism of generic statements---how novel generics are interpreted. We find that generics are best modeled as single positive observations produced with a communicative intent. %The results are consistent with a recent proposal that generics can be understood as non-linguistic phenomenon.
-\mht{i dont mention Expt 1 \& 2 here. also, dont mention the role of prior knowledge... (which motivates expt 2: manipulating prior knowledge)}
-
+Generic language (e.g., ``Birds have hollow bones'') conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Understanding generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Here, we formalize a new null hypothesis about the meaning of generics:  Generics convey a single, minimal example to the listener. We show this model is mathematically equivalent to a recent proposal by Tessler and Goodman (2019) for generics as a kind of vague quantifier. We enrich this null hypothesis with a mechanism for pragmatic interpretation and test these models in their ability to account for the belief-updating force of generic statements---how novel generics are interpreted. These models also predict strong dependence of interpretation on prior beliefs about the prevalence of features. Across two experiments, we both measure and manipulate prior beliefs, finding they are causally related to generic interpretations. Additionally, we find that generics are best modeled as single minimal observations produced with a communicative intent.
 }
 
 \begin{document}
@@ -146,6 +144,7 @@ What sort of literal meaning could account for the panoply of interpretations th
 
 If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic way, if one mosquito once had this property, then it is reasonable to think there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
 From this intuition, one could formalize the meaning of a generic statement as equivalent to Bayesian belief-updating of structured prior knowledge (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011) after observing a single positive example of the category with a property.
+This positive example would be a \emph{minimal example} in the sense that it exhibits only the feature being described by the predicate in the generic sentence.
 In this paper, we show how this formalism is mathematically identical to a recent model by Tessler and Goodman (2019) that treat generics as a kind of vague quantifier.
 This earlier work tested such a model only via its implications for \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested.
 
@@ -568,7 +567,7 @@ The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1
 \begin{figure}
 \centering
 \includegraphics{genint_files/figure-latex/genint-modelingResults-bars-1.pdf}
-\caption{Implied prevalence ratings and model predictions for 10 items that cover the spectrum of prevalence ratings. 
+\caption{Implied prevalence ratings and model predictions for eight items that cover the spectrum of prevalence ratings. 
 Both generic models closely track the implied prevalence ratings, but the pragmatic model shows stronger interpretations for a number of important cases.}
 \label{fig:genint-modelingResults-bars}
 \end{figure}
@@ -826,42 +825,24 @@ Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\t
 \hypertarget{general-discussion}{%
 \section{General Discussion}\label{general-discussion}}
 
+
+%\red{SOcial import, minimal example (property)
+%L0: predicate observed, all other features missing
+%language is hard for actually describing specifics
+%think about hte law
+%good for minimal examples
+%}
+
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted through language.
 %, and it is commonly believed that generics carry strong interpretations (analogous to the quantifier \enquote{most} or \enquote{all}).
-Despite their ubiquity and relative morphosyntactic simplicity, generics have been the examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
-Here, we explored the hypothesis that a generic statement can be literally thought of as conveying a single positive observation to a listener.
-We showed how this model is mathematically equivalent to the interpretation model assumed by Tessler and Goodman (2019) and we articulated a more elaborate model which understands generics as intentional utterances.
+Despite their ubiquity and relative morphosyntactic simplicity, generics have been examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
+Here, we explored the hypothesis that a generic statement can be literally thought of as conveying a single, minimal example to a listener.
+We showed how this model is mathematically equivalent to the interpretation model assumed by Tessler \& Goodman (2019) and we articulated a more elaborate model which understands generics as intentional utterances.
 We tested the models using a diverse set of stimuli and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property (Expt. 1).
 Furthermore, we found that this background knowledge was causally responsible for the resulting interpretation (Expt. 2).
-Finally, our data strongly support the conclusion that generics can be thought of as conveying a communicatively relevant observation. 
+Finally, our data strongly support the conclusion that generics can be thought of as conveying a communicatively relevant minimal example. 
 % interprets generics pragmatically provides a better explanation of the observed data than a literal interpretation model.
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
-
-The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property suggests a very primitive foundation to generic language.
-Bayesian belief-updating based on observations is a general learning mechanism for any animal {\textcolor{Red}{(is there some citation for bayes in other animals?)}}.
-The work here suggests that the human unique component of understanding generic language comes not from understanding
-syntax or the meaning of the words but from understanding the communicative intent of the speaker {\textcolor{Red}{(cite tomasello?)}}.
-Csibra and Shamsudheen (2015) argue that individual objects are interpreted by infants as symbolic representations of the object kind, and thus that it is possible to interpret a pedagogically presented exemplar from a category as a \enquote{nonverbal generic}.
-The pedagogical example acts as an indexical to the category.
-In fact, the connection between generics and indexicality has made been by Sterken (2015) as well, argueing that the context-sensitivity exhibited by indexicals is the exact kind we need to model generics.
-The model we present that interprets generics as communicatively relevant single observations is a very natural formalization of the nonverbal generic / indexical view.\footnote{
-	One difference between our model and the view of Csibra and Shamsudheen (2015) is that our model does not assume any qualitative difference between ``generic knowledge'' and ``probabilistic knowledge''. All the knowledge in our model is probabilistic knowledge. 
-	}
-The fact that an underspecified quantifier semantics proposed by Tessler and Goodman (2019) is equivalent to an observation model provides a route to learning the truth-functional meanings of natural language expressions through analogy to a more general learning mechanism. 
-%That is, an uncertain quantifier updates beliefs in exactly the same way as a single positive observation. 
-\mht{maybe this last sentence could be unpacked?}
-
-\mht{What is Leslie's ``default generalization'', then? A single pedagogical observation}
-
-\mht{what do the words in the generic do? they point to the features that are relevant in the observation, kind of analogous to a demonstrator exaggerating their actions when producing a demonstration. they also point to the category to generalize (though, the actual category to generalize may be a restricted class (e.g., ``cabs are yellow'' [NYC cabs])}
-
-\mht{generics come in diverse syntax (within and across languages). ``A dog barks'' literally means one dog barked. ``You see a dog, it barks'' has the same semantics as both a particular and a generic?}
-
-\mht{Lassiter suggested threshold version, and suggested that it might be reasoned about by the pragmatic listener. The results from the lifted threshold version of this model were inconclusive and we omitted them for brevity}
-
-\mht{another model: $x^n$ semantics... probably computationally indistinguishable as well}
-
-\mht{why is a single positive observation model different than the ``some'' model? ``some'' just tells you that both sides of the coin are not tails. gen tells you that you flipped it and it came up heads...}
 
 Generics are often described as conveying strong meanings.
 The experimental data we present provides strong evidence for the existence of \enquote{weak generics}, operationalized as generic statements that imply a prevalence less than 50\%.
@@ -870,20 +851,40 @@ When manipulating the prevalence prior distributions to suggest only prevalence 
 This is an aspect of generic language understanding often swept under the rug: Generics are believed (in a generic sense) to carry strong implications.
 Here, we show that generics also carry weak implications.
 
-Other semantic theories of generics make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted (e.g., Cohen, 1999; Declerck, 1991).
-In such a theory, the statement \enquote{Morseths have a menstrual cycle} gets evaluated as \enquote{Female morseths have a menstrual cycle}; under such an account, the implied prevalence of the feature would be 100\% (or near 100\%) because 100\% of the \emph{relevant lorches} (i.e., the females) have a menstrual cycle.\footnote{The scientifically correct term for a \enquote{menstrual cycle} is actually an \enquote{estrous cycle}. We are grateful to one of our MTurk participants for pointing this out to us. }
-Interestingly, domain restricted interpretations are present in the empirical data.
-Several properties about the reproductive behavior of animals (Expt. 1b) have interpretation distributions that are bimodal.
-For example, \enquote{Morseths have a menstrual cycle} is interpreted primarily as applying to 50\% of morseths (38 out of 64 give a response between 45\% and 55\%); however, some participants (10 of 64) rate this as applying to 100\% of morseths.
-This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that \emph{could} have the property (e.g., 100\% of female morseths have a menstrual cycle).
-The domain restricted interpretation is not limited to the generic interpretation data, however.
-The bimodality is present in our prevalence elicitation task (Expt. 1a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0\% (the animals that don't have a menstrual cycle), 50\% (\enquote{only females}) and 100\% (perhaps, \enquote{all females}).
-The fact that this multi-modality appears in the prior elicitation task means that the generic interpretation model predicts bi-modal interpretation distributions for the implied prevalence data, which is what we observe.
-Still, the question remains why some participants interpret the noun phrase in generic statements as restricted to a salient subset of the category.
+\subsection{A communicatively relevant, minimal example}
 
-%In what follows, we elaborate the assumptions in our modeling framework, describe how conceptual knowledge can guide prevalence-based interpretations, discuss how our answer to the problem of generic interpretation can inform an answer to the parallel problem of \emph{generic identification}, and speculate about the implications for communicating weak generics.
-%
-{\textcolor{Green}{[ndg: i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.]}}
+The pragmatic generic interpretation models interprets a generic as conveying a communicatively relevant, minimal example to the listener. 
+The example is minimal in the sense that the language picks out the correct feature for the listener to attend to; the predicate highlights the feature to be generalized. 
+Drawing the same generalization from actual observational data alone would require significant covariation data to single out the feature relevant for generalization. 
+Thus, using generics for conveying generalizations is more efficient because the speaker isolates a feature for generalization. 
+Generics are also more useful than observations because speakers can describe properties that listeners could not in principle observe (Harris \& Koenig, 2006). 
+
+%The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property suggests a very primitive foundation to generic language.
+%Bayesian belief-updating based on observations is a general learning mechanism for any animal {\textcolor{Red}{(is there some citation for bayes in other animals?)}}.
+%The work here suggests that the human unique component of understanding generic language comes not from understanding
+%syntax or the meaning of the words but from understanding the communicative intent of the speaker {\textcolor{Red}{(cite tomasello?)}}.
+The view of generics as communicatively relevant examples has previously been suggested by Csibra \& Shamsudheen (2015), who argue that individual objects are interpreted by infants as symbolic representations of the object kind, and thus that it is possible to interpret a pedagogically presented exemplar from a category as a \enquote{nonverbal generic}.
+The pedagogical example acts as an indexical to the category.
+In fact, the connection between generics and indexicality has made been by Sterken (2015) as well, arguing that the context-sensitivity exhibited by indexicals is the exact kind we need to model generics.
+The model we present that interprets generics as communicatively relevant minimal examples is a very natural formalization of the nonverbal generic / indexical view.\footnote{
+	One difference between our model and the view of Csibra and Shamsudheen (2015) is that our model does not assume any qualitative distinctions between ``generic knowledge'' and ``probabilistic knowledge''. All the knowledge in our model is probabilistic knowledge. 
+	}
+
+
+It may be surprising that our model for the semantics of generics as a single, minimal example is distinct from a model of existential quantification (i.e., the ``some'' model). 
+After all, observing a single example of category with a property entails that at least one member of the category has the property. 
+%The difference between existential quantification and a minimal example is that 
+The minimal example is more concrete, however. 
+Consider the case of trying to infer the weight of a biased coin: The quantifier ``some'' tells you that both sides are not tails, whereas a minimal example requires actually flipping the coin and seeing it land on heads. 
+The minimal example entails existential quantification, but Bayesian reasoning can update based on an example in a stronger way.
+Without strong prior knowledge about the weight of a coin, it is more likely than not that it has a heads bias after observing just a single heads outcome; in fact, the most likely state of affairs to produce a single heads outcome (given uniform uncertainty about the weight of a coin) is that both sides of the coin are heads.
+Such a strong generalization is not supported by existential quantification.
+
+In our experiments, we investigate bare plural sentences, which are a common syntactic way of conveying generics (Gelman et al., 2008).
+Generic meanings , however, can be packaged into different syntactic frames in English (e.g., ``A raven is black''; ``The blue-breasted quail eats small bugs and various grasses''), which are also commonly used to express concrete specifics (e.g., definite and indefinite singulars). 
+Our ``minimal example'' semantics has a very natural analog to the semantics of an indefinite or definite singular.
+The main difference is that with concrete reference, a speaker is referring to an instance that the listener knows about or could observe. 
+Future work will need to investigate whether this formulation of the semantics of generics is sufficient to extend to generic meanings expressed in different syntactic frames. 
 
 \hypertarget{the-relationship-between-prevalence-priors-and-generic-interpretations}{%
 \subsection{The relationship between prevalence priors and generic interpretations}\label{the-relationship-between-prevalence-priors-and-generic-interpretations}}
@@ -913,15 +914,60 @@ The fact that the \enquote{some} model consistently underpredicts the generic in
 %In Expt. 1, we again find the generic interpretation data are distinct from those of the conditional, non-zero distribution of prevalence, as evidenced by the \enquote{some} model comparisons.
 %The fact that we use this \enquote{single, positive observation} question to elicit prior knowledge may in fact have blurred the distinction between the literal and the pragmatic model, which is why we Expt. 2 was conducted.
 
-The patterns of data we observe in our three generic interpretation experiments are additionally unlikely to be identical to those obtained using the quantifier \enquote{Some} (i.e., \enquote{Some Ks have F}).
+The patterns of data we observe in our experiments are additionally unlikely to be identical to those obtained using the quantifier \enquote{Some} (i.e., \enquote{Some Ks have F}).
 Though we did not empirically measure judgments given the existentially quantified statements, the alternative model that assumes a fixed-threshold at 0\%-prevalence provides insight into what should be expected for those data.\footnote{Recall the fixed-threshold models are \enquote{literal interpretation} models and do not compute scalar implicatures.}
 In both of our experiments, we found that the \enquote{some} model provided too weak of interpretations, consistent with the intuition that generic statements convey stronger prevalence implications that the existential statement.
 
-Another interesting question is whether the same pattern of data could arise from a bonafide pedagogically sampled observation (cf., Csibra \& Shamsudheen, 2015).
-Given the success of the pragmatic model, we suspect this is possible.
-We also suspect, however, an interaction with the alternative actions available to the speaker or teacher.
-That is, we do not expect bonafide generic interpretations from pedagogical demonstrations when the speaker could have said a generic.
-Finally, it should be noted that many of the properties used in our experimental stimuli are not directly observable either due to the nature of the property (e.g., \enquote{transmit HIV}) or to the habituality of the predicate (e.g., \enquote{fly into building windows}).
+%Another interesting question is whether the same pattern of data could arise from a bonafide pedagogically sampled observation (cf., Csibra \& Shamsudheen, 2015).
+%Given the success of the pragmatic model, we suspect this is possible, provided the pedagogical example is a minimal example. 
+%We also suspect, however, an interaction with the alternative actions available to the speaker or teacher.
+%That is, we do not expect bonafide generic interpretations from pedagogical demonstrations when the speaker could have said a generic.
+%Finally, it should be noted that many of the properties used in our experimental stimuli are not directly observable either due to the nature of the property (e.g., \enquote{transmit HIV}) or to the habituality of the predicate (e.g., \enquote{fly into building windows}).
+
+
+\subsection{Implications for stereotype amplification}
+
+\mht{these two paragraphs are somewhat disconnected. if you think it's worthwhile, i can merge them}
+
+The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication or deceit when using and learning from generics.
+Cimpian et al. (2010) provided evidence for an \emph{asymmetry} between the conditions that permit a speaker to assert a generic and the prevalence learned by the listener from that same statement. 
+The situation arises when a speaker endorses a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
+The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
+For many properties, the difference in implied prevalence may be inconsequential.
+For features of social categories, which have difficult-to-understand statistical properties \red{cite something about how people misunderstand the distributions of properties within social categories?)}, the misalignment of background  beliefs can lead to the propagation of stereotypes.
+In fact, we saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
+
+%Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
+%At the same time, the communicative force of a generic encodes a pressure for higher prevalence interpretations (e.g., without strong prior knowledge, generics imply high prevalence).
+%Thus, listeners who do not have the substantial prior knowledge to restrict an interpretation of generics to a weak interpretation (e.g., young children) might derive a high-prevalence interpretation and furthermore posit abstract relations that would make a high-prevalence interpretation more likely.
+%For example, upon learning \enquote{Dobles live in zoos}, a naive learner might infer that there is something about Dobles that causes them to live in zoos (cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013).
+%This is potentially problematic for language about social categories (e.g., \enquote{Tall people are good at basketball}) for which an adult speaker might wish to convey a relatively low prevalence interpretation (e.g., \emph{some tall people\ldots{}} because most people are not good at basketball) but which a naive listener might derive a higher prevalence interpretation.
+%This points to an aspect of generic meaning that might differ between adults and children: Whether or not children understand weak generics.
+
+
+
+%The fact that an underspecified quantifier semantics proposed by Tessler and Goodman (2019) is equivalent to an observation model provides a route to learning the truth-functional meanings of natural language expressions through analogy to a more general learning mechanism. 
+%That is, an uncertain quantifier updates beliefs in exactly the same way as a single positive observation. 
+
+
+%\mht{What is Leslie's ``default generalization'', then? A single pedagogical observation}
+
+%\mht{what do the words in the generic do? they point to the features that are relevant in the observation, kind of analogous to a demonstrator exaggerating their actions when producing a demonstration. they also point to the category to generalize (though, the actual category to generalize may be a restricted class (e.g., ``cabs are yellow'' [NYC cabs])}
+
+%\mht{generics come in diverse syntax (within and across languages). ``A dog barks'' literally means one dog barked. ``You see a dog, it barks'' has the same semantics as both a particular and a generic?}
+
+\mht{Lassiter suggested threshold version, and suggested that it might be reasoned about by the pragmatic listener. The results from the lifted threshold version of this model were inconclusive and we omitted them for brevity}
+
+%\mht{another model: $x^n$ semantics... probably computationally indistinguishable as well}
+
+%\mht{why is a single positive observation model different than the ``some'' model? ``some'' just tells you that both sides of the coin are not tails. gen tells you that you flipped it and it came up heads...}
+
+
+
+
+%In what follows, we elaborate the assumptions in our modeling framework, describe how conceptual knowledge can guide prevalence-based interpretations, discuss how our answer to the problem of generic interpretation can inform an answer to the parallel problem of \emph{generic identification}, and speculate about the implications for communicating weak generics.
+%
+{\textcolor{Green}{[ndg: i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.]}}
 
 
 \hypertarget{conceptual-generic-interpretations}{%
@@ -940,49 +986,42 @@ Here, it is clear that the participant is using their knowledge of the property,
 Participants often wrote about the lack of an enabling causal situation when describing their weak interpretations: \enquote{Most frams don't have access to nicotine.}
 Explicitly modeling the intuitive theories that give rise to the intuitions about prevalence is an obvious future direction of this work.
 
-\hypertarget{generic-identification}{%
-\subsection{Generic identification}\label{generic-identification}}
+Other semantic theories of generics make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted (e.g., Cohen, 1999; Declerck, 1991).
+In such a theory, the statement \enquote{Morseths have a menstrual cycle} gets evaluated as \enquote{Female morseths have a menstrual cycle}; under such an account, the implied prevalence of the feature would be 100\% (or near 100\%) because 100\% of the \emph{relevant lorches} (i.e., the females) have a menstrual cycle.\footnote{The scientifically correct term for a \enquote{menstrual cycle} is actually an \enquote{estrous cycle}. We are grateful to one of our MTurk participants for pointing this out to us. }
+Interestingly, domain restricted interpretations are present in the empirical data.
+Several properties about the reproductive behavior of animals (Expt. 1b) have interpretation distributions that are bimodal.
+For example, \enquote{Morseths have a menstrual cycle} is interpreted primarily as applying to 50\% of morseths (38 out of 64 give a response between 45\% and 55\%); however, some participants (10 of 64) rate this as applying to 100\% of morseths.
+This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that \emph{could} have the property (e.g., 100\% of female morseths have a menstrual cycle).
+The domain restricted interpretation is not limited to the generic interpretation data, however.
+The bimodality is present in our prevalence elicitation task (Expt. 1a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0\% (the animals that don't have a menstrual cycle), 50\% (\enquote{only females}) and 100\% (perhaps, \enquote{all females}).
+The fact that this multi-modality appears in the prior elicitation task means that the generic interpretation model predicts bi-modal interpretation distributions for the implied prevalence data, which is what we observe.
+Still, the question remains why some participants interpret the noun phrase in generic statements as restricted to a salient subset of the category.
 
-{\textcolor{Blue}{[mht: i think this should be cut... unless you think there is something here?]}}
+%\hypertarget{generic-identification}{%
+%\subsection{Generic identification}\label{generic-identification}}
+%
+%{\textcolor{Blue}{[mht: i think this should be cut... unless you think there is something here?]}}
+%
+%Though often interpreted as generics, bare plural sentences (e.g., \enquote{Dogs bark}) can also manifest as \emph{non-generics} (e.g., \enquote{Dogs are on my front lawn}).
+%Figuring out when a sentence expresses a generic meaning vs.~a non-generic meaning is called the problem of generic identification and is a parallel challenge to the problem of generic meaning (Carlson \& Pelletier, 1995).
+%Our answer to the question \enquote{what do generics mean?} involves vagueness concerning the prevalence, which recruits beliefs about the property in question.
+%The properties themselves may involve vagueness in terms of genericity, or its event counterpart \emph{habituality}, such as \emph{barks}: How often does an individual dog need to bark in order to qualify as a thing that barks?
+%Tessler and Goodman (2019) showed that the same uncertain threshold mechanism explains graded endorsements of habitual statements like \enquote{John's dog barks}.
+%
+%The habituality of the predicate may actually be the source of the perceived generic/non-generic distinction.
+%For instance, \enquote{Dogs are on my front lawn} exhibits only a single generalization (e.g., over \emph{dogs}); it is not a habitual predicate like \emph{barks}.
+%The habituality of the predicate may influence the expected prevalence in the head noun category: A more vague, habitual predicate may be applied by human observers to more instances of the category because it is harder to verify than static properties.
+%For non-habitual predicates, the expected prevalence would be substantially more restricted.
+%Thus, we may find continuity in interpretations of underspecified noun phrases, including so-called \enquote{non-generics}: \enquote{Tigers have stripes} has higher implied prevalence than \enquote{Tigers are in the savanna} which is higher than \enquote{Tigers are in zoos}, \enquote{Tigers are in my local zoo}, and \enquote{Tigers are on my front lawn}.
+%An uncertain threshold mechanism of the kind we have posited here may be such a way as to pragmatically infer a continuum of interpretations, from generics that are interpreted as universals (\enquote{Tigers are mammals}) to those that are interpreted existentially but habitually (\enquote{Tigers are in zoos}) to those that are interpreted existentially and non-habitually (\enquote{Tigers are on my front lawn}).
+%Deriving such a prediction would necessarily involve a model of compositional generic interpretation, in which a habitual predicate meaning can be resolved jointly with a generic subject.
 
-Though often interpreted as generics, bare plural sentences (e.g., \enquote{Dogs bark}) can also manifest as \emph{non-generics} (e.g., \enquote{Dogs are on my front lawn}).
-Figuring out when a sentence expresses a generic meaning vs.~a non-generic meaning is called the problem of generic identification and is a parallel challenge to the problem of generic meaning (Carlson \& Pelletier, 1995).
-Our answer to the question \enquote{what do generics mean?} involves vagueness concerning the prevalence, which recruits beliefs about the property in question.
-The properties themselves may involve vagueness in terms of genericity, or its event counterpart \emph{habituality}, such as \emph{barks}: How often does an individual dog need to bark in order to qualify as a thing that barks?
-Tessler and Goodman (2019) showed that the same uncertain threshold mechanism explains graded endorsements of habitual statements like \enquote{John's dog barks}.
-
-The habituality of the predicate may actually be the source of the perceived generic/non-generic distinction.
-For instance, \enquote{Dogs are on my front lawn} exhibits only a single generalization (e.g., over \emph{dogs}); it is not a habitual predicate like \emph{barks}.
-The habituality of the predicate may influence the expected prevalence in the head noun category: A more vague, habitual predicate may be applied by human observers to more instances of the category because it is harder to verify than static properties.
-For non-habitual predicates, the expected prevalence would be substantially more restricted.
-Thus, we may find continuity in interpretations of underspecified noun phrases, including so-called \enquote{non-generics}: \enquote{Tigers have stripes} has higher implied prevalence than \enquote{Tigers are in the savanna} which is higher than \enquote{Tigers are in zoos}, \enquote{Tigers are in my local zoo}, and \enquote{Tigers are on my front lawn}.
-An uncertain threshold mechanism of the kind we have posited here may be such a way as to pragmatically infer a continuum of interpretations, from generics that are interpreted as universals (\enquote{Tigers are mammals}) to those that are interpreted existentially but habitually (\enquote{Tigers are in zoos}) to those that are interpreted existentially and non-habitually (\enquote{Tigers are on my front lawn}).
-Deriving such a prediction would necessarily involve a model of compositional generic interpretation, in which a habitual predicate meaning can be resolved jointly with a generic subject.
-
-\hypertarget{implications-for-stereotype-propogation}{%
-\subsection{Implications for stereotype propogation}\label{implications-for-stereotype-propogation}}
-
-\mht{these two paragraphs are somewhat disconnected. if you think it's worthwhile, i can merge them}
-
-The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication or deceit when using generics.
-A speaker might endorse a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
-The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
-For many properties, the difference in implied prevalence may be inconsequential.
-For features of social categories, which have difficult-to-understand statistical properties {\textcolor{Red}{(cite something about how people misunderstand the distributions of properties within social categories?)}}, the misalignment of background believes can lead to the propagation of stereotypes.
-In fact, we saw that the biggest differences between the literal and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
-
-Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
-At the same time, the communicative force of a generic encodes a pressure for higher prevalence interpretations (e.g., without strong prior knowledge, generics imply high prevalence).
-Thus, listeners who do not have the substantial prior knowledge to restrict an interpretation of generics to a weak interpretation (e.g., young children) might derive a high-prevalence interpretation and furthermore posit abstract relations that would make a high-prevalence interpretation more likely.
-For example, upon learning \enquote{Dobles live in zoos}, a naive learner might infer that there is something about Dobles that causes them to live in zoos (cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013).
-This is potentially problematic for language about social categories (e.g., \enquote{Tall people are good at basketball}) for which an adult speaker might wish to convey a relatively low prevalence interpretation (e.g., \emph{some tall people\ldots{}} because most people are not good at basketball) but which a naive listener might derive a higher prevalence interpretation.
-This points to an aspect of generic meaning that might differ between adults and children: Whether or not children understand weak generics.
 
 \hypertarget{conclusion}{%
 \subsection{Conclusion}\label{conclusion}}
 
-An easy way to acquire abstract knowledge is to interpret a novel generic statement but heretofore no quantitative models have accounted for how generics updates beliefs.
-A computational model that understands generics as conveying communicatively relevant observations is able to predict the large variability in generic interpretations, even predicting the existence of \enquote{weak generics}, or generics that only apply to a minority of the category.
+An easy way to acquire abstract knowledge is to understand a novel generic statement produced by a helpful interlocutor, but heretofore no quantitative models have accounted for how learning should occur from generic language.
+ A computational model that understands generics as conveying communicatively relevant observations is able to predict the large variability in generic interpretations, even predicting the existence of \enquote{weak generics}, or generics that only apply to a minority of the category.
 This work opens the door to understanding more precisely how abstract knowledge is learned from language.
 
 \newpage
