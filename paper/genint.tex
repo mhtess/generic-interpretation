@@ -174,10 +174,10 @@ Together, these results provide strong evidence that generics update beliefs in 
 \hypertarget{computational-model}{%
 \section{Computational Model}\label{computational-model}}
 
-Generic language conveys generalizations about categories (Carlson, 1977; Leslie, 2008).
+Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ (Carlson, 1977; Leslie, 2008).
 Human generalization from observational data can be well described using the language of probability (Shepard, 1987) and Bayesian belief-updating with structured, prior knowledge (Tenenbaum et al., 2011).
 We propose a null hypothesis that generics convey the same information-content as a single, positive observation interpreted with respect to structured background knowledge.
-Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property \(r \in [0, 1]\) with a single positive observation according to Bayes' rule, the model is:
+Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property---$P(f \mid k)$, denoted by \(r \in [0, 1]\)---with a single positive observation according to Bayes' rule, the model is:
 
 %\begin{align}
 %L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
@@ -191,11 +191,11 @@ L_0(r, \mid u = u_{gen}) &\propto P(u = u_{gen} \mid r) \cdot P(r)  \nonumber \\
  &= r \cdot P(r) \label{eq:L0}
 \end{align}
 
-\noindent where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples.
+\noindent where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples, which are both equal to 1.
 We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
 The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
 
-Belief-updating based on a single positive observation is mathematically equivalent to the interpretation model proposed by Tessler and Goodman (2019), as belief-updating based on a threshold-function (e.g., \(\mbox{ $[\![ gen ]\!]$} = x > \theta\)) whose threshold value is uncertain and is drawn from a uniform prior (\(\theta \sim \text{Uniform}(0, 1)\)):
+Belief-updating based on a single positive observation is mathematically equivalent to the interpretation model proposed by Tessler and Goodman (2019), as belief-updating based on a threshold-function (e.g., \(\mbox{ $[\![ gen ]\!]$} = r > \theta\)) whose threshold value is uncertain and is drawn from a uniform prior (\(\theta \sim \text{Uniform}(0, 1)\)):
 
 \begin{align}
 L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0a}
@@ -210,8 +210,8 @@ Here, the truth-functional meaning of a generic is a threshold-function mandatin
 %\end{cases}\label{eq:delta}
 %\end{align}
 %
-This version of the model uses the standard truth-functional tools of formal semantics (Montague, 1973) and relates to the literal semantics of quantifiers, which can also be described by threshold functions (e.g., \(\mbox{ $[\![ some ]\!]$} = \{r > 0\}\), \(\mbox{ $[\![ most ]\!]$} = \{r > 0.5\}\), \(\mbox{ $[\![ all ]\!]$} = \{r = 1\}\)).
-Note that Equation \ref{eq:L0a} can be rewritten as: \(L_0(r, \theta \mid u) \propto P(u \mid r, \theta)\) where
+This version of the model uses the standard truth-functional tools of formal semantics (Montague, 1973) and relates to the literal semantics of quantifiers, which can also be described by threshold functions (e.g., \(\mbox{ $[\![ some ]\!]$} = r > 0\), \(\mbox{ $[\![ most ]\!]$} = r > 0.5\), \(\mbox{ $[\![ all ]\!]$} = r = 1\)).
+Note that since \(\theta \sim \text{Uniform}(0, 1)\),  \(P(\theta) \propto 1\)  and thus Equation \ref{eq:L0a} can be rewritten as: \(L_0(r, \theta \mid u) \propto P(u \mid r, \theta)\) where
 
 \begin{align}
 P(u \mid r, \theta)  &\propto \begin{cases}
@@ -219,7 +219,7 @@ P(r) & \text{if } r > \theta \\
 0 & \text{otherwise} \end{cases} \label{eq:delta2}
 \end{align}
 
-\noindent since \(\theta \sim \text{Uniform}(0, 1)\) hence \(P(\theta) \propto 1\). To arrive at \(L_0(r \mid u)\) from Equation \ref{eq:delta2}, we integrate out \(\theta\).
+\noindent To arrive at \(L_0(r \mid u)\) from Equation \ref{eq:delta2}, we integrate out \(\theta\).
 
 \begin{align}
 L_0(r, \mid u) =& \int_{0}^{1} L_0(r, \theta \mid u) \mathop{}\!\mathrm{d}\theta \nonumber \\
@@ -227,14 +227,16 @@ L_0(r, \mid u) =& \int_{0}^{1} L_0(r, \theta \mid u) \mathop{}\!\mathrm{d}\theta
 =& \int_{0}^{r} P(u \mid r, \theta) \mathop{}\!\mathrm{d}\theta + \int_{r}^{1}P(u \mid r, \theta) \mathop{}\!\mathrm{d}\theta \nonumber \\
 =& \int_{0}^{r} P(r) \mathop{}\!\mathrm{d}\theta + \int_{r}^{1} 0 \mathop{}\!\mathrm{d}\theta \nonumber  \\ 
    = &  P(r) \int_{0}^{r} \mathop{}\!\mathrm{d}\theta \nonumber \\
-     =&   P(r) \cdot r \label{eq:L0d}
+     = &   P(r) \cdot r \label{eq:L0d}
 \end{align}
+
+Thus, the model of Tessler and Goodman (2019) that assumes the literal meaning of a generic utterance is a uniformly uncertain threshold-function is mathematically equivalent to Bayesian belief-updating based on a single positive observation. 
 
 \hypertarget{pragmatic-enrichment}{%
 \subsection{Pragmatic enrichment}\label{pragmatic-enrichment}}
 
-The generic interpretation model used by Tessler and Goodman (2019) makes the strong claim that the literal contribution of a generic sentence is informationally equivalent to observing a single, positive example.
-In context, however, generics could convey a stronger generalization than that implied by just a single example, if the listener reasons that the speaker intentionally produced the generic.
+Even if the literal contribution of a generic sentence is informationally equivalent to observing a single, positive example, a listener could derive more precise or stronger interpretations from the utterance through pragmatic reasoning.
+%That is, a listener could reason about why the speaker choose to produce a generic utterance (when they could have stayed silent)
 We model this in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016; Scontras, Tessler, \& Franke, 2018), wherein a listener \(L_1\) reasons about why a speaker \(S_1\) produced an utterance:
 
 \begin{eqnarray}
@@ -246,7 +248,7 @@ Equation \ref{eq:S1} is the endorsement model of Tessler and Goodman (2019), whe
 Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker \(S_1\) (Figure \ref{fig:cartoon}).
 Following Tessler and Goodman (2019), we assume the speaker's only alternative utterance is an information-less silent utterance and we allow the act of producing the generic to incur some production cost to the speaker (plausibly, \(\text{cost}(generic)\) \(>\) \(\text{cost}(silence)\)).
 Under the interpretation of a generic sentence as communicating a single, positive observation, the alternative is \emph{not} producing that observation.
-For purposes of quantitative modeling, we allow both the cost of the generic (\(\text{cost}(generic)\)) and the speaker's rationality parameter \(\alpha\) to be free parameters that we infer from the behavioral data.
+For purposes of quantitative modeling, we allow both the cost of the generic---\(\text{cost}(generic)\)---and the speaker's rationality parameter \(\alpha\) to be free parameters that we infer from the behavioral data.
 
 \begin{figure}
 \centering
@@ -847,7 +849,7 @@ Finally, our data strongly support the conclusion that generics can be thought o
 This work, thus, provides the computational formalism necessary to describe how beliefs are updated from generic language.
 
 Generics are often described as conveying strong meanings.
-The experimental data we present provides strong evidence for the existence of \enquote{weak generics}, operationalized as generic statements that imply a prevalence less than 50\%.
+The experimental data we present provides evidence for the existence of \enquote{weak generics}, operationalized as generic statements that imply a prevalence less than 50\%.
 Statements like \enquote{Lorches live in zoos}, \enquote{Feps perform in the circus}, and \enquote{Wugs have seizures} all received average implied prevalence ratings below 50\%, with many individual participants providing ratings of 10\% or less (Expt. 1b).
 When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0\% or around 25\%, participants readily interpret the statement \enquote{Ks know when earthquakes are about to happen} to mean about 25\% (Expt. 2b).
 This is an aspect of generic language understanding often swept under the rug: Generics are believed (in a generic sense) to carry strong implications.
@@ -855,19 +857,19 @@ Here, we show that generics also carry weak implications.
 
 \subsection{A communicatively relevant, minimal example}
 
-The pragmatic generic interpretation models interprets a generic as conveying a communicatively relevant, minimal example to the listener. 
+The pragmatic generic interpretation models interpret a generic as conveying a communicatively relevant, minimal example to the listener. 
 The example is minimal in the sense that the language picks out the correct feature for the listener to attend to; the predicate highlights the feature to be generalized. 
 Drawing the same generalization from actual observational data alone would require significant covariation data to single out the feature relevant for generalization. 
-Thus, using generics for conveying generalizations is more efficient because the speaker isolates a feature for generalization. 
-Generics are also more useful than observations because speakers can describe properties that listeners could not in principle observe (Harris \& Koenig, 2006). 
+Thus, using generics for conveying generalizations is still expected under this account to be more efficient because the speaker isolates a feature for generalization. 
+Generics are also more useful than observations because speakers can describe properties that listeners could not in principle observe (Harris and Koenig, 2006). 
 
 %The fact that the literal meaning of a generic is equivalent to observing a single positive instance of the category with a property suggests a very primitive foundation to generic language.
 %Bayesian belief-updating based on observations is a general learning mechanism for any animal {\textcolor{Red}{(is there some citation for bayes in other animals?)}}.
 %The work here suggests that the human unique component of understanding generic language comes not from understanding
 %syntax or the meaning of the words but from understanding the communicative intent of the speaker {\textcolor{Red}{(cite tomasello?)}}.
-The view of generics as communicatively relevant examples has previously been suggested by Csibra \& Shamsudheen (2015), who argue that individual objects are interpreted by infants as symbolic representations of the object kind, and thus that it is possible to interpret a pedagogically presented exemplar from a category as a \enquote{nonverbal generic}.
-The pedagogical example acts as an indexical to the category.
-In fact, the connection between generics and indexicality has made been by Sterken (2015) as well, arguing that the context-sensitivity exhibited by indexicals is the exact kind we need to model generics.
+The view of generics as communicatively relevant examples has been suggested by Csibra and Shamsudheen (2015), who argue that individual objects are interpreted by infants as symbolic representations of the object kind.
+Under this account, a pedagogically presented exemplar from a category can be interpreted as a \enquote{nonverbal generic} by providing indexical reference to the object category.
+The connection between generics and indexicality has also been made by Sterken (2015), who argues that the context-sensitivity exhibited by indexicals is the exact kind we need to model generics.
 The model we present that interprets generics as communicatively relevant minimal examples is a very natural formalization of the nonverbal generic / indexical view.\footnote{
 	One difference between our model and the view of Csibra and Shamsudheen (2015) is that our model does not assume any qualitative distinctions between ``generic knowledge'' and ``probabilistic knowledge''. All the knowledge in our model is probabilistic knowledge. 
 	}
@@ -876,11 +878,12 @@ The model we present that interprets generics as communicatively relevant minima
 It may be surprising that our model for the semantics of generics as a single, minimal example is distinct from a model of existential quantification (i.e., the ``some'' model). 
 After all, observing a single example of category with a property entails that at least one member of the category has the property. 
 %The difference between existential quantification and a minimal example is that 
-The minimal example is more concrete, however. 
-Consider the case of trying to infer the weight of a biased coin: The quantifier ``some'' tells you that both sides are not tails, whereas a minimal example requires actually flipping the coin and seeing it land on heads. 
-The minimal example entails existential quantification, but Bayesian reasoning can update based on an example in a stronger way.
-Without strong prior knowledge about the weight of a coin, it is more likely than not that it has a heads bias after observing just a single heads outcome; in fact, the most likely state of affairs to produce a single heads outcome (given uniform uncertainty about the weight of a coin) is that both sides of the coin are heads.
+A minimal example is more concrete than a quantifier, however.
+Consider the case of trying to infer the weight of a biased coin: The quantifier ``some'' ($r > 0$) is tantamount to learning that it's not the case that both sides are tails; observing a minimal example requires actually flipping the coin and seeing it land on heads. 
+A minimal example entails existential quantification, but Bayesian reasoning updates beliefs based on an example in a stronger way.
+Even without strong prior knowledge about the weight of a coin, it is more likely than not that the coin has a heads bias after observing just a single heads outcome; in fact, the most likely state of affairs to produce a single heads outcome (given uniform uncertainty about the weight of a coin) is that both sides of the coin are heads.
 Such a strong generalization is not supported by existential quantification.
+\mht{anything to say about demonstratives like ``this fep has wings''?}
 
 In our experiments, we investigate bare plural sentences, which are a common syntactic way of conveying generics (Gelman et al., 2008).
 Generic meanings , however, can be packaged into different syntactic frames in English (e.g., ``A raven is black''; ``The blue-breasted quail eats small bugs and various grasses''), which are also commonly used to express concrete specifics (e.g., definite and indefinite singulars). 
