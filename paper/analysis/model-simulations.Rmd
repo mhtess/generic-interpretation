@@ -196,6 +196,7 @@ var pragmaticListener = cache(function() {
   
 '
 
+
 l1.lifted.model <- '
 
 var literalListener = cache(function(utt, theta) {
@@ -363,7 +364,7 @@ save(sims.combined, file = "../cached_results/modelSims-priors_fixedT_uncertainT
 #save(sims.priors, sims.uncertain.thresholds, sims.fixed.thresholds, file = "../cached_results/modelSims-priors_fixedT_uncertainT_L1.RData")
 ```
 
-```{r}
+```{r priors fig}
 #load(file = "../cached_results/modelSims-priors_fixedT_uncertainT.RData")
 
 
@@ -400,7 +401,7 @@ fig.sims.priors <- ggplot(sims.combined %>%
 
 ```
 
-```{r fig.width = 6, fig.asp = 0.6}
+```{r posteriors fig, fig.width = 6, fig.asp = 0.6}
       # PriorShape = factor(PriorShape, 
       #                     levels = c("barks", "hasSpots", "doesntEatPeople", "laysEggs", "isFemale", "carriesMalaria"),
       #                     labels = c("bark", "have spots", "don't eat people", "lay eggs", "are female", "carry malaria")),
@@ -446,7 +447,7 @@ fig.sims.distributions <- ggplot(sims.combined %>%
 fig.sims.distributions
 ```
 
-```{r fig.width = 6, fig.asp = 0.6}
+```{r expval fig, fig.width = 6, fig.asp = 0.6}
 sims.combined.summary <- sims.combined %>%
          filter(
            PriorShape %in% c("uniform","biological_rare", "accidental_rare"),
@@ -494,11 +495,206 @@ cowplot::plot_grid(
 
 ```
 
+# Speaker model behavior
+
+```{r define speaker model params}
+params <- expand.grid(
+  speakerOptimality = seq(0.5, 30, 2),
+  cost = c(0, 0.5, 1, 3, 5, 10),
+  modelName = c("speaker"),
+  prior = c("uniform", "biological_rare",# "biological_common",
+            #"accidental_common",
+            "accidental_rare",
+            "gendered_rare")
+  ) 
+```
+ 
+```{r run speaker model}
+wp.rs <- webppl(program_file = "../../models/genint_S1.wppl",
+       packages = c("../../models/node_modules/utils"),
+       data = params)
+```
+
+```{r fig speaker model}
+ggplot(wp.rs, aes( x = state, y = endorsement,
+                   color = factor(cost), group = factor(cost)))+
+  geom_line()+
+  facet_grid(priorName~speakerOptimality)+
+  scale_x_continuous(breaks = c(0, 0.5, 1))+
+  scale_y_continuous(breaks = c(0, 0.5, 1))+
+  ylab("speaker generic production probability")+
+  theme(legend.position = 'bottom',
+        strip.text.y = element_text(angle = 0))
+
+ggsave("../../models/figs/schematic_S1.pdf", width = 14, height = 10)
+```
+
+# L1 simulations with cost and speaker optimality
+
+```{r define listener model params}
+params.l1 <- expand.grid(
+  speakerOptimality = seq(0.5, 30, 2),
+  cost = c(0,  5, 10, 20),
+  modelName = c("pragmatic_unlifted", "pragmatic_most", "pragmatic_some"),
+  prior = c("uniform", 
+            "biological_rare", #"biological_common",
+            #"accidental_common", 
+            "accidental_rare",
+            "gendered_rare")
+  ) %>% 
+  bind_rows(., 
+            expand.grid(
+              speakerOptimality = 0.5, cost = 0,
+              modelName = c("prior","literal", 
+                            "literal_some", "literal_most"),
+              prior = c("uniform", 
+                "biological_rare",
+                "accidental_rare",
+                "gendered_rare")))
+```
+ 
+```{r run listener model}
+wp.rs.l1 <- webppl(program_file = "../../models/genint.wppl",
+       packages = c("../../models/node_modules/utils"),
+       data = params.l1)
+
+wp.rs.l1.filtered <- wp.rs.l1 %>% 
+  filter( (cost %in% c(0, 5, 10) & speakerOptimality == 10.5) | 
+            modelName %in% c("literal", "prior") ) %>%
+  mutate(
+      priorName = factor(priorName, 
+                         levels = c("uniform", "biological_rare",
+                                    "gendered_rare","accidental_rare"),
+                                    labels = c("Xs Y\n[uniform]", 
+                                               "Xs fly\n[biological]", 
+                                               "Xs lay eggs\n[sexed]", 
+                                               "Xs carry malaria\n[accidental]")))
+
+head(wp.rs.l1)
+```
+
+```{r fig listener model}
+ggplot(wp.rs.l1, aes( x = state, y = prediction,
+                   color = factor(cost), group = factor(cost)))+
+  geom_line()+
+  facet_grid(priorName~speakerOptimality)+
+  scale_x_continuous(breaks = c(0, 0.5, 1))+
+  scale_y_continuous(breaks = c(0, 0.5, 1))+
+  ylab("pragmatic listener interpretation probability")+
+  theme(legend.position = 'bottom',
+        strip.text.y = element_text(angle = 0))
+
+ggsave("../../models/figs/schematic_L1.pdf", width = 14, height = 10)
+```
+
+```{r fig.width=3, fig.height=4}
+
+wp.rs.l1.filtered %>% 
+  filter(modelName %in% c("literal", "prior")) %>%
+  mutate(modelName = factor(modelName, levels = c( "literal", "prior"),
+                            labels = c("Literal generic interpretation",
+                                       'Prior / "null" interpretation'))) %>%
+  rename(prob = prediction) %>%
+  get_samples(., 750) %>%
+  ggplot(., aes( x = state, linetype = modelName))+
+  geom_density(adjust = 1.3, aes(y = ..scaled..))+
+  labs( y = "Scaled probability density", x = "Prevalence")+
+  facet_wrap(~priorName, #scales = 'free', 
+             ncol = 1)+
+  scale_linetype_manual(values = c(1, 2))+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  guides(linetype = guide_legend(reverse = T, title = element_blank()))+
+  theme(strip.text = element_blank())+
+  coord_fixed(ratio = 1/1.6)+
+  guides(linetype = F)
+
+ggsave("../figs/literal_prior.pdf", width = 4, height = 5)
+```
+
+
+```{r}
+wp.rs %>%
+  filter(speakerOptimality %in% c(10.5), 
+         cost %in% c(0, 5, 10)) %>%
+  mutate(priorName = factor(priorName, 
+                         levels = c("uniform", "biological_rare",
+                                    "gendered_rare","accidental_rare"),
+                                    labels = c("Xs Y\n[uniform]", 
+                                               "Xs fly\n[biological]", 
+                                               "Xs lay eggs\n[sexed]", 
+                                               "Xs carry malaria\n[accidental]"))) %>%
+  ggplot(., aes( x = state, y = endorsement,
+                   color = factor(cost), group = factor(cost)))+
+  geom_line(size = 1)+
+  facet_grid(priorName~speakerOptimality)+
+  scale_x_continuous(breaks = c(0, 1))+
+  scale_y_continuous(breaks = c(0, 1))+
+  scale_color_brewer(type="seq", palette = 1) +
+  ylab("Speaker generic production probability")+
+  xlab("Prevalence")+
+  theme(strip.text = element_blank(),
+        legend.position ='bottom')+
+        #legend.title = element_text(size = 8))+
+  guides(color = guide_legend(title = "Utterance cost"))+
+  #guides(color = F)+
+  coord_fixed(ratio = 1/1.6)
+
+ggsave("../figs/speaker_legend.pdf", width = 4, height = 5)
+```
+
+
+```{r}
+wp.rs.l1.filtered %>% 
+  filter(modelName == "pragmatic_unlifted") %>%
+  rename(prob = prediction) %>%
+  get_samples(., 500) %>%
+  ggplot(., aes( x = state, color = factor(cost)))+
+  geom_density(adjust = 2, aes (y = ..scaled..))+
+  facet_wrap(~priorName, ncol = 1, strip.position  = "right")+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  scale_y_continuous(breaks = c(0, 1))+
+  scale_color_brewer(type="seq", palette = 1) +
+  ylab("Pragmatic listener interpretation probability")+
+  xlab("Prevalence")+
+  guides(color = guide_legend(title = "Utterance cost"))+
+  coord_fixed(ratio = 1/1.6)+
+  #theme(strip.text.y = element_text(angle = 0))+
+  theme(strip.text =  element_blank())+
+  guides(color = F)
+
+#ggsave("../figs/pragmatic_listener.pdf", width = 4, height = 5)
+```
+
+
+```{r}
+wp.rs.l1.filtered %>% 
+  filter(modelName %in% c("pragmatic_most", "pragmatic_some")) %>%
+  rename(prob = prediction) %>%
+  get_samples(., 500) %>%
+  ggplot(., aes( x = state, color = factor(cost)))+
+  geom_density(adjust = 1, aes (y = ..scaled..))+
+  facet_grid(priorName~modelName)+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 1))+
+  scale_y_continuous(breaks = c(0, 1))+
+  scale_color_brewer(type="seq", palette = 1) +
+  ylab("Pragmatic listener interpretation probability")+
+  xlab("Prevalence")+
+  guides(color = guide_legend(title = "Utterance cost"))+
+  coord_fixed(ratio = 1/1.6)#+
+  #theme(strip.text.y = element_text(angle = 0))+
+  #theme(strip.text =  element_blank())#+
+  #guides(color = F)
+
+#ggsave("../figs/pragmatic_listener.pdf", width = 4, height = 5)
+```
+
+
 
 
 ## Manipulated priors experiment (Expt 3)
 
-```{r}
+```{r manipulated priors expts}
 
 statePrior2 <- '
 var priorComponents = {
@@ -587,7 +783,7 @@ sims.combined <- bind_rows(
     )
 ```
 
-```{r}
+```{r fig manipulated priors}
 ggplot(sims.combined,# %>%
          # filter(
          #   PriorShape %in% c("uniform", "biological_rare", "accidental_rare"),
@@ -626,7 +822,7 @@ ggplot(sims.combined,# %>%
 
 # Schematic (uniform prior) figure
 
-```{r schematicModel}
+```{r uniform prior model}
 schematicModel <- '
 var round = function(x){
   return Math.round(x*100)/100
@@ -744,7 +940,6 @@ fig.l0.thresholds <- ggplot(rs.wp.l0, aes( x = state,
 fig.l0.thresholds
 ```
 
-
 Integrate out threshold (full interpretation model)
 
 ```{r schematicUncertain}
@@ -803,10 +998,12 @@ fig.thresholds
  #      file = "figs/lassiterS1_uttXstateXtheta_wCost.pdf", width = 7, height = 7)
 ```
 
-```{r}
+```{r save uniform prior results}
 save(rs.wp.l0, rs.listener.wp.tidy.samples, rs.tidy,
      file = "../paper/cached_results/modelSims-uniform_fixedT_uncertainT_speaker.RData")
 ```
+
+
 
 # Misc extra
 

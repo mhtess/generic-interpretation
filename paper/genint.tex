@@ -265,8 +265,9 @@ Figure~\ref{fig:modelSimulations}A shows hypothetical prevalence priors for the 
 
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
-\caption{\label{fig:modelSimulations}Model simulations. A: Prevalence priors reflect knowledge about properties. An abstract property could be given a uniform distribution, while familiar properties display more complex structure. B: Posterior distributions over prevalence (interpretations) given different fixed-threshold quantifiers and the uncertain threshold generic.}
+%\includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
+\includegraphics{figs/modelSimulations-noPrag.pdf}
+\caption{\label{fig:modelSimulations}Model behavior. A: Prevalence priors reflect knowledge about properties. An abstract property could be given a uniform distribution, while familiar properties display more complex structure. B: Posterior distributions over prevalence (interpretations) given different belief updating rules: fixed-threshold quantifiers and the literal generic meaning as a single positive example.}
 \end{figure}
 
 
@@ -283,17 +284,31 @@ This results from the prior distribution over a biological property like \emph{f
 For the accidental property prior, \enquote{Xs carry malaria} is most similar to \enquote{Some Xs carry malaria} because the property is expected to be rare within categories in which the property is present.
 If a listener knows the existence of the property depends upon the sex of the creature (e.g., \emph{lays eggs}), the prevalence interpretation from a generic (\enquote{Xs lay eggs}) should be roughly that 50\% of the Xs lay eggs (only the females).
 
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{figs/tripartite.pdf}
+\caption{Three layers of the pragmatic interpretation model. A: Literal listener $L_0$ interpretations (solid) for different prevalence priors (dashed). Priors also correspond to the literal interpretations of the ``null'' utterance produced by the speaker $S_1$. B: Speaker $S_1$ production probabilities at different levels of prevalence for the generic utterance for three different costs of the generic utterance. C: Pragmatic listener interpretations of the generic utterance under different assumed costs of utterances. Differences between pragmatic and literal models are most pronounced for the priors with more uncertainty, such as the uniform prior. Speaker optimality parameter $\alpha$ set to 10 for panels B and C. }
+\label{fig:tripartite}
+\end{figure}
+
 Interpreting a generic sentence as providing a single positive observation to the listener provides a way to understand generics in a highly property-specific manner.
 Listeners may derive a stronger interpretation of a generic, however, by reasoning about the communicative nature of the sentence they hear (Clark, 1996; Grice, 1975; Levinson, 2000).
 That is, a generic sentence is produced by a speaker who has the goal of conveying information to them.
-The rightmost column of Figure~\ref{fig:modelSimulations}B shows the predictions of the pragmatic model (Eq. \ref{eq:L1}).
-The primary difference between the literal and pragmatic generic interpretation models is that the pragmatic model is able to derive stronger interpretations of a generic sentence.
-When learning about an abstract property with a uniform prevalence prior (top row), the pragmatic model infers more strongly that at least most of the category have the property.
-For the other prevalence priors, the pragmatic model predicts lower-variance interpretations.
-We design Experiment 1 with a diverse stimulus set to elicit a wide range of variability in interpretations that could distinguish the literal from the pragmatic generic interpretation models.
+Figure~\ref{fig:tripartite} shows the predictions of each level of recursion in the pragmatic interpretation model (Eqs.~\ref{eq:L0}, \ref{eq:S1}, \ref{eq:L1}).
+The speaker model (Eq.~\ref{eq:S1})  decides to produce the generic by reasoning about whether to convey to the literal listener the distribution implied by the generic~vs.~the prevalence prior, which results from staying silent (or producing the ``null'' utterance; Figure~\ref{fig:tripartite}A).
+The speaker production probabilities thus strongly depend on the prevalence prior as well as the assumed cost of production (Figure~\ref{fig:tripartite}B).
+The pragmatic listener reasons that a speaker would only produce the generic at relatively high prevalence levels (\emph{relative} to the prevalence prior) and thus the fact that the speaker bothered to say the generic implies even higher prevalence than the literal meaning implies. 
+This inference is strengthened as the cost of the utterance increases, though in a way that respects the prevalence prior (i.e., not all generics can imply 100\% prevalence, even given high cost to the utterance; Figure~\ref{fig:tripartite}C).
+
+%When learning about an abstract property with a uniform prevalence prior (top row), the pragmatic model infers more strongly that at least most of the category have the property.
+%For the other prevalence priors, the pragmatic model predicts lower-variance interpretations.
+%We design Experiment 1 with a diverse stimulus set to elicit a wide range of variability in interpretations that could distinguish the literal from the pragmatic generic interpretation models.
 
 {\textcolor{Green}{[ndg: note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.]}}
 {\textcolor{Blue}{[mht: wonder if we should make those changes more widespread (e.g., the running-head) or have an explicit statement about the kind of context we are considering here...]}}
+
+
+
 
 \hypertarget{alternative-semantic-models}{%
 \subsection{Alternative semantic models}\label{alternative-semantic-models}}
@@ -314,7 +329,7 @@ The second is analogous to \enquote{most}, with a threshold at 50\% prevalence:
 \begin{eqnarray}
 L_0^{most}(r \mid u) &\propto&  P(r \mid r > 0.5)  \label{eq:mostModel}
 \end{eqnarray}
-
+Predictions of these control models are shown in Figure~\ref{fig:modelSimulations}.
 A model that assumes a fixed threshold at 50\% is a very restricted model; it places zero probability on any response less than 50\%.
 In case there are ratings in the experimental data sets that are less than 50\%, we must supplement the \enquote{most} model with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
 We infer this noise probability parameter for the \enquote{most} model from the data.
