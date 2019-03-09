@@ -143,16 +143,16 @@ Consistent with this intuition, Cimpian et al. (2010) (Expt. 3) found lower impl
 Finally, generics can mean neither \emph{some} nor \emph{most} as in the case of \enquote{Ducks lay eggs}, which implies that half of ducks (the females) lay eggs.
 What sort of literal meaning could account for the panoply of interpretations that come with generic sentences?
 
-If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic way, it is reasonable to think there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
+If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic ways, a learner might reasonably infer that there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
 From this intuition, one could formalize the meaning of a generic statement as equivalent to Bayesian belief-updating of structured prior knowledge (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011) after observing a single positive example of the category with a property.
 This positive example would be a \emph{minimal example} in the sense that it exhibits only the feature being described by the predicate in the generic sentence.
-In this paper, we show how this formalism is mathematically identical to a recent model by Tessler and Goodman (2019) that treat generics as a kind of vague quantifier.
+It turns out, this formalism is mathematically identical to a recent model by Tessler and Goodman (2019) that treats a generic as a vague quantifier.
 This earlier work tested such a model only via its implications for \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested.
 
-Even with sufficiently structured prior knowledge about categories and properties, however, the information conveyed by a generic may be more than that encoded by just a single positive example.
+Even with sufficiently structured prior knowledge about categories and properties, however, the information conveyed by a generic may still be more than that encoded by just a single positive example.
 One plausible source for deriving stronger interpretations is social reasoning (Grice, 1975): Why did the speaker bother to tell me this generic sentence?
 That is, pragmatic enrichment of the literal content of generics could manifest as a stronger implied prevalence than just that implied by a single example.
-The idea that generics convey a communicatively relevant example to the listener is consistent with a view of generics as an essentially non-verbal but communicative phenomenon (Csibra \& Shamsudheen, 2015).
+The idea that generics convey a communicatively relevant example to the listener is consistent with a view of generics as a fundamentally pedagogical---and not necessarily linguistic---phenomenon (Csibra \& Shamsudheen, 2015).
 In this paper, we test a literal model of generic interpretation against a pragmatic model, which we formalize in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016).
 
 In addition to these theoretical questions, basic empirical questions about context-sensitive generic interpretation remain.
@@ -167,7 +167,7 @@ This model is mathematically equivalent to the interpretation model proposed by 
 We then propose an extension to this model where generic language can be understood pragmatically via recursive Bayesian reasoning (Baker, Saxe, \& Tenenbaum, 2009; Frank \& Goodman, 2012).
 We compare the literal and pragmatic models against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
 In a preliminary study, we replicate and extend the findings of Cimpian et al. (2010) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
-In Experiment 1, we use a diverse stimulus set better able to reliably elicit high variability in implied prevalence; we use these data to test our models of generic interpretation against each other and against control models.
+In Experiment 1, we use a diverse stimulus set better able to reliably elicit high variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
 In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to interpreting a novel generic.
 Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as a pedagogically-transmitted minimal example.
 
@@ -298,7 +298,6 @@ We design our items in Expt.~1 to elicit a wide range of implied prevalence rati
 %We design Experiment 1 with a diverse stimulus set to elicit a wide range of variability in interpretations that could distinguish the literal from the pragmatic generic interpretation models.
 
 {\textcolor{Green}{[ndg: note: i changed "context" to other things (eg "property") in a bunch of places because what we're talking about is differences in target property and it's corresponding background knowledge. this is context in some sense, but i worry it would confuse people with more pragmatic / situated notions of context.]}}
-{\textcolor{Blue}{[mht: wonder if we should make those changes more widespread (e.g., the running-head) or have an explicit statement about the kind of context we are considering here...]}}
 
 
 
@@ -373,7 +372,7 @@ At the level of property type, Cimpian et al. (2010) found a difference between 
 
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/cimpian-modelingResults-1.pdf}
+\includegraphics{figs/cimpian-results}
 \caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\enquote{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
 \end{figure}
 
@@ -389,8 +388,8 @@ Since the strongest test of our models of generic interpretation will come from 
 \section{Experiment 1}\label{experiment-1}}
 
 This experiment is designed to measure the prevalence implied by a generic about a diverse set of properties (Expt. 1b).
-In addition, we elicit participants' beliefs about the likely prevalence levels expected for these different properties (Expt. 1a).
-We again use our computational models and alternative models, all using the elicited prevalence priors, to make predictions about the prevalence implied by a generic.
+In addition, we first elicit participants' beliefs about the likely prevalence levels expected for these different properties (Expt. 1a).
+We then use the elicited prevalence priors in our computational models and alternative models to make predictions about the prevalence implied by a generic.
 
 \hypertarget{experiment-1a-prevalence-prior-elicitation}{%
 \subsection{Experiment 1a: Prevalence prior elicitation}\label{experiment-1a-prevalence-prior-elicitation}}
@@ -432,7 +431,7 @@ The experimental paradigm can be seen here: \url{http://stanford.edu/~mtessler/g
 \hypertarget{results}{%
 \subsubsection{Results}\label{results}}
 
-We used the same exclusion criteria that were preregistered for the subsequent generic interpretation study (Expt. 2b): \url{https://osf.io/bwn4t/register/5771ca429ad5a1020de2872e}.
+We used the same exclusion criteria that were preregistered for the subsequent generic interpretation study (Expt.~1b): \url{https://osf.io/bwn4t/register/5771ca429ad5a1020de2872e}.
 Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded (\(n = 15\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 13\)).
 This left a total of \(n = 175\) participants, with items receiving on average 28 (range = {[}16, 38{]}) unique participants responses (each participant provides five ratings).
@@ -448,15 +447,17 @@ For example, the property \emph{have four legs} is most likely either completely
 The property \emph{get erections} is only expected to be present in 50\% of the population (presumably, the males) when it is present at all.
 
 Most of the elicited prevalence prior distributions are at least bi-modal.
-To visualize all properties simultaneously, we represent each distribution by its relative probability mass at 0\%---\(P(\text{feature is present})\), or \(P(r > 0)\)---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---\(\mathbb{E}[P(r \mid r>0)]\) or the its \emph{prevalence when present} (Figure~\ref{fig:genInt-prevPrior}B).
-Our stimulus set covers a wide range of possible values of both of these parameters.
+To visualize all properties simultaneously, we represent each distribution by two statistics: the relative probability mass at 0\%---\(P(\text{feature is present})\), or \(P(r > 0)\)---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---\(\mathbb{E}[P(r \mid r>0)]\) or the property's \emph{prevalence when present}.
+The $P(\text{feature is present})$ is a measure of the (inverse-)distinctiveness of the feature (i.e., among how many animal categories is the property expected to be present). 
+\emph{Prevalence when present} is the average prevalence among the categories for which the property has non-zero prevalence. 
+Figure~\ref{fig:genInt-prevPrior}B shows the distributions of these two parameters: The stimulus set covers a wide range of possible values of both of these parameters.
 This suggests we have sampled items with priors that exhibit a lot of quantitative variability.
 Given these priors, our model makes quantitative predictions about the prevalence implied by a novel generic sentence (e.g., \enquote{Lorches live in zoos}).
 
 \begin{figure}
 \centering
 \includegraphics{genint_files/figure-latex/genInt-prevPrior-1.pdf}
-\caption{\label{fig:genInt-prevPrior}Prevalence priors for a broad set of animal properties. A: Ten example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. Error bars denote bootstrapped 95\% confidence intervals.}
+\caption{\label{fig:genInt-prevPrior}Prevalence priors for a broad set of animal properties. A: Ten example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. The stimulus set covers a wide range of possible values of both of these parameters. Error bars denote bootstrapped 95\% confidence intervals.}
 \end{figure}
 
 \hypertarget{experiment-1b-generic-interpretation}{%
@@ -947,7 +948,7 @@ Cimpian et al. (2010) provided evidence for an \emph{asymmetry} between the cond
 The situation arises when a speaker endorses a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
 The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
 For many properties, the difference in implied prevalence may be inconsequential.
-For features of social categories, which have difficult-to-understand statistical properties \red{cite something about how people misunderstand the distributions of properties within social categories?)}, the misalignment of background  beliefs can lead to the propagation of stereotypes.
+For features of social categories, which have difficult-to-understand statistical properties \red{(is there something about how people misunderstand the distributions of properties within social categories?)}, the misalignment of background  beliefs can lead to the propagation of stereotypes.
 In fact, we saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
 
 %Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
