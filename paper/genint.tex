@@ -901,21 +901,24 @@ Future work will need to investigate whether this formulation of the semantics o
 {\textcolor{Green}{[ndg: people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).]}}
 {\textcolor{Blue}{[mht: does this address it?]}}
 
-In our experiments, we predict participants' implied prevalence ratings as a function of our computational model and empirical measurements about participants' background knowledge about properties. 
+In our experiments, we predict participants' implied prevalence ratings as a function of our computational model and empirical measurements of participants' background knowledge about properties. 
 %The background knowledge elicitation tasks involve reasoning about the properties of alternative categories of animals.
 %In order to elicit this knowledge, however, we conveyed instructions and questions using language. 
 %Thus, there is the potential for circularity in our argument: We are predicting beliefs updated from language via beliefs elicited from language.
 %A close inspection of the prior elicitation questions and our control quantitative models argue against circularity, however. 
 %Our argument is not circular, however, because of the nature of the prior elicitation questions and our control quantitative models, which we describe below.
-In Expt. 1a, we elicited background knowledge by having participants generate different animal categories and then later rate prevalence for different properties for those animals.
-Here enters the potential for circularity in our method of predicting beliefs updated from language (\emph{generic interpretation}; Expt.~1b) via beliefs elicited from language (\emph{prevalence prior}; Expt.~1a).
+In Expt. 1a, we elicited background knowledge by having participants generate different animal categories and then later rate prevalence for different properties of those animals.
+In this measurement, the potential for circularity enters because we are predicting beliefs updated from language (\emph{generic interpretation}; Expt.~1b) via beliefs elicited from language (\emph{prevalence prior}; Expt.~1a).
 
-It is possible that participants answer the prevalence question (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then rating their personal generic-interpreted prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
-If this view, beliefs about the generic are representationally primary (as is thought in the case of \emph{generic beliefs}; Prasada, 2000) and prevalence estimates are derived by participants' generic knowledge. 
-Furthermore, under this view, the generic interpretation task (Expt.~1b) reduces to simply reporting back the part of the prior distribution that was generated when participants answered \enquote{yes} to their internally-directed generic question (\enquote{Do dogs develop phobias?}).
-The prevalence priors do not seem to be simply a mixture of two distributions, and we have modeled each distribution as a mixture of three distributions because they exhibit complex structure. 
-Furthermore, if this were the strategy participants employed, the most accurate model for the generic interpretation data would be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
-The ``some'' model consistently underpredicts the generic interpretation data supporting the idea that belief-updating from generics is more nuanced that simply fixing a \emph{generic belief} node to be true (cf., Prasada, 2000; Csibra and Shamsudheen, 2015).
+Consider the possibility that participants answer the prevalence prior questions (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then rating their personal generic-interpreted prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
+This procedure is consistent with a view of generics as representationally primary (as is thought in the case of \emph{generic beliefs}; Prasada, 2000) and in which prevalence estimates are derived by participants' generic knowledge. 
+Furthermore, under this view, the generic interpretation task (Expt.~1b) reduces to simply reporting back the part of the prior distribution that was generated when participants answered \enquote{yes} to their internally-directed generic question in the prevalence  prior task (\enquote{Do dogs develop phobias?}).
+Thus, the two experiments would be measuring essentially the same construct, with the latter experiment (\emph{generic interpretation}; Expt.~1b) restricting to  kinds that generically have the property. 
+
+Several features of our project argue against this possibility. 
+Foremost, the prevalence priors do not seem to be simply a mixture of two distributions (e.g., \emph{generically do and do not have the property}), and we have modeled each distribution as a mixture of three distributions because they exhibit complex structure. 
+Furthermore, if the above strategy were that employed by participants, the most accurate model for the generic interpretation data would be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
+The ``some'' model consistently underpredicts the generic interpretation data, however, supporting the idea that belief-updating from generics is more nuanced that simply fixing the value of a \emph{generic belief} node to be true (cf., Prasada, 2000; Csibra and Shamsudheen, 2015).
 
 
 %If this were the case, there are only two possibilities for participants' beliefs---the category either does or does not (generically) have the property---and the generic interpretation task 
@@ -954,7 +957,7 @@ Cimpian et al. (2010) provided evidence for an \emph{asymmetry} between the cond
 The situation arises when a speaker endorses a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
 The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
 For many properties, the difference in implied prevalence may be inconsequential.
-For features of social categories, which have difficult-to-understand statistical properties \red{(is there something about how people misunderstand the distributions of properties within social categories?)}, the misalignment of background  beliefs can lead to the propagation of stereotypes.
+For features of social categories, which have difficult-to-understand statistical properties (e.g., Judd, Ryan, \& Park, 1991), the misalignment of background  beliefs can lead to the propagation of stereotypes.
 In fact, we saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
 
 %Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
@@ -1116,6 +1119,9 @@ Goodman, N. D., \& Stuhlmüller, A. (2014). The Design and Implementation of Pro
 \leavevmode\hypertarget{ref-Grice1975}{}%
 Grice, H. P. (1975). Logic and conversation. In \emph{Readings in language and mind}. Blackwell.
 
+\leavevmode\hypertarget{ref-Judd1991}{}%
+Judd, C. M., Ryan, C. S., \& Park, B. (1991). Accuracy in the Judgment of In-Group and Out-Group Variability. \emph{Journal of Personality and Social Psychology}, \emph{61}(3), 366–379. doi:\href{https://doi.org/10.1037/0022-3514.61.3.366}{10.1037/0022-3514.61.3.366}
+
 \leavevmode\hypertarget{ref-Khemlani2009}{}%
 Khemlani, S., Leslie, S.-J., \& Glucksberg, S. (2009). Generics, prevalence, and default inferences. In \emph{Proceedings of the 31st annual conference of the cogntiive science society}. Austin, TX.
 
@@ -1139,6 +1145,9 @@ Neal, R. M. (2001). Annealed importance sampling. \emph{Statistics and Computing
 
 \leavevmode\hypertarget{ref-Prasada2013}{}%
 Prasada, S., Khemlani, S., Leslie, S.-J., \& Glucksberg, S. (2013). Conceptual distinctions amongst generics. \emph{Cognition}, \emph{126}(3), 405--22. doi:\href{https://doi.org/10.1016/j.cognition.2012.11.010}{10.1016/j.cognition.2012.11.010}
+
+\leavevmode\hypertarget{ref-Prasada2000}{}%
+Prasada, S. (2000). Acquiring generic knowledge.  \emph{Trends in Cognitive Sciences}, \emph{4}(2), 66--72. doi:\href{https://doi.org/10.1016/S1364-6613(99)01429-1}{10.1016/S1364-6613(99)01429-1}
 
 \leavevmode\hypertarget{ref-Ritchie2016}{}%
 Ritchie, D., Stuhlmüller, A., \& Goodman, N. D. (2016). C3: Lightweight incrementalized mcmc for probabilistic programs using continuations and callsite caching. In \emph{AISTATS 2016}.
