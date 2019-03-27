@@ -649,7 +649,7 @@ This is extremely strong evidence that the best model for how generics update be
 \section{Experiment 2: Prior Manipulation}\label{experiment-2-prior-manipulation}}
 
 In this experiment, we test the causal role of the prevalence prior in generic interpretation.
-In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property measured by asking about alternative categories (Expt. 1a) related to the prevalence implied by a novel generic (Expt. 1b) via the pragmatic generic interpretation model.
+In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the pragmatic generic interpretation model.
 Though the pragmatic generics model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational.
 Here we manipulate the prevalence prior and measure the resulting influence on interpretation.
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
@@ -671,12 +671,12 @@ The experiment took on average 3 minutes and participants were compensated \$0.3
 \paragraph{Materials}\label{materials-1}}
 
 The goal of this experiment was to manipulate the prevalence prior.
-Participants were familiarized with one of ten prevalence prior distributions, shown in Figure~\ref{fig:priorManipulationExpt}E).
+Participants were familiarized with one of ten prevalence prior distributions, shown in Figure~\ref{fig:priorManipulationExpt}E.
 Nine of the ten distributions were bimodal with modes either at 0\%, 25\%, 50\%, 75\%, or 100\%; the tenth distribution was uniform over all prevalence levels between 0\% and 100\%.
 The mixture between the two modes was always 50\% (half of samples were from one mode and half from the other, as shown in Figure~\ref{fig:priorManipulationExpt}B).
 
-Our cover story involved learning about a single property (\emph{know when earthquakes are about to happen}).
-We used this property because its prevalence prior elicited in Expt. 1a suggested participants had a lot of uncertainty as to what prevalence levels to expect for this property; we thus expected this property might be particularly amenable to manipulation.\footnote{Pilot testing using a completely novel property (e.g., \emph{daxing}) appeared to make the task too artificial. Participants seemed to treat the task as a number game. }
+Our cover story involved learning about a single property---\emph{know when earthquakes are about to happen}.
+We used this property because its prevalence prior elicited in Expt. 1a suggested participants had high uncertainty as to what prevalence levels to expect for this property; we thus expected this property might be particularly amenable to manipulation.\footnote{Pilot testing using a completely novel property (e.g., \emph{daxing}) appeared to make the task too artificial. }
 
 \hypertarget{procedure}{%
 \paragraph{Procedure}\label{procedure}}
@@ -688,7 +688,7 @@ We used this property because its prevalence prior elicited in Expt. 1a suggeste
 \end{figure}
 
 In order to avoid participants learning the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
-Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with lots of new animals on it.
+Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with many new animals on it.
 They were studying these animals with another scientist to understand the animals' ability to \enquote{know when earthquakes are about to happen}.
 Participants were then shown data that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
 In order to minimize distraction, novel animals were simply labeled by a letter (e.g., \enquote{Animal C} or just \enquote{Cs}).
@@ -708,12 +708,12 @@ Then, they completed an attention check survey where they were asked what proper
 \hypertarget{results-1}{%
 \subsubsection{Results}\label{results-1}}
 
-Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded.
+Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded. \ndg{how many?}
 Similar to the data from Expt. 1a, a response in this task can be thought of as a sample from a prevalence prior distribution and the distribution of responses as estimates for the whole distribution.
 We visualize the distributions by discretizing the responses so that each response goes into one of twenty equally spaced bins (effectively turning the 101-pt scale into a 20-pt scale).
 Figure~\ref{fig:priorManipulationResults}A (top row) shows the empirically elicited predicted prevalence distributions.
-These distributions clearly reflect the familiarization distributions supplied to participants in the experiment, with some idiosyncratic features.
-The distribution that is most different from the familiarization distribution is the uniform distribution; the empirical predicted distribution is more unimodal with a peak at 50\%.
+These distributions clearly reflect the familiarization distributions supplied to participants in the experiment, indicating a successful manipulation, with some idiosyncratic features.
+The distribution that is most different from the familiarization distribution is the uniform distribution; the empirical distribution is more unimodal with a peak at 50\%.
 Many distributions exhibit a regression to the mean in some participants' predictions: In the \emph{rare or deterministic} distribution (which featured prevalence levels either around 0\% or 100\%), some participants guess that the next animal will have 50\% prevalence; a similar phenomenon can be observed in the \emph{weak or strong} distribution (25\% or 75\%) and to a lesser extent in the other bimodal distributions.
 
 
@@ -724,7 +724,7 @@ Many distributions exhibit a regression to the mean in some participants' predic
 We use the empirically measured prevalence distributions from Expt. 2a to generate \emph{a priori} model predictions about the generic interpretation data from our five models.\footnote{For the pragmatic model, we fix the two parameters to be the maximum a-posteriori inferred values from the Expt. 1 analysis: \(\alpha = 2; c = 3.5\).}
 To account for our uncertainty in the measurement of the prevalence priors, we bootstrap the priors by resampling subjects (with replacement), calculating the empirical prevalence distributions (by binning, as above), and generating model predictions.
 We repeated this procedure 10,000 times to generate distributions of predictions.
-The bootstrapped mean and 95\% quantiles for each prevalence bin in each distribution are shown in Figure~\ref{fig:priorManipulationResults}A (middle row).
+The bootstrapped mean and 95\% quantiles for each prevalence bin in each distribution are shown in Figure~\ref{fig:priorManipulationResults}A (middle rows).
 We see that context-sensitive interpretations are predicted, with idiosyncrasies that reflect empirically measured distributions.
 In this experiment, we test these predictions against interpretations in the same empirical paradigm as Expt. 2a.
 
@@ -783,7 +783,7 @@ With those criteria in mind, we preregistered the following contrast predictions
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a \enquote{zero and one inflated beta} linking function to appropriately model the responses of exactly 0\% and 100\%, which are undefined under the beta distribution.
 The maximum a-posteriori estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 2.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
-Overall, the literal and pragmatic generic interpretation model predicts a lot of the variance in the means of these empirical distributions: (literal results: \(r^2(10) = 0.89; MSE = 0.00429\); pragmatic results: \(r^2(10) = 0.82; MSE = 0.0162\)).
+Overall, the literal and pragmatic generic interpretation models predict much of the variance in the means of these empirical distributions: (literal results: \(r^2(10) = 0.89; MSE = 0.00429\); pragmatic results: \(r^2(10) = 0.82; MSE = 0.0162\)).
 
 \begin{table}[h]
 \centering
@@ -808,19 +808,22 @@ Intercept &  & 0.32 & [ 0.221, 0.418] \\
 \caption{Regression model fits for planned comparisons. Predictions are based on whether the 95\% credible intervals for the generics model prediction overlap.} 
 \end{table}
 
-The computational models we articulate do more than just predict the \emph{mean} implied prevalence; they predict the full distribution of responses.
-Again recall for this analysis, there are no free parameters in any of these models.
-The model fits in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
-To quantitatively compare the models in their ability to predict the empirical distributions of responses for these ten different conditions, we computed the likelihood of the data under each model by discretizing the empirical distributions and model predictions into ten equally spaced bins.
-As is evident from Figure~\ref{fig:priorManipulationResults}A (bottom row, \enquote{data}), however, a number of participants responded that 0\% of Ks knew when earthquakes were about to happen when they read \enquote{Ks know when earthquakes are about to happen}.
-Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question like in the prior elicitation task: Predict the next animal.
-These \enquote{prior-type} responses are a source of noise in the data and one that affects all models (except the prior only model) to an equal degree.
-All of the models we articulate have no way to account for 0\% responses, which are literally impossible given the utterance of the form \enquote{Ks F}.
-To compute the likelihood of the complete data set under these models, we make the further assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
-We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
+The computational models we have articulated  predict the full distribution of responses, not only the \emph{mean} implied prevalence.
+The model performance in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
+(Recall that there are no free parameters fit for this analysis, in any of the models, since we use the best values from the analysis of the previous experiment.)
+
+We next aim to computed the likelihood of the data under each model, to enable model comparison.
+While the overall agreement between data and generics models is good, a number of participants responded that 0\% of Ks knew when earthquakes were about to happen when they read \enquote{Ks know when earthquakes are about to happen} (Figure~\ref{fig:priorManipulationResults}A, bottom row, \enquote{data}).
+Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question similar to the prior elicitation task: Predict the next animal.
+These \enquote{prior-type} responses are a source of noise in the data that affects all models (except the prior only model) to an equal degree: the models have no way to account for 0\% responses, which are literally impossible given the utterance of the form \enquote{Ks F}.
+%To compute the likelihood of the complete data set under these models, 
+We thus make the further data analysis assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
+In computing marginal likelihood of the data we sum over this mixture parameter in the range of 0-20\% prior-type responses (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
+%We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
+\ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
+We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 3, both the literal and pragmatic generic interpretation models are the best at predicting these data.
-Because this experiment was designed to test the causal influence of the prevalence priors and not directly to compare these two models, the data do not definitively distinguish these two models from each other, owing to the relatively small differences in overall predictions for the two experimental conditions.
+As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is ot unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distiguish models, which was the goal of the previous experiment.}
 We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
 
 \begin{table}[h]
@@ -839,7 +842,7 @@ Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\t
    \hline
 \end{tabular}
 \endgroup
-\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the uncertain threshold generics model. Numbers less than 0 indicate evidence in favor of the uncertain threshold model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions.} 
+\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the literal generics model. Numbers less than 0 indicate evidence in favor of the literal model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions. \ndg{use LL instead of BF here as for previous expt?}} 
 \end{table}
 
 \hypertarget{general-discussion}{%
