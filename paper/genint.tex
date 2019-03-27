@@ -119,8 +119,12 @@
 Correspondence concerning this article should be addressed to Michael Henry Tessler, 450 Serra Mall, Bldg. 420, Rm. 316, Stanford, CA 94305. E-mail: \href{mailto:tessler@mit.edu}{\nolinkurl{tessler@mit.edu}}}
 
 \abstract{
-Generic language (e.g., ``Birds have hollow bones'') conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning without direct experience. Understanding generics, however, involves an extreme dependence on context that has made the precise articulation of how generic language updates beliefs beyond the reach of any extant theory of generics. Here, we formalize a new null hypothesis about the meaning of generics:  Generics convey a single, minimal example to the listener. We show this model is mathematically equivalent to a recent proposal by Tessler and Goodman (2019) for generics as a kind of vague quantifier. We enrich this null hypothesis with a mechanism for pragmatic interpretation and test these models in their ability to account for the belief-updating force of generic statements---how novel generics are interpreted. These models also predict strong dependence of interpretation on prior beliefs about the prevalence of features. Across two experiments, we both measure and manipulate prior beliefs, finding they are causally related to generic interpretations. Additionally, we find that generics are best modeled as a single minimal example understood with a communicative intent.
-\ndg{note to self: revise after rest.}
+Generic language (e.g., ``Birds have hollow bones'') conveys generalizations about categories and is believed to be a fundamental and ubiquitous mechanism of learning. 
+%Understanding generics, however, involves an extreme dependence on context that has made 
+The precise articulation of how generic language updates beliefs is, however, beyond the reach of any extant theory of generics.
+Here, we formalize a simple hypothesis about the meaning of generics:  Generics convey a single, minimal example to the listener, borrowing the machinery of learning from observations. 
+%We show this model is mathematically equivalent to a recent proposal by Tessler and Goodman (2019) for generics as a kind of vague quantifier. 
+We enrich this simple hypothesis with a mechanism for pragmatic interpretation and test these models in their ability to account for the belief-updating resulting from generic statements---how novel generics are interpreted. These models also predict strong dependence of interpretation on prior beliefs about the prevalence of features. Across two experiments, we both measure and manipulate prior beliefs. We find that prior beliefs are causally related to generic interpretations, as predicted, and that generics are best modeled as a single minimal example understood with a communicative intent.
 }
 
 \begin{document}
@@ -132,10 +136,10 @@ Generic language (e.g., ``Birds have hollow bones'') conveys generalizations abo
 \section{Introduction}\label{introduction}}
 
 Much of what we learn about the world comes not from our own experience but by learning from others, often via language.
-A learner can induce a generalization from examples, but language can go beyond examples, encoding information that is itself a generalization.
-Generalizations about categories are often conveyed using \emph{generic language} (e.g., ``Birds have hollow bones''; Carlson, 1977), a clear case of abstract knowledge transmitted through language (Gelman, 2009).
+Language can go beyond examples, conveying abstractions and encoding information that is itself a generalization.
+Generalizations about categories are often conveyed using \emph{generic language} (e.g., ``Birds have hollow bones''; Carlson, 1977), an important case of abstract knowledge transmitted through language (Gelman, 2009).
 Generics are ubiquitous in everyday conversation and child-directed speech (Gelman, Coley, Rosengren, Hartman, \& Pappas, 1998; Gelman, Goetz, Sarnecka, \& Flukes, 2008; Gelman et al., 2004), and learning from generics is thought to be central to conceptual development (Cimpian \& Markman, 2009; Gelman, 2004).
-Understanding how beliefs are updated from generic language is thus an important question for cognitive science.
+Understanding how beliefs are updated from generic language is thus an important issue for cognitive science.
 
 Generics exhibit extreme sensitivity to context, however, that has made it difficult to define quantitatively what should be learned from a generic.
 Intuitively, generics \enquote{{[}\ldots{}{]} appear to be commonly taken in a rather strong sense, as though the qualifier \emph{always} had implicitly crept into their interpretation} (p.~172; Abelson \& Kanouse, 1966), and indeed adults learning from generics about both familiar and novel animals (e.g., \enquote{Bears like to eat ants}; \enquote{Lorches have purple feathers}) rate the \emph{implied prevalence} of the feature (e.g., the percentage of bears that like to eat ants) as very high (\(\sim 85\%\); Gelman, Star, \& Flukes, 2002; Cimpian, Brandone, \& Gelman, 2010, Expt. 1).
@@ -143,14 +147,20 @@ Yet other true generics like \enquote{Mosquitos carry malaria} only seem to have
 Consistent with this intuition, Cimpian et al. (2010) (Expt. 3) found lower implied prevalence from generics about features that could be construed as accidental (e.g., ``Crullets have fungus-covered claws''; see also Khemlani, Leslie, \& Glucksberg, 2009, 2012 for evidence of weak inferences from generics such as ``Lions eat people'').
 Finally, generics can mean neither \emph{some} nor \emph{most} as in the case of \enquote{Ducks lay eggs}, where half of ducks (the females) lay eggs.
 What sort of literal meaning could account for the panoply of interpretations that come with generic sentences?
+And how would a learner, hearing a novel generic, know how strongly to interpret it?
 
-If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic ways, a learner might reasonably infer that there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
-From this intuition, one could formalize the meaning of a generic statement as equivalent to Bayesian belief-updating of structured prior knowledge (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011) after observing a single positive example of the category with a property.
-This positive example would be a \emph{minimal example} in the sense that it exhibits only the feature being described by the predicate in the generic sentence.
-It turns out, this formalism is mathematically identical to a recent model by Tessler and Goodman (2019) that treats a generic as a vague quantifier.
-This earlier work tested such a model only via its implications for \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested. \ndg{this par is awk}
+%If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic ways, a learner might reasonably infer that there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
 
-Even with sufficiently structured prior knowledge about categories and properties, however, the information conveyed by a generic may still be more than that encoded by just a single positive example.
+We know that belief updating from examples is a very basic human capability, shared with other animals. 
+It is thus a reasonable starting point to imagine that language has coopted this belief updating mechanism: that the meaning of a generic is equivalent ``imagine you have observed an example.''
+That is, hearing \enquote{Mosquitos carry malaria} is interpreted as the knowledge that one mosquito, in one particular circumstance, was once observed carrying malaria; belief updating from this one ``observation'' would effect our beliefs about other mosquitos, given that properties tends to be consistent within kinds.
+Notice that this positive example is a \emph{minimal example} in the sense that it exhibits only the feature being described by the predicate in the generic sentence, while other features remain unknown.
+Bayesian belief-updating is a standard way to formalize this reasoning, that has been found to match complex patterns of human learning (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011).
+%ne could formalize the meaning of a generic statement as equivalent to Bayesian belief-updating of structured prior knowledge (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011) after observing a single positive example of the category with a property.
+It turns out, that construing generic interpretation as Bayesian belief-updating from a single minimal example is mathematically identical to a recent model by Tessler and Goodman (2019) that treats a generic as a vague quantifier.
+This earlier work tested such a model only via \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested, and this is crucial given the role of generic interpretation in learning. 
+
+The information conveyed by a generic may still be more than that encoded by just a single positive example.
 One plausible source for deriving stronger interpretations is social reasoning (Grice, 1975): Why did the speaker bother to tell me this generic sentence?
 That is, pragmatic enrichment of the literal content of generics could manifest as a stronger implied prevalence than just that implied by a single example.
 The idea that generics convey a communicatively relevant example to the listener is consistent with a view of generics as a fundamentally pedagogical---and not necessarily linguistic---phenomenon (Csibra \& Shamsudheen, 2015).
@@ -161,18 +171,18 @@ Though the intuitive implied prevalence of \enquote{Mosquitos carry malaria} is 
 In Cimpian et al. (2010) Expt. 3, the mean implied prevalence of \enquote{weak generics} was \(70\%\), significantly lower than that observed for generics about biological properties, but still conveying well above a majority having the property.
 Similarly, inferences that members of a category have a property (e.g., \enquote{Leo is a lion. Thus, Leo eats people.}) can be quite weak, though still the extant empirical evidence suggests participants think this inference is more likely than not (Khemlani et al., 2012).\footnote{In this study of Khemlani et al. (2012), the measurement was actually a confidence rating on -3 to +3 scale. All reported mean confidence ratings were greater than zero. }
 Thus, though intuitively generics can have weak implications, the actual implied prevalence from weak generics in these previous studies was still quite high, leaving open the question of whether bonafide weak interpretations (e.g., implied prevalence \(<50\%\)) can result when learning from novel generics.
-\ndg{Our modeling will suggest...}
+Our formal modeling will suggest that such very weak interpretations can occur, when prior knowledge indicates that the property in question is very rare across categories.
 
 This paper is organized as follows.
 In the first section, we formalize a model for learning from generic language that takes a generic statement to literally convey that a single instance of the category has the property.
-\ndg{We show that...? }This model is mathematically equivalent to the interpretation model proposed by Tessler and Goodman (2019), wherein generics were conceived as a kind of vague quantifier.
+In the appendix we show that this model is mathematically equivalent to the interpretation model proposed by Tessler and Goodman (2019), wherein generics were conceived as a kind of vague quantifier.
 We then propose an extension to this model where generic language can be understood pragmatically via recursive Bayesian reasoning (Baker, Saxe, \& Tenenbaum, 2009; Frank \& Goodman, 2012).
 We compare the literal and pragmatic models against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
 In a preliminary study, we replicate and extend the findings of Cimpian et al. (2010) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
 In Experiment 1, we use a diverse stimulus set better able to reliably elicit high variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
-In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to interpreting a novel generic.
+In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to the interpretation of a novel generic as predicted by the models.
 Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as a pedagogically-transmitted minimal example.
-\ndg{We conclude by discussing the importance of these results for our understanding of learning and development.}
+We conclude by discussing the broader context of these results and their importance for our understanding of learning and development.
 
 
 
@@ -189,23 +199,41 @@ Together, these results provide strong evidence that generics update beliefs in 
 Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ (Carlson, 1977; Leslie, 2008).
 Human generalization from observational data can be well described using the language of probability (Shepard, 1987) and Bayesian belief-updating with (often structured) prior knowledge (Tenenbaum et al., 2011).
 A reasonable initial hypothesis is thus that generics convey the same information-content as a single observation, interpreted with respect to background knowledge.
-Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property---$P(f \mid k)$, denoted by \(r \in [0, 1]\)---with a single positive observation according to Bayes' rule:
+We thus begin by considering the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. In the setting of observations, we imagine that we have observed a particular $x_\texttt{obs}$ in category $k$ that has the property of interest, $f(x_\texttt{obs})=\texttt{true}$. Bayes' rule then tells us:
+$$
+P(r | x_\texttt{obs}, x_\texttt{obs} \in k) \propto P( x_\texttt{obs} | x_\texttt{obs}\in k, r)P(r)
+$$
+In the setting of a minimal example, we have observed that $x_\texttt{obs}$ has property $f$, but we have not observed any of its other properties.
+If we assume that properties are independent given the category, then unobserved properties can be marginalized away. Writing the object now as $x$, to remind us that we haven't fully observed it, we have:
+\begin{align}
+P(r | x \in k, f(x){=}\texttt{true}) &\propto P(f(x){=}\texttt{true} | x \in k, r) P(r) \nonumber \\
+&\propto r\cdot P(r), \nonumber
+\end{align}
+where we have used the fact that the hypothesis, $r$, \emph{is} the likelihood in this setting.
+Finally, adopting this minimal-example belief-update as the effect of hearing the generic utterance yields:
+\begin{equation}
+L_0(r \mid u_{gen}) \propto  r \cdot P(r). 
+\label{eq:L0}
+\end{equation}
+%Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property---$P(f \mid k)$, denoted by \(r \in [0, 1]\)---with a single positive observation according to Bayes' rule:
 %\begin{align}
 %L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
 % &= \frac{P(x = 1 \mid n = 1; r) \cdot P(r)}{\int_0^1 {P(x = 1 \mid n = 1; r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
 % &= \frac{r \cdot P(r)}{\int_0^1 {r' \cdot P(r') \mathop{}\!\mathrm{d}r'}} \label{eq:L0}
 %\end{align}
-\begin{align}
-L_0(r \mid u = u_{gen}) &\propto P(u = u_{gen} \mid r) \cdot P(r)  \nonumber \\
- &= P(x = 1 \mid n = 1; r) \cdot P(r) \nonumber \\
- &= r \cdot P(r) \label{eq:L0}
-\end{align}
-\ndg{notation is weird. x,n, etc... maybe start by writing bayes rule?}
-where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples, which are both equal to 1.
-We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
-The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
-Given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), belief updating based on a single positive observation produces a posterior distribution that favors higher values of $r$ in proportion to their value (Figure~\ref{fig:tripartite}A, top panel). 
-This model is mathematically equivalent to the interpretation model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function (Appendix A).
+%\begin{align}
+%L_0(r \mid u = u_{gen}) &\propto P(u = u_{gen} \mid r) \cdot P(r)  \nonumber \\
+% &= P(x = 1 \mid n = 1; r) \cdot P(r) \nonumber \\
+% &= r \cdot P(r) \label{eq:L0}
+%\end{align}
+%\ndg{notation is weird. x,n, etc... maybe start by writing bayes rule?}
+%where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples, which are both equal to 1.
+%We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
+%The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
+Given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, in proportion to their value (Figure~\ref{fig:tripartite}A, top panel). 
+This model was derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it; interestingly, this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function (see proof in Appendix A). 
+
+\ndg{mh, i re-worked this section because i didn't like the previous notation... see what you think?}
 
 \subsection{Prevalence priors}
 
@@ -253,12 +281,10 @@ Reasoning about why a speaker chooses to produce a generic could at the very lea
 %That is, a listener could reason about why the speaker choose to produce a generic utterance (when they could have stayed silent)
 We model pragmatic reasoning by incorporating our model of literal generic interpretation (Eq.~\ref{eq:L0}) as a \emph{literal listener} model in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016; Scontras, Tessler, \& Franke, 2018).
 In such a model, a listener \(L_1\) interprets an utterance $u$ by reasoning about a speaker \(S_1\) intentionally producing the utterance to update the beliefs of the literal listener \(L_0\):
-
 \begin{eqnarray}
 S_1(u \mid r) &\propto& \exp{(\alpha \cdot \ln L_0(r \mid u) - \text{cost}(u))} \label{eq:S1} \\
 L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}
 \end{eqnarray}
-
 Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce a generic utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}) taking into account the cost of producing the utterance (plausibly, \(\text{cost}(generic)\) \(>\) \(\text{cost}(silence)\)).
 The speaker makes this decision by choosing among their set of alternative utterances, which we assume only consists of producing the generic and staying silent: the act of silence produces a posterior distribution in the literal listener that is identical to the prior (Figure~\ref{fig:tripartite}A). 
 Thus, choosing between a generic and silence amounts to how much more likely the speaker's personal level of prevalence $r$ (i.e., their belief about how many of the category have the property) is under the prior distribution over prevalence than under the posterior distribution given a single positive example, taking into account the cost of producing a statement.\ndg{awk} 
@@ -599,7 +625,8 @@ It is the actual magnitude of the strength of the generalization implied by the 
 \enquote{Most} is handicapped by its high inferred rate of noise and does not make dramatically different predictions across the items.
 Both the literal and pragmatic generic interpretation models track the quantitative variance across these items.
 The evidence for pragmatic interpretations is most apparent for items that receive high but not at-ceiling implied prevalence ratings (e.g., \emph{have spots}, \emph{hunt other animals}; Figure~\ref{fig:genint-litPrag-scatter}), suggesting that interpretations are most in dangerous of being strengthened beyond a speaker's intent for properties for which the listener is most uncertain about their distribution (cf., the asymmetry reported in Cimpian et al., 2010).\ndg{that last sentence (pointing to assymetry) needs to either be explained a lot more or cut.}
-{\textcolor{Blue}{[mht: could do a regression comparing whether or not the pragmatic model is better than the literal model (or the difference in sq.err) vs. the entropy of the prior... to see if pragmatics is most visible under conditions of uncertainty]}}\ndg{meh}
+
+{\textcolor{Blue}{[mht: could do a regression comparing whether or not the pragmatic model is better than the literal model (or the difference in sq.err) vs. the entropy of the prior... to see if pragmatics is most visible under conditions of uncertainty]}}\ndg{meh, i don't think it's needed...}
 
 
 
