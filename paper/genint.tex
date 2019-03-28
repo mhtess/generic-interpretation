@@ -151,34 +151,34 @@ And how would a learner, hearing a novel generic, know how strongly to interpret
 
 %If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic ways, a learner might reasonably infer that there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
 
-We know that belief updating from examples is a very basic human capability, shared with other animals. 
-It is thus a reasonable starting point to imagine that language has coopted this belief updating mechanism: that the meaning of a generic is equivalent ``imagine you have observed an example.''
-That is, hearing \enquote{Mosquitos carry malaria} is interpreted as the knowledge that one mosquito, in one particular circumstance, was once observed carrying malaria; belief updating from this one ``observation'' would effect our beliefs about other mosquitos, given that properties tends to be consistent within kinds.
+Updating one's beliefs by observing examples is a very basic cognitive ability, shared with other animals. 
+It is thus a reasonable starting point to imagine that language has coopted this belief-updating mechanism, and that the meaning of a generic is equivalent to ``imagine you have observed an example.''
+That is, hearing \enquote{Mosquitos carry malaria} is interpreted as the knowledge that one mosquito, in one particular circumstance, was once observed carrying malaria; belief updating from this one ``observation'' would affect our beliefs about other mosquitos, given that properties tend to be consistent within kinds.
 Notice that this positive example is a \emph{minimal example} in the sense that it exhibits only the feature being described by the predicate in the generic sentence, while other features remain unknown.
 Bayesian belief-updating is a standard way to formalize this reasoning, that has been found to match complex patterns of human learning (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011).
 %ne could formalize the meaning of a generic statement as equivalent to Bayesian belief-updating of structured prior knowledge (Tenenbaum, Kemp, Griffiths, \& Goodman, 2011) after observing a single positive example of the category with a property.
-It turns out, that construing generic interpretation as Bayesian belief-updating from a single minimal example is mathematically identical to a recent model by Tessler and Goodman (2019) that treats a generic as a vague quantifier.
+Later we show that construing generic interpretation as Bayesian belief-updating from a single minimal example is mathematically identical to a recent model by Tessler and Goodman (2019) that treats a generic as a vague quantifier.
 This earlier work tested such a model only via \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested, and this is crucial given the role of generic interpretation in learning. 
 
 The information conveyed by a generic may still be more than that encoded by just a single positive example.
-One plausible source for deriving stronger interpretations is social reasoning (Grice, 1975): Why did the speaker bother to tell me this generic sentence?
+One plausible source for deriving stronger interpretations is social reasoning (Grice, 1975): Why did the speaker bother to tell me this generic sentence? (Figure~\ref{fig:cartoon}).
 That is, pragmatic enrichment of the literal content of generics could manifest as a stronger implied prevalence than just that implied by a single example.
 The idea that generics convey a communicatively relevant example to the listener is consistent with a view of generics as a fundamentally pedagogical---and not necessarily linguistic---phenomenon (Csibra \& Shamsudheen, 2015).
 In this paper, we test a literal model of generic interpretation against a pragmatic model, which we formalize in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016).
 
 In addition to these theoretical questions, basic empirical questions about context-sensitive generic interpretation remain.
 Though the intuitive implied prevalence of \enquote{Mosquitos carry malaria} is very low (i.e., very few mosquitos carry malaria), the empirical data supporting this conclusion is mixed.
-In Cimpian et al. (2010) Expt. 3, the mean implied prevalence of \enquote{weak generics} was \(70\%\), significantly lower than that observed for generics about biological properties, but still conveying well above a majority having the property.
+In Cimpian et al. (2010) Expt. 3, the mean implied prevalence of \enquote{weak generics} was \(70\%\) (i.e., after hearing a generic, the predicated property was expected to be present in 70\% of the category), significantly lower than that observed for generics about biological properties, but still conveying well above a majority having the property.
 Similarly, inferences that members of a category have a property (e.g., \enquote{Leo is a lion. Thus, Leo eats people.}) can be quite weak, though still the extant empirical evidence suggests participants think this inference is more likely than not (Khemlani et al., 2012).\footnote{In this study of Khemlani et al. (2012), the measurement was actually a confidence rating on -3 to +3 scale. All reported mean confidence ratings were greater than zero. }
 Thus, though intuitively generics can have weak implications, the actual implied prevalence from weak generics in these previous studies was still quite high, leaving open the question of whether bonafide weak interpretations (e.g., implied prevalence \(<50\%\)) can result when learning from novel generics.
-Our formal modeling will suggest that such very weak interpretations can occur, when prior knowledge indicates that the property in question is very rare across categories.
+Our formal modeling will suggest that such very weak interpretations can occur, when prior knowledge indicates that the property in question is very rare (e.g., the property only manifests in certain circumstances).
 
 This paper is organized as follows.
 In the first section, we formalize a model for learning from generic language that takes a generic statement to literally convey that a single instance of the category has the property.
 In the appendix we show that this model is mathematically equivalent to the interpretation model proposed by Tessler and Goodman (2019), wherein generics were conceived as a kind of vague quantifier.
 We then propose an extension to this model where generic language can be understood pragmatically via recursive Bayesian reasoning (Baker, Saxe, \& Tenenbaum, 2009; Frank \& Goodman, 2012).
 We compare the literal and pragmatic models against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
-In a preliminary study, we replicate and extend the findings of Cimpian et al. (2010) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
+In a preliminary study, we replicate and extend the findings of Cimpian et al. (2010; Expt.~3) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
 In Experiment 1, we use a diverse stimulus set better able to reliably elicit high variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
 In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to the interpretation of a novel generic as predicted by the models.
 Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as a pedagogically-transmitted minimal example.
@@ -199,18 +199,19 @@ We conclude by discussing the broader context of these results and their importa
 Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ (Carlson, 1977; Leslie, 2008).
 Human generalization from observational data can be well described using the language of probability (Shepard, 1987) and Bayesian belief-updating with (often structured) prior knowledge (Tenenbaum et al., 2011).
 A reasonable initial hypothesis is thus that generics convey the same information-content as a single observation, interpreted with respect to background knowledge.
-We thus begin by considering the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. In the setting of observations, we imagine that we have observed a particular $x_\texttt{obs}$ in category $k$ that has the property of interest, $f(x_\texttt{obs})=\texttt{true}$. Bayes' rule then tells us:
+We thus begin by considering a learner trying to figure out how strongly to expect the feature in the category: The learner considers the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. In the setting of observations, we imagine the learner observes a particular $x_\texttt{obs}$ in category $k$ that has the property of interest, $f(x_\texttt{obs})=\texttt{true}$. Bayes' rule then tells us:
 $$
-P(r | x_\texttt{obs}, x_\texttt{obs} \in k) \propto P( x_\texttt{obs} | x_\texttt{obs}\in k, r)P(r)
+P(r \mid x_\texttt{obs}; x_\texttt{obs} \in k) \propto P( x_\texttt{obs} \mid x_\texttt{obs}\in k; r) \cdot P(r)
 $$
-In the setting of a minimal example, we have observed that $x_\texttt{obs}$ has property $f$, but we have not observed any of its other properties.
-If we assume that properties are independent given the category, then unobserved properties can be marginalized away. Writing the object now as $x$, to remind us that we haven't fully observed it, we have:
+In the setting of a minimal example, the learner observes that $x_\texttt{obs}$ has property $f$, but has not observed any of its other properties.
+\mht{should there be an $f(x_{obs})$ in this above equation?}
+If we assume that properties are independent given the category, then unobserved properties can be marginalized away. Writing the object now as $x$, to remind us that we have not fully observed it, we have:
 \begin{align}
-P(r | x \in k, f(x){=}\texttt{true}) &\propto P(f(x){=}\texttt{true} | x \in k, r) P(r) \nonumber \\
+P(r \mid x \in k; f(x){=}\texttt{true}) &\propto P(f(x){=}\texttt{true} \mid x \in k; r) \cdot P(r) \nonumber \\
 &\propto r\cdot P(r), \nonumber
 \end{align}
-where we have used the fact that the hypothesis, $r$, \emph{is} the likelihood in this setting.
-Finally, adopting this minimal-example belief-update as the effect of hearing the generic utterance yields:
+where we have used the fact that the hypothesis, $r$, is the likelihood in this setting.
+Finally, adopting this minimal-example belief-update as the effect of hearing the generic utterance $u_{gen}$ yields:
 \begin{equation}
 L_0(r \mid u_{gen}) \propto  r \cdot P(r). 
 \label{eq:L0}
@@ -231,17 +232,17 @@ L_0(r \mid u_{gen}) \propto  r \cdot P(r).
 %We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
 %The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
 Given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, in proportion to their value (Figure~\ref{fig:tripartite}A, top panel). 
-This model was derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it; interestingly, this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function (see proof in Appendix A). 
+This model was derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it; interestingly, this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function like a vague quantifier (see proof in Appendix A). 
 
 \ndg{mh, i re-worked this section because i didn't like the previous notation... see what you think?}
-
+\mht{i like the new notation, but am a bit confused by the first equation. I think I was expecting something like the second equation, and am not sure what is conveyed the first. also, the distinction between $x$ and $x_{obs}$ goes by too quick.}
 \subsection{Prevalence priors}
 
-According to this model of literal generic interpretation (Equation \ref{eq:L0}), the derivation of a literal interpretation of a generic balances the prior probability of different prevalence levels \(P(r)\) with the overall preference for higher prevalence levels \(r\). %, which results from observing a positive example.
+According to the model of literal generic interpretation given by Equation \ref{eq:L0}, the derivation of a literal interpretation of a generic balances the prior probability of different prevalence levels \(P(r)\) with the overall preference for higher prevalence levels \(r\). %, which results from observing a positive example.
 The prevalence prior \(P(r)\) is a representation of intuitive beliefs about properties that may display interesting structure.
 %The distribution can also be understood as a distribution over different categories (and their associated prevalence of the feature).
-For instance, a biological property (e.g., \emph{Xs fly}) manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}); however, the property is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence the distribution would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:tripartite}A, second row).\footnote{
-	We assume that people have graded degrees of belief and hence the mode at 0\% is not a Delta distribution at exactly 0\%. That is, the model assumes there are categories in which almost no members have the property (e.g., a dog flying), but it is not entirely impossible.}
+For instance, according to a veridical theory of biological properties \emph{flies} (like in ``Ducks fly''), a learner would know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}); however, the property is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence the distribution would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:tripartite}A, second row).\footnote{
+	We assume that people have graded degrees of belief and hence the mode at 0\% is not a Delta distribution at exactly 0\%. That is, the model assumes there are categories in which almost no members have the property (e.g., a dog flying), but such an individual is not entirely impossible.}
 	%Bayesians in general do not like to assign 0 probabilities to outcomes, which is what a mode at 0\% would entail for this cognitive model. 
 	%Instead, the model assigns some low but non-zero probability that an instance of a category having a property which is not in general true of the category  (e.g., a dog flying), because it is not impossible to imagine some intuitive chain of causal events that could give rise to the property (e.g., a genetic mutation or a cross-species cloning experiment). }
 A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which results in an intuitive distribution with a different bimodal structure (Figure~\ref{fig:tripartite}A, third row).  
@@ -286,16 +287,16 @@ S_1(u \mid r) &\propto& \exp{(\alpha \cdot \ln L_0(r \mid u) - \text{cost}(u))} 
 L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}
 \end{eqnarray}
 Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce a generic utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}) taking into account the cost of producing the utterance (plausibly, \(\text{cost}(generic)\) \(>\) \(\text{cost}(silence)\)).
-The speaker makes this decision by choosing among their set of alternative utterances, which we assume only consists of producing the generic and staying silent: the act of silence produces a posterior distribution in the literal listener that is identical to the prior (Figure~\ref{fig:tripartite}A). 
-Thus, choosing between a generic and silence amounts to how much more likely the speaker's personal level of prevalence $r$ (i.e., their belief about how many of the category have the property) is under the prior distribution over prevalence than under the posterior distribution given a single positive example, taking into account the cost of producing a statement.\ndg{awk} 
+The speaker makes this decision by choosing among their set of alternative utterances, which we assume only consists of producing the generic and staying silent: the act of silence produces a posterior distribution in the literal listener that is identical to the prior.
+Thus, in addition to the cost of the utterance, the speaker's production decision reflects the probability of the speaker's personal level of prevalence $r$ (i.e., their belief about how many of the category have the property) under the literal generic interpretation distribution~vs.~the prior distribution (Figure~\ref{fig:tripartite}A). \ndg{awk}\mht{better?}
 This formulation results in production probabilities that vary as a function of subjective prevalence of the feature, the prevalence prior, and the cost of the utterance (Figure~\ref{fig:tripartite}B).
 In previous work, this model was shown to be a good model of generic truth judgments (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not; why ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week; Tessler and Goodman, 2019) and we use it here for continuity with that work. 
 
 Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker \(S_1\) (Figure \ref{fig:cartoon}).
 Again, interpretations are strongly driven by the prevalence priors (Figure \ref{fig:tripartite}C). 
-However, pragmatic reasoning allows the utterances to imply stronger generalizations than literal interpretation because a speaker might not have bothered to produce the generic if the prevalence was not sufficiently high, especially if the speaker incurred some cost in producing the utterance (compare Figure \ref{fig:tripartite} A with C).
+However, pragmatic reasoning allows the utterances to imply stronger generalizations than literal interpretation because a speaker might not have bothered to produce the generic if the prevalence was not sufficiently high, especially if the speaker incurred some cost in producing the utterance (compare Figure~\ref{fig:tripartite}A~vs.~\ref{fig:tripartite}C).
 The differences between literal and pragmatic interpretations are most pronounced for priors with more uncertainty, such as the uniform prior. 
-We design our items in Expt.~1 to elicit a wide range of implied prevalence ratings in order to have sufficient quantitative variability to tell the literal~vs.~pragmatic models apart.
+We design our items in Expt.~1 to elicit a wide range of implied prevalence ratings in order to have sufficient quantitative variability to distinguish the predictions of the literal~vs.~pragmatic models.
 %For purposes of quantitative modeling, we allow both the cost of the generic---\(\text{cost}(generic)\)---and the speaker's rationality parameter \(\alpha\) to be free parameters that we infer from the behavioral data.
 
 
@@ -388,8 +389,10 @@ The experiment took about 5 minutes and participants were compensated \$0.60.
 
 In order to get participants motivated to reason about novel kinds, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals.
 Participants were supplied with a bare plural about a novel category (e.g., \enquote{Feps have yellow fur}) and asked to judge prevalence: \enquote{What percentage of feps do you think have yellow fur?}
+The stimulus set was comprised of 40 properties, which we divided into three sets of eight biological properties (body parts described with a color adjective e.g., \emph{purple feathers}, body parts described with a gradable adjective  e.g., \emph{long teeth}, and body parts with no adjective e.g., \emph{fur}) and a set of 16 body parts in accidental or diseased states (e.g., \emph{wet fur} or \emph{broken legs}).
+Properties were mostly taken from Cimpian et al. (2010), though were elaborated to create more classes of stimuli (the original stimuli only used color body parts and accidental properties). 
 Participants completed in randomized order 25 trials: 5 for each of the biological properties and 10 for the accidental.
-\ndg{need a sentence about the classes of properties and where the items come from... all are from cimpian, or we added some?}
+%\ndg{need a sentence about the classes of properties and where the items come from... all are from cimpian, or we added some?}
 
 \hypertarget{results-and-discussion}{%
 \subsection{Results and discussion}\label{results-and-discussion}}
@@ -626,7 +629,7 @@ It is the actual magnitude of the strength of the generalization implied by the 
 Both the literal and pragmatic generic interpretation models track the quantitative variance across these items.
 The evidence for pragmatic interpretations is most apparent for items that receive high but not at-ceiling implied prevalence ratings (e.g., \emph{have spots}, \emph{hunt other animals}; Figure~\ref{fig:genint-litPrag-scatter}), suggesting that interpretations are most in dangerous of being strengthened beyond a speaker's intent for properties for which the listener is most uncertain about their distribution (cf., the asymmetry reported in Cimpian et al., 2010).\ndg{that last sentence (pointing to assymetry) needs to either be explained a lot more or cut.}
 
-{\textcolor{Blue}{[mht: could do a regression comparing whether or not the pragmatic model is better than the literal model (or the difference in sq.err) vs. the entropy of the prior... to see if pragmatics is most visible under conditions of uncertainty]}}\ndg{meh, i don't think it's needed...}
+%{\textcolor{Blue}{[mht: could do a regression comparing whether or not the pragmatic model is better than the literal model (or the difference in sq.err) vs. the entropy of the prior... to see if pragmatics is most visible under conditions of uncertainty]}}\ndg{meh, i don't think it's needed...}
 
 
 
@@ -848,6 +851,7 @@ We thus make the further data analysis assumption that the true generative proce
 In computing marginal likelihood of the data we sum over this mixture parameter in the range of 0-20\% prior-type responses (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
 %We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
 \ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
+\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
 We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
 As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is ot unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distiguish models, which was the goal of the previous experiment.}
