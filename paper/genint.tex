@@ -898,14 +898,6 @@ Our data strongly support the conclusion that generics can be thought of as conv
 % interprets generics pragmatically provides a better explanation of the observed data than a literal interpretation model.
 This work contributes a computational formalism to describe how beliefs are updated from generic language, which appears to be adequate within the domains considered; it thus represents a first step in understanding how generics serve to convey knowledge between people and generations.
 
-\ndg{this par is good, but out of place.... move to a subsection?}
-In the psychological literature on generics, they are often thought of as conveying strong meanings.
-The experimental data we present, however, shows that generics can receive a spectrum of interpretations, including being interpreted as only applying to a minority of the category (\emph{weak generics}). 
-Statements like \enquote{Lorches live in zoos}, \enquote{Feps perform in the circus}, and \enquote{Wugs have seizures} all received average implied prevalence ratings below 50\%, with many individual participants providing ratings of 10\% or less (Expt. 1b).
-When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0\% or around 25\%, participants readily interpret the statement \enquote{Ks know when earthquakes are about to happen} to mean about 25\% (Expt. 2b).
-This is an aspect of generic language understanding often swept under the rug: Generics are believed (in a generic sense) to carry strong implications.
-Here, we show that generics also carry weak implications and all shades in-between.
-
 \subsection{A communicatively relevant, minimal example}
 
 The pragmatic generic interpretation model interprets a generic as conveying a communicatively relevant, minimal example to the listener. 
@@ -947,8 +939,8 @@ Future work will need to investigate whether syntactic and pragmatic cues are en
 \hypertarget{the-relationship-between-prevalence-priors-and-generic-interpretations}{%
 \subsection{The relationship between prevalence priors and generic interpretations}\label{the-relationship-between-prevalence-priors-and-generic-interpretations}}
 
-{\textcolor{Green}{[ndg: people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).]}}
-{\textcolor{Blue}{[mht: does this address it?]}}
+%{\textcolor{Green}{[ndg: people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).]}}
+%{\textcolor{Blue}{[mht: does this address it?]}}
 
 In our experiments, we predict participants' implied prevalence ratings as a function of our computational model and empirical measurements of participants' background knowledge about properties. 
 %The background knowledge elicitation tasks involve reasoning about the properties of alternative categories of animals.
@@ -957,17 +949,18 @@ In our experiments, we predict participants' implied prevalence ratings as a fun
 %A close inspection of the prior elicitation questions and our control quantitative models argue against circularity, however. 
 %Our argument is not circular, however, because of the nature of the prior elicitation questions and our control quantitative models, which we describe below.
 In Expt. 1a, we elicited background knowledge by having participants generate different animal categories and then later rate prevalence for different properties of those animals.
-In this measurement, the potential for circularity enters because we are predicting beliefs updated from language (\emph{generic interpretation}; Expt.~1b) via beliefs elicited from language (\emph{prevalence prior}; Expt.~1a).
+One might worry that there is a potential for circularity because we are predicting beliefs updated from language (\emph{generic interpretation}; Expt.~1b) via beliefs elicited partly from language (\emph{prevalence prior}; Expt.~1a).
+Perhaps participants answer the prevalence prior questions (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then answering with their personal generic-interpretation prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
+This procedure would be consistent with a view of generics as representationally primary (as is thought by Prasada, 2000 in the case of \emph{generic beliefs}) and in which prevalence estimates are derived by participants' generic knowledge. 
+%Furthermore, under this view, the generic interpretation task (Expt.~1b) reduces to simply reporting back the part of the prior distribution that was generated when participants answered \enquote{yes} to their internally-directed generic question in the prevalence  prior task (\enquote{Do dogs develop phobias?}).
+Under this view, the two experiments would be measuring essentially the same construct, with the latter experiment (\emph{generic interpretation}; Expt.~1b) restricting to  kinds that generically have the property. 
 
-Consider the possibility that participants answer the prevalence prior questions (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then rating their personal generic-interpreted prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
-This procedure is consistent with a view of generics as representationally primary (as is thought in the case of \emph{generic beliefs}; Prasada, 2000) and in which prevalence estimates are derived by participants' generic knowledge. 
-Furthermore, under this view, the generic interpretation task (Expt.~1b) reduces to simply reporting back the part of the prior distribution that was generated when participants answered \enquote{yes} to their internally-directed generic question in the prevalence  prior task (\enquote{Do dogs develop phobias?}).
-Thus, the two experiments would be measuring essentially the same construct, with the latter experiment (\emph{generic interpretation}; Expt.~1b) restricting to  kinds that generically have the property. 
-
-Several features of our project argue against this possibility. 
-Foremost, the prevalence priors do not seem to be simply a mixture of two distributions (e.g., \emph{generically do and do not have the property}), and we have modeled each distribution as a mixture of three distributions because they exhibit complex structure. 
-Furthermore, if the above strategy were that employed by participants, the most accurate model for the generic interpretation data would be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
-The ``some'' model consistently underpredicts the generic interpretation data, however, supporting the idea that belief-updating from generics is more nuanced that simply fixing the value of a \emph{generic belief} node to be true (cf., Prasada, 2000; Csibra and Shamsudheen, 2015).
+Several aspects of our data argue against this possibility. 
+Foremost, the prevalence priors do not seem to be a simple mixture of two distributions (e.g., \emph{generically do and do not have the property})---we needed to model each distribution as a mixture of three distributions because they exhibit complex structure. 
+Furthermore, if the above strategy were that employed by participants, the most accurate model for the generic interpretation data should be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
+The ``some'' model consistently under-predicts the generic interpretation data, however, and was easily ruled out by model comparison given our data.
+This supports the idea that belief-updating from generics is more nuanced that simply fixing the value of a \emph{generic belief} property to be true (cf., Prasada, 2000; Csibra and Shamsudheen, 2015).
+Instead, it is most parsimonious to conclude that Expt. 1a elicits intuitions about frequency or probability, and that generic belief updating in turn depends on this prior knowledge.
 
 
 %If this were the case, there are only two possibilities for participants' beliefs---the category either does or does not (generically) have the property---and the generic interpretation task 
@@ -975,9 +968,9 @@ The ``some'' model consistently underpredicts the generic interpretation data, h
 %
 %The fact that the \enquote{some} model consistently underpredicts the generic interpretation data argues against the circularity in our measurements of the prevalence prior and generic interpretations.
 
-Similarly, the patterns of data we observe in our experiments are additionally unlikely to be identical to those obtained using the quantifier \enquote{Some} (i.e., \enquote{Some Ks have F}).
-Though we did not empirically measure judgments given the existentially quantified statements, the alternative model that assumes a fixed-threshold at 0\%-prevalence provides insight into what should be expected for those data.\footnote{Recall the fixed-threshold models are \enquote{literal interpretation} models and do not compute scalar implicatures.}
-In both of our experiments, we found that the \enquote{some} model provided too weak of interpretations, consistent with the intuition that generic statements convey stronger prevalence implications that the existential statement.
+%Similarly, the patterns of data we observe in our experiments are additionally unlikely to be identical to those obtained using the quantifier \enquote{Some} (i.e., \enquote{Some Ks have F}).
+%Though we did not empirically measure judgments given the existentially quantified statements, the alternative model that assumes a fixed-threshold at 0\%-prevalence provides insight into what should be expected for those data.\footnote{Recall the fixed-threshold models are \enquote{literal interpretation} models and do not compute scalar implicatures.}
+%In both of our experiments, we found that the \enquote{some} model provided too weak of interpretations, consistent with the intuition that generic statements convey stronger prevalence implications that the existential statement.
 
 %A similar argument can be made for the structured elicitation task in Expt. 1a.
 %In Expt. 1, we assumed a particular model of the prevalence prior (i.e., a mixture of Betas) and elicited participants' knowledge about the property using questions that we assumed tapped into this structure.
@@ -997,17 +990,23 @@ In both of our experiments, we found that the \enquote{some} model provided too 
 %Finally, it should be noted that many of the properties used in our experimental stimuli are not directly observable either due to the nature of the property (e.g., \enquote{transmit HIV}) or to the habituality of the predicate (e.g., \enquote{fly into building windows}).
 
 
-\subsection{Implications for stereotype amplification}
+\subsection{Weak generics and the danger of asymmetry}
 
-\mht{these two paragraphs are somewhat disconnected. if you think it's worthwhile, i can merge them}
+In the psychological literature on generics, they are often thought of as conveying strong meanings.
+The experimental data we present, however, shows that generics can receive a spectrum of interpretations, including being interpreted as only applying to a minority of the category (\emph{weak generics}). 
+Statements like \enquote{Lorches live in zoos}, \enquote{Feps perform in the circus}, and \enquote{Wugs have seizures} all received average implied prevalence ratings below 50\%, with many individual participants providing ratings of 10\% or less (Expt. 1b).
+When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0\% or around 25\%, participants readily interpret the statement \enquote{Ks know when earthquakes are about to happen} to mean about 25\% (Expt. 2b).
+This is an aspect of generic language understanding often swept under the rug: Generics are believed (in a generic sense) to carry strong implications.
+Here, we show that generics also carry weak implications and all shades in-between.
 
-The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication or deceit when using and learning from generics.
+The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication when using and learning from generics.
 Cimpian et al. (2010) provided evidence for an \emph{asymmetry} between the conditions that permit a speaker to assert a generic and the prevalence learned by the listener from that same statement. 
 The situation arises when a speaker endorses a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
-The extent to which a listener has a different set of assumptions of the distribution of the property will result in miscommunication.
-For many properties, the difference in implied prevalence may be inconsequential.
-For features of social categories, which have difficult-to-understand statistical properties (e.g., Judd, Ryan, \& Park, 1991), the misalignment of background  beliefs can lead to the propagation of stereotypes.
-In fact, we saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
+To the extent that a listener has a different set of assumptions of the distribution of the property miscommunication will result.
+%For many properties, the difference in implied prevalence may be inconsequential.
+We saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
+For features of social categories, which have difficult-to-understand statistical properties (e.g., Judd, Ryan, \& Park, 1991), the misalignment of background beliefs can lead to the propagation of stereotypes.
+
 
 %Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
 %At the same time, the communicative force of a generic encodes a pressure for higher prevalence interpretations (e.g., without strong prior knowledge, generics imply high prevalence).
@@ -1039,35 +1038,39 @@ In fact, we saw that the biggest differences between the literal interpretation 
 
 %In what follows, we elaborate the assumptions in our modeling framework, describe how conceptual knowledge can guide prevalence-based interpretations, discuss how our answer to the problem of generic interpretation can inform an answer to the parallel problem of \emph{generic identification}, and speculate about the implications for communicating weak generics.
 %
-{\textcolor{Green}{[ndg: i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.]}}
 
+%{\textcolor{Green}{[ndg: i'm not so sure about including these following discussion sections. they seem like interesting but only thematically related, as apposed to being crucial to our story or responses to probably objections. i didn't comment / edit them yet -- let's first decide if they stay.]}}
+%
+%
+%\hypertarget{conceptual-generic-interpretations}{%
+%\subsection{Conceptual generic interpretations}\label{conceptual-generic-interpretations}}
+%
+%In this paper, we tested a particular model of generic interpretation that uses a prior distribution over the prevalence of a feature across relevant categories and assumes the truth-functional meaning of the generic is an uncertain threshold on the prevalence.
+%The prevalence prior distributions, which we elicit from participants, are likely influenced by the conceptual knowledge of our participants.
+%For example, the prevalence priors over properties that have to do with reproduction (e.g., \emph{have menstrual cycles}, \emph{get erections}) are multi-modal with one mode around 50\%, clearly reflecting participants' biological knowledge that these properties are specific to one sex of the animal.
+%We thus predict that 4-year-olds, who lack significant biological knowledge (Carey, 1985), would derive different interpretations than adults from generics about these properties.
+%
+%Consistent with the intuition that conceptual knowledge underlies prevalence judgments, participants appeal to domain knowledge in their explanations for low-prevalence ratings, revealing aspects of their intuitive theories which guide their judgments.
+%One participant wrote: \enquote{About half are females and females have menstrual cycles.}
+%Another: \enquote{I assumed that only a percentage of Moxes were female and young enough to have a menstrual cycle.}
+%A typical explanation of a participant's response to \emph{Dobles live in zoos} was \enquote{I thought that there would be many more Dobles in the wild than in zoos. This is true of most animals in zoos today}.
+%Here, it is clear that the participant is using their knowledge of the property, derived from other animals, to learn about the category.
+%Participants often wrote about the lack of an enabling causal situation when describing their weak interpretations: \enquote{Most frams don't have access to nicotine.}
+%Explicitly modeling the intuitive theories that give rise to the intuitions about prevalence is an obvious future direction of this work.
+%
+%Other semantic theories of generics make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted (e.g., Cohen, 1999; Declerck, 1991).
+%In such a theory, the statement \enquote{Morseths have a menstrual cycle} gets evaluated as \enquote{Female morseths have a menstrual cycle}; under such an account, the implied prevalence of the feature would be 100\% (or near 100\%) because 100\% of the \emph{relevant lorches} (i.e., the females) have a menstrual cycle.\footnote{The scientifically correct term for a \enquote{menstrual cycle} is actually an \enquote{estrous cycle}. We are grateful to one of our MTurk participants for pointing this out to us. }
+%Interestingly, domain restricted interpretations are present in the empirical data.
+%Several properties about the reproductive behavior of animals (Expt. 1b) have interpretation distributions that are bimodal.
+%For example, \enquote{Morseths have a menstrual cycle} is interpreted primarily as applying to 50\% of morseths (38 out of 64 give a response between 45\% and 55\%); however, some participants (10 of 64) rate this as applying to 100\% of morseths.
+%This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that \emph{could} have the property (e.g., 100\% of female morseths have a menstrual cycle).
+%The domain restricted interpretation is not limited to the generic interpretation data, however.
+%The bimodality is present in our prevalence elicitation task (Expt. 1a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0\% (the animals that don't have a menstrual cycle), 50\% (\enquote{only females}) and 100\% (perhaps, \enquote{all females}).
+%The fact that this multi-modality appears in the prior elicitation task means that the generic interpretation model predicts bi-modal interpretation distributions for the implied prevalence data, which is what we observe.
+%Still, the question remains why some participants interpret the noun phrase in generic statements as restricted to a salient subset of the category.
+%
+%
 
-\hypertarget{conceptual-generic-interpretations}{%
-\subsection{Conceptual generic interpretations}\label{conceptual-generic-interpretations}}
-
-In this paper, we tested a particular model of generic interpretation that uses a prior distribution over the prevalence of a feature across relevant categories and assumes the truth-functional meaning of the generic is an uncertain threshold on the prevalence.
-The prevalence prior distributions, which we elicit from participants, are likely influenced by the conceptual knowledge of our participants.
-For example, the prevalence priors over properties that have to do with reproduction (e.g., \emph{have menstrual cycles}, \emph{get erections}) are multi-modal with one mode around 50\%, clearly reflecting participants' biological knowledge that these properties are specific to one sex of the animal.
-We thus predict that 4-year-olds, who lack significant biological knowledge (Carey, 1985), would derive different interpretations than adults from generics about these properties.
-
-Consistent with the intuition that conceptual knowledge underlies prevalence judgments, participants appeal to domain knowledge in their explanations for low-prevalence ratings, revealing aspects of their intuitive theories which guide their judgments.
-One participant wrote: \enquote{About half are females and females have menstrual cycles.}
-Another: \enquote{I assumed that only a percentage of Moxes were female and young enough to have a menstrual cycle.}
-A typical explanation of a participant's response to \emph{Dobles live in zoos} was \enquote{I thought that there would be many more Dobles in the wild than in zoos. This is true of most animals in zoos today}.
-Here, it is clear that the participant is using their knowledge of the property, derived from other animals, to learn about the category.
-Participants often wrote about the lack of an enabling causal situation when describing their weak interpretations: \enquote{Most frams don't have access to nicotine.}
-Explicitly modeling the intuitive theories that give rise to the intuitions about prevalence is an obvious future direction of this work.
-
-Other semantic theories of generics make use of a mechanism by which the domain over which the prevalence of the feature in the category is calculated is contextually restricted (e.g., Cohen, 1999; Declerck, 1991).
-In such a theory, the statement \enquote{Morseths have a menstrual cycle} gets evaluated as \enquote{Female morseths have a menstrual cycle}; under such an account, the implied prevalence of the feature would be 100\% (or near 100\%) because 100\% of the \emph{relevant lorches} (i.e., the females) have a menstrual cycle.\footnote{The scientifically correct term for a \enquote{menstrual cycle} is actually an \enquote{estrous cycle}. We are grateful to one of our MTurk participants for pointing this out to us. }
-Interestingly, domain restricted interpretations are present in the empirical data.
-Several properties about the reproductive behavior of animals (Expt. 1b) have interpretation distributions that are bimodal.
-For example, \enquote{Morseths have a menstrual cycle} is interpreted primarily as applying to 50\% of morseths (38 out of 64 give a response between 45\% and 55\%); however, some participants (10 of 64) rate this as applying to 100\% of morseths.
-This behavior could result from a participant interpreting the question as pragmatically restricting the domain to only the members of that category that \emph{could} have the property (e.g., 100\% of female morseths have a menstrual cycle).
-The domain restricted interpretation is not limited to the generic interpretation data, however.
-The bimodality is present in our prevalence elicitation task (Expt. 1a) as well: The distribution over several of the reproductive properties is tri-modal, with peaks at 0\% (the animals that don't have a menstrual cycle), 50\% (\enquote{only females}) and 100\% (perhaps, \enquote{all females}).
-The fact that this multi-modality appears in the prior elicitation task means that the generic interpretation model predicts bi-modal interpretation distributions for the implied prevalence data, which is what we observe.
-Still, the question remains why some participants interpret the noun phrase in generic statements as restricted to a salient subset of the category.
 
 %\hypertarget{generic-identification}{%
 %\subsection{Generic identification}\label{generic-identification}}
@@ -1092,9 +1095,9 @@ Still, the question remains why some participants interpret the noun phrase in g
 \hypertarget{conclusion}{%
 \subsection{Conclusion}\label{conclusion}}
 
-An easy way to acquire abstract knowledge is to understand a novel generic statement produced by a helpful interlocutor, but heretofore no quantitative models have accounted for how learning should occur from generic language.
- A computational model that understands generics as conveying communicatively relevant observations is able to predict the large variability in generic interpretations, even predicting the existence of \enquote{weak generics}, or generics that only apply to a minority of the category.
-This work opens the door to understanding more precisely how abstract knowledge is learned from language.
+An easy way to acquire abstract knowledge is to understand a novel generic statement produced by a helpful interlocutor. 
+A computational model that understands generics as conveying communicatively relevant observations is able to predict the large variability in generic interpretations, even predicting the existence of \enquote{weak generics}, or generics that only apply to a minority of the category.
+This work opens the door to understanding more precisely how abstract knowledge is learned from language and conveyed through generations.
 
 \newpage
 
