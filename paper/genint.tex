@@ -891,12 +891,20 @@ Generic language is the foremost case study of how abstract, generalizable knowl
 %, and it is commonly believed that generics carry strong interpretations (analogous to the quantifier \enquote{most} or \enquote{all}).
 Despite their ubiquity and relative morphosyntactic simplicity, generics have been examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
 Here, we explored the hypothesis that a generic statement acts by conveying a single minimal example to a listener---and that generics thus directly use mechanisms for non-linguistic belief updating.
-This model turned out to be mathematically equivalent to the interpretation model assumed by Tessler \& Goodman (2019) where the generic acts a vague quantifier (Appendix A). We further articulated a more elaborate model which interprets generics as intentional utterances, that were chosen purposefully by the speaker.
+We further articulated a more elaborate model which interprets generics as intentional utterances, that were chosen purposefully by the speaker.
 We tested these models using a diverse set of stimuli and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property (Expt. 1).
 Furthermore, we found that this background knowledge was causally responsible for the resulting interpretation (Expt. 2).
 Our data strongly support the conclusion that generics can be thought of as conveying a communicatively relevant minimal example, as opposed to a mere observation. 
 % interprets generics pragmatically provides a better explanation of the observed data than a literal interpretation model.
 This work contributes a computational formalism to describe how beliefs are updated from generic language, which appears to be adequate within the domains considered; it thus represents a first step in understanding how generics serve to convey knowledge between people and generations.
+
+
+The model of the literal content of a generic as conveying a single, positive observation is mathematically equivalent to the interpretation model assumed by Tessler \& Goodman (2019) where the generic acts a vague quantifier (Appendix A). 
+The generics-as-vague-quantifier formulation is similar to a Rational Speech Act model proposed by Lassiter and Goodman (2015) for context-sensitive, scalar adjectives (e.g., \emph{tall}).
+They argued that the truth-functional threshold (i.e., the literal point at which something becomes tall) ought to be reasoned about by the pragmatic listener: That is, their model ``lifts'' the threshold variable to the pragmatic listener to allow communicative reasoning to influence the value of the threshold (e.g., the listener reasons about what thresholds would be informative) in a style consistent with other ``lifted variable'' RSA models (see Goodman \& Frank, 2016 for a review). 
+Our pragmatic model of generics does not reason about the threshold; in fact, the generics-as-single-observation version of the model no longer makes reference to a threshold variable. 
+Instead, our model is analogous to a Lassiter \& Goodman (2015) style model where the threshold variable is only present at the level of the literal listener and is integrated out of the model prior to any pragmatic reasoning. 
+That being said, the predictions of these two versions of a pragmatic generics model are only very subtly different from one another, and we omit a detailed comparison of these models for brevity. 
 
 \subsection{A communicatively relevant, minimal example}
 
@@ -926,10 +934,10 @@ Consider the case of trying to infer the weight of a biased coin: The quantifier
 Even without strong prior knowledge about the weight of a coin, it is more likely than not that the coin has a heads bias after observing just a single heads outcome; in fact, the most likely state of affairs to produce a single heads outcome (given uniform uncertainty about the weight of a coin) is that both sides of the coin are heads.
 A minimal example entails existential quantification, but Bayesian reasoning updates beliefs based on an example in a stronger way.
 Such a strong generalization is not supported by existential quantification.
-\mht{anything to say about demonstratives like ``this fep has wings''?}
+%\mht{anything to say about demonstratives like ``this fep has wings''?}
 
 In our experiments, we investigate bare plural sentences, which are a common syntactic way of conveying generics (Gelman et al., 2008).
-Generic meanings , however, can be packaged into different syntactic frames in English (e.g., ``A raven is black''; ``The blue-breasted quail eats small bugs and various grasses''), which are also commonly used to express concrete specifics (e.g., definite and indefinite singulars). 
+Generic meanings, however, can be packaged into different syntactic frames in English (e.g., ``A raven is black''; ``The blue-breasted quail eats small bugs and various grasses''), which are also commonly used to express concrete specifics (e.g., definite and indefinite singulars). 
 Our ``minimal example'' semantics is very similar to the natural semantics of an indefinite or definite singular.
 The main difference is that with concrete reference a speaker is referring to an instance that the listener knows about or could observe. 
 That is, the difference is whether a referent is in common ground.
@@ -942,7 +950,7 @@ Future work will need to investigate whether syntactic and pragmatic cues are en
 %{\textcolor{Green}{[ndg: people may worry about circularity of argument, given rich background knowledge elicitation that also uses language (similar to ellen's point). i think we should discuss this directly. relatedly we should discuss the implications of our structured background knowledge (elicitation and results).]}}
 %{\textcolor{Blue}{[mht: does this address it?]}}
 
-In our experiments, we predict participants' implied prevalence ratings as a function of our computational model and empirical measurements of participants' background knowledge about properties. 
+In our experiments, we predict participants' implied prevalence ratings with our computational model as a function of empirical measurements of participants' background knowledge about properties. 
 %The background knowledge elicitation tasks involve reasoning about the properties of alternative categories of animals.
 %In order to elicit this knowledge, however, we conveyed instructions and questions using language. 
 %Thus, there is the potential for circularity in our argument: We are predicting beliefs updated from language via beliefs elicited from language.
@@ -950,14 +958,14 @@ In our experiments, we predict participants' implied prevalence ratings as a fun
 %Our argument is not circular, however, because of the nature of the prior elicitation questions and our control quantitative models, which we describe below.
 In Expt. 1a, we elicited background knowledge by having participants generate different animal categories and then later rate prevalence for different properties of those animals.
 One might worry that there is a potential for circularity because we are predicting beliefs updated from language (\emph{generic interpretation}; Expt.~1b) via beliefs elicited partly from language (\emph{prevalence prior}; Expt.~1a).
-Perhaps participants answer the prevalence prior questions (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then answering with their personal generic-interpretation prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
+Perhaps participants answer the prevalence prior questions (e.g., \enquote{What percentage of dogs develop phobias?}) by first asking themselves internally a generic question (\enquote{Do dogs develop phobias?}) and then responding with their personal, generic-interpretation prevalence if the answer to this question was yes (and rating 0\% prevalence if the answer to the generic question was no).
 This procedure would be consistent with a view of generics as representationally primary (as is thought by Prasada, 2000 in the case of \emph{generic beliefs}) and in which prevalence estimates are derived by participants' generic knowledge. 
 %Furthermore, under this view, the generic interpretation task (Expt.~1b) reduces to simply reporting back the part of the prior distribution that was generated when participants answered \enquote{yes} to their internally-directed generic question in the prevalence  prior task (\enquote{Do dogs develop phobias?}).
 Under this view, the two experiments would be measuring essentially the same construct, with the latter experiment (\emph{generic interpretation}; Expt.~1b) restricting to  kinds that generically have the property. 
 
 Several aspects of our data argue against this possibility. 
 Foremost, the prevalence priors do not seem to be a simple mixture of two distributions (e.g., \emph{generically do and do not have the property})---we needed to model each distribution as a mixture of three distributions because they exhibit complex structure. 
-Furthermore, if the above strategy were that employed by participants, the most accurate model for the generic interpretation data should be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
+Second, if the above strategy were that employed by participants, the most accurate model for the generic interpretation data should be the existentially-quantified \enquote{some} model, which rules out the 0\% component of the distribution.
 The ``some'' model consistently under-predicts the generic interpretation data, however, and was easily ruled out by model comparison given our data.
 This supports the idea that belief-updating from generics is more nuanced that simply fixing the value of a \emph{generic belief} property to be true (cf., Prasada, 2000; Csibra and Shamsudheen, 2015).
 Instead, it is most parsimonious to conclude that Expt. 1a elicits intuitions about frequency or probability, and that generic belief updating in turn depends on this prior knowledge.
@@ -1001,8 +1009,8 @@ Here, we show that generics also carry weak implications and all shades in-betwe
 
 The fact that understanding generics relies heavily on background knowledge about properties provides a clear avenue for miscommunication when using and learning from generics.
 Cimpian et al. (2010) provided evidence for an \emph{asymmetry} between the conditions that permit a speaker to assert a generic and the prevalence learned by the listener from that same statement. 
-The situation arises when a speaker endorses a generic when the prevalence is quite low (see Tessler \& Goodman, 2019) believing that they and the listener share the background assumptions that the property is a low-prevalence property in general.
-To the extent that a listener has a different set of assumptions of the distribution of the property miscommunication will result.
+The situation arises when a speaker endorses a generic when the prevalence is quite low believing that they and the listener share the background assumptions that the property is a low-prevalence property in general (see Tessler \& Goodman, 2019).
+To the extent that a listener has a different set of assumptions of the distribution of the property, miscommunication will result.
 %For many properties, the difference in implied prevalence may be inconsequential.
 We saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
 For features of social categories, which have difficult-to-understand statistical properties (e.g., Judd, Ryan, \& Park, 1991), the misalignment of background beliefs can lead to the propagation of stereotypes.
@@ -1027,7 +1035,6 @@ For features of social categories, which have difficult-to-understand statistica
 
 %\mht{generics come in diverse syntax (within and across languages). ``A dog barks'' literally means one dog barked. ``You see a dog, it barks'' has the same semantics as both a particular and a generic?}
 
-\mht{Lassiter suggested threshold version, and suggested that it might be reasoned about by the pragmatic listener. The results from the lifted threshold version of this model were inconclusive and we omitted them for brevity}
 
 %\mht{another model: $x^n$ semantics... probably computationally indistinguishable as well}
 
