@@ -202,15 +202,14 @@ The literal listener interprets the utterance by drawing on their prior knowledg
 
 Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ (Carlson, 1977; Leslie, 2008).
 Human generalization from observational data can be well described using the language of probability (Shepard, 1987) and Bayesian belief-updating with (often structured) prior knowledge (Tenenbaum et al., 2011).
-A reasonable initial hypothesis is thus that generics convey the same information-content as a single observation, interpreted with respect to background knowledge.
-We thus begin by considering a learner trying to figure out how strongly to expect the feature in the category: The learner considers the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. In the setting of observations, we imagine the learner observes a particular $x_\texttt{obs}$ in category $k$ that has the property of interest, $f(x_\texttt{obs})=\texttt{true}$. Bayes' rule then tells us:
+A reasonable initial hypothesis is that generics convey the same information content as a single observation, interpreted with respect to background knowledge.
+We thus begin by considering a learner trying to figure out how strongly to expect the feature in the category: The learner considers the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. In the setting of observations, let us write $F(x)$ for all of the observable features of an observed item $x$; we imagine the learner observes a particular $x$ in category $k$ that has the property of interest, $f(x)=\texttt{true}$ among its features. Bayes' rule then tells us:
 $$
-P(r \mid x_\texttt{obs}; x_\texttt{obs} \in k) \propto P( x_\texttt{obs} \mid r; x_\texttt{obs}\in k) \cdot P(r)
+P(r \mid F(x), x \in k) \propto P( F(x) \mid r, x \in k) \cdot P(r)
 $$
-In the setting of a minimal example, the learner observes that $x_\texttt{obs}$ has property $f$, but has not observed any of its other properties.
-\mht{should there be an $f(x_{obs})$ in this above equation?}
+In the setting of a minimal example, the learner observes that $x$ has property $f$, but has not observed any of its other properties.
 If we assume that properties are conditionally independent given the category, then unobserved properties can be marginalized away.
-Writing the object now as $x$, to remind us that the object is not fully observed it, we have:
+We have:
 \begin{align}
 P(r \mid  f(x){=}\texttt{true}; x \in k) &\propto P(f(x){=}\texttt{true} \mid r;   x \in k) \cdot P(r) \nonumber \\
 &\propto r\cdot P(r), \nonumber
@@ -246,9 +245,6 @@ Rational, Bayesian belief-updating in this setting says a reasoner should \emph{
 The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
 Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, in proportion to their value (Figure~\ref{fig:tripartite}A, top panel). 
 
-
-\ndg{mh, i re-worked this section because i didn't like the previous notation... see what you think?}
-\mht{i like the new notation, but am a bit confused by the first equation. I think I was expecting something like the second equation, and am not sure what is conveyed the first. also, the distinction between $x$ and $x_{obs}$ goes by too quick.}
 \subsection{Prevalence priors}
 
 According to the model of literal generic interpretation given by Equation \ref{eq:L0}, the derivation of a literal interpretation of a generic strongly depends upon the prior probability of different prevalence levels \(P(r)\), which a listener could construct via their knowledge of other categories (Figure \ref{fig:cartoon}). 
@@ -300,7 +296,7 @@ L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}
 \end{eqnarray}
 Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce a generic utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}) taking into account the cost of producing the utterance (plausibly, \(\text{cost}(generic)\) \(>\) \(\text{cost}(silence)\)).
 The speaker makes this decision by choosing among their set of alternative utterances, which we assume only consists of producing the generic and staying silent: the act of silence produces a posterior distribution in the literal listener that is identical to the prior.
-Thus, in addition to the cost of the utterance, the speaker's production decision reflects the probability of the speaker's personal level of prevalence $r$ (i.e., their belief about how many of the category have the property) under the literal generic interpretation distribution~vs.~the prior distribution (Figure~\ref{fig:tripartite}A). \ndg{awk}\mht{better?}
+Thus, in addition to the cost of the utterance, the speaker's production decision reflects the probability of the prevalence level the speaker intends to convey, $r$ (i.e., their belief about how many of the category have the property), under the literal generic interpretation distribution~vs.~the prior distribution (Figure~\ref{fig:tripartite}A). 
 This formulation results in production probabilities that vary as a function of subjective prevalence of the feature, the prevalence prior, and the cost of the utterance (Figure~\ref{fig:tripartite}B).
 In previous work, this model was shown to be a good model of generic truth judgments (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not; why ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week; Tessler and Goodman, 2019) and we use it here for continuity with that work. 
 
@@ -867,8 +863,8 @@ These \enquote{prior-type} responses are a source of noise in the data that affe
 We thus make the further data analysis assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
 In computing marginal likelihood of the data we sum over this mixture parameter in the range of 0-20\% prior-type responses (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
 %We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
-\ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
-\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
+%\ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
+%\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
 We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
 As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is ot unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distiguish models, which was the goal of the previous experiment.}
@@ -890,7 +886,9 @@ Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\t
    \hline
 \end{tabular}
 \endgroup
-\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the literal generics model. Numbers less than 0 indicate evidence in favor of the literal model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions. \ndg{use LL instead of BF here as for previous expt?} \mht{actually LL is misleading here because we are bootstrapping the priors... the range of LLs is large for any given model, but the range of ratios of LL (BFs) is much smaller, because when one model does worse due to a resampled prior, they all tend to do worse}} 
+\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the literal generics model. Numbers less than 0 indicate evidence in favor of the literal model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions. 
+%\ndg{use LL instead of BF here as for previous expt?} \mht{actually LL is misleading here because we are bootstrapping the priors... the range of LLs is large for any given model, but the range of ratios of LL (BFs) is much smaller, because when one model does worse due to a resampled prior, they all tend to do worse}
+} 
 \end{table}
 
 
