@@ -4,10 +4,10 @@ output: html_notebook
 ---
 
 ```{r}
-theme_set(theme_black())
 library(tidyverse)
 library(ggpirate)
-fig.path <- "~/Documents/research/talks/defense/figs/"
+theme_set(theme_black())
+fig.path <- "~/Documents/talks/coglunch-0319/figs/"
 ```
 
 
@@ -85,7 +85,7 @@ ggsave(fig.prevPriors.genInt,
 
 
 ```{r genint-modelingResults, fig.width = 11, fig.asp = 0.95, fig.cap="Implied prevalence data and model predictions for a broad set of seventy-four items. A: Mean implied prevalence ratings (points are individual empirical judgments). B: Posterior predictive model fits for quantitative models based on (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\"some\"), (iii) a threshold semantics fixed at 0.5 (\"most\"), and (iv) an uncertain threshold semantics (generic). The model for \"most\" is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95% confidence intervals for the behavioral data and 95% highest posterior density intervals for the model predictions.", cache = F}
-load(file = "../../paper/cached_results/genInt_interpretation6_prior3_modelData.RData")
+load(file = "../../paper/cached_results/genInt_interpretation6_prior3_modelData2.RData")
 
 
 fig.genint.interpretation.ci <- df.int.filtered %>%
@@ -134,6 +134,43 @@ fig.genint.interpretation.modelss
 ggsave(fig.genint.interpretation.modelss, 
        file = paste(fig.path, "genint_modelscatters.pdf", sep =""),
        width = 6, height = 4)
+```
+
+
+```{r}
+md.impprev %>% 
+  ungroup() %>%
+  filter(!(src == "pragmatic")) %>%
+  filter(((src == "pragmatic_unlifted" &	semantics == "uncertain" & parameter == "prior") |
+           (parameter == "posterior")))   %>%
+  mutate(src = paste(parameter, "_", semantics, "_", src, sep =""),
+         src = factor(src, 
+                      levels = c("prior_uncertain_pragmatic_unlifted", 
+                                 "posterior_some_literal",
+                                 "posterior_most_literal", 
+                                 "posterior_uncertain_literal", 
+                                 "posterior_uncertain_pragmatic_unlifted"),
+                      labels = c("Prevalence prior mean",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"most" + noise\n(threshold = 0.5)',
+                                 'generic\n(literal)',
+                                 'generic\n(pragmatic)'))) %>%
+  ggplot(., aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3, color = 'white')+
+  geom_errorbar(alpha = 0.3, color = 'white')+
+  geom_errorbarh(alpha = 0.3, color = 'white')+
+  geom_point(alpha = 0.7, shape = 21, color = 'white')+
+  facet_wrap(~src, nrow = 1)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+  coord_fixed()+
+  xlab("Model prediction")+
+  ylab("Human implied prevalence")
+
+
+ggsave(file = paste(fig.path, "genint_modelscatters.pdf", sep =""),
+       width = 8, height = 4)
 ```
 
 

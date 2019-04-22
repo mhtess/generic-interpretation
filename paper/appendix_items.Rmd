@@ -1,7 +1,7 @@
 
 # Appendix: Items
 
-```{r expt1items, results="asis"}
+```{r expt1items, results="asis", eval = F}
 tab1 <- xtable::xtable(
   df.c.prior.bs.wide %>% 
   distinct(stim_property, stim_type) %>%

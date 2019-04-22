@@ -91,7 +91,9 @@ df.int <- left_join(df.int, df.int.catch.summary %>%
                          select(workerid, totalCorrect, pass))
 
 df.int.filtered <- df.int %>% filter(pass == 1) %>%
-  mutate(response = as.numeric(response))
+  mutate(response = as.numeric(response)) %>%
+    mutate(property = gsub("&quotechar", "", property))
+
 ```
 
 ## Load model results
@@ -238,13 +240,104 @@ m.samp %>%
 #        width = 4, height = 4)
 ```
 ```{r}
-m.samp %>%
+m.genint.params.l1 <- m.samp %>%
   filter(type %in% c("speakerOptimality","cost")) %>%
   group_by(type, src) %>%
   summarize(MAP = estimate_mode(val),
             cred_upper = hdi_upper(val),
             cred_lower = hdi_lower(val))
+
+save(m.genint.params.l1, file = "../paper/cached_results/genint_L1_params.RData")
 ```
+
+
+
+### Implied prevalence
+
+```{r}
+df.int.filtered.bs <-   df.int.filtered %>%
+    #filter(property %in% levels(factor(m.samp$param))) %>%
+    group_by(property) %>%
+    tidyboot::tidyboot_mean(column = response)
+
+md.impprev <- left_join(
+  bind_rows(
+   m.samp %>%
+    #filter(parameter %in% c("prior", "posterior"), src != "literal") %>% #FIXEDPRIORRs
+    filter(type == "prediction",  src != "literal") %>%
+    #rename(component = property, property = param, parameter = category) %>%
+    group_by(src, semantics, property, parameter) %>%
+    summarize(model_MAP = estimate_mode(val),
+            model_upper = hdi_upper(val),
+            model_lower = hdi_lower(val)),
+   m.samp %>%
+    filter(src == "literal", parameter %in% c("prior", "posterior")) %>%
+    group_by(src,semantics, property, parameter) %>%
+    # summarize(model_MAP = val,
+    #         model_upper = val,
+    #         model_lower = val)
+   summarize(model_MAP = estimate_mode(val),
+      model_upper = hdi_upper(val),
+      model_lower = hdi_lower(val))
+  ),
+  df.int.filtered.bs
+)
+
+# save(df.int.filtered, df.int.filtered.bs, md.impprev,
+#      file = "../paper/cached_results/genInt_interpretation6_prior3_modelData2.RData")
+```
+
+```{r}
+ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2)+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  facet_wrap(~src + parameter)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()
+
+# ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
+#        width = 6, height = 4)
+```
+```{r}
+md.impprev %>%
+  filter(src %in% c("literal", "pragmatic_unlifted"), 
+         parameter == "posterior", semantics == "uncertain") %>%
+  select(src, property, model_MAP) %>%
+  #unique() %>%
+  spread(src, model_MAP) %>%
+  ggplot(., aes( x = literal, y = pragmatic_unlifted))+
+  geom_abline(intercept  = 0 , slope = 1)+
+  geom_point()
+```
+
+
+### Error analysis
+
+```{r}
+md.impprev.genModels <- md.impprev %>%
+  ungroup() %>%
+  filter(src %in% c("literal", "pragmatic_unlifted"), 
+         semantics == "uncertain",
+         parameter == "posterior") %>%
+  mutate(sqErr = (model_MAP - mean)^2) 
+
+md.impprev.genModels %>%
+  filter(src == "pragmatic_unlifted") %>% View()
+```
+
+
+```{r}
+md.impprev %>%
+  #filter(!is.na(mean)) %>%
+  group_by(src, parameter) %>%
+  summarize( mse  = mean((model_MAP-mean)^2),
+             r2 = cor(model_MAP, mean)^2) %>% 
+  kable()
+```
+
 
 
 ### Prevalence prior parameters
@@ -325,78 +418,6 @@ ggsave(paste("individual_prevPriorsCDFs.pdf", sep = ""),
        width = 14, height = 8)
 ```
 
-### Implied prevalence
-
-```{r}
-df.int.filtered.bs <-   df.int.filtered %>%
-    #filter(property %in% levels(factor(m.samp$param))) %>%
-    group_by(property) %>%
-    tidyboot::tidyboot_mean(column = response)
-
-md.impprev <- left_join(
-  bind_rows(
-   m.samp %>%
-    #filter(parameter %in% c("prior", "posterior"), src != "literal") %>% #FIXEDPRIORRs
-    filter(type == "prediction",  src != "literal") %>%
-    #rename(component = property, property = param, parameter = category) %>%
-    group_by(src, semantics, property, parameter) %>%
-    summarize(model_MAP = estimate_mode(val),
-            model_upper = hdi_upper(val),
-            model_lower = hdi_lower(val)),
-   m.samp %>%
-    filter(src == "literal", parameter %in% c("prior", "posterior")) %>%
-    group_by(src,semantics, property, parameter) %>%
-    # summarize(model_MAP = val,
-    #         model_upper = val,
-    #         model_lower = val)
-   summarize(model_MAP = estimate_mode(val),
-      model_upper = hdi_upper(val),
-      model_lower = hdi_lower(val))
-  ),
-  df.int.filtered.bs
-)
-
-# save(df.int.filtered, df.int.filtered.bs, md.impprev,
-#      file = "../paper/cached_results/genInt_interpretation6_prior3_modelData2.RData")
-```
-
-```{r}
-ggplot(md.impprev, aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
-                        y = mean, ymin = ci_lower, ymax = ci_upper))+
-  geom_abline(intercept = 0, slope = 1, lty = 2)+
-  geom_point()+
-  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
-  facet_wrap(~src + parameter)+
-  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
-  coord_fixed()
-
-# ggsave(paste("figs/", model.prefix, "interpretationScatters.pdf", sep = ""),
-#        width = 6, height = 4)
-```
-```{r}
-md.impprev %>%
-  filter(src %in% c("literal", "pragmatic_unlifted"), parameter == "posterior") %>%
-  select(src, property, model_MAP) %>%
-  unique() %>%
-  spread(src, model_MAP) %>%
-  ggplot(., aes( x = literal, y = pragmatic_unlifted))+
-  geom_abline(intercept  = 0 , slope = 1)+
-  geom_point()
-```
-
-```{r}
-md.impprev %>%
-  #filter(!is.na(mean)) %>%
-  group_by(src, parameter) %>%
-  summarize( mse  = mean((model_MAP-mean)^2),
-             r2 = cor(model_MAP, mean)^2) %>% 
-  kable()
-```
-
-
-
-
 ```{r wip}
 m.samp.iter.weight <- m.samp.iter %>%
   filter((componentParam == "weight") | (parameter == "numberOfComponents")) %>%
@@ -436,6 +457,41 @@ m.samp.iter.param %>%
 ```
 
 
+## Model comparison
+
+```{r}
+mll.results.path <- "../models/results/genint/marginal_likelihood/final_results/"
+mll.results = list.files(
+  path = mll.results.path,
+  # pattern = paste(model.prefix, format(n_samples, scientific = F), 
+  #                 "_burn", n_burn, 
+  #             "_lag", lg, "_chain", sep = "")
+)
+extractMLLfromJSON <- function(fileName){
+  name1 <- strsplit(fileName, "-")[[1]][4]
+  name2 <- strsplit(fileName, "-")[[1]][5]
+  rs <- jsonlite::fromJSON(paste(mll.results.path, fileName, sep = ""))[1]
+  return(data.frame(name1=name1, name2=name2, mll=rs))
+}
+
+rs.mll <- bind_rows(lapply(mll.results, extractMLLfromJSON)) %>%
+  mutate(name2 = ifelse(name1 == "steps2000","generic", name2))
+
+rs.mll.formatted <- rs.mll %>%
+  group_by(name1, name2) %>%
+  summarize(mll = mean(mll)) %>%
+  ungroup() %>%
+  mutate(Model = ifelse(name2 == "most", '"Most"',
+                  ifelse(name1 == "prior", "Prior", 
+                 ifelse(name2 == "some", '"Some"',
+                ifelse(name1 == "pragmatic_unlifted", 
+                       "Pragmatic Generic",
+                 ifelse(name2 == "generic", "Literal Generic", name1)))))) %>%
+  filter(!Model == "pragmatic") %>%
+  select(Model, mll)
+
+save(rs.mll.formatted, file = "../paper/cached_results/genint_BF_results.RData")
+```
 
 
 ## (not working) RWebPPL RSA/BDA Model

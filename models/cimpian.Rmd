@@ -12,6 +12,8 @@ library(tidyboot)
 library(knitr)
 library(ggpirate)
 library(viridis)
+library(ggthemes)
+theme_set(theme_few())
 ```
 
 ## Load data
@@ -40,6 +42,8 @@ df.c.int %>%
   scale_color_viridis(discrete = T)+
   ylim(0, 1)
 ```
+
+
 ```{r}
 df.c.int.bs %>%
   ggplot(., aes(x = mean))+
@@ -106,27 +110,72 @@ ggplot(df.c.prior.bs.wide %>%
 ## Load model results
 
 ```{r}
-model.path <- "../models/results/"
+null.dists <- c("beta1_100", "beta1_1000", "delta")
+semantics <- c("some","most", "uncertain")
+models <- c("literal", "pragmatic", "pragmatic_unlifted")
+#modelName <- "pragmatic_unlifted"
 
-model.prefix <- "pilot-results-cimpian-L0-structuredPrior_most-semantics_-nullDist_beta1_100_2500_burn1250_lag1_chain2"
-m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
+m.samp <- data.frame()
 
-# model.files <- list.files(
-#   path = model.path, 
-#   pattern = paste(model.prefix, n_samples, "_burn", n_burn, 
-#                   "_lag", lg, "_chain", sep = "")
-#   )
-# m.samp <- data.frame()
-# for (modfile in model.files){
-#   m.item <- read_csv(paste(model.path , modfile, sep = ""))
-#   
-#   m.samp <- bind_rows(
-#     m.samp,
-#     m.item %>% mutate(chain = match(modfile, model.files))
-#   )
-#     
-# }
+for (null.dist in null.dists){
+  for (sem in semantics){
+    for (modelName in models){
+      
+      model.path <- paste("results/cimpian", 
+                     paste("nullDist_", null.dist, sep = ""), 
+                     sem, sep = "/")
+      
+      model.prefix <-if (modelName == "literal"){
+        paste(
+        "pilot-results-cimpian-L0-structuredPrior_",
+        sem, "-semantics-nullDist_", null.dist,
+        sep = "")
+      } else {
+        paste(
+        "results-cimpian-",modelName,"-structuredPrior_",
+        sem, "-semantics-nullDist_", null.dist,
+        sep = "")
+      }
+      
+      model.files <- list.files(
+        path = model.path,
+        pattern = model.prefix
+        #paste(model.prefix, n_samples, "_burn", n_burn,
+        #            "_lag", lg, "_chain", sep = "")
+      )
+      
+      for (modfile in model.files){
+        
+        m.item <- read_csv(paste(model.path, modfile, sep = "/"))
+  
+        m.samp <- bind_rows(
+          m.samp,
+          m.item %>% 
+            mutate(
+              src = modelName,
+              semantics = sem,
+              nullDist = null.dist,
+              chain = match(modfile, model.files)
+              )
+        )
+      }
+    }
+  }
+  print(null.dist)
+}
+
+#m.samp <- read_csv(paste(model.path,model.prefix,".csv", sep = ""))
+
+
 ```
+
+
+```{r}
+m.samp.1 <- m.samp %>%
+  filter(nullDist == "beta1_100") %>%
+  mutate(src = paste(src, semantics, sep = "_"))
+```
+
 
 ### Null distribution parameters
 
@@ -148,7 +197,7 @@ ggsave(paste("figs/", model.prefix, "nullDistParams.pdf", sep = ""),
 Add iteration number back in.
 
 ```{r}
-m.samp.iter <-   m.samp %>% 
+m.samp.iter <- m.samp.1 %>% 
   filter(param %in% c("mixtureParam", "prevWhenPresent")) %>%
   mutate(parameter = paste(type, param, property, category, sep = "_")) %>%
   select(-type, -param, -property, -category) %>%
@@ -170,7 +219,7 @@ m.rs.prior.parameters <- m.samp.iter %>%
                             n = 1),
     isPresent = rbinom(n = 1, prob = mixtureParam, size = 1),
     prevalence = ifelse(isPresent == 1, prevWhenPresent, 
-                        rbeta( shape1 = 1, shape2 = 200, n = 1) )
+                        rbeta( shape1 = 1, shape2 = 100, n = 1) )
     )
 ```
 
@@ -186,10 +235,11 @@ md.prevPriorParams <- bind_rows(
     select(stim_property,param,  val) %>%
     mutate(src = 'data'),
   m.rs.prior.parameters %>% 
-    gather(param, val, mixtureParam, prevWhenPresent) %>%
-    select(property, param, val) %>%
-    rename(stim_property = property) %>%
-    mutate(src = 'model') 
+    select(-semantics) %>%
+    gather(param, val, mixtureParam, prevWhenPresent, -src) %>%
+    select(src, property, param, val) %>%
+    rename(stim_property = property)# %>%
+    #mutate(src = 'model') 
   )
 
 
@@ -203,6 +253,68 @@ ggplot(md.prevPriorParams,
     theme(strip.text.y = element_text(angle = 0))
 # ggsave(paste("figs/", model.prefix, "prevPriorParamsCDFs.pdf", sep = ""),
 #        width = 14, height = 8)
+```
+
+```{r}
+ggplot(md.prevPriorParams %>%
+         filter(src %in% c("data", "literal_uncertain")), 
+       aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+```
+
+```{r}
+ggplot(md.prevPriorParams %>%
+         filter(src %in% c("data", "pragmatic_unlifted_uncertain")), 
+       aes( x = val, color = src))+
+    stat_ecdf()+
+    facet_wrap(~param)+
+    scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))
+```
+```{r}
+x1s <- md.prevPriorParams %>%
+  filter(src %in% c("data"), param == "mixtureParam") %>% 
+  pull(val) %>% quantile(., probs = seq(0, 1, 0.01))
+
+x2s <- md.prevPriorParams %>%
+  filter(src %in% c("pragmatic_unlifted_uncertain"), param == "mixtureParam") %>% 
+  pull(val) %>% quantile(., probs = seq(0, 1, 0.01))
+
+x3s <- md.prevPriorParams %>%
+  filter(src %in% c("literal_uncertain"), param == "mixtureParam") %>% 
+  pull(val) %>% quantile(., probs = seq(0, 1, 0.01))
+
+x4s <- md.prevPriorParams %>%
+  filter(src %in% c("pragmatic_uncertain"), param == "mixtureParam") %>% 
+  pull(val) %>% quantile(., probs = seq(0, 1, 0.01))
+
+df.qq <- data.frame(
+  human = x1s,
+  prag_unlift_unc = x2s,
+  prag_lift_unc = x4s,
+  lit_unc = x3s
+)
+
+df.qq %>% 
+  mutate(empirical = as.numeric(gsub("%", "", row.names(df.qq))) / 100) %>%
+  gather(key, val, -empirical) %>%
+  ggplot(., aes( x = empirical, y = val, color = key))+
+  geom_jitter()
+```
+
+
+```{r}
+
+save(md.prevPriorParams,
+     file = "../paper/cached_results/cimpian-prevPriorParam_dists.RData")
+
 ```
 
 

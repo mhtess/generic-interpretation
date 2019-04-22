@@ -13,3 +13,9 @@ packrat/lib*/
 *.out
 *~
 paper/genint_cache/
+paper/
+*.json
+*.zip
+abstracts/
+models/results/*
+models/figs/

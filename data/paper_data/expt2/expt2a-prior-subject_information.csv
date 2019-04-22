@@ -1,0 +1,451 @@
+"workerid","language","enjoyment","gender","age","problems","comments","asses","fairprice","education"
+0,"english",1,"Female",26,"","","Yes","yes",2
+1,"englsh",0,"Male",30,"none","","Yes",".5",3
+2,"English",0,"Male",49,"No.","Thank you.","Yes","Yes.",1
+3,"english",0,"Male",26,"no","","Yes","this is fine",3
+4,"English",-1,"Male",30,"No","n/a","Yes","$0.60 or higher",2
+5,"English",0,"Male",27,"None","","Yes","0.50",1
+6,"English",1,"Female",41,"no","This was curious and I am interested in what you were looking to study for the survey. Thank you =)","Yes","0.15",2
+7,"English",0,"Male",24,"no","","Yes",".30",3
+8,"English",1,"Male",22,"","","Yes","Yes",1
+9,"English",0,"Male",25,"no","","Yes","yes",3
+10,"English ",0,"Male",41,"no","","Confused","too low",1
+11,"English",1,"Male",26,"Progress bar was a little wonky.","Interesting survey.","Yes",".30",3
+12,"english",0,"Male",52,"no","","Yes",".40",4
+13,"English",0,"Male",57,"No","","Yes",".50",3
+14,"english",0,"Male",30,"no","","Yes","0.45",2
+15,"Spanish",0,"Male",30,"Yes","","Yes","0.75",3
+16,"English",1,"Female",24,"No","","Yes","0.30",3
+17,"English",0,"Female",34,"no","","Yes","0.50",3
+18,"English",0,"Male",24,"","","Yes","0.3",1
+19,"English",-1,"Female",32,"No","","Yes","0.3",4
+20,"English",0,"Male",20,"No","","Yes","0.3",2
+21,"English",1,"Female",38,"no","","Yes","0.3",4
+22,"English",0,"Male",32,"No","","Yes",NA,3
+23,"English",1,"Female",32,"No","","Yes","0.35",3
+24,"english",0,"Female",29,"no","none","No",NA,2
+25,"English",0,"Female",40,"No","No","Yes","0.3",2
+26,"english",0,"Female",22,"no","","Yes","0.3",3
+27,"english",0,"Female",48,"","","Yes",".30",1
+28,"en",-1,"Male",26,"0","0","No","1.00",3
+29,"English",0,"Female",57,"no","","Yes","sure",1
+30,"English",0,"Male",30,"No problems that I know of.","","Confused","I think the amount on it is fair",2
+31,"English",1,"Female",34,"no","","Yes","slightly low",2
+32,"English",0,"Male",35,"n/a","Thank you for the opportunity","Yes",".30",3
+33,"English",0,"Male",28,"no","","Yes",".50",3
+34,"Bulgarian ",1,"Female",42,"No","","Yes","Yes",2
+35,"English",1,"Male",27,"none","","No",".50",2
+36,"English",1,"Female",37,"no","","Yes",".50",3
+37,"English",1,"Female",43,"NO.","","Yes",".30",3
+38,"English",0,"Male",47,"No","none","Yes","$0.60",3
+39,"Spanish",1,"Male",41,"No.","None.","Yes","0.40",3
+40,"English",1,"Male",31,"No.","Thank you.","Yes",".50",2
+41,"English",1,"Male",40,"No","","Yes","0.30",2
+42,"English",0,"Male",35,"no","","Yes","0.40",3
+43,"English",0,"Female",NA,"","","Confused","50 cents",4
+44,"English",1,"Male",33,"No.","No comments.","Yes","0.50",3
+45,"english",-1,"Male",30,"no","","Yes","10",3
+46,"English",0,"Male",39,"no","","Yes","close",2
+47,"English ",0,"Male",30,"no","","Yes","30",4
+48,"English",1,"Female",40,"No","","Yes","0.30",3
+49,"English",1,"Male",24,"Noticed at least 1 spelling error ""percentage"" previous page","","Yes",".50",2
+50,"English",0,"Male",36,"I didn&quotechart see any bugs.","","No","0.30",3
+51,"English",1,"Male",38,"no","","Yes",".30",3
+52,"English",1,"Female",58,"no","","Yes","yes",2
+53,"English",1,"Male",48,"no","None at this time.","Yes",".50",4
+54,"English",1,"Male",20,"","","Yes","$0.50",2
+55,"English",1,"Female",25,"None","","Yes",".25",3
+56,"english",0,"Male",28,"no","","Yes","50 cents",2
+57,"English",0,"Female",21,"No","","Yes",".30",1
+58,"English",1,"Female",39,"","","Yes","0.50",2
+59,"English",0,"Male",49,"No.","","Yes",".75",3
+60,"English",0,"Female",59,"no","no","Confused",".30",2
+61,"English",1,"Female",40,"No Problems or bugs","No additional comments at this time.","Yes","20",2
+62,"english",0,"Female",30,"No.","None","Yes",".50",2
+63,"English",0,"Male",33,"no","no","Yes","$0.50",2
+64,"english",0,"Female",25,"","","Yes","30 cents",3
+65,"English",0,"Female",47,"","","Yes",".15",3
+66,"english",1,"Male",35,"no","","Yes",".60",2
+67,"English",0,"Male",34,"","This was an interesting survey.","Yes","0.30",3
+68,"English",0,"Female",30,"No","","Yes",".50",1
+69,"english",0,"Male",60,"no","","Yes",".75",4
+70,"english",0,"Male",50,"no","","Yes",".30",3
+71,"English",1,"Female",28,"no.","Thank you!","Yes",".50",3
+72,"English",0,"Male",23,"None","","Yes","Yes",2
+73,"English",1,"Female",23,"NonE","It was a good survey.  Thank you.","Yes",".30",2
+74,"English",1,"Female",57,"No","No","Yes",".30",2
+75,"English",0,"Male",34,"No","Nope","Yes",".50",3
+76,"English",0,"Male",30,"None","","Yes","$0.40",3
+77,"english",0,"Female",48,"no","","Yes",".70",3
+78,"English",0,"Male",31,"no","","Yes",".30",3
+79,"English",0,"Male",28,"no","","Yes","1.00",3
+80,"English",0,"Male",46,"no","","Yes","0.50",3
+81,"english",0,"Male",34,"no","","Yes","yes",3
+82,"English",1,"Female",25,"","","No",".40",3
+83,"English",1,"Female",56,"no","","Yes",".45",3
+84,"English",1,"",27,"","","Yes","",3
+85,"English",0,"Male",37,"No","","Yes","Yes",3
+86,"English",0,"Male",44," no","thank you very much.","Yes","$1.00",2
+87,"english",1,"Female",35,"Nope","","Yes",".30",4
+88,"English",1,"Male",29,"I don&quotechart believe so.","It was very interesting and I enjoyed it.  Thank you.","Yes","Current price of 0.30 seems fair.",3
+89,"English",1,"Female",48,"No","","Yes",".30",4
+90,"",99,"",NA,"","","Yes","",-1
+91,"English",0,"Female",38,"none","","Yes",".30",3
+92,"English",0,"Male",63,"none","","Yes","yes",2
+93,"english",0,"Male",35,"no","","Yes","0.60",1
+94,"English",1,"Male",23,"No","","Yes","$.50",2
+95,"English",0,"Male",42,"no","no","Yes",".30",2
+96,"English",0,"Male",38,"No.","","Yes",".30",3
+97,"English",0,"Male",45,"no","","Yes",".50",2
+98,"English",0,"Female",42,"No.","","Yes",".20",4
+99,"English",1,"Male",28,"No","","Yes","0.15",3
+100,"English",0,"Female",27,"No.","","Yes",".50",3
+101,"english",0,"Female",35,"no","","Yes",".50",3
+102,"English",0,"Female",66,"no","","Yes",".40",3
+103,"English",0,"Male",27,"None.","Great study.","Yes","0.35",1
+104,"English",0,"Female",24,"None that I could see.","","Yes","$0.30",1
+105,"english",0,"Female",39,"","","Yes",".30",2
+106,"English",1,"Male",22,"no","none . Great!","Yes","1.00",2
+107,"English",1,"Female",24,"no problems","","Yes",".30",1
+108,"English",1,"Female",31,"no","","Yes","30",3
+109,"English",1,"Male",25,"No","","Yes",".60",3
+110,"English",0,"Female",42,"No","None","Yes",".50",3
+111,"English",0,"Male",62,"No","None","Yes","$0.50",2
+112,"english",0,"Male",26,"no","great task","Yes","1.00",2
+113,"Chinese",1,"Female",56,"none","","Yes","100",4
+114,"english",0,"Female",30,"mo","","Yes",". 50 cents is good",4
+115,"English",1,"Female",55,"none","none","Yes","50",2
+116,"English",0,"Male",19,"none","","Yes","Yes",1
+117,"English",0,"Male",30,"No","","Yes",".40",2
+118,"english",0,"Female",45,"none","","Yes","no",2
+119,"English",0,"Female",32,"","","Yes","0.50",2
+120,"English",1,"Female",31,"","","Yes","25-35 cents",3
+121,"english",1,"Male",61,"no","","Yes","yes",1
+122,"English",1,"Male",26,"no","","Yes","yes",3
+123,"English",1,"Female",58,"no","","Yes","0.50",2
+124,"english",1,"Female",38,"","","Yes","50",2
+125,"English",0,"Female",31,"no","none","Yes","30",4
+126,"English",1,"Female",25,"No bugs","","Yes","0.35",3
+127,"english",0,"Male",31,"no","","Yes",".30",2
+128,"English",0,"Male",34,"no","","Yes","0.35",4
+129,"English",1,"Male",41,"none","none","Yes","yes",2
+130,"english",1,"Male",26,"","","Yes",".50",2
+131,"English",0,"Male",53,"no","","Yes","10.00",2
+132,"English",1,"Male",36,"no","I tried to remember the Percentages and Letters and did not even see the pattern.","Yes","yes",2
+133,"English",1,"Female",26,"","Interesting and quick HIT.","Yes","yes",3
+134,"English",0,"Female",22,"","I&quotecharm not sure if it was purposeful to not allow the participant to see the percentages once they were asked on the next page to predict the next animals percentages. If it was intentional then you should make sure that participants know this so they don&quotechart try to go back to that page or think ahead and write down the numbers. I almost wrote down the numbers but decided against it.","Yes",".50",2
+135,"English",1,"Male",22,"No.","","No",".25",2
+136,"English",1,"Male",21,"No","","No","$1",2
+137,"English",0,"Male",47,"no","","Yes","yes",2
+138,"English",1,"Female",50,"no","","Yes",".35",3
+139,"English",0,"Female",64,"No","","Yes","Yes",2
+140,"English",0,"Male",21,"None","","Yes",".30",2
+141,"English",1,"Female",40,"","That was fun. I love Sci Fi and imagined I was an animal Scientist haha. ","Yes",".20",1
+142,"english",1,"Male",30,"no","","No","50",4
+143,"English",1,"Female",38,"No","","Yes","0.30",2
+144,"english",0,"Female",33,"no","","Yes","25 cents",3
+145,"english",0,"Male",37,"","","Yes","",3
+146,"English",0,"Male",23,"no","","Yes","I&quotechard like it to be higher, but it&quotechars okay. ",2
+147,"english",0,"Female",47,"no","","Yes","yes",3
+148,"English",1,"Male",32,"No","Fun to do!","Yes","yes",4
+149,"English",1,"Female",45,"","","Yes","1.00",2
+150,"English",0,"Male",42,"None","","Yes",".30",3
+151,"Spanish",0,"Female",28,"No","","Yes","Min. wage",2
+152,"English",0,"Female",27,"no","","Yes",".4",3
+153,"English",1,"Male",39,"None","None","Yes",".30",3
+154,"English",1,"Female",35,"no","","Yes",".30",4
+155,"English",1,"Male",29,"","","Yes","Yes",3
+156,"English",1,"Female",21,"no","","Yes","0.30",3
+157,"English",1,"Female",43,"n/a","n/a","Yes",".40",2
+158,"English",1,"Female",57,"No problems.  I felt the questions were well written and easy to understand.","","Yes",".30",4
+159,"English",1,"Female",71,"I didn&quotechart like the word property I would have chosen the word ability instead.","I do believe certain animals can sense when an earthquake is about to happen. ","No",".25",2
+160,"english",0,"Female",57,"no problems","no comments and thank you or this experiment","Yes","1.00",2
+161,"English",1,"Male",26,"no","","Yes",".30",2
+162,"english",1,"Male",37,"no","","Yes","0.30",4
+163,"German",1,"Female",42,"","","Yes",".50",3
+164,"English",0,"Male",37,"no","no","Yes","yes",1
+165,"English",1,"Male",19,"No","","Yes","0.15",2
+166,"French",0,"Female",48,"no","30 cents makes me go very fast and it&quotechars not even 10 cents a minute. I hate rushing through tasks and surveys, but when I am treated poorly I can&quotechart give the best I can give. You get what you pay for. Still my work is honest, just not as thorough as if it paid more.","Yes",".50",3
+167,"",1,"Male",64,"no","enjoyed it","Yes","50",2
+168,"English",0,"Male",22,"","","Yes",".30",2
+169,"English",1,"Male",33,"No","N/A","Yes","0.30",3
+170,"English",0,"Female",35,"No","","Yes",".30",1
+171,"English",1,"Male",40,"None","cool survey!","Yes","40 cents",2
+172,"English",1,"Female",26,"Nope!","None, Thanks!","Yes","0.30",4
+173,"Bulgarian",1,"Female",25,"no","","No",".50 would have been better in my opinion.",2
+174,"English",0,"Female",54,"no","","Yes","25",3
+175,"English",0,"Male",22,"no","","Yes","0.30",2
+176,"english",1,"Female",32,"no","This was a fun experiment, thank you!","Yes",".30",3
+177,"English",1,"Female",22,"No","","No","40",3
+178,"english",0,"Female",43,"no","curious what it is about","Yes","50",2
+179,"English",0,"Male",33,"No problems.","Thanks!","Yes","1.00",3
+180,"English",0,"Male",27,"","Thanks!","Yes",".30",3
+181,"engligh",1,"Female",46,"no","","Yes","open",3
+182,"English",0,"Male",36,"No.","Compensation should be raised a bit, perhaps even doubled.","Yes","0.60",3
+183,"english",0,"Male",45,"no","no","Yes",".50 cents",2
+184,"English",0,"Female",28,"no","","Yes","yes",4
+185,"English",0,"Female",53,"none","good luck with your work! ","Yes","yes",4
+186,"English",0,"Female",65,"no","none","Confused","1.00",2
+187,"English",0,"Male",38,"No problems at all.","","Yes","Yes",2
+188,"english",1,"Female",23,"","","Yes",".30",3
+189,"English",1,"Female",24,"No","","Yes","0.5",2
+190,"English",0,"Female",40,"no problems","","Confused",NA,3
+191,"English",1,"Male",28,"Nope","","Yes",NA,4
+192,"English",0,"Female",29,"None that I experienced","None","Yes","0.3",2
+193,"English",1,"Female",28,"no","","Yes","0.3",2
+194,"English",1,"Male",29,"none","","Yes",NA,2
+195,"e",99,"Male",27,"","","No",NA,1
+196,"English",1,"Male",45,"No","","Yes","0.3",3
+197,"English",1,"Male",27,"No","n/a","Yes","0.5",3
+198,"english",0,"Female",29,"no","","Yes",".30",2
+199,"English",0,"Other",38,"No","","Yes",".40",4
+200,"English",0,"Male",29,"None","","Yes","30 cents is fair",1
+201,"English",0,"Male",30,"","","Yes","about $6 per hour",2
+202,"English",0,"Male",29,"no","","Yes","yes",3
+203,"English",0,"Female",34,"No","No comment","Yes",".50",3
+204,"English",0,"Female",39,"nothing ","","Yes","yes",1
+205,"English",0,"Male",40,"There were no problems in this experiment.","","Yes",".50",3
+206,"English",0,"Female",27,"No.","","Yes","A bit lower than avg.",2
+207,"English",0,"Male",34,"No","","Yes","Yes",4
+208,"English",0,"Male",30,"No","","Yes",".25",4
+209,"English",0,"Female",31,"no, but the last question was worded a bit oddly","","Yes",".35",3
+210,"english",1,"Female",38,"no","thanks","Yes","sure",2
+211,"English",0,"Female",29,"No.","","Yes",".40",3
+212,"English",1,"Male",43,"No","Thank you for using mturk.","Yes",".30",2
+213,"English",0,"Male",69,"no","","Yes",".50",2
+214,"english",0,"Male",53,"No","","Yes","7.00",2
+215,"English",0,"Female",33,"None","","Yes","Yes",3
+216,"English",0,"Male",34,"","","Yes",".30",3
+217,"English",0,"Female",32,"No","","Yes",".30",4
+218,"english",0,"Male",53,"no","no","Yes","50 cents",1
+219,"english",1,"Female",42,"no","","Yes",".30",1
+220,"English",0,"Female",34,"","","Yes","0.30",3
+221,"English",1,"Female",70,"none","none","Yes",".30",2
+222,"english",0,"Female",49,"none","none",NA,"0.30",3
+223,"english",1,"Male",24,"no","nope","Yes","50 cents",3
+224,"English",1,"Female",24,"No","","Yes","Yes",3
+225,"English ",1,"Female",36,"No","","Yes",".3",4
+226,"english",0,"Female",57,"no","","Yes","yes",3
+227,"English",0,"Male",24,"no","","Yes","not really ",3
+228,"English",0,"Female",34,"None","None","Yes",".30",3
+229,"English",0,"Male",35,"","I&quotecharm really curious as to what your hypothesis is in this study.","Yes",".30",4
+230,"english",0,"Female",41,"no","no","Yes",".30",2
+231,"English",1,"Male",38,"No","Good Survey","Yes","$1.00",2
+232,"english",0,"Male",41,"no","","Yes",".40",2
+233,"English",0,"Female",49,"no","","Yes",".35",3
+234,"English",0,"Female",28,"","","Yes",".30",2
+235,"English ",1,"Female",26,"I wish I could see the data in a table. ","I am not 100% sure I did the HIT correctly but I am like 80% sure I did. ","Yes","yes",3
+236,"English",0,"Female",41,"No","","Yes","yes",3
+237,"english",0,"Female",34,"no","","Yes",".50",3
+238,"English",1,"Female",55,"No","","Yes","0.50",2
+239,"english",1,"Male",37,"no","no","Yes",".75",3
+240,"English",0,"Male",48,"no","","Yes","no",3
+241,"Spanish",1,"Male",36,"no","no","Yes","0.30",2
+242,"English",0,"",32,"no","","Yes","unsure",1
+243,"English",0,"Male",33,"Nope.","None.","Yes","0.3",3
+244,"ENGLISH",1,"Male",22,"","","Yes","0.3",1
+245,"English",0,"Male",33,"None","None","Yes","0.3",3
+246,"English",1,"Male",36,"no","thats all?","Yes","0.3",3
+247,"English",99,"Female",NA,"","","Yes",NA,2
+248,"English",0,"Female",52,"no","","Yes","50",3
+249,"English",1,"Female",61,"no","Thank you for allowing me to participate in your research study!","Yes",NA,3
+250,"English",0,"Male",38,"Nope","","Yes",NA,4
+251,"English",0,"Female",62,"no","","Yes","0.3",3
+252,"English",0,"Male",22,"No","","Yes","$0.50",3
+253,"english",1,"Female",23,"","","Yes","yes",3
+254,"English",0,"Male",32,"no","","Yes","yes",1
+255,"English",1,"Female",33,"Links are better. These in-screen surveys are always glitchy.","","No","$0.50",2
+256,"english",0,"Female",26,"","","Yes","1.00",2
+257,"english",0,"Male",33,"","","Yes","yes",2
+258,"English",0,"Male",23,"no","","Yes","0.30",3
+259,"English",1,"Female",24,"","I&quotecharm unsure if I was supposed to look for a specific pattern--regardless, I didn&quotechart really look for one other than seeing that the numbers were similar.","Confused","",3
+260,"English",0,"Female",48,"No problems or bugs.","No other comments.","Yes","Barely.",3
+261,"english ",1,"Female",32,"no","","Yes","30",3
+262,"English",1,"Male",28,"no","","Yes","yes",2
+263,"English",0,"Male",33,"No","","Yes",".40",3
+264,"English",1,"Female",55,"all good, thanks","thank you :)","Yes","yes",2
+265,"english",1,"Male",75,"no","nice survey","Yes","1oo",1
+266,"English",0,"Male",36,"None","","Yes","0.75",2
+267,"English",0,"Male",46,"None","Thanks","No",".3",2
+268,"English",0,"Female",35,"","","No","Yes",3
+269,"English",0,"Female",29,"no","","Yes",".30",4
+270,"english",1,"Female",28,"no","","Yes",".50",3
+271,"English",1,"Male",32,"none","none","Yes",".50",3
+272,"",99,"",NA,"","","Yes","",-1
+273,"ENGLISH",1,"Male",35,"NO","THANKS","No","YES",2
+274,"English",1,"Male",30,"No problems.","","Yes",".30",1
+275,"english",1,"Female",38,"none","none","No","1.00",2
+276,"English",1,"Male",26,"","","Yes",".4",3
+277,"English",1,"Female",26,"No everything worked good","Good hit!","Yes","yes",2
+278,"English",1,"Female",47,"no","","Yes",".30",4
+279,"english",1,"Male",38,"","","Yes","",2
+280,"English",1,"Female",27,"No issues at all","","Yes",".50",1
+281,"English",1,"Female",42,"no","","Yes","I don&quotechart know",4
+282,"English",1,"Male",49,"","","Yes",".30",4
+283,"English",1,"Male",26,"No","","Yes",".50",3
+284,"English",0,"Female",49,"No.","No.","Yes",".50",1
+285,"English",0,"Male",33,"","","Yes",".3",3
+286,"English",1,"Male",70,"no","","Yes","30",-1
+287,"English",1,"Male",20,"","","Yes","50",2
+288,"English",1,"Male",36,"n/a","n/a","Yes",".25",3
+289,"English",0,"Female",23,"No.","","Yes","Yes.",1
+290,"English",0,"Female",41,"no","none","Yes","yes",2
+291,"English, Spanish",0,"Male",23,"No, but some grammar issues. ","","Yes","0.30",3
+292,"English",0,"Female",22,"No","None","Yes",".30",2
+293,"english",1,"Female",27,"no","","No",".30",1
+294,"Kickapoo",1,"Female",32,"No","","Yes",".50",4
+295,"English",0,"Female",33,"No","I would have liked there to be numerical values visible on the page when you have to predict percentage.  ","Yes","0.30",3
+296,"english",1,"Female",54,"no","","Yes",".30",2
+297,"English",1,"Male",29,"No",NA,"Yes","Yes",4
+298,"english",1,"Female",30,"no",NA,"Yes","0.30",3
+306,"English",0,"Male",31,"","","Confused","a dollar",2
+307,"english",0,"Female",23,"npne","","Yes","2",2
+308,"English",1,"Male",43,"no","none","Yes",".50",3
+309,"tagalog",0,"Female",58,"no","","Yes","$0.30",3
+310,"English",0,"Male",36,"No","","Yes","1.00",2
+311,"english",0,"Male",35,"no","","Yes","yes",2
+312,"English",1,"Female",51,"no","","Yes",".30",4
+313,"english",0,"Female",35,"I just messaged because I was stuck...the question on the last page about a percent and an animal seemed like it wanted which animal had which percent - and it wouldn&quotechart take that answer. It took just a number. That wording seems confusing.","As I said, I messaged you on mturk, but I figured it out - so that message is irrelevant now. ","Yes",".35",3
+314,"english",1,"Male",51,"no","","Yes",".25",3
+315,"English",0,"Male",33,"","","Yes","yes, for mturk, but still not great",2
+316,"Tagalog",1,"Female",40,"No","None","Yes","50",3
+317,"english",1,"Female",52,"none","","Yes",".50",3
+318,"English",1,"Female",31,"No","","Yes","45",1
+319,"English",0,"Male",25,"","","Yes","Yes",3
+320,"English",0,"Male",30,"No.","Thanks so much.","No","Sure.",2
+321,"English",1,"Female",31,"","","Yes",".40",3
+322,"English",0,"Female",29,"No.","No comments.","Yes","0.30",3
+323,"English",0,"Male",46,"No","","Yes",".25",3
+324,"english",0,"Female",32,"There were not","Thank You","Yes","yes",3
+325,"English",1,"Female",22,"","","Yes","Yes",2
+326,"English",0,"Male",41,"no","","Yes","1.00",2
+327,"English",1,"Male",24,"None ","","Yes","0.40",2
+328,"English",1,"Male",39,"I found no problems or issues.","This was very interesting, thank you.","Yes",".75",2
+329,"englsih",0,"Female",56,"no","interesting","Yes","75",3
+330,"English",1,"Female",59,"no","","Yes",".50",1
+331,"English",0,"Male",38,"no","ty","Yes",".30",2
+332,"English",0,"Female",52,"No","","Yes","35",2
+333,"English",99,"Female",23,"","","Yes","",4
+334,"English",1,"Female",33,"No","No","Yes","Yes",3
+335,"English",0,"Male",22,"","","Yes","yes",2
+336,"english",0,"Female",35,"no","","Yes",".3",3
+337,"English",1,"Female",43,"no","","Yes","yes",3
+338,"English",1,"Male",42,"","","Yes","50",3
+339,"English",1,"Female",53,"no","non",NA,"yes",2
+340,"English",0,"Male",86,"no","no","Yes",".30",3
+341,"ENGLISH",1,"Female",53,"NONE","NONE","Yes","50",2
+342,"English",0,"Male",44,"no","","Yes","40",3
+343,"Dutch",0,"Male",47,"No","","Yes","Yes",3
+344,"english",1,"Female",18,"No","Survey ran smoothly","Yes",".30",1
+345,"English",0,"Male",31,"no","none","Yes",".30",2
+346,"English",1,"Female",34,"No","","Yes","Yes",3
+347,"English",0,"Female",47,"not that I noticed","It took me about 7 minutes to complete, that is how I based my fair price. ","Yes",".70",2
+348,"English",1,"Female",33,"None","","Yes","0.40",3
+349,"English",1,"Female",21,"No","","Yes","$0.50",2
+350,"English",0,"Female",42,"No","",NA,"Yes",3
+351,"English",1,"Male",25,"no","","Yes","yes",2
+352,"English",0,"Male",54,"","","Yes","No.  It should be 0.50 (or more)",3
+353,"English",1,"Male",48,"None","Thanks","Yes","0.30",3
+354,"English",1,"Female",44,"no","","Yes",".30",2
+355,"english",1,"Female",32,"no","","Yes","0.50",2
+356,"english",0,"Male",27,"no","","Yes",".40",3
+357,"english",1,"Male",67,"no","no","Yes",".75",3
+358,"Filipino",1,"Male",42,"No","Enjoyable sci-fi survey","Yes",".30",2
+359,"English ",1,"Female",36,"no","","Yes","yes",2
+360,"english",0,"Male",23,"no","","Yes","50 cents",2
+361,"English",0,"Female",28,"No","","Yes","0.30",3
+362,"English, Vietnamese",0,"Male",23,"no","","Yes","yes",2
+363,"English",0,"Male",27,"There was not.","","Yes",".45",3
+364,"English",0,"Male",47,"no","Thanks.","Yes","yes",2
+365,"English",0,"Female",37,"none","no.","Yes",".50",3
+366,"English",1,"Female",23,"","","Yes",".30",3
+367,"English",0,"Male",54,"none","a fair price?? How much do you think a human being should make per hour in the United States. Certainly not these sweat shop prices. LOL. ","Yes",".25",2
+368,"English",0,"Male",30,"None!","","Yes","Yes",3
+369,"english",0,"Male",22,"no","","Yes","30",2
+370,"English",1,"Male",27,"No","","Yes","50 cents",3
+371,"english",0,"Male",28,"","","Yes","1.00",4
+372,"English",1,"Male",26,"None.","Survey went smoothly.","Yes","0.30",3
+373,"English",1,"Male",26,"no","","Yes","yes",2
+374,"English ",0,"Male",33,"No","","Yes","Yes",3
+375,"English",0,"Male",26,"No","","Yes","Yes",3
+376,"english",1,"Female",65,"none","","Yes","not really",2
+377,"English",0,"Male",36,"no","none","Yes","0.50",3
+378,"English",1,"Female",31,"No","","Yes",".35",4
+379,"english",0,"Female",62,"","none","Yes","yes",2
+380,"english",1,"Male",35,"no","","Yes","yes",2
+381,"English ",0,"Female",51,"No ","","Yes",".60",2
+382,"English",1,"Male",50,"No","","Yes",".30",4
+383,"English",1,"Male",41,"No","","Yes","Yes",2
+384,"english",0,"Male",29,"no","no","Yes",".50",3
+385,"Chinese",0,"Female",43,"","","Yes","0.5",-1
+386,"English",-1,"Male",27,"no","","Confused","35",3
+387,"English",0,"Male",42,"No problems or bugs.","","Yes","Yes",3
+388,"Tagalog",0,"Female",41,"none","none","Yes",".20",3
+389,"English",0,"Female",24,"no","","Yes","25 cents",3
+390,"english",0,"Female",25,"none","","Yes",".50",3
+391,"English",1,"Female",25,"no","","Yes","yes",2
+392,"English",1,"Male",29,"No","None","Yes",".50",4
+393,"English",0,"Male",24,"No","","Yes","Yes",4
+394,"English",1,"Female",47,"","","Yes","assigned",4
+395,"English",1,"Female",27,"No.","","Yes",".30",2
+396,"English",1,"Female",48,"no","","Yes","50",3
+397,"English",0,"Female",47,"No","Interesting survey","Yes","0.30",3
+398,"english",0,"Female",56,"","","Yes",".50",2
+399,"English",1,"Male",56,"No","Pura Vida!","Yes","Yes",3
+400,"French",1,"Male",28,"It asked me to go on chrome and I was initially on IE. I switched and had no issue.","I am fluent in English :]","Yes","Current price is $0.30",3
+401,"English",1,"Male",37,"No","","Yes","0.45",2
+402,"English",0,"Female",69,"no","thank you for the opportunity to participate in your study and best of outcomes for you","Yes",".50",3
+403,"English",1,"Female",61,"no","Interesting","Yes",".50",3
+404,"English",0,"Female",49,"","","Yes",".40",3
+405,"English",1,"Female",40,"no","","Yes",".50",2
+406,"English",1,"Female",58,"no","","Yes","30-50",4
+407,"English",0,"Male",53,"No","","Yes",".30",3
+408,"English",1,"Female",30,"No","","Yes",".50",3
+409,"English",0,"Male",24,"No","","Yes",".60",3
+410,"English",1,"Female",63,"No","Good luck with your study!","Yes","30",-1
+411,"English",1,"Male",32,"no","","Yes",".5",1
+412,"English",0,"Male",19,"No","","No",".50",2
+413,"English",0,"Female",36,"No","","Yes","0.30",1
+414,"English",1,"Male",27,"No",NA,"Yes","30",3
+415,"English",1,"Male",24,"",NA,"Yes","yes",3
+416,"",99,"",NA,"",NA,"Yes","",-1
+417,"English",0,"Female",24,"No",NA,"Yes",".30",3
+418,"English",1,"Female",61,"no",NA,"Yes","yes",3
+419,"English",1,"Male",54,"no",NA,"Yes",".30",3
+420,"english",1,"Female",28,"no",NA,"Yes","0.3",3
+423,"English",0,"Male",35,"","","Yes","Yes",1
+424,"English, Croatian",1,"Male",24,"N/A","","Yes","Yes",3
+425,"Laotian",0,"Female",36,"no","None. Thank you for the oppurtunity to particate, and good luck with your study.","Yes",".50",2
+426,"english",0,"Female",26,"","","Yes","yes",3
+427,"English",1,"Male",42,"Smooth and easy.","Thanks. I like the format.","Yes","$0.50",2
+428,"english",1,"Male",36,"none","","Yes",".50",2
+429,"English",0,"Female",42,"No","","Yes",".50",2
+430,"English ",1,"Female",36,"no","","Yes","yes",2
+431,"English.",1,"Female",61,"I wanted to change my percentage on the graph after I started ansering the next question, but it wouldn&quotechart let me.","Thank you.","Yes","yes. I just go slow.",2
+432,"english",1,"Female",29,"no","none","Yes","yes",2
+433,"English",0,"Male",25,"No",NA,"Yes",".50",3
+434,"english",0,"Male",29,"no","","Yes",".30",1
+435,"english",1,"Male",36,"non","","Yes",".75",3
+436,"English",1,"Male",31,"No","","Yes","0.40",3
+437,"english",1,"Female",46,"no","","Yes",".10",3
+438,"english",0,"Female",35,"","","Yes",".50",2
+439,"English",1,"Female",31,"","","Yes",".50",3
+440,"English",0,"Male",31,"No","","Yes",".35",2
+441,"english",0,"Female",45,"no","","Yes","50",4
+442,"English",1,"Female",55,"No.","","Yes",".40",3
+443,"english",0,"Male",63,"no","A3KG015BZSWBE5","Yes","yes",1
+444,"English",1,"Male",32,"No","No","Yes",".3",4
+445,"English",0,"Male",23,"no","","Yes",".5",3
+446,"English",0,"Male",27,"","","Yes",".30",2
+447,"English",0,"Female",51,"I was not able to go back and adjust my percentages. ","","Yes","50 cents",3
+448,"English",1,"Female",49,"no","","Yes",".30",2
+449,"English",0,"Male",30,"no","","Yes",".30",3
+450,"English",0,"Male",50,"","","Yes","0.50",4
+451,"English",0,"Male",44,"no","","Yes","yes",4
+452,"English, Chinese",0,"Male",25,"","","Yes","0.30",2
+453,"english",0,"Male",37,"no","","Yes","yes",3
+454,"English",0,"Male",28,"no","","Yes",".30",3
+455,"english",0,"Female",23,"no","no","Yes","0.35",2
+456,"English",0,"Female",31,"No","","Yes","Yes",3
+457,"English",1,"Female",60,"No","I found it very, very odd that any animals would not sense an upcoming earthquake as normally most animals tend to be quite aware of changes in the environment, especially ones that might be a threat.","Yes",".55",3
+458,"English",0,"Male",27,"","","Yes",".30",3

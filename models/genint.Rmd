@@ -30,7 +30,7 @@ params <- expand.grid(
   prior = c("uniform", "biological_rare", "biological_common",
             "accidental_common", "accidental_rare",
             "gendered_rare")
-  )
+  ) 
 ```
 
 Notes...

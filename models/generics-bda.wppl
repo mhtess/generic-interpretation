@@ -125,7 +125,7 @@ var model = function(){
   var speakerOptimality = (modelName == "literal") ? 1:
     uniformDrift({a: 0, b: 30, width:2})
 
-  var cost = uniformDrift({a: 0, b: 10, width: 2})
+  var cost = (modelName == "literal") ? 0: uniformDrift({a: 0, b: 10, width: 2})
   var cost_uttProb = Math.exp(-cost)
 
   var numberOfComponents = 3;//poisson(1) + 1;
@@ -286,8 +286,8 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 250000, lag =  75;
-// var totalIterations = 30, lag =  1;
+// var totalIterations = 250000, lag =  75;
+var totalIterations = 1, lag =  1;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 var outfile = 'results-genint-wCost-int6-prior3-fixedPrior_'+modelName+'-'+semantics+'-'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
@@ -295,9 +295,10 @@ var outfile = 'results-genint-wCost-int6-prior3-fixedPrior_'+modelName+'-'+seman
 
 var posterior = Infer({
   model: model,
-	// method: "incrementalMH",
-  method: "MCMC",
-  samples: samples, burn: burn, lag: lag,
+	method: "incrementalMH",
+  // method: "MCMC",
+  // samples: samples, burn: burn, lag: lag,
+  samples: samples, burn: 0, lag: 0,
   verbose: T,
   verboseLag: totalIterations / 20,
 	stream: {

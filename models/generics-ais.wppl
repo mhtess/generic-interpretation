@@ -1,4 +1,4 @@
-// time webppl generics-ais.wppl --require utils --require webppl-json pragmatic_unlifted uncertain 4
+// time webppl generics-ais.wppl --require utils --require webppl-json literal some 1
 
 // modelName: pragmatic, pragmatic_unlifted, literal
 
@@ -121,7 +121,7 @@ var marginalLikelihood = function(){
 
   var noise = (semantics == "most") ? uniform(0, 1) : 0
   var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
-  var cost = uniform(0, 10)
+  var cost = (modelName == "literal") ? 1 : uniform(0, 10)
 
   var cost_uttProb = Math.exp(-cost)
 
@@ -231,18 +231,19 @@ var marginalLikelihood = function(){
 
     var interpretationPrediction = modelName == "literal" ? listener0("generic") :
       modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
+      modelName == "prior" ? statePrior :
       listener1("generic")
 
 
   // var L0 = listener0("generic")
-  // var interpretationPrediction = addNoise(L0, noise)
+  var noisyPrediction = addNoise(interpretationPrediction, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
-     var scr = interpretationPrediction.score(d.binnedResponse)
+     var scr = noisyPrediction.score(d.binnedResponse)
      scr == -Infinity ? displayObj(d) : null
      // display(scr)
-     observe(interpretationPrediction, d.binnedResponse)
+     observe(noisyPrediction, d.binnedResponse)
    })
 
    // var supp = interpretationPrediction.support()
@@ -284,13 +285,13 @@ var marginalLikelihood = function(){
 
 
 // data.endorsement
-var steps = 10000
+var steps = 1000
 var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
 
-var resultsOutFile = 'results/marginal_likelihood/ais-genint-wCost-'+modelName+
-  '-fixedPriors-steps'+steps +'-iter'+iter+'.json'
+var resultsOutFile = 'results/genint/marginal_likelihood/ais-genint-wCost-'+modelName+
+  "-" + semantics + '-fixedPriors-steps'+steps +'-iter'+iter+'.json'
 
 // // postOut
 json.write(resultsOutFile, mll)

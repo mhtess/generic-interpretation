@@ -1,4 +1,4 @@
-// time ~/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
+// time ~/tools/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -40,24 +40,24 @@ var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
 
 var data = {
 	prior: filter(function(di){
-    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) &&
       utils.isNumber(di.response) &&
       di.trial_type == "prevalence_elicitation")
   }, map(function(d){ return extend(d, {
 		avoided_endval: avoidEnds(d.response)
   })}, d_prior)),
 	interpretation: filter(function(di){
-    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
       utils.isNumber(di.response) &&
       di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
 	})}, d_interpretation))//,
   // endorsement: filter(function(di){
-  //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) && 
-  //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) && 
+  //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) &&
+  //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) &&
   //     utils.isNumber(di.response) &&
   //     di.trial_type == "truth_conditions")
   // }, map(function(d){ return extend(d, {

@@ -1,0 +1,24 @@
+workerid,reported_results,reported_property,pass_property,pass_numeric,actual_property,pass_both,condition
+5,42,dax,1,1,dax,1,memory_check
+7,100,dax,1,1,dax,1,memory_check
+10,1,dax,1,1,dax,1,memory_check
+11,84,Dax,0,0,dax,0,memory_check
+12,17,dax,1,1,dax,1,memory_check
+14,100,dax,1,1,dax,1,memory_check
+16,41,dax,1,1,dax,1,memory_check
+17,0,dax,1,1,dax,1,memory_check
+21,99,dax,1,1,dax,1,memory_check
+22,28,dax,1,1,dax,1,memory_check
+28,7,Dax,0,0,dax,0,memory_check
+32,10,new species,0,0,dax,0,memory_check
+33,24,Dax,0,1,dax,0,memory_check
+35,8,dax,1,0,dax,0,memory_check
+37,40,dax,1,1,dax,1,memory_check
+38,46,dax,1,0,dax,0,memory_check
+43,18,dax,1,0,dax,0,memory_check
+44,42,dax,1,0,dax,0,memory_check
+45,74,Dax,0,1,dax,0,memory_check
+47,95,dax,1,1,dax,1,memory_check
+48,88,100,0,1,dax,0,memory_check
+51,42,dax,1,1,dax,1,memory_check
+53,70,dax,1,1,dax,1,memory_check
