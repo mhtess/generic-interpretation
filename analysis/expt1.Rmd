@@ -1,0 +1,646 @@
+---
+title: "Analysis of Experiments 1: Prior elicitation and Generic interpretation"
+output: github_document
+---
+
+### author: MH Tessler
+
+### date: April 21, 2019
+
+# libraries
+
+```{r}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, cache=F, message=FALSE, sanitize = T)
+```
+
+
+```{r libraries}
+library(tidyverse)
+library(tidyboot)
+library(tidytext)
+#library(ggpirate)
+library(knitr)
+#library(viridis)
+```
+
+# Experiment 1a: Prior Elicitation
+
+## Subject information
+
+```{r load prior data}
+df.prior <- read_csv("../data/paper_data/expt1/expt1a-prior-trials.csv")
+df.prior.catch <- read_csv("../data/paper_data/expt1/expt1a-prior-catch_trials.csv")
+df.prior.subj <- read_csv("../data/paper_data/expt1/expt1a-prior-subject_information.csv")
+```
+
+
+```{r prior english}
+
+df.prior.english <- df.prior.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(english = grepl("en", tolower(language)))
+
+expt1a.prior.n <- length(unique(df.prior$workerid))
+
+print("english native?")
+table(df.prior.english$english)
+
+print("what do people report for native language that is not english?")
+
+df.prior.english %>%
+  filter(!english) %>%
+  select(language) %>%
+  kable(.)
+```
+
+## Catch trials
+
+```{r prior memory check trials}
+df.prior.catch.summary <- df.prior.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+
+df.prior.catch.pass <- sum(!df.prior.catch.summary$pass)
+
+print("pass memory check")
+
+df.prior.catch.summary %>%
+  select(pass) %>%
+  table()
+```
+
+remove catch trial failures
+
+```{r prior exclusion}
+df.prior.filtered <- left_join(
+  df.prior, 
+  df.prior.catch.summary %>% select(workerid, totalCorrect, pass)
+  ) %>% left_join(., 
+  df.prior.english) %>%
+  filter(pass == 1, english)
+
+expt1a.prior.n.passCatch.English <- length(unique(df.prior.filtered$workerid))
+expt1a.prior.n.passCatch.English
+```
+
+
+How long did the experiemnt take?
+
+```{r prior expt length(time)}
+df.prior.filtered.meanTime <- df.prior.filtered %>%
+  distinct(workerid, rt, trial_num, trial_type) %>%
+  group_by(workerid) %>%
+  summarize(total_time = sum(rt / 1000)) %>%
+  ungroup() %>%
+  summarize(mean_time = mean(total_time) / 60)
+
+df.prior.filtered.meanTime
+```
+
+
+
+
+## Prevalence priors
+
+```{r prevalence prior results}
+df.prior.filtered.prevalence <- df.prior.filtered %>%
+  filter(trial_type == "prevalence_elicitation", !(is.na(response))) %>%
+  mutate(response = as.numeric(response),
+         property = gsub("&quotechar", "", property))
+```
+
+
+### Histogram of number of responses per item
+
+```{r prior hist n_responses per item}
+
+df.prior.filtered.prevalence.n_subj_per_item <- df.prior.filtered.prevalence %>%
+  group_by(property) %>%
+  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n / 5),
+                                      lb = min(n / 5),
+                                      ub = max(n / 5))
+
+df.prior.filtered.prevalence %>%
+  group_by(property) %>%
+  count() %>%
+  ggplot(., aes(x = n / 5))+
+  geom_bar()+
+  ylab("number of items")+
+  xlab("number of participants that rated item")
+
+
+# save(expt2.prior.n,
+#      expt2.prior.nonEnglish,
+#      expt2.prior.catchFail,
+#      expt2.prior.n.passCatch.English,
+#      df.prior.3.filtered.meanTime, 
+#      df.prior.3.filtered.n_subj_per_item,
+#      file = "../../paper/cached_results/genint_priors_metaData.RData")
+
+```
+
+### Distribution of all responses (collapse item)
+
+```{r prior hist all responses}
+df.prior.filtered.prevalence %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram()
+```
+
+### Item distributions (prevalence priors)
+
+```{r priors by item, fig.width = 18, fig.height = 12}
+df.prior.filtered.prevalence %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ))+
+  facet_wrap(~property, scales = 'free') +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+
+#ggsave("figs/prior-3-prevpriors-n144.pdf", width = 20, height = 14)
+```
+
+### Item distributions conditional on > 0
+
+```{r priors nonzero by item, fig.width = 18, fig.height = 12}
+df.prior.filtered.prevalence %>%
+  filter(response > 0) %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( bins = 20,aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ))+
+  facet_wrap(~property, scales = 'free') +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))
+
+#ggsave("figs/prior-3-prevpriorsNonZero-n144.pdf", width = 20, height = 14)
+```
+
+### Distribution of expected values
+
+```{r priors expected values}
+df.prior.filtered.prevalence.ev <- df.prior.filtered.prevalence %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.filtered.prevalence.ev, aes ( x = mean ))+
+  geom_histogram(bins = 30)
+
+#ggsave("figs/prior-3-expvals-n144.pdf", width = 4, height = 4)
+
+```
+
+
+### Distribution of expected values conditional on non-zero prevalence
+
+```{r priors nonxero expected values}
+df.prior.filtered.prevalence.nonzero.ev <- df.prior.filtered.prevalence %>%
+  filter(response > 0) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+ggplot(df.prior.filtered.prevalence.nonzero.ev, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+
+#ggsave("figs/prior-3-nonZeroExpvals-n144.pdf", width = 4, height = 4)
+
+```
+
+### Distribution of proportion of probability mass at 0
+
+```{r priors is zero}
+df.prior.prevalence.isZero <- df.prior.filtered.prevalence %>%
+  mutate(isZero = ifelse(response == 0, 1, 0)) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = isZero)
+
+ggplot(df.prior.prevalence.isZero, aes ( x = mean ))+
+  geom_histogram(bins = 20)
+
+#ggsave("figs/prior-3-isZero-n144.pdf", width = 4, height = 4)
+```
+
+### Propoortion IS ZERO vs nonzero Expectation
+
+```{r priors is zero vs nonzero expectation}
+
+df.prior.conditional.ev <- df.prior.filtered.prevalence %>%
+  filter(response > 0) %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+
+df.prior.prevalence.isZero.conditionalEv <- left_join(
+  df.prior.conditional.ev %>%
+    select(-n, -empirical_stat) %>%
+    rename(pwp_mean = mean, pwp_low = ci_lower, pwp_high = ci_upper),
+  df.prior.prevalence.isZero %>%
+    select(-n, -empirical_stat) %>%
+    rename(isZero = mean, zero_low = ci_lower, zero_high = ci_upper)
+)
+
+ggplot(df.prior.prevalence.isZero.conditionalEv, 
+       aes( x = 1-isZero, xmin = 1-zero_low, xmax = 1-zero_high,
+            y = pwp_mean, ymin = pwp_low, ymax = pwp_high))+
+  geom_errorbar(alpha = 0.3) + geom_errorbarh(alpha = 0.3) + 
+  geom_point(shape = 21, size = 2.6, color = 'black', fill = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  ylab("Prevalence when present")+
+  xlab("P(feature is present)")
+```
+
+
+### Prevalence priors for sample items
+
+```{r priors sample items, fig.width=6}
+target.properties <- c("eat insects", 
+                       "feed on the carcasses of dead animals",
+                       "are afraid of loud noises",
+                       "get in fights with other animals",
+                       "live in urban areas",
+                       "live in zoos",
+                       #"drink alcohol left behind by tourists",
+                       "chase their tails",
+                       "have seizures")
+var_width <- 20
+
+# save(df.prior.prevalence.3.isZero.conditionalEv,
+#      df.prior.prevalence.3,
+#      file = "../../paper/cached_results/genInt_priors.RData"
+#      )
+
+df.prior.filtered.prevalence %>%
+  filter(property %in% target.properties) %>%
+  mutate(property = factor(property, levels = target.properties,
+                           labels = stringr::str_wrap(target.properties, 
+                                                      width = var_width))) %>%
+  ggplot(., aes( x = response ))+
+  geom_histogram( 
+    bins = 20,
+    aes(y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]),
+    color = 'black', fill= 'white')+
+  facet_wrap(~property, scales = 'free', nrow = 2) +
+  scale_x_continuous(limits = c(-0.1, 1.1), breaks = c(0, 0.5, 1))+
+  ylab("Proportion of responses")+
+  xlab("Prevalence")
+
+```
+
+
+
+# Experiment 1b: Generic Interpretation
+
+```{r load data}
+df.int <- read_csv("../data/paper_data/expt1/expt1b-interpretation-trials.csv")
+df.int.subj <- read_csv("../data/paper_data/expt1/expt1b-interpretation-subject_information.csv")
+df.int.catch <- read_csv("../data/paper_data/expt1/expt1b-interpretation-catch_trials.csv")
+```
+
+Native language of English
+
+```{r native english}
+df.int.subj.english <- df.int.subj %>%
+  select(workerid, language) %>%
+  mutate(english = str_detect(tolower(language), "en"),
+         english = ifelse(is.na(english), F, english))
+
+paste(sum(df.int.subj.english$english), " out of ", length(df.int.subj.english$english), " subjects self report native language of english", sep = "")
+```
+
+
+### Memory check trials
+
+```{r exclusion criteria}
+df.int.catch.summarized <- df.int.catch %>%
+  group_by(workerid, tested_on) %>% 
+  summarise(n_correct = sum(correct)) %>%
+  ungroup() %>%
+  mutate(tested_on = factor(tested_on, levels = c(0, 1), 
+                            labels = c("correct rejections", "hits")))
+
+df.int.catch.pass <- df.int.catch.summarized %>%
+  spread(tested_on, n_correct) %>%
+  group_by(workerid) %>%
+  summarise(pass = (hits > 3) && (`correct rejections` > 3))
+
+print(
+  paste(
+    sum(df.int.catch.pass$pass), " out of ", 
+    length(df.int.catch.pass$pass), " participants pass memory check",
+    sep = ""
+  ))
+
+
+df.int.catch.summarized %>%
+  ggplot(., aes( x = n_correct ))+
+  geom_bar()+
+  facet_wrap(~tested_on)+
+  ylab("Number of subjects")
+```
+
+Exclude subjects who do not get at least 4 / 5 correct on both correct rejections and false alarms, as well as non-English speakers. 
+
+```{r exclude subjects}
+df.int.filtered <- left_join(
+  df.int,
+  df.int.catch.pass
+  ) %>% left_join(.,
+    df.int.subj.english
+  ) %>%
+    filter(pass, english)
+
+print(
+  paste(
+    length(unique(df.int.filtered$workerid)), " out of ", 
+    length(df.int.catch.pass$pass), " participants pass exclusion criteria",
+    sep = ""
+  ))
+
+```
+
+## Bootstrap CIs for by-item plot
+
+```{r bootstrap, fig.width=8, fig.height=10}
+df.int.filtered.bs <- df.int.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+df.int.filtered <- df.int.filtered %>% 
+    mutate(property = factor(property, 
+                           levels =  with(df.int.filtered.bs, property[order(mean)])))
+  
+df.int.filtered.bs %>%
+  mutate(property = factor(property,
+                           levels =  with(df.int.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = mean))+
+  #geom_hline(yintercept = 0.5, lty = 2, alpha = 0.5)+
+  geom_point(shape = 73, size = 4)+
+  geom_point(data = df.int.filtered, position = position_jitter(),
+             inherit.aes = F, aes( x = property, y = response),
+             alpha = 0.1)+
+  # geom_col(position = position_dodge(0.8),
+  #          aes(y = mean),
+  #          width = 0.8, alpha = 0.3, color = 'black')+
+    coord_flip()+
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper),
+                position = position_dodge(0.8), width = 0.3, size = 1)+
+  ylab("Implied prevalence rating")+
+  scale_y_continuous(limits = c(-0.03, 1.03), breaks = c(0, 0.5, 1))+
+  #scale_fill_solarized()+
+  #scale_color_solarized()+
+  xlab("")
+```
+
+
+
+### by item histogram
+
+```{r by item histogram, fig.width = 13, fig.height = 10}
+df.int.filtered %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~property, scales = 'free')+
+  xlim(-0.03, 1.03)
+```
+
+### by subject hists
+
+```{r by subject hist, fig.width = 14, fig.height = 11}
+df.int.filtered %>%
+  ggplot(., aes(x = response ))+
+  geom_histogram()+
+  facet_wrap(~workerid, scales = 'free')+
+  xlim(-0.03, 1.03)
+```
+
+
+
+# Replication data set
+
+```{r load replication data}
+df.int.rep <- read_csv("../data/paper_data/expt1/expt1b-rep-interpretation-trials.csv")
+df.int.rep.subj <- read_csv("../data/paper_data/expt1/expt1b-rep-interpretation-subject_information.csv")
+df.int.rep.catch <- read_csv("../data/paper_data/expt1/expt1b-rep-interpretation-catch_trials.csv")
+```
+
+
+
+Native language of English
+
+```{r rep native english}
+df.int.rep.subj.english <- df.int.rep.subj %>%
+  select(workerid, language) %>%
+  mutate(english = str_detect(tolower(language), "en"),
+         english = ifelse(is.na(english), F, english))
+
+paste(sum(df.int.rep.subj.english$english), " out of ", length(df.int.rep.subj.english$english), " subjects self report native language of english", sep = "")
+```
+
+
+### Memory check
+
+```{r rep exlcusion criteria}
+df.int.rep.catch.summarized <- df.int.rep.catch %>%
+  group_by(workerid, tested_on) %>% 
+  summarise(n_correct = sum(correct)) %>%
+  ungroup() %>%
+  mutate(tested_on = factor(tested_on, levels = c(0, 1), 
+                            labels = c("correct rejections", "hits")))
+
+df.int.rep.catch.pass <- df.int.rep.catch.summarized %>%
+  spread(tested_on, n_correct) %>%
+  group_by(workerid) %>%
+  summarise(pass = (hits > 3) && (`correct rejections` > 3))
+
+print(
+  paste(
+    sum(df.int.rep.catch.pass$pass), " out of ", 
+    length(df.int.rep.catch.pass$pass), " participants pass memory check",
+    sep = ""
+  ))
+
+
+df.int.rep.catch.summarized %>%
+  ggplot(., aes( x = n_correct ))+
+  geom_bar()+
+  facet_wrap(~tested_on)+
+  ylab("Number of subjects")
+```
+
+Exclude subjects who do not get at least 4 / 5 correct on both correct rejections and false alarms, as well as non-English speakers. 
+
+```{r rep exclude subjects}
+df.int.rep.filtered <- left_join(
+  df.int.rep,
+  df.int.rep.catch.pass
+  ) %>% left_join(.,
+    df.int.rep.subj.english
+  ) %>%
+    filter(pass, english)
+
+print(
+  paste(
+    length(unique(df.int.rep.filtered$workerid)), " out of ", 
+    length(df.int.rep.catch.pass$pass), " participants pass exclusion criteria",
+    sep = ""
+  ))
+
+```
+
+## Bootstrap CIs for by-item plot
+
+```{r rep bootstrap, fig.width=8, fig.height=10}
+df.int.rep.filtered.bs <- df.int.rep.filtered %>%
+  group_by(property) %>%
+  tidyboot_mean(column = response)
+
+
+df.int.rep.filtered <- df.int.rep.filtered %>% 
+    mutate(property = factor(property, 
+                           levels =  with(df.int.rep.filtered.bs, property[order(mean)])))
+  
+df.int.rep.filtered.bs %>%
+  mutate(property = factor(property,
+                           levels =  with(df.int.rep.filtered.bs, property[order(mean)]))) %>%
+  ggplot(., aes( x = property, y = mean))+
+  #geom_hline(yintercept = 0.5, lty = 2, alpha = 0.5)+
+  geom_point(shape = 73, size = 4)+
+  geom_point(data = df.int.rep.filtered, position = position_jitter(),
+             inherit.aes = F, aes( x = property, y = response),
+             alpha = 0.1)+
+  # geom_col(position = position_dodge(0.8),
+  #          aes(y = mean),
+  #          width = 0.8, alpha = 0.3, color = 'black')+
+    coord_flip()+
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper),
+                position = position_dodge(0.8), width = 0.3, size = 1)+
+  ylab("Implied prevalence rating")+
+  scale_y_continuous(limits = c(-0.03, 1.03), breaks = c(0, 0.5, 1))+
+  #scale_fill_solarized()+
+  #scale_color_solarized()+
+  xlab("")
+```
+
+
+## Comparison of main experiment and replication
+
+
+```{r comparison main and rep}
+df.int.filtered.bs.main.rep <- left_join(
+  df.int.filtered.bs,
+  df.int.rep.filtered.bs %>%
+    select(-empirical_stat, -n) %>%
+    rename(rep_mean = mean, rep_ci_upper = ci_upper, rep_ci_lower = ci_lower)
+)
+
+print(paste("correlation of two data set means  = ", with(df.int.filtered.bs.main.rep, cor(mean, rep_mean, use = "pairwise.complete.obs"), sep = "")))
+
+ggplot(df.int.filtered.bs.main.rep, aes( x = mean, y = rep_mean,
+                                         xmin = ci_lower, xmax = ci_upper,
+                                         ymin = rep_ci_lower, ymax = rep_ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.4)+
+  geom_point()+
+  geom_linerange(alpha = 0.3)+
+  geom_errorbarh(alpha = 0.3)+
+  xlim(0, 1)+ylim(0, 1)+
+  coord_fixed()
+```
+
+
+## Comparison of generic interpretation and the prevalence prior
+
+```{r}
+df.prior.ev.wInt <- left_join(
+  df.prior.filtered.prevalence.ev,
+  #df.prior.3.conditional.ev,
+  df.int.filtered.bs %>%
+    rename(int_mean = mean, int_upper = ci_upper, int_lower = ci_lower) %>%
+    select(property, int_mean, int_upper, int_lower)
+) %>%
+  mutate(sq_err = (mean - int_mean)^2)
+
+ggplot(df.prior.ev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
+                     y = int_mean, ymin = int_lower, ymax = int_upper))+
+  geom_point()+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  scale_x_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  coord_fixed()
+```
+
+## Comparison of generic interpretation and the conditional, non-zero prevalence prior
+
+
+```{r}
+df.prior.nonZeroev.wInt <- left_join(
+  #df.prior.filtered.prevalence.ev,
+  df.prior.filtered.prevalence.nonzero.ev,
+  df.int.filtered.bs %>%
+    rename(int_mean = mean, int_upper = ci_upper, int_lower = ci_lower) %>%
+    select(property, int_mean, int_upper, int_lower)
+) %>%
+  mutate(sq_err = (mean - int_mean)^2)
+
+ggplot(df.prior.nonZeroev.wInt, aes (x = mean, xmin = ci_lower, xmax = ci_upper,
+                     y = int_mean, ymin = int_lower, ymax = int_upper))+
+  geom_point()+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  scale_x_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1.1), breaks = c(0, 0.5, 1))+
+  coord_fixed()
+```
+
+
+## What categories do people produce in the prevalence prior elicitation?
+
+```{r prior free production categories}
+df.prior.categories <- df.prior.filtered %>%
+  filter(trial_type == "category_elicitation") %>%
+  mutate(response = gsub("&quotechar", "", response)) %>%
+  unnest_tokens(word, response) %>%
+  anti_join(stop_words)
+
+d.tidy.wordCounts <- df.prior.categories %>%
+  count(animal_class,word)
+
+d.tidy.wordCounts[with(d.tidy.wordCounts, order(animal_class, -n)),] %>%
+  kable()
+```
+
+## Subject comments and information
+
+#### Prior experiment 
+
+```{r prior subj comments}
+df.prior.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+
+#### Main experiment 
+
+```{r subj comments}
+df.int.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+#### Replication experiment 
+
+```{r rep subj comments}
+df.int.rep.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+
+

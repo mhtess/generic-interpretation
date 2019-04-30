@@ -1,0 +1,14 @@
+base
+ggthemes
+ggplot2
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+tidyboot
+knitr
+tidytext
