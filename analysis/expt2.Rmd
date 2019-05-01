@@ -1,0 +1,1123 @@
+---
+title: "Prior manipulation pilots and full sample"
+output: github_document
+---
+
+### author: MH Tessler
+
+### date: April 21, 2019
+
+```{r}
+library(tidyverse)
+library(tidyboot)
+#library(ggpirate)
+library(knitr)
+library(viridis)
+#library(tidytext)
+#library(rwebppl)
+library(lme4)
+library(brms)
+#library(jsonlite)
+#library(parallel)
+
+# lower_bins <- c(0, 0.01, seq(0.05, 0.95, 0.05), 0.99)
+# upper_bins <- c(0.01, seq(0.05, 0.95, 0.05), 0.99, 1)
+lower_bins <-seq(0, 0.95, 0.05)
+upper_bins <- seq(0.05, 1, 0.05)
+mid_bins <- (upper_bins - lower_bins)/2 + lower_bins
+
+round_to_bin <- function(x){
+  index <- if (x==0){ 1 } else if (x ==1){ length(mid_bins)} else{
+    x <= upper_bins & x > lower_bins
+  }
+  #if (sum(index) > 1) { print (x) }
+  return (mid_bins[index])
+}
+
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, sanitize = T)
+
+```
+
+# Prior manipulation 3
+
+
+```{r}
+df.pm.prior <- read_csv("../data/paper_data/expt2/expt2a-prior-trials.csv")
+df.pm.prior.catch <- read_csv("../data/paper_data/expt2/expt2a-prior-catch_trials.csv")
+df.pm.prior.subj <- read_csv("../data/paper_data/expt2/expt2a-prior-subject_information.csv")
+```
+
+full data collection
+
+```{r}
+df.pm.prior.catch %>%
+  select(pass_both) %>%
+  table()
+```
+
+```{r}
+df.pm.prior.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+Native english
+
+```{r}
+df.pm.subj.nativeEng <- df.pm.prior.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(englishNative = grepl("eng", tolower(language)))
+
+#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+
+table(df.pm.subj.nativeEng$englishNative)
+
+# what do people report for native english that is not english?
+df.pm.subj.nativeEng %>%
+  filter(!englishNative) %>%
+  select(language) %>%
+  kable(.)
+```
+
+```{r}
+df.pm.prior %>%
+  distinct(workerid, rt)  %>%
+  ggplot(., aes(x = rt / 60000))+
+  geom_histogram()+
+  xlab("minutes")
+  #xlim(0, 10)
+###
+
+
+df.pm.prior.filtered <- left_join(
+  left_join(df.pm.prior, df.pm.prior.catch %>%
+                         select(workerid, pass_both)),
+  df.pm.subj.nativeEng)  %>% 
+  filter(pass_both == 1, englishNative)
+
+df.pm.prior.filtered %>%
+  distinct(workerid) %>%
+  count()
+```
+
+
+
+### by item histogram
+
+by item counts
+```{r}
+with(df.pm.prior.filtered %>% distinct(workerid, distribution),
+                table(distribution))  %>%
+  kable()
+```
+
+```{r fig.width = 8}
+df.pm.prior.filtered %>%
+  ggplot(., aes(x = response))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black', fill = 'grey')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ distribution, scales = 'free')+
+  scale_x_continuous(limits = c(-0.05, 1.05), breaks = c(0, 0.5, 1))
+
+
+with(df.trials, table(distribution))
+df.trials %>%
+  ggplot(., aes(x = response))+
+  geom_histogram( bins = 20, color = 'black', fill = 'grey')+#aes(
+    #y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    #),
+     #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ distribution, scales = 'free')+
+  scale_x_continuous(limits = c(-0.05, 1.05), breaks = c(0, 0.5, 1))
+
+
+#ggsave("figs/interpretation-5-filtered-n140-hist.pdf", width = 20, height = 14)
+```
+
+
+
+# Model predictions
+
+```{r read in (boostrapped) model predictions}
+model.path <- "../models/results/bootstrap/"
+
+## all of the fixed threshold model predictions in the L1 file are erroneous
+## because of a coding error, they are simply the prior
+## use L0 file (above) for the fixed_threshold model predictions
+#model.prefix.l1 <- "generics-bda-priormanip-L1unlifted-btstrp-results_chunk"
+#model.prefix.l0 <- "generics-bda-L0-btstrp-results_chunk"
+model.prefix.l1 <- "generics-bda-priormanip-L1unlifted-fixTheFixeds-btstrp-results_chunk"
+
+L1.model.files <- list.files(
+  path = model.path,
+  pattern = model.prefix.l1
+)
+
+# L0.model.files <- list.files(
+#   path = model.path,
+#   pattern = model.prefix.l0
+# )
+
+# m.preds <- bind_rows(lapply(L0.model.files, function(modfile){
+#   read_csv(paste(model.path, modfile, sep = ""))
+# }))
+
+m.preds <-  bind_rows(lapply(L1.model.files, function(modfile){
+  read_csv(paste(model.path, modfile, sep = ""), 
+           cols(
+            model = col_character(),
+            distribution = col_character(),
+            iteration = col_integer(),
+            state = col_double(),
+            prob = col_double()
+          ))
+}))
+
+# m.preds <- bind_rows(
+#   m.preds.L1 %>% 
+#     filter(model %in% c("literal", "prior", "pragmatic_unlifted")), 
+#   m.preds %>%
+#      filter(!(model %in% c("prior", "uncertain")))# %>%
+#     # mutate(model = ifelse(model == "prior", "prior_1",
+#                    # ifelse(model == "uncertain", "literal_1", model)))
+# )
+
+m.preds.zeroPadded <- left_join(
+  expand.grid(
+  model = unique(m.preds$model),
+  distribution = unique(m.preds$distribution),
+  iteration = unique(m.preds$iteration),
+  state = unique(m.preds$state)
+  ), m.preds)
+
+m.preds.zeroPadded[is.na(m.preds.zeroPadded)] <- 0
+summary(m.preds.zeroPadded)
+```
+
+```{r model expvals, fig.width = 11}
+m.preds.zeroPadded.expectations <- m.preds.zeroPadded %>%
+  group_by(model, distribution, iteration) %>%
+  summarize(expval = sum(prob*state))
+
+m.pred.uncertain.expvals <- m.preds.zeroPadded.expectations %>%
+  #filter(model == "uncertain") %>%
+  filter(model == "pragmatic_unlifted") %>%
+  group_by(distribution) %>%
+  summarize(mean_expval = mean(expval))
+
+property.order <- with(m.pred.uncertain.expvals, distribution[order(mean_expval)])
+
+m.preds.zeroPadded.expectations.summary <- m.preds.zeroPadded.expectations %>%
+  group_by(model, distribution) %>%
+  summarize( lower = quantile(expval, 0.025),
+             mean = mean(expval),
+             upper = quantile(expval, 0.975)) %>%
+  ungroup() %>%
+  mutate(distribution = factor(distribution, levels = property.order))
+
+ggplot(m.preds.zeroPadded.expectations.summary, 
+       aes( x = distribution, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  facet_wrap(~model)
+```
+bootstrapped expectated values
+
+```{r}
+ggplot(m.preds.zeroPadded.expectations, aes(x = expval))+
+  geom_histogram(bins = 20, fill = 'white', color = 'black')+
+  facet_wrap(~model + distribution, scales = 'free')+
+  scale_x_continuous(limits = c(-0.03, 1.03))
+```
+
+
+```{r model posteriors, fig.width = 20, fig.height = 8}
+m.preds.zeroPadded.bins.boostrapped <- m.preds.zeroPadded %>%
+  #filter(threshold %in% c("prior", "generic")) %>%
+  group_by(model, distribution, state) %>%
+  summarize( lower = quantile(prob, 0.025),
+             mean = mean(prob),
+             upper = quantile(prob, 0.975)) %>%
+  ungroup()
+
+m.preds.zeroPadded.bins.boostrapped %>%
+  #mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper, fill = distribution))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 1)+
+  facet_grid(model~distribution, scales = 'free')+
+  scale_x_continuous(breaks = c(0, 0.5 , 1))+
+  scale_fill_viridis(discrete = T)+
+  ylab("predicted probability")+
+  xlab("prevalence")
+```
+
+# Expt 2b: Interpretation data (prior manipulation)
+
+```{r load catch data pm int}
+df.pm.int <- read_csv("../data/paper_data/expt2/expt2b-interpretation-interpretation-trials.csv")
+df.pm.int.catch <- read_csv("../data/paper_data/expt2/expt2b-interpretation-catch_trials.csv")
+df.pm.int.subj <- read_csv("../data/paper_data/expt2/expt2b-interpretation-interpretation-subject_information.csv")
+
+df.pm.int.catch %>%
+  select(pass_both) %>%
+  table()
+```
+
+```{r load subj info pm int}
+df.pm.int.subj %>%
+  select(problems, comments) %>%
+  kable()
+```
+
+Native english
+
+```{r native language pm int}
+df.pm.int.subj.nativeEng <- df.pm.int.subj %>% 
+  select(workerid ,language) %>% 
+  mutate(englishNative = grepl("eng", tolower(language)))
+
+#save(d.full.nativeEnglish, file = "../cached_results/english_summary.RData")
+
+table(df.pm.int.subj.nativeEng$englishNative)
+
+# what do people report for native english that is not english?
+df.pm.int.subj.nativeEng %>%
+  filter(!englishNative) %>%
+  select(language) %>%
+  kable(.)
+```
+
+Load data
+
+```{r load data and filter pmint3}
+df.pm.int %>%
+  distinct(workerid, rt)  %>%
+  mutate(rt_min = rt / 60000) %>%
+  ggplot(., aes(x = rt_min))+
+  geom_histogram()+
+  xlab("minutes")
+  #xlim(0, 10)
+###
+
+
+df.pm.int.filtered <- left_join(
+  left_join(df.pm.int, df.pm.int.catch %>%
+                         select(workerid, pass_both)),
+  df.pm.int.subj.nativeEng) %>% 
+  filter(pass_both == 1, englishNative)
+#  filter(pass_both == 1, englishNative, response > 0) # the last condition is posthoc (see below about 0 responses)
+
+df.pm.int.filtered %>%
+  distinct(workerid) %>%
+  count()
+```
+
+
+"0" responses
+
+```{r 0 responses pm int3}
+df.pm.int.filtered %>%
+  filter(response == 0) %>% 
+  group_by(distribution) %>%
+  count() %>% 
+  kable()
+
+df.pm.int.filtered %>%
+  filter(response == 0) %>%
+  select(workerid, distribution, experimentResults, explanation) %>%
+  kable()
+```
+
+- though one person cites that "animals dont have that ability", most of these responses are due to pattern detection. people got distributions that seemed to have a pattern in it. we suspect they ignored the language..
+
+Explaining using the word "pattern"?
+
+```{r explanations using pattern or partner}
+df.pm.int %>%
+  mutate(mention_pattern = grepl("pattern", tolower(explanation)),
+         mention_partner = grepl("partner", tolower(explanation))) %>%
+  filter(mention_partner) %>%
+  group_by(distribution) %>%
+  count()
+
+```
+
+### by item counts
+
+```{r condition ns}
+with(df.pm.int.filtered %>% distinct(workerid, distribution),
+                table(distribution)) %>%
+  kable()
+
+df.prior_manip.int.filtered.n_subj_per_item <- df.pm.int.filtered %>%
+  group_by(distribution) %>%
+  count() %>% ungroup() %>% summarize(n_subj_per_item = mean(n),
+                                      lb = min(n),
+                                      ub = max(n))
+```
+
+
+```{r save meta data, eval =F}
+expt3.int.catchFail <- sum(!df.pm.3.int.catch$pass_both)
+expt3.int.nonEnglish <- sum(!df.pm.3.int.subj.nativeEng$englishNative)
+expt3.int.n <- length(unique(df.pm.int.3$workerid))
+expt3.int.n.passCatch.English <- length(unique(df.pm.int.3.filtered$workerid))
+expt3.int.meanTime <- df.pm.int.3 %>%
+  distinct(workerid, rt)  %>%
+  summarize(mean_time = mean(rt / 60000))
+save(expt3.int.catchFail,
+     expt3.int.nonEnglish,
+     expt3.int.n,
+     expt3.int.n.passCatch.English,
+     expt3.int.meanTime,
+     df.prior_manip.int.filtered.n_subj_per_item,
+  file = "../../paper/cached_results/priorManip_int_metaData.RData")
+```
+
+
+by item histogram
+
+```{r data distributions, fig.width = 8}
+df.pm.int.filtered %>%
+  ggplot(., aes(x = response))+
+  geom_histogram(aes(
+    y=(..count..)/tapply(..count..,..PANEL..,sum)[..PANEL..]
+    ),
+    bins = 20, color = 'black', fill = 'grey')+  #scale_fill_viridis(discrete = T)+
+  facet_wrap(~ distribution, scales = 'free', nrow = 2)+
+  scale_x_continuous(limits = c(-0.2, 1.2), breaks = c(0, 0.5, 1))
+
+# ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-hist.pdf", width = 12, height = 6)
+```
+
+#### what's happening with rare determinsitic
+
+```{r}
+df.pm.int.filtered %>%
+  filter(distribution == "rare_deterministic",
+         response < 0.1) %>%
+  select(workerid, distribution, experimentResults, response, explanation) %>%
+  kable(.)
+```
+
+### analyze expected values
+
+```{r data 95cis}
+df.pm.int.filtered.bs <- df.pm.int.filtered %>%
+  group_by(distribution) %>%
+  tidyboot_mean(column = response)
+
+df.pm.int.filtered.bs %>% ungroup() %>%
+  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  theme(axis.text.x = element_blank())
+```
+
+preregistered prediction ordering []s denote very small difference in predicted
+
+ rare_weak, 
+ [weak_or_half, rare_half], 
+ [weak_or_strong, uniform], 
+ rare_strong, 
+ [weak_or_deterministic, half_or_deterministic],
+ [strong_or_deterministic, rare_deterministic]
+ 
+ 
+```{r data model expvals}
+md.pm.int.filtered.expvals.bs.summary <- bind_rows(
+  df.pm.int.filtered.bs %>% 
+    select(-n, -empirical_stat) %>% 
+    mutate(model = 'data'),
+  m.preds.zeroPadded.expectations.summary %>%
+    rename(ci_lower = lower, ci_upper = upper)
+)
+
+
+md.pm.int.filtered.expvals.bs.summary %>% 
+  ungroup() %>%
+  #filter(!(model %in% c("fixed_0.625", "fixed_0.875"))) %>%
+  mutate(distribution = factor(distribution, levels = property.order),
+         model = factor(model,
+                        levels = c("prior", "literal","pragmatic_unlifted",
+                                   "data",
+                                   "fixed_0.05", "fixed_0.1",
+                                   "fixed_0.3"))) %>%
+  ggplot(., aes( x = distribution, y = mean, ymin = ci_lower, ymax = ci_upper, fill = distribution))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge())+
+  scale_fill_viridis(discrete = T)+
+  ylab("Mean implied prevalence")+
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank())+
+  facet_wrap(~model)+ guides(fill = guide_legend(reverse=T))
+
+
+# ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-expvals-model-data.pdf", width = 7, height = 5)
+
+```
+
+```{r scatters expected values}
+md.pm.int.filtered.expvals.bs.summary.wide <- left_join(m.preds.zeroPadded.expectations %>%
+    group_by(model, distribution) %>%
+    summarize( model_lower = quantile(expval, 0.025),
+               model_prediction = mean(expval),
+               model_upper = quantile(expval, 0.975)),
+  df.pm.int.filtered.bs) %>%
+  ungroup()
+
+md.pm.int.filtered.expvals.bs.summary.wide %>%   
+  mutate(distribution = factor(distribution, levels = property.order)) %>%
+  ggplot(., aes(x = model_prediction, xmin = model_lower, xmax = model_upper, ymin = ci_lower, y = mean, ymax = ci_upper, fill = distribution))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), alpha = 0.8)+
+  geom_errorbarh(position = position_dodge(), alpha = 0.4)+
+  geom_point(shape = 21, color = 'black')+
+  scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  coord_fixed()+
+  facet_wrap(~model, nrow = 2)+
+  guides(fill = F)
+
+#ggsave("figs/prior-manipulation-3-interpretation-filtered-n600-modelFits-scatter.png", width = 10, height = 5)
+
+md.pm.int.filtered.expvals.bs.summary.wide %>%
+  group_by(model) %>%
+  summarize(r2 = cor(model_prediction, mean) ^2,
+            mse = mean((model_prediction-mean)^2)) %>%
+  kable(.)
+```
+
+### Regression analyses
+
+#### Effect of prior mean?
+
+```{r}
+load(file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals.RData")
+# md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+#      md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide
+
+
+df.pm.int.filtered.prior_mean <- left_join(
+  df.pm.int.filtered,
+  md.pm.int.filtered.expvals.bs.summary %>%
+    filter(model == "prior") %>%
+    select(distribution, mean) %>%
+    rename(prior_mean = mean)
+)
+
+
+rs.lm.priorManip <- lm(data = df.pm.int.filtered.prior_mean,
+     response ~ prior_mean)
+
+#save(rs.lm.priorManip,
+#     file = "../../paper/cached_results/gentInt_manipPriors_lm.RData")
+
+summary(rs.lm.priorManip)
+```
+
+
+ rare_weak vs. [weak_or_half, rare_half]
+ 
+```{r regression contrast 0}
+contrast1.levels <- c("rare_weak", "weak_or_half", "rare_half")
+rs.lm.priorManip.contrast1 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast1.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast1.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast1)
+```
+
+
+ rare_weak vs. [weak_or_half, rare_half]
+ 
+  0/25, 
+ [25/50, 0/50], 
+ [25/75, uniform], 
+ 0/75, 
+ [25/100, 50/100],
+ [75/100, 0/100]
+ 
+ 
+```{r regression contrast 1}
+contrast1.levels <- c(
+  "rare_weak", 
+  "weak_or_half", "rare_half",
+  "weak_or_strong", "uniform",
+  "rare_strong", 
+  "weak_or_deterministic","half_or_deterministic",
+  "strong_or_deterministic", "rare_deterministic"
+  )
+rs.lm.priorManip.contrast1 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast1.levels)
+      ),
+     response ~ distribution)
+
+df.pm.int.filtered.prior_mean$distribution <-  factor(df.pm.int.filtered.prior_mean$distribution,
+                                                        levels = contrast1.levels)
+custom_contrasts <- MASS::contr.sdif(10)
+colnames(custom_contrasts) <- paste("a", seq(1, 9))
+contrasts(df.pm.int.filtered.prior_mean$distribution) <- custom_contrasts
+
+
+
+
+rs.lm.priorManip.sdif <- lm(response ~ d,
+                            df.pm.int.filtered.prior_mean %>%
+                              rename(d = distribution))
+
+
+summary(rs.lm.priorManip.sdif)
+```
+
+
+ rare_weak, 
+ [weak_or_half, rare_half], 
+ [weak_or_strong, uniform], 
+ rare_strong, 
+ [weak_or_deterministic, half_or_deterministic],
+ [strong_or_deterministic, rare_deterministic]
+ 
+ 
+ 
+```{r}
+df.pm.int.filtered.prior_mean$distribution <- factor(df.pm.int.filtered.prior_mean$distribution)
+
+contrasts(df.pm.int.filtered.prior_mean$distribution) <- cbind(c1 = c(-2,1,1,0,0,0,0,0,0,0),
+      c2 = c(0, -1, 1, 0,0,0,0,0,0,0),
+      c3 = c(-2,-2,-2,3,3,0,0,0,0,0),
+      c4 = c(0,0,0,-1,1,0,0,0,0,0),
+      c5 = c(0,0,0,-1,-1,2,0,0,0,0),
+      c6 = c(0,0,0,0,0,-2,1,1,0,0),
+      c7 = c(0,0,0,0,0,0,-1,1,0,0),
+      c8 = c(0,0,0,0,0,0,-1,-1,1,1),
+      c9 = c(0,0,0,0,0,0,0,0,-1,1)
+      )
+
+
+rs.lm.priorManip.sdif <- lm(response ~ d,
+                            df.pm.int.filtered.prior_mean %>%
+                              rename(d = distribution))
+
+rs.brm.priorManip.sdif <- brm(
+  formula = response ~ d,
+  data = df.pm.int.filtered.prior_mean %>% rename(d = distribution),
+  family = "zero_one_inflated_beta",
+  chains = 3, 
+  cores = 3,
+  iter = 2000
+  )
+
+# save(rs.brm.priorManip.sdif, file = "../../paper/cached_results/gentInt_manipPriors_brms_contrasts.RData")
+
+summary(rs.brm.priorManip.sdif)
+
+contrasts(df.pm.int.filtered.prior_mean$distribution)
+
+
+tidy(rs.brm.priorManip.sdif) %>%
+  mutate(estimate = paste(
+    format(estimate, digits = 2),
+    " [", format(lower, digits = 2), ", ",
+    format(upper, digits = 2), "]", sep =""
+  )) %>%
+  select(term, estimate)
+
+```
+
+
+
+
+[weak_or_half, rare_half]
+
+```{r regression contrast 2}
+contrast2.levels <- c("weak_or_half", "rare_half")
+rs.lm.priorManip.contrast2 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast2.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast2.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast2)
+```
+
+weak_or_half vs. [weak_or_strong, uniform]
+
+```{r regression contrast 3}
+contrast3.levels <- c("weak_or_half", "weak_or_strong", "uniform")
+rs.lm.priorManip.contrast3 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast3.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast3.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast3)
+```
+
+ [n.s.] -- [weak_or_strong, uniform] vs.  rare_strong
+
+```{r regression contrast 4}
+contrast4.levels <- c("weak_or_strong", "rare_strong")
+rs.lm.priorManip.contrast4 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast4.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast4.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast4)
+```
+
+
+rare_strong vs. [weak_or_deterministic, half_or_deterministic]
+
+```{r regression contrast 5}
+contrast5.levels <- c("rare_strong", "weak_or_deterministic", "half_or_deterministic")
+rs.lm.priorManip.contrast5 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast5.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast5.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast5)
+```
+
+- [n.s.]
+
+[weak_or_deterministic, half_or_deterministic]
+vs.
+ [strong_or_deterministic, rare_deterministic]
+ 
+```{r regression contrast 6}
+contrast6.levels <- c("half_or_deterministic", "rare_deterministic", "strong_or_deterministic")
+rs.lm.priorManip.contrast6 <- lm(
+  data = 
+    df.pm.int.filtered.prior_mean %>%
+    filter(
+      distribution %in% contrast6.levels
+      ) %>%
+    mutate(distribution = factor(
+      distribution, levels = contrast6.levels)
+      ),
+     response ~ distribution)
+
+summary(rs.lm.priorManip.contrast6)
+```
+
+```{r}
+# save(rs.lm.priorManip,
+#   rs.lm.priorManip.contrast1,
+#   rs.lm.priorManip.contrast2,
+#   rs.lm.priorManip.contrast3,
+#   rs.lm.priorManip.contrast4,
+#   rs.lm.priorManip.contrast5,
+#   rs.lm.priorManip.contrast6,
+#   file = "../../paper/cached_results/gentInt_manipPriors_lm.RData")
+
+summary(rs.lm.priorManip)
+```
+
+
+
+
+
+
+### analyze full distibutions
+
+```{r bootstrap interpretation distributions}
+ bootstrapInterpretationDistributions<- function(i){
+  
+  df.pm.3.intDist.filtered.i <- df.pm.int.3.filtered %>% 
+    group_by(distribution) %>%
+    sample_n(53, replace = TRUE) %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(distribution, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.pm.3.intDist.filtered.i[is.na(df.pm.3.intDist.filtered.i)] <- 0
+
+  df.pm.3.intDist.filtered.i %>%
+    gather(state, n, -distribution) %>%
+    group_by(distribution) %>%
+    mutate(prop = n / sum(n),
+           prop = round(prop, 5),
+           i = i)
+}
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+df.pm.int.3.filtered.dists.bs <- bind_rows(
+  parLapply(cl, 1:5000, bootstrapInterpretationDistributions)
+)
+
+end_time <- Sys.time()
+print(end_time - start_time) 
+stopCluster(cl)
+```
+ 
+```{r write bootstrap interpretation distributions}
+df.pm.int.3.filtered.dists.bs %>% 
+  select(-prop) %>%
+  spread(state, n) %>%
+  jsonlite::toJSON(., pretty = F) %>%
+  write(., "../../models/generics-bda-L0-btstrp-interpretations-notPretty.json")
+
+
+
+
+### non boostrapped
+
+  df.pm.3.intDist.filtered.0 <- df.pm.int.3.filtered %>% 
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(distribution, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.pm.3.intDist.filtered.0[is.na(df.pm.3.intDist.filtered.0)] <- 0
+
+  df.pm.3.intDist.filtered.0 %>%
+    gather(state, n, -distribution) %>%
+    group_by(distribution) %>%
+    mutate(prop = (n+1) / sum(n + 1),
+           prop = round(prop, 5)) %>%
+  select(-prop) %>%
+  spread(state, n) %>%
+  jsonlite::toJSON(., pretty = T) %>%
+  write(., "../../models/generics-bda-L0-interpretations-counts.json")
+```
+
+```{r bootstrap interpretation distributions (summarize)}
+
+df.pm.int.3.filtered.dists.bs.summary <- df.pm.int.3.filtered.dists.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(distribution, state) %>%
+  summarize(data_lower = quantile(prop, 0.025),
+            data_mean = mean(prop),
+            data_upper = quantile(prop, 0.975))
+
+
+md.pm.int.3.filtered.dists.bs.summary <-bind_rows(m.preds.zeroPadded.bins.boostrapped,
+          df.pm.int.3.filtered.dists.bs.summary %>% rename(lower = data_lower, mean = data_mean,upper= data_upper) %>%
+            mutate(model = 'data'))
+
+
+
+
+ggplot(df.pm.int.3.filtered.dists.bs.summary, 
+       aes( x = state, y = data_mean, ymin = data_lower, ymax = data_upper))+
+  geom_col(position= position_dodge())+
+  geom_errorbar(position = position_dodge())+
+  facet_wrap(~distribution, nrow = 2)
+```
+
+```{r scatters binned_posteriors}
+md.pm.int.3.filtered.dists.bs.summary.wide <- left_join(m.preds.zeroPadded.bins.boostrapped %>%
+    rename(model_mean = mean, model_lower = lower, model_upper = upper),
+  df.pm.int.3.filtered.dists.bs.summary)
+
+
+ggplot(md.pm.int.3.filtered.dists.bs.summary.wide, aes(fill = state,
+                x = model_mean, xmin = model_lower, xmax = model_upper,
+                y = data_mean, ymin = data_lower, ymax = data_upper))+
+  facet_wrap(~model, nrow = 2)+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  #coord_fixed()+
+  geom_point(shape = 21, color = 'black')+
+  #scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  #scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_fill_viridis()+
+  theme(legend.position = 'bottom')
+  
+
+save(md.pm.int.3.filtered.expvals.bs.summary, md.pm.int.3.filtered.dists.bs.summary,
+     md.pm.int.3.filtered.dists.bs.summary.wide, md.pm.int.3.filtered.expvals.bs.summary.wide,
+     file = "../../paper/cached_results/gentInt_manipPriors_dists_expvals2.RData")
+
+ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
+
+
+md.pm.int.3.filtered.dists.bs.summary.wide %>%
+  group_by(model) %>%
+  summarize(r2 = cor(model_mean, data_mean) ^2,
+            mse = mean((model_mean-data_mean)^2),
+            n = n()) %>%
+  kable(.)
+```
+
+```{r scatters binned_posteriors 3 models}
+md.pm.int.3.filtered.dists.bs.summary.wide %>%
+  filter(model %in% c("prior", "literal", "pragmatic_unlifted", "fixed_0.125"),
+         data_mean < 0.25) %>%
+ggplot(., aes(fill = state,
+                x = model_mean, xmin = model_lower, xmax = model_upper,
+                y = data_mean, ymin = data_lower, ymax = data_upper))+
+  facet_wrap(~model)+
+  geom_errorbar(alpha = 0.2)+
+  geom_errorbarh(alpha = 0.2)+
+  #coord_fixed()+
+  geom_point(shape = 21, color = 'black')+
+  #scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  #scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  scale_fill_viridis()+
+  theme(legend.position = 'bottom')
+
+ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-focus-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
+```
+
+```{r uncertain model residuals}
+md.int3.binned.boostrapped %>%
+  #filter(model %in% c("prior", "uncertain", "fixed_0.125")) %>%
+  filter(model %in% c("uncertain"),
+         model_mean < 0.1, data_mean > 0.1) %>%
+  mutate(absErr = abs(model_mean-data_mean),
+         sqErr = absErr^2) %>% 
+  View()
+```
+
+rare weak and rare determinsitic at the lowest bin (0.025) are the only points where the CIs dont overlap. why is this?
+
+```{r}
+df.pm.int.3.filtered %>%
+  filter(distribution %in% c("rare_deterministic", "rare_weak"),
+         response < 0.1) %>% 
+  select(workerid, rt, distribution, response, explanation, experimentResults) %>%
+  kable(.)
+```
+
+explanations all had to do with pattern matching. some participants randomly got a distribution that had an especially deviant pattern to it.
+
+Where does fixed0.125 go wrong?
+
+- dont yet understand this.
+```{r fixed model residual}
+md.int3.binned.boostrapped %>%
+  #filter(model %in% c("prior", "uncertain", "fixed_0.125")) %>%
+  filter(model %in% c("fixed_0.125"),
+         model_mean > 0.1, data_mean < 0.1) %>%
+  mutate(absErr = abs(model_mean-data_mean),
+         sqErr = absErr^2) %>% 
+  View()
+```
+
+
+### Model likelhoods / model comparison
+
+```{r load model likelihood results}
+#model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
+
+
+
+model.path <- "../../models/results/bootstrap/"
+model.prefix <- "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb"
+
+sample_from_prior_probs <- c(0.0001,0.0005,0.001,
+                             0.005, 0.01, 0.05, 0.1, 0.15)
+
+
+m.ll <- data.frame()
+for (sfpp in sample_from_prior_probs){
+  
+  model.files <- list.files(
+    path = model.path,
+    pattern = paste(model.prefix, sfpp, ".csv", sep = "")
+  )
+
+  for (modfile in model.files){
+    m.item <- read_csv(paste(model.path , modfile, sep = ""))
+  
+    m.ll <- bind_rows(
+      m.ll,
+      m.item %>% mutate(noiseProb = sfpp)
+    )
+    
+  }
+}
+```
+
+
+```{r model likelihoods summarized}
+model.likelihoods.summarized <- m.ll %>%
+  # filter(distribution %in% c("rare_weak", "rare_strong",
+  #                            "rare_half", "rare_deterministic")) %>%
+  group_by(model, noiseProb, iteration) %>%
+  summarize(sum_likelihood = sum(likelihood)) %>%
+  group_by(model, noiseProb) %>%
+  summarize(lower_likelihood = quantile(sum_likelihood, 0.025),
+            mean_likelihood = mean(sum_likelihood),
+            upper_likelihood = quantile(sum_likelihood, 0.975))
+
+
+
+model.order <- with(filter(model.likelihoods.summarized, noiseProb == 0.01), model[order(mean_likelihood)])
+
+model.likelihoods.summarized %>%
+  ungroup() %>%
+  mutate(model = factor(model, levels = model.order)) %>%
+  ggplot(., aes( x = model, y = mean_likelihood, ymin = lower_likelihood, ymax = upper_likelihood, fill = model))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), width = 0.3)+
+  scale_fill_viridis(discrete = T)+
+  ylab("log p (d | m)")+
+  facet_wrap(~noiseProb)+
+  theme(axis.text.x = element_blank())
+
+#Wggsave("figs/prior-manipulation-3-model-likelihoods-facetNoiseProb.pdf", width = 8, height = 5)
+```
+
+
+```{r bayes factors}
+model.likelihoodRatios.summarized <- m.ll %>%
+  # filter(distribution %in% c("rare_weak", "rare_strong",
+  #                            "rare_half", "rare_deterministic")) %>%
+  group_by(model, noiseProb, iteration) %>%
+  summarize(sum_likelihood = sum(likelihood)) %>%
+  ungroup() %>%
+  spread(model, sum_likelihood) %>%
+  gather(alternative_model, alternative_model_sum_likelihood, 
+         -iteration, -uncertain, -noiseProb) %>%
+  mutate(log_bf_uncertain_alternative = uncertain - alternative_model_sum_likelihood) %>%
+  group_by(alternative_model, noiseProb) %>%
+  summarize(lower_log_bf = quantile(log_bf_uncertain_alternative, 0.025),
+            expected_log_bf= mean(log_bf_uncertain_alternative),
+            upper_log_bf = quantile(log_bf_uncertain_alternative, 0.975))
+
+
+model.likelihoodRatios.summarized %>%
+  # mutate(alternative_model = factor(alternative_model, levels = alternative_model[with(model.likelihoodRatios.summarized, order(expected_log_bf))])) %>%
+  ggplot(., aes( x = alternative_model, y = expected_log_bf, ymin = lower_log_bf, ymax = upper_log_bf, fill = alternative_model))+
+  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
+  geom_errorbar(position = position_dodge(), width = 0.3)+
+  scale_fill_viridis(discrete = T)+
+  facet_wrap(~noiseProb)+
+  ylim(0, 50)+
+  ylab("log [ p (d | generics model) / p (d | alternative model) ]")+
+  theme(axis.text.x = element_blank())
+
+
+model.likelihoodRatios.summarized %>% kable(.)
+
+#save(model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf.RData")
+```
+
+## bootstrap priors (then write, and read into webppl)
+```{r eval = F}
+bootstrapPriors <- function(i){
+  
+  df.pm.filtered.priors.i <- df.pm.prior.filtered %>% 
+    spread(category, response) %>%
+    group_by(distribution) %>%
+    sample_n(40, replace = TRUE) %>%
+    gather(category, response, K, L, M, N, O)  %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(distribution, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.pm.3.filtered.priors.i[is.na(df.pm.3.filtered.priors.i)] <- 0
+
+
+df.pm.3.filtered.priors.wpReady <- df.pm.3.filtered.priors.i %>%
+  gather(state, n, -distribution) %>%
+  group_by(distribution) %>%
+  mutate(prop = (n+1) / sum(n + 1),
+         prop = round(prop, 5),
+         i = i)
+df.pm.3.filtered.priors.wpReady
+}
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+df.pm.3.filtered.priors.bs <- bind_rows(
+  parLapply(cl, 1:1000, bootstrapPriors)
+)
+
+end_time <- Sys.time()
+print(end_time - start_time) 
+stopCluster(cl)
+```
+
+```{r visualize bootstrapped priors, eval = F}
+head(df.pm.3.filtered.priors.bs)
+
+df.pm.3.filtered.priors.bs.summary <- df.pm.3.filtered.priors.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(distribution, state) %>%
+  summarize( lower = quantile(prop, 0.025),
+             mean = mean(prop),
+             upper = quantile(prop, 0.975))
+
+
+df.pm.3.filtered.priors.bs.summary %>%
+  ggplot(., aes( x = state, y = mean, ymin = lower, ymax = upper))+
+  geom_col(position= position_dodge())+
+  geom_errorbar(position = position_dodge())+
+  facet_wrap(~distribution, nrow = 2)
+
+```
+
+```{r write bootstrapped priors, eval = F}
+df.pm.3.filtered.priors.bs %>% 
+  select(-n) %>%
+  spread(state, prop) %>%
+  jsonlite::toJSON(., pretty = F) %>%
+  write(., "../../models/generics-bda-L0-btstrp-priors-notPretty.json")
+```
+
+
+## Explanations that don't use the word "pattern"
+
+```{r}
+df.pm.int %>%
+  mutate(mention_pattern = grepl("pattern", tolower(explanation))) %>%
+  filter(!mention_pattern) %>%
+  select(workerid, distribution, experimentResults, response, explanation) %>%
+  kable()
+```
+
