@@ -747,23 +747,25 @@ summary(rs.lm.priorManip)
 
 
 ### Model likelhoods / model comparison
-
 ```{r load model likelihood results}
-model.path <- "../models/results/bootstrap/"
-# ran L0 and L1 model likelihood simulations serparately
-model.prefixes <- c(
-  "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb",
-  "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb"
-  )
+#model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
 
-sample_from_prior_probs <- c(0.0001,0.0005,0.001,
-                             0.005, 0.01, 0.05, 0.1, 0.15)
+
+
+model.path <- "../models/results/bootstrap/"
+model.prefixes <- c(
+  "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb",
+  "generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb"
+)
+
+sample_from_prior_probs <- c(0.001, 0.01, 0.05, 0.1, 0.15, 0.2)
+#sample_from_prior_probs <- c(0.01, 0.05, 0.1)
 
 
 m.ll <- data.frame()
 for (model.prefix in model.prefixes){
   for (sfpp in sample_from_prior_probs){
-  
+    
     model.files <- list.files(
       path = model.path,
       pattern = paste(model.prefix, sfpp, ".csv", sep = "")
@@ -771,20 +773,19 @@ for (model.prefix in model.prefixes){
   
     for (modfile in model.files){
       m.item <- read_csv(paste(model.path , modfile, sep = ""))
-      
-      # computed model likelihoods for prior in each file, only need 1
-      m.item <- if (model.prefix == "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb") {
-        m.item %>% filter(model != "prior")
-      } else { m.item }
     
+      if (model.prefix == "generics-bda-L1unlifted-btstrpPriors-likelihood-results_sampleFromPriorProb") {
+        #m.item <- m.item %>% filter(model == "pragmatic_unlifted")
+        m.item <- m.item %>% mutate(model = ifelse(model == "prior", "prior_1", model))
+      }
       m.ll <- bind_rows(
         m.ll,
         m.item %>% mutate(noiseProb = sfpp)
-      )
-      
+      ) 
     }
   }  
 }
+
 ```
 
 
@@ -794,113 +795,52 @@ model.likelihoods.summarized <- m.ll %>%
   #                            "rare_half", "rare_deterministic")) %>%
   group_by(model, noiseProb, iteration) %>%
   summarize(sum_likelihood = sum(likelihood)) %>%
-  group_by(model, noiseProb) %>%
-  summarize(lower_likelihood = quantile(sum_likelihood, 0.025),
-            mean_likelihood = mean(sum_likelihood),
-            upper_likelihood = quantile(sum_likelihood, 0.975))
-
-
-
-model.order <- with(filter(model.likelihoods.summarized, noiseProb == 0.01), model[order(mean_likelihood)])
-
-model.likelihoods.summarized %>%
   ungroup() %>%
-  mutate(model = factor(model, levels = model.order)) %>%
-  ggplot(., aes( x = model, y = mean_likelihood, ymin = lower_likelihood, ymax = upper_likelihood, fill = model))+
-  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
-  geom_errorbar(position = position_dodge(), width = 0.3)+
-  scale_fill_viridis(discrete = T)+
-  ylab("log p (d | m)")+
-  facet_wrap(~noiseProb)+
-  theme(axis.text.x = element_blank())
+  group_by(model, iteration) %>%
+  summarize(marginalized_ll = log(mean(exp(sum_likelihood)))) %>%
+  ungroup() %>%
+  group_by(model) %>%
+  summarize(lower_likelihood = quantile(marginalized_ll, 0.025),
+            mean_likelihood = mean(marginalized_ll),
+            upper_likelihood = quantile(marginalized_ll, 0.975))
 
-#Wggsave("figs/prior-manipulation-3-model-likelihoods-facetNoiseProb.pdf", width = 8, height = 5)
+model.likelihoods.summarized %>% kable()
 ```
 
+Marginalize across noise levels within iteration
 
 ```{r bayes factors}
 model.likelihoodRatios.summarized <- m.ll %>%
+  #filter(noiseProb <= 0.1) %>%
   # filter(distribution %in% c("rare_weak", "rare_strong",
   #                            "rare_half", "rare_deterministic")) %>%
   group_by(model, noiseProb, iteration) %>%
   summarize(sum_likelihood = sum(likelihood)) %>%
   ungroup() %>%
-  spread(model, sum_likelihood) %>%
+  group_by(model, iteration) %>%
+  summarize(marginalized_ll = log(mean(exp(sum_likelihood)))) %>%
+  ungroup() %>%
+  spread(model, marginalized_ll) %>%
   gather(alternative_model, alternative_model_sum_likelihood, 
-         -iteration, -uncertain, -noiseProb) %>%
+         -iteration, 
+         -uncertain,
+         #-pragmatic_unlifted, 
+         #-noiseProb
+         ) %>%
+  #mutate(log_bf_uncertain_alternative = pragmatic_unlifted - alternative_model_sum_likelihood) %>%
   mutate(log_bf_uncertain_alternative = uncertain - alternative_model_sum_likelihood) %>%
-  group_by(alternative_model, noiseProb) %>%
+  #filter(!is.na(log_bf_uncertain_alternative)) %>%
+  #group_by(alternative_model, noiseProb) %>%
+  group_by(alternative_model) %>%
   summarize(lower_log_bf = quantile(log_bf_uncertain_alternative, 0.025),
             expected_log_bf= mean(log_bf_uncertain_alternative),
             upper_log_bf = quantile(log_bf_uncertain_alternative, 0.975))
 
+model.likelihoodRatios.summarized
 
-model.likelihoodRatios.summarized %>%
-  # mutate(alternative_model = factor(alternative_model, levels = alternative_model[with(model.likelihoodRatios.summarized, order(expected_log_bf))])) %>%
-  ggplot(., aes( x = alternative_model, y = expected_log_bf, ymin = lower_log_bf, ymax = upper_log_bf, fill = alternative_model))+
-  geom_col(position= position_dodge(), color  = 'black', alpha = 0.8)+
-  geom_errorbar(position = position_dodge(), width = 0.3)+
-  scale_fill_viridis(discrete = T)+
-  facet_wrap(~noiseProb)+
-  #ylim(0, 50)+
-  ylab("log [ p (d | generics model) / p (d | alternative model) ]")+
-  theme(axis.text.x = element_blank())
-
-
-model.likelihoodRatios.summarized %>% kable(.)
-
-#save(model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf.RData")
+# save(model.likelihoods.summarized, model.likelihoodRatios.summarized, file = "../../paper/cached_results/genint_manipPriors_bf_marginalizeWithinIteration.RData")
 ```
 
-
-
-```{r}
-left_join(
-     left_join(
-      md.pm.int.3.filtered.expvals.bs.summary.wide %>%
-        ungroup () %>%
-      group_by(model) %>%
-      summarize(`expected value statistics` = paste(
-        "r\\textsuperscript{2}","(", n(), ") = ", format(cor(model_prediction, mean)^2, digits = 2),
-        "; MSE = ", format(mean((model_prediction - mean)^2), digits = 3), sep = "")
-    ),
-    md.pm.int.3.filtered.dists.bs.summary.wide %>%
-              ungroup () %>%
-      group_by(model) %>%
-      summarize(`full distribution statistics` = paste(
-        "r\\textsuperscript{2}","(", n(), ") = ", format(cor(model_mean, data_mean)^2, digits = 2),
-        "; MSE = ", format(mean((model_mean - data_mean)^2), digits = 3), sep = "")
-    )) %>% ungroup() %>%
-    mutate(model = ifelse(model == "fixed_0.0175", "fixed_0.05", model)), 
-  model.likelihoodRatios.summarized %>%
-      # group_by(alternative_model) %>%
-      # summarize(expected_log_bf = log(mean(exp(expected_log_bf))),
-      #       lower_log_bf =  log(mean(exp(lower_log_bf))),
-      #       upper_log_bf =  log(mean(exp(upper_log_bf)))) %>% 
-      ungroup() %>% 
-      rename(model = alternative_model) %>%
-      mutate(model = ifelse(model == "fixed_0.125", "fixed_0.1", 
-                     ifelse(model == "fixed_0.375", "fixed_0.3", model)))
-  ) %>%
-          filter(model %in% c("literal", "pragmatic_unlifted",
-                          "prior", "fixed_0.05", "fixed_0.1", "fixed_0.3")) %>%
-    mutate(`Model` = factor(model, levels = c("prior", "fixed_0.05",
-                                              "fixed_0.1", "fixed_0.3", "literal",
-                                              "pragmatic_unlifted"),
-                                    labels = c("Prior", 
-                                               "Threshold = 0.01",
-                                               "Threshold = 0.1",
-                                               "Threshold = 0.35",
-                                               "Literal Generic",
-                                               "Pragmatic Generic")),
-    `log Bayes Factor` = paste(
-    round(-expected_log_bf, 1), " (", round(-lower_log_bf,1), ", ", round(-upper_log_bf,1), ")", sep=""
-  )) %>% 
-    mutate(`log Bayes Factor` = ifelse(Model == "Literal Generic", "0", `log Bayes Factor`)) %>%
-    
-    select(`Model`, `log Bayes Factor`, `expected value statistics`, `full distribution statistics`)
-
-```
 
 ### further analysis of full distibutions
 
@@ -972,7 +912,7 @@ df.pm.int.3.filtered.dists.bs %>%
   write(., "../../models/generics-bda-L0-interpretations-counts.json")
 ```
 
-```{r bootstrap interpretation distributions (summarize), eavl = F}
+```{r bootstrap interpretation distributions (summarize), eval = F}
 
 df.pm.int.3.filtered.dists.bs.summary <- df.pm.int.3.filtered.dists.bs %>%
   mutate(state = as.numeric(state)) %>%
@@ -1051,7 +991,7 @@ ggplot(., aes(fill = state,
 # ggsave("figs/prior-manipulation-3-interpretation-filteredNo0s-focus-n600-modelFits-scatter-distributions.pdf", width = 10, height = 5)
 ```
 
-```{r uncertain model residuals}
+```{r uncertain model residuals, eval = F}
 md.int3.binned.boostrapped %>%
   #filter(model %in% c("prior", "uncertain", "fixed_0.125")) %>%
   filter(model %in% c("uncertain"),
@@ -1063,7 +1003,7 @@ md.int3.binned.boostrapped %>%
 
 rare weak and rare determinsitic at the lowest bin (0.025) are the only points where the CIs dont overlap. why is this?
 
-```{r}
+```{r eval = F}
 df.pm.int.3.filtered %>%
   filter(distribution %in% c("rare_deterministic", "rare_weak"),
          response < 0.1) %>% 
@@ -1075,8 +1015,7 @@ explanations all had to do with pattern matching. some participants randomly got
 
 Where does fixed0.125 go wrong?
 
-- dont yet understand this.
-```{r fixed model residual}
+```{r fixed model residual, eval = F}
 md.int3.binned.boostrapped %>%
   #filter(model %in% c("prior", "uncertain", "fixed_0.125")) %>%
   filter(model %in% c("fixed_0.125"),
@@ -1090,7 +1029,7 @@ md.int3.binned.boostrapped %>%
 
 ## Explanations that don't use the word "pattern"
 
-```{r}
+```{r, eval = F}
 df.pm.int %>%
   mutate(mention_pattern = grepl("pattern", tolower(explanation))) %>%
   filter(!mention_pattern) %>%
