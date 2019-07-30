@@ -14,6 +14,13 @@ function make_slides(f) {
 
   slides.instructions = slide({
     name : "instructions",
+    start: function(){
+      if (exp.condition == "pedagogical"){
+        $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Your fellow scientist has studied these animals a lot and wants to teach you about them. On each trial, your fellow scientist will show you an example of a new kind of animal and show you one of its properties.")
+      } else if (exp.condition == "accidental"){
+        $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Unfortunately, all of the notes that the scientists recorded about all of the animals got jumbled. On each trial, you randomly pick out a note from the large stack of notes and read about a single example of a new kind of animal.")
+      }
+    },
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
@@ -32,7 +39,8 @@ function make_slides(f) {
       var story = speaker + ' says to ' + listener + ': "It\'s a beautiful day, isn\'t it?"'
 
       $("#story").html(story)
-      $("#question").html("Who is " + speaker + " talking to?")
+      $("#question").html("Who is " + speaker + " talking to?" +
+    "<br><strong>Note: please type your answer in lower-case.")
 
       // don't allow enter press in text field
       $('#listener-response').keypress(function(event) {
@@ -52,7 +60,8 @@ function make_slides(f) {
         response = $("#listener-response").val().replace(" ","");
 
         // response correct
-        if (this.listener.toLowerCase() == response.toLowerCase()) {
+        // if (this.listener.toLowerCase() == response.toLowerCase()) {
+        if (this.listener.toLowerCase() == response) {
             exp.catch_trials.botresponse = $("#listener-response").val();
             exp.go();
 
@@ -180,12 +189,21 @@ function make_slides(f) {
       this.evidence_prompt = '"' + utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + '."'
       console.log(this.stim.exemplar.slice(0,1))
       var article = ["a","e","i","o","u"].indexOf(this.stim.exemplar.slice(0,1)) > -1 ? "an" : "a"
-      $(".evidence").html(
-        "Your fellow scientist shows you an animal you've never seen before." +
-        "<br>" +
-        '<br>They point to it and say, "This is ' +article + " " + this.stim.exemplar + '."' +
-        '<br><strong>They then show you that it ' +this.stim.observable_property + '.</strong>'
-      )//; this.evidence_prompt);
+      if (exp.condition == "pedagogical") {
+        var evidence_statement = "Your fellow scientist shows you an animal you've never seen before." +
+            "<br>" +
+            '<br>They point to it and say, "This is ' +article + " " + this.stim.exemplar + '."' +
+            '<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
+      } else if (exp.condition == "accidental"){
+        var evidence_statement = "You pick out a note from the disorganized stack. It has the ID number of the animal, the name of the kind of animal, and one of its properties." +
+            "<br>" +
+            '<br>The note reads:'+
+            '<br><div class="note"> Species: '+ utils.upperCaseFirst(this.stim.exemplar) +
+          '<br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
+            '<br>Note: ' +this.stim.observable_property + '</div>'
+      }
+
+      $(".evidence").html(evidence_statement)//; this.evidence_prompt);
       $(".query").html(query_prompt);
 
       this.init_sliders();
@@ -383,35 +401,36 @@ function init() {
       }
   })();
 
-exp.numTrials = creatureNames.length;
-// console.log(stim_properties.length)
-var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
-  function(x){return {category: x.category, exemplar: x.exemplar}}
+  exp.numTrials = creatureNames.length;
+  // console.log(stim_properties.length)
+  exp.condition = "accidental"
+  var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
+    function(x){return {category: x.category, exemplar: x.exemplar}}
   )
 
-var properties_to_be_tested = _.shuffle(stim_properties).slice(0,exp.numTrials)
+  var properties_to_be_tested = _.shuffle(stim_properties).slice(0,exp.numTrials)
 
-exp.stims =_.map(_.zip(creatures, properties_to_be_tested),
+  exp.stims =_.map(_.zip(creatures, properties_to_be_tested),
   function(cp){
     return _.extend(cp[1], cp[0])
   })
 
-exp.stimscopy = exp.stims.slice(0);
+  exp.stimscopy = exp.stims.slice(0);
 
   exp.trials = [];
   exp.catch_trials = [];
   exp.data_trials = [];
 
-  exp.condition = "implied_prevalence";
+  // exp.condition = "implied_prevalence";
   exp.instructions = "elaborate_instructions";
   exp.structure=[
-    "i0",
-    "botcaptcha",
+    // "i0",
+    // "botcaptcha",
     "instructions",
     "implied_prevalence",
     "memory_check",
-    "explain_instructions",
-    "explain_responses",
+    // "explain_instructions",
+    // "explain_responses",
     'subj_info',
     'thanks'
   ];

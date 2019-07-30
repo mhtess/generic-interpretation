@@ -5,7 +5,7 @@ var stim_properties = [
   { property: "have very long wings", type: "physical" , observable_property: "has very long wings", observable: true},
   { property: "have an exquisite sense of smell", type: "physical", observable_property: "has an exquisite sense of smell", observable: false},
   { property: "have intensely beautiful feathers", type: "physical", observable_property: "has intensely beautiful feathers", observable: true},
-  { property: "live to be twenty years old", type: "physical", observable_property: "has very long wings"},
+  { property: "live to be twenty years old", type: "physical", observable_property: "is twenty years old"},
   { property: "live to be a hundred years old", type: "physical", observable_property: "is a hundred years old"},
   { property: "live to be five hundred years old", type: "physical", observable_property: "is five hundred years old"},
 
