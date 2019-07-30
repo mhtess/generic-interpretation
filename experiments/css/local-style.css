@@ -5,7 +5,7 @@
 }
 
 .evidence{
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	/* font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif; */
     font-size: 20px;
 }
 
@@ -32,4 +32,9 @@
 
 .bin_label{
 	text-align: center;
+}
+
+.note{
+text-align: left;
+font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }

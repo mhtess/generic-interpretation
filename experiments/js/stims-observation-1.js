@@ -80,7 +80,7 @@ var stim_properties = [
   { property: "lay eggs without needing fertilization", type: "reproduction", observable_property: "lays eggs without needing fertilization"},
   { property: "attract mates by secreting pheromones", type: "reproduction", observable_property: "attracts mates by secreting pheromones"},
   { property: "get erections", type: "reproduction", observable_property: "gets erections"},
-  { property: "have a menstrual cycle", type: "reproduction", observable_property: "has a menstrual cycle"},
+  // { property: "have a menstrual cycle", type: "reproduction", observable_property: "has a menstrual cycle"},
   { property: "have dozens of sexual partners", type: "reproduction", observable_property: "has dozens of sexual partners"}
 
 ]

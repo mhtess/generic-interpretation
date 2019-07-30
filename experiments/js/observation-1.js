@@ -15,16 +15,117 @@ function make_slides(f) {
   slides.instructions = slide({
     name : "instructions",
     start: function(){
-      if (exp.condition == "pedagogical"){
-        $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Your fellow scientist has studied these animals a lot and wants to teach you about them. On each trial, your fellow scientist will show you an example of a new kind of animal and show you one of its properties.")
-      } else if (exp.condition == "accidental"){
-        $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Unfortunately, all of the notes that the scientists recorded about all of the animals got jumbled. On each trial, you randomly pick out a note from the large stack of notes and read about a single example of a new kind of animal.")
-      }
+
+      // if (exp.condition == "pedagogical"){
+      //   $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Your fellow scientist has studied these animals a lot and wants to teach you about them. On each trial, your fellow scientist will show you an example of a new kind of animal and show you one of its properties.")
+      // } else if (exp.condition == "accidental"){
+      //   $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. Unfortunately, all of the notes that the scientists recorded about all of the animals got jumbled. On each trial, you randomly pick out a note from the large stack of notes and read about a single example of a new kind of animal.")
+      // }
     },
     button : function() {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
+  slides.implied_prevalence = slide({
+    name: "implied_prevalence",
+
+    // present : _.shuffle(_.range(numTrials)),
+    trial_num : 1,
+    present : _.shuffle(exp.stims),
+    //this gets run only at the beginning of the block
+    present_handle : function(stim) {
+      this.startTime = Date.now();
+
+      $(".err").hide();
+      // $(".followUpQ").hide();
+      // $("#followUpResponse").val('');
+      this.followUp = true;
+
+      this.stim = stim
+      // console.log(this.stim)
+
+      // var query_prompt = "Out of 100 "  + this.stim.category + ", how many do you think " + this.stim.property + "?\n";
+      var query_prompt = "Out of all of the "  + this.stim.category + " on the planet,<br> what percentage do you think " + this.stim.property + "?\n";
+
+      this.evidence_prompt = '"' + utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + '."'
+      console.log(this.stim.exemplar.slice(0,1))
+      var article = ["a","e","i","o","u"].indexOf(this.stim.exemplar.slice(0,1)) > -1 ? "an" : "a"
+      var evidence_statement = "You walk by a room where one of your fellow scientists is observing an animal you've never seen before. "
+      if (exp.condition == "pedagogical") {
+        evidence_statement+='Your colleague notices you and comes to the window. They have been writing lots of notes in their notebook. They point to the animal, and then point to two lines in their notebook (underlined below):'+
+        "<br>" +
+        '<br><div class="note"><strong>Species: <u>'+ utils.upperCaseFirst(this.stim.exemplar) +
+      '</strong></u><br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
+        '<br>Notes: <strong><u>' +this.stim.observable_property + '</strong></u></div>'
+            //'<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
+      } else if (exp.condition == "accidental"){
+        evidence_statement+="Your colleague has been writing lots of notes in their notebook. You glance at the notebook for a moment, but can only see part of what is on the page: the species name, the ID of the animal, and one of the many notes your colleague has taken:"+
+            "<br>" +
+            '<br><div class="note"> Species: '+ utils.upperCaseFirst(this.stim.exemplar) +
+          '<br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
+            '<br>Notes: ' +this.stim.observable_property + '</div>'
+      }
+
+      $(".evidence").html(evidence_statement)//; this.evidence_prompt);
+      $(".query").html(query_prompt);
+
+      this.init_sliders();
+      // exp.sliderPost = [];
+      exp.sliderPost = -1;
+      $(".slider_number").html("---")
+
+    },
+
+    init_sliders : function() {
+        utils.make_slider("#single_slider", this.make_slider_callback());
+      // utils.make_slider("#single_slider", function(event, ui) {
+      //   exp.sliderPost = ui.value;
+      // });
+    },
+    make_slider_callback : function() {
+      return function(event, ui) {
+        exp.sliderPost = ui.value;
+        $(".slider_number").html(Math.round(exp.sliderPost*100) + "%")
+      };
+    },
+
+    button : function() {
+      if (exp.sliderPost<0) {
+        $(".err").show();
+      // } else if ((exp.sliderPost <= 0.25) & (this.followUp)){
+      //   $(".followUpQ").show()
+      //   this.followUp = false;
+      } else {
+        this.rt = Date.now() - this.startTime;
+        this.log_responses();
+        _stream.apply(this);
+      }
+    },
+   log_responses : function() {
+      exp.data_trials.push({
+        "trial_type" : "implied_prevalence",
+        "trial_num": this.trial_num,
+        "response" : exp.sliderPost,
+        "rt":this.rt,
+        "property_type": this.stim.type,
+        "property": this.stim.property,
+        "category": this.stim.category//,
+        // "explanation": $("#followUpResponse").val()
+      });
+      // CHECK THAT THIS IS LAST TRIAL
+      if (this.trial_num == exp.stims.length){
+
+        minorityInterpretations = _.filter(exp.data_trials, function(x){
+          return x.response < 0.50
+        })
+
+        // set stimuli to be explained,
+        slides.explain_responses.present = _.shuffle(minorityInterpretations).slice(0, 5)
+      }
+      this.trial_num++;
+    }
+  });
+
 
   slides.botcaptcha  = slide({
     name: "botcaptcha",
@@ -162,104 +263,6 @@ function make_slides(f) {
       }
 
       exp.go(); //use exp.go() if and only if there is no "present" data.
-    }
-  });
-
-  slides.implied_prevalence = slide({
-    name: "implied_prevalence",
-
-    // present : _.shuffle(_.range(numTrials)),
-    trial_num : 1,
-    present : _.shuffle(exp.stims),
-    //this gets run only at the beginning of the block
-    present_handle : function(stim) {
-      this.startTime = Date.now();
-
-      $(".err").hide();
-      // $(".followUpQ").hide();
-      // $("#followUpResponse").val('');
-      this.followUp = true;
-
-      this.stim = stim
-      // console.log(this.stim)
-
-      // var query_prompt = "Out of 100 "  + this.stim.category + ", how many do you think " + this.stim.property + "?\n";
-      var query_prompt = "Out of all of the "  + this.stim.category + " on the planet,<br> what percentage do you think " + this.stim.property + "?\n";
-
-      this.evidence_prompt = '"' + utils.upperCaseFirst(this.stim.category) + " " + this.stim.property + '."'
-      console.log(this.stim.exemplar.slice(0,1))
-      var article = ["a","e","i","o","u"].indexOf(this.stim.exemplar.slice(0,1)) > -1 ? "an" : "a"
-      if (exp.condition == "pedagogical") {
-        var evidence_statement = "Your fellow scientist shows you an animal you've never seen before." +
-            "<br>" +
-            '<br>They point to it and say, "This is ' +article + " " + this.stim.exemplar + '."' +
-            '<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
-      } else if (exp.condition == "accidental"){
-        var evidence_statement = "You pick out a note from the disorganized stack. It has the ID number of the animal, the name of the kind of animal, and one of its properties." +
-            "<br>" +
-            '<br>The note reads:'+
-            '<br><div class="note"> Species: '+ utils.upperCaseFirst(this.stim.exemplar) +
-          '<br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
-            '<br>Note: ' +this.stim.observable_property + '</div>'
-      }
-
-      $(".evidence").html(evidence_statement)//; this.evidence_prompt);
-      $(".query").html(query_prompt);
-
-      this.init_sliders();
-      // exp.sliderPost = [];
-      exp.sliderPost = -1;
-      $(".slider_number").html("---")
-
-    },
-
-    init_sliders : function() {
-        utils.make_slider("#single_slider", this.make_slider_callback());
-      // utils.make_slider("#single_slider", function(event, ui) {
-      //   exp.sliderPost = ui.value;
-      // });
-    },
-    make_slider_callback : function() {
-      return function(event, ui) {
-        exp.sliderPost = ui.value;
-        $(".slider_number").html(Math.round(exp.sliderPost*100) + "%")
-      };
-    },
-
-    button : function() {
-      if (exp.sliderPost<0) {
-        $(".err").show();
-      // } else if ((exp.sliderPost <= 0.25) & (this.followUp)){
-      //   $(".followUpQ").show()
-      //   this.followUp = false;
-      } else {
-        this.rt = Date.now() - this.startTime;
-        this.log_responses();
-        _stream.apply(this);
-      }
-    },
-   log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "implied_prevalence",
-        "trial_num": this.trial_num,
-        "response" : exp.sliderPost,
-        "rt":this.rt,
-        "property_type": this.stim.type,
-        "property": this.stim.property,
-        "category": this.stim.category//,
-        // "explanation": $("#followUpResponse").val()
-      });
-      // CHECK THAT THIS IS LAST TRIAL
-      if (this.trial_num == exp.stims.length){
-
-        minorityInterpretations = _.filter(exp.data_trials, function(x){
-          return x.response < 0.50
-        })
-
-        // set stimuli to be explained,
-        slides.explain_responses.present = _.shuffle(minorityInterpretations).slice(0, 5)
-      }
-      this.trial_num++;
     }
   });
 
@@ -403,7 +406,7 @@ function init() {
 
   exp.numTrials = creatureNames.length;
   // console.log(stim_properties.length)
-  exp.condition = "accidental"
+  exp.condition = _.sample(["accidental", "pedagogical"])
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}
   )
