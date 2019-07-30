@@ -52,14 +52,16 @@ function make_slides(f) {
       var article = ["a","e","i","o","u"].indexOf(this.stim.exemplar.slice(0,1)) > -1 ? "an" : "a"
       var evidence_statement = "You walk by a room where one of your fellow scientists is observing an animal you've never seen before. "
       if (exp.condition == "pedagogical") {
-        evidence_statement+='Your colleague notices you and comes to the window. They have been writing lots of notes in their notebook. They point to the animal, and then point to two lines in their notebook (underlined below):'+
-        "<br>" +
-        '<br><div class="note"><strong>Species: <u>'+ utils.upperCaseFirst(this.stim.exemplar) +
-      '</strong></u><br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
-        '<br>Notes: <strong><u>' +this.stim.observable_property + '</strong></u></div>'
-            //'<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
+        evidence_statement+='<br>Your colleague notices you, points to the animal, and says: "This is '+ article + ' ' + this.stim.exemplar + '."'+ // this is a dax. They then show you:
+        '<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
+      //   'They have been writing lots of notes in their notebook. They point to the animal, and then point to two lines in their notebook (underlined below):'+
+      //   "<br>" +
+      //   '<br><div class="note"><strong>Species: <u>'+ utils.upperCaseFirst(this.stim.exemplar) +
+      // '</strong></u><br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
+      //   '<br>Notes: <strong><u>' +this.stim.observable_property + '</strong></u></div>'
+
       } else if (exp.condition == "accidental"){
-        evidence_statement+="Your colleague has been writing lots of notes in their notebook. You glance at the notebook for a moment, but can only see part of what is on the page: the species name, the ID of the animal, and one of the many notes your colleague has taken:"+
+        evidence_statement+="They are behind a two-way mirror and cannot see you. Your colleague has been writing lots of notes in their notebook. You glance at the notebook for a moment, but can only see part of what is on the page: the species name, the ID of the animal, and one of the many notes your colleague has taken:"+
             "<br>" +
             '<br><div class="note"> Species: '+ utils.upperCaseFirst(this.stim.exemplar) +
           '<br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
