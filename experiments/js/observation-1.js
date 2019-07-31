@@ -168,7 +168,7 @@ function make_slides(f) {
         // response correct
         // if (this.listener.toLowerCase() == response.toLowerCase()) {
         if (this.listener.toLowerCase() == response) {
-            exp.catch_trials.botresponse = $("#listener-response").val();
+            // exp.catch_trials.botresponse = $("#listener-response").val();
             exp.go();
 
         // response false
