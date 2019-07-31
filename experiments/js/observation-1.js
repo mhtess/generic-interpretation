@@ -8,7 +8,7 @@ function make_slides(f) {
      start: function() {
       exp.startT = Date.now();
       $("#total-num").html(exp.numTrials);
-      $("#expected-time").html(Math.ceil(exp.numTrials / 4))
+      $("#expected-time").html(10)//Math.ceil(exp.numTrials / 4))
      }
   });
 
@@ -53,7 +53,7 @@ function make_slides(f) {
       var evidence_statement = "You walk by a room where one of your fellow scientists is observing an animal you've never seen before. "
       if (exp.condition == "pedagogical") {
         evidence_statement+='<br>Your colleague notices you, points to the animal, and says: "This is '+ article + ' ' + this.stim.exemplar + '."'+ // this is a dax. They then show you:
-        '<br><strong>They then show to you that it ' +this.stim.observable_property + '.</strong>'
+        '<br><strong>Your colleague then shows you that it ' +this.stim.observable_property + '.</strong>'
       //   'They have been writing lots of notes in their notebook. They point to the animal, and then point to two lines in their notebook (underlined below):'+
       //   "<br>" +
       //   '<br><div class="note"><strong>Species: <u>'+ utils.upperCaseFirst(this.stim.exemplar) +
@@ -75,7 +75,7 @@ function make_slides(f) {
       // exp.sliderPost = [];
       exp.sliderPost = -1;
       $(".slider_number").html("---")
-
+      this.evidence_statement = evidence_statement
     },
 
     init_sliders : function() {
@@ -105,25 +105,27 @@ function make_slides(f) {
     },
    log_responses : function() {
       exp.data_trials.push({
+        "condition": exp.condition,
         "trial_type" : "implied_prevalence",
         "trial_num": this.trial_num,
         "response" : exp.sliderPost,
         "rt":this.rt,
         "property_type": this.stim.type,
         "property": this.stim.property,
-        "category": this.stim.category//,
+        "category": this.stim.category,
+        "evidence_statement": this.evidence_statement
         // "explanation": $("#followUpResponse").val()
       });
       // CHECK THAT THIS IS LAST TRIAL
-      if (this.trial_num == exp.stims.length){
-
-        minorityInterpretations = _.filter(exp.data_trials, function(x){
-          return x.response < 0.50
-        })
-
-        // set stimuli to be explained,
-        slides.explain_responses.present = _.shuffle(minorityInterpretations).slice(0, 5)
-      }
+      // if (this.trial_num == exp.stims.length){
+      //
+      //   minorityInterpretations = _.filter(exp.data_trials, function(x){
+      //     return x.response < 0.50
+      //   })
+      //
+      //   // set stimuli to be explained,
+      //   slides.explain_responses.present = _.shuffle(minorityInterpretations).slice(0, 5)
+      // }
       this.trial_num++;
     }
   });
@@ -134,6 +136,7 @@ function make_slides(f) {
     // amount of trials to enter correct response
     trial: 0,
     start: function(){
+      $("#fail").hide()
       // define possible speaker and listener names
       // fun fact: 10 most popular names for boys and girls
       var speaker = _.shuffle(["James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles"])[0];
@@ -184,6 +187,8 @@ function make_slides(f) {
                 $('#quest-response').css("opacity", "0.2");
                 $('#listener-response').prop("disabled", true);
                 $("#error").show();
+                $("#fail").show()
+
             };
         };
       }
@@ -398,14 +403,14 @@ function init() {
 
   repeatWorker = false;
   (function(){
-      var ut_id = "mht-genint-20180416";
+      var ut_id = "mht-genobs-20190731";
       if (UTWorkerLimitReached(ut_id)) {
         $('.slide').empty();
         repeatWorker = true;
         alert("You have already completed the maximum number of HITs allowed by this requester. Please click 'Return HIT' to avoid any impact on your approval rating.");
       }
   })();
-
+  console.log(stim_properties.length)
   exp.numTrials = creatureNames.length;
   // console.log(stim_properties.length)
   exp.condition = _.sample(["accidental", "pedagogical"])
@@ -429,8 +434,8 @@ function init() {
   // exp.condition = "implied_prevalence";
   exp.instructions = "elaborate_instructions";
   exp.structure=[
-    // "i0",
-    // "botcaptcha",
+    "i0",
+    "botcaptcha",
     "instructions",
     "implied_prevalence",
     "memory_check",
