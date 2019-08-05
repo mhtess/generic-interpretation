@@ -17,7 +17,7 @@ function make_slides(f) {
     start: function(){
 
       if (exp.condition == "pedagogical"){
-        $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. The animals have been studied extensively in the wild and in the laboratory.  You enter the facility where your fellow scientists are observing the animals and they want to teach you what they've learned.")
+        $("#instruction_text").html("Imagine that a team of scientists discovered a large island with lots of animals that we did not know existed before. The team has been studying these animals in their natural habitats extensively over the past year. One of the scientists takes you around the island in order to teach you about the animals.")
       } else if (exp.condition == "accidental"){
         $("#instruction_text").html("Recently, a team of scientists discovered lots of animals that we did not know existed. The animals have been observed in the wild and in the laboratory. You enter the facility where your fellow scientists observe the animals.")
       } else if (exp.condition == "firstObs") {
@@ -28,6 +28,7 @@ function make_slides(f) {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
+
   slides.implied_prevalence = slide({
     name: "implied_prevalence",
 
@@ -60,15 +61,16 @@ function make_slides(f) {
       }
 
       if (exp.condition == "pedagogical") {
-        evidence_statement+="<br>You wait in a room. One of your fellow scientists walks in with an animal you've never seen before. "+
-        '<strong>They say: "This is '+ article + ' ' + this.stim.exemplar + '."'+ // this is a dax. They then show you:
-        '<br>Your colleague then shows you that it ' +this.stim.observable_property + '.</strong>'
-      //   'They have been writing lots of notes in their notebook. They point to the animal, and then point to two lines in their notebook (underlined below):'+
-      //   "<br>" +
-      //   '<br><div class="note"><strong>Species: <u>'+ utils.upperCaseFirst(this.stim.exemplar) +
-      // '</strong></u><br>ID: '+ _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100) +
-      //   '<br>Notes: <strong><u>' +this.stim.observable_property + '</strong></u></div>'
+        // this.kind_name = _.sample(["A","B","C","D","E","F","G","H","J","K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "X", "Z"]) + Math.ceil(Math.random()*100)
+        this.kind_num = String(this.trial_num).replace('.', '').length == 1 ? "0"+this.trial_num : this.trial_num
+        this.stim.category = "K" + this.kind_num;
+        this.observation_statement = this.stim.duration_observation == "directly_observable" ?
+        "The scientist draws your attention to the fact that it  ":
+        "The scientist shows you with their scientific devices that it "
 
+        evidence_statement+="<br>The scientist shows you an animal of a kind you've never seen before. <br>You record the kind in your journal as " + this.stim.category + ".<br>" +
+        '<strong>' + this.observation_statement + ' ' + this.stim.observable_property + '.'+
+        '</strong>'
       } else if (exp.condition == "accidental"){
         evidence_statement+= "You walk by a room where one of your fellow scientists is observing an animal you've never seen before."+
         "They are behind a two-way mirror and cannot see you. Your colleague has been writing lots of notes in their notebook. You glance at the notebook for a moment, but can only see part of what is on the page: the species name, the ID of the animal, and one of the many notes your colleague has taken:"+
@@ -156,7 +158,6 @@ function make_slides(f) {
     }
   });
 
-
   slides.botcaptcha  = slide({
     name: "botcaptcha",
     // amount of trials to enter correct response
@@ -229,7 +230,6 @@ function make_slides(f) {
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
-
 
   slides.memory_check = slide({
     name : "memory_check",
@@ -321,8 +321,6 @@ function make_slides(f) {
     }
   });
 
-
-
   slides.explain_responses = slide({
     name: "explain_responses",
 
@@ -407,7 +405,6 @@ function make_slides(f) {
     }
   });
 
-
   slides.subj_info =  slide({
     name : "subj_info",
     submit : function(e){
@@ -462,7 +459,8 @@ function init() {
   exp.numTrials = creatureNames.length;
   // console.log(stim_properties.length)
   // exp.condition = _.sample(["accidental", "pedagogical"])
-  exp.condition =  "firstObs"
+  // exp.condition =  "firstObs"
+  exp.condition = "pedagogical"
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}
   )

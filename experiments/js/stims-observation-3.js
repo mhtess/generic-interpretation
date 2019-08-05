@@ -69,7 +69,7 @@ var stim_properties = [
   { property: "get addicted to nicotine", type: "disease_self", observable_property: "is addicted to nicotine"},
   { property: "develop back problems", type: "disease_self", observable_property: "has back problems"},
   { property: "have seizures", type: "disease_self", observable_property: "has seizures"},
-  { property: "have strange genetic mutations", type: "disease_self", observable_property: "has stange genetic mutations"},
+  { property: "have strange genetic mutations", type: "disease_self", observable_property: "has strange genetic mutations"},
   { property: "get dandruff", type: "disease_self", observable_property: "has dandruff"},
   { property: "get cancer", type: "disease_self", observable_property: "has cancer"},
   { property: "lose their teeth", type: "disease_self", observable_property: "has lost its teeth"},
