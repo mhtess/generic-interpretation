@@ -295,6 +295,28 @@ function make_slides(f) {
         })
       }
 
+      response = $("#n_obs").val()
+      tested_on = 1
+      exp.catch_trials.push({
+        condition: "memory_check",
+        check_index: 0,
+        property: "n_obs",
+        tested_on:tested_on,
+        response: response,
+        correct: (tested_on == response) ? 1 : 0
+      })
+
+      response = $('input[name="first_observer"]:checked').val()
+      tested_on = "No"
+      exp.catch_trials.push({
+        condition: "memory_check",
+        check_index: 0,
+        property: "first_observer",
+        tested_on: tested_on,
+        response: response,
+        correct: (tested_on == response) ? 1 : 0
+      })
+
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
@@ -466,8 +488,6 @@ function init() {
     "instructions",
     "implied_prevalence",
     "memory_check",
-    // "explain_instructions",
-    // "explain_responses",
     'subj_info',
     'thanks'
   ];
