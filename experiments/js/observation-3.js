@@ -458,9 +458,9 @@ function init() {
   console.log(stim_properties.length)
   exp.numTrials = creatureNames.length;
   // console.log(stim_properties.length)
-  // exp.condition = _.sample(["accidental", "pedagogical"])
+  exp.condition = _.sample(["firstObs", "pedagogical"])
   // exp.condition =  "firstObs"
-  exp.condition = "pedagogical"
+  // exp.condition = "pedagogical"
   var creatures = _.map(_.shuffle(creatureNames).slice(0,exp.numTrials),
     function(x){return {category: x.category, exemplar: x.exemplar}}
   )
