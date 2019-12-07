@@ -228,33 +228,57 @@ Tessler and Goodman (2019) propose that the literal contribution of a generic se
 %A reasonable initial hypothesis is that generics convey the same information content as a single observation, interpreted with respect to background knowledge.
 We thus begin by considering a learner trying to figure out how strongly to expect the feature in the category: The learner considers the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. 
 
-Tessler and Goodman (2019) borrow the machinery from formal semantics (Montague, 1973) to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!]$} = r > \theta\)) whose threshold value is uncertain and is drawn from a uniform prior (\(\theta \sim \text{Uniform}(0, 1)\)). Thus, the generics model is a like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!]$} = r > 0\), \(\mbox{ $[\![ most ]\!]$} = r > 0.5\), \(\mbox{ $[\![ all ]\!]$} = r = 1\)), but in which the threshold is not specified a priori. 
+Tessler and Goodman (2019) borrow the machinery from formal semantics (Montague, 1973) to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!]$} = r > \theta\)) whose threshold value is uncertain and is drawn from a uniform prior (\(\theta \sim \text{Uniform}(0, 1)\)). Thus, the generics model is like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!]$} = r > 0\), \(\mbox{ $[\![ most ]\!]$} = r > 0.5\), \(\mbox{ $[\![ all ]\!]$} = r = 1\)), but one in which the threshold is not specified a priori. 
 Incorporating that likelihood function and prior on thresholds into the learner trying to uncover how strongly to expect the feature in the category $r$, they present a Bayesian model of literal generic interpretation: 
 
 \begin{align}
-L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0a}
+L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0}
 \end{align}
 
 Here, the truth-functional meaning of a generic is a threshold-function mandating that the prevalence \(r\) is greater than the threshold \(\theta\), represented by the Kronecker delta \(\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)}\) that returns \(1\) when the utterance is true (i.e., when \(r > \theta\)) and \(0\) otherwise.
 
-\red{END EDITS}
-In the setting of observations, we denote the function that maps an observed item to all of its observable features as $F(x)$; we imagine the learner observes a particular $x$ in category $k$ that has the property of interest  among its features: $f(x)=\texttt{true}$. Bayes' rule then tells us:
-$$
-P(r \mid F(x); x \in k) \propto P( F(x) \mid r; x \in k) \cdot P(r)
-$$
-In the setting of a minimal example, the learner observes that $x$ has property $f$, but has not observed any of its other properties.
-If we assume that properties are conditionally independent given the category, then unobserved properties can be marginalized away.
-We have:
+To get some intuition for the model behavior, consider the idealized belief-updating scenario of trying to infer the weight of a potentially-biased coin (i.e., a coin which potentially has some preference for landing on heads or tails), where the hypothesis space of the reasoner contains all coin-weights with equal \emph{a priori} probability.
+We are positing that belief-updating from a generic is informationally equivalent to observing the coin flipped once and it landing on heads.
+Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
+Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
+The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
+Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
+
+Tessler and Goodman (2019) used this semantic hypothesis to explain human truth judgments (or endorsements) of generics (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not) as well as other kinds of linguistic expressions that are thought to convey generalizations (e.g., habituals;  ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week).
+They modeled truth judgments as a speaker decision of whether or not to say the generic sentence to the listener defined by Equation \ref{eq:L0}.
+Following a typical Rational Speech Act model (Frank and Goodman, 2012; Goodman and Frank, 2016), the speaker is a soft-max rational agent whose utility function is given by the information conveyed to the listener by the utterance $u$ -- $\ln L_0(r \mid u)$ -- minus the cost of the utterance $C(u)$ (e.g., taking into account that certain utterances will be costlier to produce because they are longer):
+
 \begin{align}
-P(r \mid  f(x){=}\texttt{true}; x \in k) &\propto P(f(x){=}\texttt{true} \mid r;   x \in k) \cdot P(r) \nonumber \\
-&\propto r\cdot P(r), \nonumber
+S_1(u \mid r) \propto \exp{(\alpha \cdot ( \ln L_0(r \mid u) - C(u))}) \label{eq:S1}
 \end{align}
-where we have used the fact that the hypothesis, $r$, is the likelihood in this setting.
-Adopting this minimal-example belief-update as the effect of hearing the generic utterance $u_{gen}$ yields:
-\begin{equation}
-L_0(r \mid u_{gen}) \propto  r \cdot P(r). 
-\label{eq:L0}
-\end{equation}
+
+The speaker's decision is relative to a set of alternative utterances; since Tessler and Goodman (2019) were interested in modeling sentence endorsements, the alternative set consisted only of producing the generic and staying silent.
+The act of silence is an information-less utterance that produces a posterior distribution in the literal listener that is identical to the prior and incorporating such an utterance into a pragmatic model is a minimal mechanism go encode speaker intentionality into utterance production: Why did the speaker choose to say the utterance they said?
+In summary, in addition to the cost of the utterance, the speaker's production decision reflects the prevalence level the speaker intends to convey, $r$ (i.e., their belief about how many of the category have the property), under the literal generic interpretation distribution~vs.~the prior distribution (Figure~\ref{fig:tripartite}A). 
+
+Since we are interested in testing models of interpretation, the question naturally arises of what is the best model for modeling prevalence interpretations of generics: The literal vague quantifier model (Eq. \ref{eq:L0}) or a model that updates their beliefs about the prevalence not given the literal contribution of the generic, but given the fact that a speaker chose to say the generic?
+
+%This formulation results in production probabilities that vary as a function of subjective prevalence of the feature, the prevalence prior, and the cost of the utterance (Figure~\ref{fig:tripartite}B).
+
+
+%\red{END EDITS}
+%In the setting of observations, we denote the function that maps an observed item to all of its observable features as $F(x)$; we imagine the learner observes a particular $x$ in category $k$ that has the property of interest  among its features: $f(x)=\texttt{true}$. Bayes' rule then tells us:
+%$$
+%P(r \mid F(x); x \in k) \propto P( F(x) \mid r; x \in k) \cdot P(r)
+%$$	
+%In the setting of a minimal example, the learner observes that $x$ has property $f$, but has not observed any of its other properties.
+%If we assume that properties are conditionally independent given the category, then unobserved properties can be marginalized away.
+%We have:
+%\begin{align}
+%P(r \mid  f(x){=}\texttt{true}; x \in k) &\propto P(f(x){=}\texttt{true} \mid r;   x \in k) \cdot P(r) \nonumber \\
+%&\propto r\cdot P(r), \nonumber
+%\end{align}
+%where we have used the fact that the hypothesis, $r$, is the likelihood in this setting.
+%Adopting this minimal-example belief-update as the effect of hearing the generic utterance $u_{gen}$ yields:
+%\begin{equation}
+%L_0(r \mid u_{gen}) \propto  r \cdot P(r). 
+%\label{eq:L0}
+%\end{equation}
 %Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property---$P(f \mid k)$, denoted by \(r \in [0, 1]\)---with a single positive observation according to Bayes' rule:
 %\begin{align}
 %L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
@@ -271,15 +295,15 @@ L_0(r \mid u_{gen}) \propto  r \cdot P(r).
 %We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
 %The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
 
-\noindent Equation \ref{eq:L0} is derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it (cf., Leslie, 2008).
-We show in Appendix A that this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function like a vague quantifier. 
-
-To get some intuition for the model behavior, consider the idealized belief-updating scenario of trying to infer the weight of a potentially-biased coin (i.e., a coin which potentially has some preference for landing on heads or tails), where the hypothesis space of the reasoner contains all coin-weights with equal \emph{a priori} probability.
-We are positing that belief-updating from a generic is informationally equivalent to observing the coin flipped once and it landing on heads.
-Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
-Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
-The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
-Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
+%\noindent Equation \ref{eq:L0} is derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it (cf., Leslie, 2008).
+%We show in Appendix A that this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function like a vague quantifier. 
+%
+%To get some intuition for the model behavior, consider the idealized belief-updating scenario of trying to infer the weight of a potentially-biased coin (i.e., a coin which potentially has some preference for landing on heads or tails), where the hypothesis space of the reasoner contains all coin-weights with equal \emph{a priori} probability.
+%We are positing that belief-updating from a generic is informationally equivalent to observing the coin flipped once and it landing on heads.
+%Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
+%Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
+%The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
+%Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
 
 \subsection{Prevalence priors}
 
@@ -288,12 +312,12 @@ According to the model of literal generic interpretation given by Equation \ref{
 In a more abstract sense, the prevalence prior \(P(r)\) is a representation of intuitive beliefs about properties, which could exhibit interesting structure.
 %The distribution can also be understood as a distribution over different categories (and their associated prevalence of the feature).
 For instance, according to a veridical theory of biological properties like \emph{flying} (like in ``Ducks fly''), a learner would know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}), but is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence the distribution would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:tripartite}A, second row).\footnote{
-	We assume that people have graded degrees of belief and hence the mode at 0\% is not a Delta distribution at exactly 0\%. That is, the model assumes there are categories in which almost no members have the property (e.g., a dog flying), but such an individual is not entirely impossible.}
+	We assume that people have graded degrees of belief about the prevalence and hence the mode at 0\% is not a Delta distribution at exactly 0\%. That is, the model assumes there are categories in which almost no members have the property (e.g., a dog flying), but that the existence of such an individual is not entirely impossible.}
 	%Bayesians in general do not like to assign 0 probabilities to outcomes, which is what a mode at 0\% would entail for this cognitive model. 
 	%Instead, the model assigns some low but non-zero probability that an instance of a category having a property which is not in general true of the category  (e.g., a dog flying), because it is not impossible to imagine some intuitive chain of causal events that could give rise to the property (e.g., a genetic mutation or a cross-species cloning experiment). }
 A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which results in an intuitive distribution with a different bimodal structure (Figure~\ref{fig:tripartite}A, third row).  
 Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013) which would follow a different distribution as well (Figure \ref{fig:tripartite}A, bottom row). 
-Belief updating based on a single observation produces posterior distributions that are radically different depending on the prevalence prior distribution  (Figure \ref{fig:tripartite}A, solid lines).
+Belief updating based on an underspecified threshold produces posterior distributions that are radically different depending on the prevalence prior distribution  (Figure \ref{fig:tripartite}A, solid lines).
 In our experiments, we both measure the prevalence priors for familiar properties  (Expt.~1) and manipulate the prevalence prior for an unfamiliar property (Expt.~2) in order to test the fine-grained quantitative influence of the prevalence prior on the implied prevalence of a generic statement. 
 
 
@@ -321,20 +345,17 @@ In our experiments, we both measure the prevalence priors for familiar propertie
 \hypertarget{pragmatic-enrichment}{%
 \subsection{Pragmatic enrichment}\label{pragmatic-enrichment}}
 
-Even if the literal contribution of a generic sentence is informationally equivalent to observing a single, positive example, the inferences a listener derives from a generic could be meaningfully different from those one would glean from an observation without any communicative reasoning  (Clark, 1996; Grice, 1975; Levinson, 2000; Figure \ref{fig:cartoon}).
-Reasoning about why a speaker chooses to produce a generic could at the very least result in strengthened inferences, where the listener takes the generalization to apply more broadly than what a literal Bayesian reasoner would infer. 
+Even if the literal contribution of a generic sentence is modeled as a vague quantifier with a uniform prior on the threshold as Tessler and Goodman (2019) posit, the inferences a listener derives from a generic could quantitatively deviate from  the predictions of Eq.~\ref{eq:L0} by listeners taking into account the communicative intent of a speaker  (Clark, 1996; Grice, 1975; Levinson, 2000; Figure \ref{fig:cartoon}).
+Reasoning about why a speaker chooses to produce a generic could result in strengthened inferences, where the listener takes the generalization to apply more broadly than what a literal Bayesian reasoner would infer. 
 %That is, a listener could reason about why the speaker choose to produce a generic utterance (when they could have stayed silent)
-We model pragmatic reasoning by incorporating our model of literal generic interpretation (Eq.~\ref{eq:L0}) as a \emph{literal listener} model in the Rational Speech Act framework (Frank \& Goodman, 2012; Goodman \& Frank, 2016; Scontras, Tessler, \& Franke, 2018).
+We model pragmatic reasoning by incorporating our model of literal generic interpretation (Eq.~\ref{eq:L0}) as a \emph{literal listener} model in the Rational Speech Act framework (Frank \& Goodman, 2012).
 In such a model, a listener \(L_1\) interprets an utterance $u$ by reasoning about a speaker \(S_1\) intentionally producing the utterance to update the beliefs of the literal listener \(L_0\):
 \begin{eqnarray}
-S_1(u \mid r) &\propto& \exp{(\alpha \cdot \ln L_0(r \mid u) - \text{cost}(u))} \label{eq:S1} \\
 L_1(r, \mid u) &\propto& S_1(u \mid r) \cdot P(r) \label{eq:L1}
 \end{eqnarray}
-Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce a generic utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}) taking into account the cost of producing the utterance (plausibly, \(\text{cost}(generic)\) \(>\) \(\text{cost}(silence)\)).
-The speaker makes this decision by choosing among their set of alternative utterances, which we assume only consists of producing the generic and staying silent: the act of silence produces a posterior distribution in the literal listener that is identical to the prior.
-Thus, in addition to the cost of the utterance, the speaker's production decision reflects the probability of the prevalence level the speaker intends to convey, $r$ (i.e., their belief about how many of the category have the property), under the literal generic interpretation distribution~vs.~the prior distribution (Figure~\ref{fig:tripartite}A). 
-This formulation results in production probabilities that vary as a function of subjective prevalence of the feature, the prevalence prior, and the cost of the utterance (Figure~\ref{fig:tripartite}B).
-In previous work, this model was shown to be a good model of generic truth judgments (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not; why ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week; Tessler and Goodman, 2019) and we use it here for continuity with that work. 
+Equations \ref{eq:S1} \& \ref{eq:L1} are a vanilla Rational Speech Act model which has been used to account for a number of diverse pragmatic language understanding phenomena (for a review, see Goodman \& Frank, 2016; for a tutorial, see Scontras, Tessler, \& Franke, 2018).
+Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce an utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}), while taking into account the cost of producing the utterance (e.g., longer utterances are more costly to produce).
+
 
 Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker \(S_1\) (Figure \ref{fig:cartoon}).
 Again, interpretations are strongly driven by the prevalence priors (Figure \ref{fig:tripartite}C). 
