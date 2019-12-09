@@ -23,6 +23,7 @@ library(kableExtra)
 library(cowplot)
 library(magick)
 library(ggridges)
+library(viridis)
 theme_set(theme_few())
 estimate_mode <- function(s) {
   d <- density(s)
@@ -163,7 +164,8 @@ var uncertainThresholdInterpreter = function() {
 condition(state > theta)
     return {
       state: state, 
-  }
+      theta: theta
+    }
   }, method: "enumerate"})}
 '
 
@@ -252,7 +254,7 @@ priorNames <- c(
   #"biological_common", 
   "biological_rare",
   "sexed_rare",
-  "accidental_common",
+  #"accidental_common",
   "accidental_rare"
 )
 
@@ -741,6 +743,135 @@ wp.rs.l1.filtered %>%
 
 ggsave("../figs/pragmatic_generic.pdf", width = 4.5, height = 3.5)
 ```
+
+
+# L0 model with Joint Posterior
+
+```{r}
+
+inputData <- list(prior = list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1))
+
+rs.uncertain.threshold.model <- webppl(
+  program_code = paste(
+    rsaHelpers, 
+    statePrior, 
+    uncertain.threshold.model, 
+    uncertain.threshold.call, 
+    sep = '\n'), 
+  data = inputData, data_var = "data"
+)
+
+ggplot(rs.uncertain.threshold.model, aes( x = state, y = theta))+
+  stat_density_2d(aes(fill = prob), geom = 'polygon')
+```
+
+```{r literal exact discrete}
+priorShapes <- list(
+  uniform =  list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1), 
+  uniform_rare =  list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4),
+  sexed_rare =  list(params = list(
+    c1 = data.frame(a = 10, b = 10), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4), 
+  biological_common =  list(params = list(
+    c1 = data.frame(a = 30, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1), 
+  biological_rare =  list(params = list(
+    c1 = data.frame(a = 30, b = 1),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4), 
+  accidental_common =  list(params = list(
+    c1 = data.frame(a = 1, b = 5), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1),
+  accidental_rare =  list(params = list(
+    c1 = data.frame(a = 2, b = 10), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4)
+)
+
+
+
+discrete.posteriors <- data.frame()
+  
+for (p in priorNames){
+  priorProbs = priorShapes[[p]]
+  
+  discrete.posteriors.i <- expand.grid(
+    state = seq(0, 1, 0.01),
+    theta  = seq(0, 1, 0.01)
+  ) %>% mutate(
+    state_prior_prob = priorProbs$mix * 
+      dbeta(shape1 = priorProbs$params$c1[1, "a"],
+            shape2 = priorProbs$params$c1[1, "b"],
+            x = state) + 
+      (1 - priorProbs$mix) *
+      dbeta(shape1 = priorProbs$params$c2[1, "a"],
+            shape2 = priorProbs$params$c2[1, "b"],
+            x = state),
+    priorName = p,
+    unnorm_post_density =  ifelse(state > theta, state_prior_prob, 0)
+  )
+  
+  discrete.posteriors <- bind_rows(
+    discrete.posteriors,
+    discrete.posteriors.i
+  )
+  print(p)
+}
+
+  #rowwise() %>%
+  # mutate(unnorm_prob_density = ifelse(state > theta, 1, 0)) %>%
+  # #ungroup() %>%
+  # mutate(prob_mass = unnorm_prob_density / sum(unnorm_prob_density))
+
+
+plot_func <- function(df, name) {
+  highest_post_densities <- sort(df %>% pull(unnorm_post_density), decreasing = T )
+  single_point_outlier <- highest_post_densities[1] > 2*highest_post_densities[2]
+  
+  df %>% 
+    rowwise() %>%
+    mutate(unnorm_post_density = ifelse(single_point_outlier,
+                                        ifelse(unnorm_post_density == highest_post_densities[1], highest_post_densities[2], unnorm_post_density), unnorm_post_density)) %>%
+  ggplot(., aes( x = state, y = theta, fill = unnorm_post_density))+
+    geom_tile()+
+    labs(x = "r (prevalence)",
+         y = expression(paste(theta, " (threshold)", sep ="")),
+         title = name)+
+    scale_x_continuous(breaks = c(0, 1))+
+    scale_y_continuous(breaks = c(0, 1))+
+    scale_fill_continuous(name = "unnormalized posterior density",
+                          breaks = c(
+                            last(highest_post_densities), 
+                            first(highest_post_densities)
+                            )
+                          )+
+    scale_fill_viridis(option = 'cividis')+
+    coord_fixed()+
+    theme(legend.position = 'bottom', legend.direction = 'horizontal')
+}
+
+
+nested_tmp <- discrete.posteriors %>% 
+  group_by(priorName) %>% 
+  nest() %>% 
+  mutate(plots = map2(data, priorName, plot_func))
+
+gridExtra::grid.arrange(grobs = nested_tmp$plots, nrow = 1)
+
+```
+
 
 
 ## Manipulated priors experiment (Expt 3)
