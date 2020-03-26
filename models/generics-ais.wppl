@@ -1,20 +1,17 @@
-// time webppl generics-ais.wppl --require utils --require webppl-json literal n_obs 1
+// time webppl generics-ais.wppl --require utils --require webppl-json lit_thetaPrior uncertain 1
 
-// modelName: pragmatic, pragmatic_unlifted, literal
+// modelName: pragmatic, pragmatic_unlifted, literal, lit_thetaPrior
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
-// var semantics = process.argv[process.argv.length - 2]
-// console.log(semantics)
 
 var arguments = process.argv
 var modelName = arguments[arguments.length - 3]
 var semantics = arguments[arguments.length - 2]
 var iter = arguments[arguments.length - 1]
 
-var n_obs = 3
-
+var n_obs = 3 // only does something if semantics == n_obs
 
 var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
@@ -108,7 +105,7 @@ var addNoise = function(dist, noise){
   }})
 }
 
-var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
+var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
   (semantics == "most") ? 0.5 :
   false
 
@@ -122,7 +119,27 @@ var marginalLikelihood = function(){
 
   var noise = (semantics == "most") ? uniform(0, 1) : 0
   var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
-  var cost = (modelName == "literal") ? 1 : uniform(0, 10)
+  var cost = (modelName == "literal") ? 1 :
+			(modelName == "lit_thetaPrior") ? 1 : uniform(0, 10)
+
+	var theta_mean = (modelName == "lit_thetaPrior") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0.5
+	var theta_concentration = (modelName == "lit_thetaPrior") ? uniformDrift({a: 0, b: 50, width:2}) : 2
+
+	var thetaParams = {
+		a: theta_mean * theta_concentration,
+		b: (1 - theta_mean) * theta_concentration
+	}
+
+	var nonuniform_ThetaPrior = Categorical({
+      vs: thetaBins,
+      ps: map2(function(b1, b2){
+        return utils.betaCDF(b2, thetaParams) -
+        utils.betaCDF(b1, thetaParams)
+      }, midBins.slice(0, midBins.length-1),
+        midBins.slice(1))
+	 })
+
+
   var cost_uttProb = Math.exp(-cost)
 
   var numberOfComponents = 3;//poisson(1) + 1;
@@ -176,14 +193,15 @@ var marginalLikelihood = function(){
   	// }});
 
   	/// RSA model
-  	var listener0 = cache(function(utterance) {
-  	  Infer({model: function(){
-  	    var state = sample(statePrior);
-        var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
-  	    var m = meaning(utterance, state, theta)
-  	    condition(m)
-  	    return state
-  	 }})}, 10000)
+
+		 var listener0 = cache(function(utterance){
+			 return Infer({model: function(){
+				 var theta = (semantics == "uncertain") ? sample(nonuniform_ThetaPrior) : fixedThreshold;
+				 var state = sample(statePrior);
+				 var m = meaning(utterance, state, theta)
+   	    condition(m)
+					return state
+			}})})
 
      /// LIFTED PRAGMATIC
    	var listener0_forL1 = cache(function(utterance, theta) {
@@ -296,13 +314,14 @@ var marginalLikelihood = function(){
 
 
 // data.endorsement
-var steps = 10
+var steps = 100
 var samples = 1
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
+var semantics_print = semantics == "n_obs" ? semantics + n_obs : semantics
 
 var resultsOutFile = 'results/genint/marginal_likelihood/ais-genint-wCost-'+modelName+
-  "-" + semantics + '-'+n_obs+'-fixedPriors-steps'+steps +'-iter'+iter+'.json'
+  "-" + semantics_print +'-fixedPriors-steps'+steps +'-iter'+iter+'.json'
 
 // // postOut
 json.write(resultsOutFile, mll)
