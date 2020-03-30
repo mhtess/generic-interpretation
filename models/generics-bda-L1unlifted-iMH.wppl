@@ -24,7 +24,7 @@ var d_prior = readDataFile("expt1a-prior"),
     // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
     // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
 
-var d_observation = readDataFile("observation-pilots");
+// var d_observation = readDataFile("observation-pilots");
 
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
@@ -74,14 +74,14 @@ var data = {
       di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
-	})}, d_interpretation)),
-  observation: filter(function(di){
-    return (utils.isNumber(di.response) &&
-      di.condition == "firstObs" &&
-      di.trial_type == "implied_prevalence")
-  }, map(function(d){ return extend(d, {
-		binnedResponse:  utils.closest( midBins.slice(1), d.response)
-	})}, d_observation))
+	})}, d_interpretation))//,
+  // observation: filter(function(di){
+  //   return (utils.isNumber(di.response) &&
+  //     di.condition == "firstObs" &&
+  //     di.trial_type == "implied_prevalence")
+  // }, map(function(d){ return extend(d, {
+	// 	binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	// })}, d_observation))
   //,
   // endorsement: filter(function(di){
   //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) &&
@@ -102,7 +102,7 @@ assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
 assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
 
-assert.ok(_.filter(data.observation, {trial_num: "30"}).length == 36) // prior 3 n200
+// assert.ok(_.filter(data.observation, {trial_num: "30"}).length == 36) // prior 3 n200
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -116,8 +116,8 @@ var meaning = function(utt,state, theta) {
          true
 }
 //
-// var properties = levels(data.interpretation, "property");
-var properties = levels(data.observation, "property");
+var properties = levels(data.interpretation, "property");
+// var properties = levels(data.observation, "property");
 
 
 var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
@@ -129,11 +129,9 @@ var addNoise = function(dist, noise){
   }})
 }
 
-
 var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
   (semantics == "most") ? 0.5 :
   false
-
 
 var model = function(){
 
@@ -149,13 +147,13 @@ var model = function(){
     var itemName = item.replace("\'", "&quotechar")
     var propertyData = {
         prior: _.filter(data.prior, {property: itemName}),
-        interpretation: _.filter(data.interpretation, {property: itemName}),
-        observation: _.filter(data.observation, {property: item})
+        interpretation: _.filter(data.interpretation, {property: itemName})//,
+        // observation: _.filter(data.observation, {property: item})
     };
 
     assert.ok(propertyData.prior.length > 0)
     assert.ok(propertyData.interpretation.length > 0)
-    assert.ok(propertyData.observation.length > 0)
+    // assert.ok(propertyData.observation.length > 0)
 
     var weights = normalize(repeat(numberOfComponents,
       function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
@@ -226,13 +224,13 @@ var model = function(){
 
     var singleObs = listener0("generic")
 
-    mapData({data:propertyData.observation}, function(d){
-      // display(d)
-      var scr = singleObs.score(d.binnedResponse)
-      scr == -Infinity ? displayObj(d) : null
-      // display(scr)
-      observe(singleObs, d.binnedResponse)
-    })
+    // mapData({data:propertyData.observation}, function(d){
+    //   // display(d)
+    //   var scr = singleObs.score(d.binnedResponse)
+    //   scr == -Infinity ? displayObj(d) : null
+    //   // display(scr)
+    //   observe(singleObs, d.binnedResponse)
+    // })
 
     var L1 = listener1("generic")
     var interpretationPrediction = addNoise(L1, noise)
@@ -248,12 +246,12 @@ var model = function(){
    // query.add(["prediction", itemName, -99, "prior"], expectation(statePrior))
    // query.add(["prediction", itemName, -99, "posterior"], expectation(interpretationPrediction))
 
-   var supp = statePrior.support()
+   var supp = sort(statePrior.support())
 
    foreach(supp, function(s){
      query.add(["prediction", itemName, "priorDist", s], Math.exp(statePrior.score(s)))
-     query.add(["prediction", itemName, "singleObs", s], Math.exp(singleObs.score(s)))
-     query.add(["prediction", itemName, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+     query.add(["prediction", itemName, "literal", s], Math.exp(singleObs.score(s)))
+     query.add(["prediction", itemName, "pragmatic_unlifted", s], Math.exp(interpretationPrediction.score(s)))
    })
 
 
@@ -268,13 +266,14 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 2, lag =  1;
+// var totalIterations = 2000, lag =  4;
+var totalIterations = 400000, lag =  800;
 // var totalIterations = 50000, lag =  50;
 // var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 // var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
-var outfile = 'results-genint-unliftedL1wCost-singleObsPilotL0-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);

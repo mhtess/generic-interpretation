@@ -93,7 +93,8 @@ var model = function(){
 
   var numberOfComponents = 3;//poisson(1) + 1;
   var speakerOptimality = uniformDrift({a: 0, b: 50, width: 10})
-  var cost_uttProb = uniformDrift({a: 0, b: 1, width: 0.2})
+	var cost = uniformDrift({a: 0, b: 10, width: 0.4})
+  var cost_uttProb = Math.exp(-cost)
 
   foreach(properties, function(item){
     // display(item)
@@ -208,7 +209,7 @@ var model = function(){
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
    // query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
    query.add(["parameter", "speakerOptimality", -99, -99], speakerOptimality)
-   query.add(["parameter", "cost_genericUttProb", -99, -99], cost_uttProb)
+   query.add(["parameter", "cost", -99, -99], cost)
 
 	return query
 }
