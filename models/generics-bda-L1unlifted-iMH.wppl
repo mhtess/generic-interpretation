@@ -1,4 +1,5 @@
 // time ~/webppl-fork/webppl generics-bda-L1unlifted-iMH.wppl --require utils uncertain 1
+//  time webppl generics-bda-L1unlifted-iMH.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -9,15 +10,21 @@ var semantics = process.argv[process.argv.length - 2]
 // console.log(semantics)
 var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
-    interpretationFilePrefix = "interpretation-6"
+    interpretationFilePrefix = "interpretation-6",
+    endorsementFilePrefix = "endorsement-1";
 
 // expt 2: measured priors
-var d_prior = readDataFile("prior", priorFilePrefix),
-    d_prior_catch = readCatchFile("prior", priorFilePrefix),
-    d_prior_subj = readSubjFile("prior", priorFilePrefix),
-    d_interpretation = readDataFile("interpretation", interpretationFilePrefix),
-    d_interpretation_catch = readCatchFile("interpretation", interpretationFilePrefix),
-    d_interpretation_subj = readSubjFile("interpretation", interpretationFilePrefix);
+var d_prior = readDataFile("expt1a-prior"),
+    d_prior_catch = readCatchFile("expt1a-prior"),
+    d_prior_subj = readSubjFile("expt1a-prior"),
+    d_interpretation = readDataFile("expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile("expt1b-interpretation");
+    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
+
+var d_observation = readDataFile("observation-pilots");
 
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
@@ -29,33 +36,73 @@ var d_prior = readDataFile("prior", priorFilePrefix),
 
 var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
+    // endorsementWorkeridsPassed = passCatchTrials(d_endorsement_catch),
     priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
     interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
+    // endorsementWorkeridsEnglish = nativeEnglish(d_endorsement_subj);
+
+// var data = {
+//   prior: filter(function(di){
+//     return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) &&
+//       (priorWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+//       utils.isNumber(di.response))
+//   }, map(function(d){ return extend(d, {
+//     avoided_endval: avoidEnds(d.response)
+//   })}, d_prior)),
+//   interpretation: filter(function(di){
+//     return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
+//       (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+//       utils.isNumber(di.response))
+//   }, map(function(d){ return extend(d, {
+//     binnedResponse:  utils.closest( midBins.slice(1), d.response)
+//   })}, d_interpretation))
+// };
 
 var data = {
-  prior: filter(function(di){
-    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+	prior: filter(function(di){
+    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+      di.trial_type == "prevalence_elicitation")
   }, map(function(d){ return extend(d, {
-    avoided_endval: avoidEnds(d.response)
+		avoided_endval: avoidEnds(d.response)
   })}, d_prior)),
-  interpretation: filter(function(di){
-    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+	interpretation: filter(function(di){
+    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+      di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
-    binnedResponse:  utils.closest( midBins.slice(1), d.response)
-  })}, d_interpretation))
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	})}, d_interpretation)),
+  observation: filter(function(di){
+    return (utils.isNumber(di.response) &&
+      di.condition == "firstObs" &&
+      di.trial_type == "implied_prevalence")
+  }, map(function(d){ return extend(d, {
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	})}, d_observation))
+  //,
+  // endorsement: filter(function(di){
+  //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) &&
+  //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+  //     utils.isNumber(di.response) &&
+  //     di.trial_type == "truth_conditions")
+  // }, map(function(d){ return extend(d, {
+  //   binned_prevalence:  utils.closest( midBins, d.prevalence_level / 100)
+  // })}, d_endorsement))
 };
+
 
 
 // // // test that removing Ss who failed catch trial works properly (computed in R)
 assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
-assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+// assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
 
+assert.ok(_.filter(data.observation, {trial_num: "30"}).length == 36) // prior 3 n200
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -69,7 +116,10 @@ var meaning = function(utt,state, theta) {
          true
 }
 //
-var properties = levels(data.interpretation, "property");
+// var properties = levels(data.interpretation, "property");
+var properties = levels(data.observation, "property");
+
+
 var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
 // properties
 
@@ -91,13 +141,21 @@ var model = function(){
 
   var numberOfComponents = 3;//poisson(1) + 1;
   var speakerOptimality = uniformDrift({a: 0, b: 20, width: 0.2})
+  var cost = uniformDrift({a: 0, b: 10, width: 0.4})
+  var cost_uttProb = Math.exp(-cost)
 
   foreach(properties, function(item){
     // display(item)
+    var itemName = item.replace("\'", "&quotechar")
     var propertyData = {
-        prior: _.filter(data.prior, {property: item}),
-        interpretation: _.filter(data.interpretation, {property: item})
+        prior: _.filter(data.prior, {property: itemName}),
+        interpretation: _.filter(data.interpretation, {property: itemName}),
+        observation: _.filter(data.observation, {property: item})
     };
+
+    assert.ok(propertyData.prior.length > 0)
+    assert.ok(propertyData.interpretation.length > 0)
+    assert.ok(propertyData.observation.length > 0)
 
     var weights = normalize(repeat(numberOfComponents,
       function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
@@ -122,14 +180,14 @@ var model = function(){
 
     foreach(_.range(numberOfComponents), function(i){
 
-      query.add(["componentParameters", item, i, "weight"],
+      query.add(["componentParameters", itemName, i, "weight"],
         weights[i]
       )
-      query.add(["componentParameters", item, i, "alpha"],
+      query.add(["componentParameters", itemName, i, "alpha"],
         componentParameters[i]["a"]
       )
 
-      query.add(["componentParameters", item, i, "beta"],
+      query.add(["componentParameters", itemName, i, "beta"],
         componentParameters[i]["b"]
       )
 
@@ -151,7 +209,8 @@ var model = function(){
 
      var speaker1 = cache(function(state) {
       Infer({model: function(){
-        var utterance = sample(utterancePrior);
+        var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+        // var utterance = sample(utterancePrior);
         var L0 = listener0(utterance);
         factor(speakerOptimality * L0.score(state))
         return utterance
@@ -165,6 +224,16 @@ var model = function(){
         return state
       }})}, 10000)
 
+    var singleObs = listener0("generic")
+
+    mapData({data:propertyData.observation}, function(d){
+      // display(d)
+      var scr = singleObs.score(d.binnedResponse)
+      scr == -Infinity ? displayObj(d) : null
+      // display(scr)
+      observe(singleObs, d.binnedResponse)
+    })
+
     var L1 = listener1("generic")
     var interpretationPrediction = addNoise(L1, noise)
 
@@ -176,34 +245,53 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-   query.add(["prediction", item, -99, "prior"], expectation(statePrior))
-   query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+   // query.add(["prediction", itemName, -99, "prior"], expectation(statePrior))
+   // query.add(["prediction", itemName, -99, "posterior"], expectation(interpretationPrediction))
+
+   var supp = statePrior.support()
+
+   foreach(supp, function(s){
+     query.add(["prediction", itemName, "priorDist", s], Math.exp(statePrior.score(s)))
+     query.add(["prediction", itemName, "singleObs", s], Math.exp(singleObs.score(s)))
+     query.add(["prediction", itemName, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   })
+
+
  })
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
    // query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
    query.add(["parameter", "speakerOptimality", -99, -99], speakerOptimality)
+   query.add(["parameter", "cost", -99, -99], cost)
 
 	return query
 }
 
-// var totalIterations = 50, lag =  1;
-var totalIterations = 250000, lag = 75;
+var totalIterations = 2, lag =  1;
+// var totalIterations = 50000, lag =  50;
+// var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-unliftedL1-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+// var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-unliftedL1wCost-singleObsPilotL0-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
-var posterior = Infer({
-  model: model,
-	method: "incrementalMH",
-  samples: samples, burn: burn, lag: lag,
-  verbose: T,
-  verboseLag: totalIterations / 20,
-	stream: {
-		path: "results/" + outfile,
-		header: ["type", "param", "property", "category", "val"]
-	}
-})
+var header = "iter,type,param,property,category,val,score"
+var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
+
+// In practice this would be combined with onlyMAP inference option to
+// avoid holding all samples in memory.
+
+Infer({model,
+      samples: samples, burn: burn, lag: lag,
+       method: 'incrementalMH',
+       onlyMAP: true,
+       verbose: T,
+       verboseLag: totalIterations / 20,
+       callbacks: [callback]
+     });
+
 
 "written to " + outfile;
+// properties
+// levels(data.interpretation, "property")
