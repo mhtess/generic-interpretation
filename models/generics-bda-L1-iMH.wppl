@@ -1,4 +1,5 @@
 // time ~/webppl-fork/webppl generics-bda-L1-iMH.wppl --require utils uncertain 1
+//  time webppl generics-bda-L1-iMH.wppl  --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -12,12 +13,12 @@ var priorFilePrefix = "prior-3",
     interpretationFilePrefix = "interpretation-6"
 
 // expt 2: measured priors
-var d_prior = readDataFile("prior", priorFilePrefix),
-    d_prior_catch = readCatchFile("prior", priorFilePrefix),
-    d_prior_subj = readSubjFile("prior", priorFilePrefix),
-    d_interpretation = readDataFile("interpretation", interpretationFilePrefix),
-    d_interpretation_catch = readCatchFile("interpretation", interpretationFilePrefix),
-    d_interpretation_subj = readSubjFile("interpretation", interpretationFilePrefix);
+var d_prior = readDataFile("expt1a-prior"),
+    d_prior_catch = readCatchFile("expt1a-prior"),
+    d_prior_subj = readSubjFile("expt1a-prior"),
+    d_interpretation = readDataFile("expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile("expt1b-interpretation");
 
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
@@ -33,20 +34,22 @@ var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
     interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
 
 var data = {
-  prior: filter(function(di){
-    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+	prior: filter(function(di){
+    return ((priorWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (priorWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+      di.trial_type == "prevalence_elicitation")
   }, map(function(d){ return extend(d, {
-    avoided_endval: avoidEnds(d.response)
+		avoided_endval: avoidEnds(d.response)
   })}, d_prior)),
-  interpretation: filter(function(di){
-    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) && 
-      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) && 
-      utils.isNumber(di.response))
+	interpretation: filter(function(di){
+    return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+      di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
-    binnedResponse:  utils.closest( midBins.slice(1), d.response)
-  })}, d_interpretation))
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	})}, d_interpretation))
 };
 
 
@@ -54,7 +57,8 @@ var data = {
 assert.ok(levels(data.interpretation, "workerid").length == 132)
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
-assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+// assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
 
 
 var utterancePrior = Infer({model: function(){
@@ -93,10 +97,14 @@ var model = function(){
 
   foreach(properties, function(item){
     // display(item)
+		var itemName = item.replace("\'", "&quotechar")
     var propertyData = {
-        prior: _.filter(data.prior, {property: item}),
-        interpretation: _.filter(data.interpretation, {property: item})
+        prior: _.filter(data.prior, {property: itemName}),
+        interpretation: _.filter(data.interpretation, {property: itemName})
     };
+
+		assert.ok(propertyData.prior.length > 0)
+		assert.ok(propertyData.interpretation.length > 0)
 
     var weights = normalize(repeat(numberOfComponents,
       function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
@@ -127,7 +135,6 @@ var model = function(){
       query.add(["componentParameters", item, i, "alpha"],
         componentParameters[i]["a"]
       )
-
       query.add(["componentParameters", item, i, "beta"],
         componentParameters[i]["b"]
       )
@@ -176,8 +183,25 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-   query.add(["prediction", item, -99, "prior"], expectation(statePrior))
-   query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+   // query.add(["prediction", item, -99, "prior"], expectation(statePrior))
+   // query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+
+	 var supp = sort(statePrior.support())
+
+   foreach(supp, function(s){
+
+		 query.add(
+			 ["prediction", itemName, s, "prior"],
+			 Math.exp(statePrior.score(s))
+		 )
+
+		 query.add(
+			 ["prediction", itemName, s, "posterior"],
+			 Math.exp(interpretationPrediction.score(s))
+		 )
+
+   })
+
  })
 
    // RECORD PARAMETERS AND PREDICTIVES
@@ -189,22 +213,22 @@ var model = function(){
 	return query
 }
 
-// var totalIterations = 50, lag =  1;
-var totalIterations = 250000, lag = 75;
+var totalIterations = 400000, lag =  400;
+// var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L1-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var header = "iter,type,param,property,category,val,score"
+var outfile = 'results-genint-L1lifted-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
-var posterior = Infer({
-  model: model,
-	method: "incrementalMH",
-  samples: samples, burn: burn, lag: lag,
-  verbose: T,
-  verboseLag: totalIterations / 20,
-	stream: {
-		path: "results/" + outfile,
-		header: ["type", "param", "property", "category", "val"]
-	}
-})
+var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
+
+Infer({model,
+      samples: samples, burn: burn, lag: lag,
+       method: 'incrementalMH',
+       onlyMAP: true,
+       verbose: T,
+       verboseLag: totalIterations / 20,
+       callbacks: [callback]
+     });
 
 "written to " + outfile;
