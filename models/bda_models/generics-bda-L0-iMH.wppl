@@ -1,4 +1,5 @@
 // time ~/tools/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
+// time webppl generics-bda-L0-iMH.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -13,12 +14,12 @@ var priorFilePrefix = "prior-3",
     endorsementFilePrefix = "endorsement-1";
 
 // expt 2: measured priors
-var d_prior = readDataFile("prior", priorFilePrefix),
-    d_prior_catch = readCatchFile("prior", priorFilePrefix),
-    d_prior_subj = readSubjFile("prior", priorFilePrefix),
-    d_interpretation = readDataFile("interpretation", interpretationFilePrefix),
-    d_interpretation_catch = readCatchFile("interpretation", interpretationFilePrefix),
-    d_interpretation_subj = readSubjFile("interpretation", interpretationFilePrefix);
+var d_prior = readDataFile("expt1a-prior"),
+    d_prior_catch = readCatchFile("expt1a-prior"),
+    d_prior_subj = readSubjFile("expt1a-prior"),
+    d_interpretation = readDataFile("expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile("expt1b-interpretation");
     // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
     // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
     // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
@@ -176,9 +177,10 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-   var supp = interpretationPrediction.support()
+   var supp = statePrior.support()
 
    foreach(supp, function(s){
+     query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
      query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
    })
 
@@ -215,23 +217,27 @@ var model = function(){
 
 
 // data.endorsement
-var totalIterations = 500, lag =  1;
+var totalIterations = 100000, lag =  100;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-// var outfile = 'results-genint-S1-endorsePrediction-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
-var posterior = Infer({
-  model: model,
-	method: "incrementalMH",
-  samples: samples, burn: burn, lag: lag,
-  verbose: T,
-  verboseLag: totalIterations / 20,
-	stream: {
-		path: "results/" + outfile,
-		header: ["type", "param", "property", "category", "val"]
-	}
-})
+var header = "iter,type,param,property,category,val,score"
+var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
+
+// In practice this would be combined with onlyMAP inference option to
+// avoid holding all samples in memory.
+
+Infer({model,
+      samples: samples, burn: burn, lag: lag,
+       method: 'incrementalMH',
+       onlyMAP: true,
+       verbose: T,
+       verboseLag: totalIterations / 20,
+       callbacks: [callback]});
+
+
+
 
 "written to " + outfile;
