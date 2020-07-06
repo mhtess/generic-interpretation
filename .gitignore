@@ -3,6 +3,7 @@ mturk/
 *.Rproj
 .Rhistory
 *.nb.html
+*.RData
 models/node_modules/utils/node_modules
 paper/*pdf
 paper/*tex
