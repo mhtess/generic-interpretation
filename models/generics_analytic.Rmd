@@ -1,0 +1,121 @@
+---
+title: "Model Simulations in R"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+theme_set(theme_few())
+bins <- seq(0.01, 0.99, 0.01)
+```
+
+```{r single example}
+
+rs.gen <- data.frame(
+  x = bins,
+  prior = dbeta(bins, shape1 = 1, shape2 = 1, log = F)
+#  unnorm_posterior = 1 - pbeta(bins, shape1 = 1, shape2 = 1, lower.tail = T, log.p = F)
+) %>%
+  mutate(
+    unnorm_posterior = x * prior,
+    norm_posterior = 100*(unnorm_posterior / sum(unnorm_posterior))
+  )
+```
+
+
+```{r}
+
+prior_shapes <- list(
+  uniform = list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1,
+  prior_name = 'uniform'), 
+  uniform_rare = list(params = list(
+    c1 = data.frame(a = 1, b = 1), 
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4, 
+  prior_name = 'uniform_rare'),
+  sexed_rare =  list(params = list(
+    c1 = data.frame(a = 10, b = 10),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4, 
+  prior_name = 'sexed_rare'),
+  biological_common =  list(params = list(
+    c1 = data.frame(a = 30, b = 1),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1, 
+  prior_name = 'biological_common'),
+  biological_rare =  list(params = list(
+    c1 = data.frame(a = 30, b = 1),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4, 
+  prior_name = 'biological_rare'),
+  accidental_common =  list(params = list(
+    c1 = data.frame(a = 1, b = 5),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 1, 
+  prior_name = 'accidental_common'),
+  accidental_rare =  list(params = list(
+    c1 = data.frame(a = 2, b = 10),
+    c2 = data.frame(a = 1, b = 200)
+  ), mix = 0.4, 
+  prior_name = 'accidental_rare')
+)
+
+literal_generic <- function(ps){
+  theta_bins <- seq(0.001, 0.99, 0.01)
+  data.frame(
+    prior_name = ps$prior_name,
+    x = bins,
+    prior =  ps$mix * dbeta(bins, shape1 = ps$params$c1$a, shape2 =  ps$params$c1$b, log = F) + 
+      (1 -  ps$mix) * dbeta(bins, shape1 = ps$params$c2$a, shape2 =  ps$params$c2$b, log = F),
+    cdf =  ps$mix * pbeta(theta_bins, shape1 =  ps$params$c1$a, shape2 = ps$params$c1$b, lower.tail = T, log.p = F) + 
+      (1 -  ps$mix) * pbeta(theta_bins, shape1 =  ps$params$c2$a, shape2 = ps$params$c2$b, lower.tail = T, log.p = F)
+  ) %>%
+    dplyr::mutate(
+      unnorm_posterior_theta = 1 - cdf,
+      norm_posterior_theta = 100*(unnorm_posterior_theta / sum(unnorm_posterior_theta)),
+      unnorm_posterior_r = prior*x,
+      norm_posterior_r = 100*(unnorm_posterior_r / sum(unnorm_posterior_r))
+    )
+}
+
+rs.gen <- prior_shapes %>% purrr::map_dfr(literal_generic)
+```
+
+```{r}
+rs.gen %>%
+  select(-unnorm_posterior_theta, -cdf, -unnorm_posterior_r) %>%
+  gather(key, y, prior, norm_posterior_theta, norm_posterior_r, -prior_name) %>%
+  #filter(key != "norm_posterior_theta") %>%
+  #select(x, y = unnorm_posterior, prior_name) %>% mutate(key= 'a') %>%
+  ggplot(., aes(x = x, y = y, linetype = key)) +
+  geom_line()+
+  facet_wrap(~prior_name, scales = 'free')
+```
+
+
+# Speaker model
+
+```{r}
+speaker_optimality = 2
+cost_gen = 2
+
+rs.speak <- data.frame(
+  x = bins,
+  L0_prior = dbeta(bins, shape1 = 1, shape2 = 1, log = F)
+) %>%
+  mutate(
+    L0_posterior_unnormalized = x * prior,
+    L0_posterior_normalized = 100*(unnorm_posterior / sum(unnorm_posterior)),
+    S1_log_likelihood_gen = exp(speaker_optimality * (log(L0_posterior_normalized) - cost_gen)),
+    S1_log_likelihood_silence = exp(speaker_optimality * log(L0_prior)),
+    S1_posterior_gen = S1_log_likelihood_gen / (S1_log_likelihood_gen + S1_log_likelihood_silence),
+    L1_posterior_unnormalized = prior * S1_posterior_gen,
+    L1_posterior_normalized = 100 * (L1_posterior_unnormalized / sum(L1_posterior_unnormalized))
+  )
+```
+
