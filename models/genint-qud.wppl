@@ -22,9 +22,11 @@
 // var NullDistributionName = NullDistributionObj.name;
 
 var meaning = function(utt, state, theta) {
-  return utt == "generic" ? state > theta :
-    utt == "generic is false" ? state <= theta :
+  return utt == "generic" ? state.k > theta :
+    utt == "generic is false" ? state.k <= theta :
     utt == 'silence' ? true :
+    utt == "individual" ? state.i > theta :
+    utt == "individual is false" ? state.i <= theta :
     utt == 'some' ? state > 0.01 :
     utt == "most" ? state > 0.5 :
     true;
@@ -104,34 +106,49 @@ var model = function(input) {
   var mixture = priorParams[priorName]["mixture"]
   var prevalence_when_present = priorParams[priorName]["params"]
 
-  var statePrior = Infer({
+  var StatePrior = Infer({
     model: function() {
-      sample(
-        flip(mixture) ?
-        DiscretizedBeta(prevalence_when_present) :
-        DiscretizedBeta(nullParams)
-      )
-    }
-  });
+
+      var categoryParams = {
+        mu: sample(
+          DiscretizedBeta(
+            flip(mixture) ? prevalence_when_present : nullParams
+          )
+        ),
+        xi: 20//exponential(0.1)
+      }
+
+      var individualParams = sample(DiscretizedBeta({
+        a: categoryParams.mu * categoryParams.xi,
+        b: (1 - categoryParams.mu) * categoryParams.xi
+      }))
+
+      return {
+        k: categoryParams.mu,
+        i: individualParams
+      }
+  }});
+
+
 
   /// RSA model
-  var listener0 = cache(function(utterance) {
-    Infer({
-      model: function() {
-        var state = sample(statePrior);
-        var theta = sample(thetaPrior);
-        var m = meaning(utterance, state, theta)
-        condition(m)
-        return state
-      }
-    })
-  }, 10000)
+  // var listener0 = cache(function(utterance) {
+  //   Infer({
+  //     model: function() {
+  //       var state = sample(statePrior);
+  //       var theta = sample(thetaPrior);
+  //       var m = meaning(utterance, state, theta)
+  //       condition(m)
+  //       return state
+  //     }
+  //   })
+  // }, 10000)
 
   /// LIFTED PRAGMATIC
   var listener0_forL1 = cache(function(utterance, theta) {
     Infer({
       model: function() {
-        var state = sample(statePrior);
+        var state = sample(StatePrior)
         var m = meaning(utterance, state, theta)
         condition(m)
         return state
@@ -139,58 +156,38 @@ var model = function(input) {
     })
   }, 10000)
 
-  var speaker1 = cache(function(state, theta) {
+  var speaker1 = cache(function(qudVal, theta, qud) {
     Infer({
       model: function() {
-        var utterance = categorical({
+        var utterance = qud == "k" ? categorical({
           vs: ["generic", "silence"],
           ps: [cost_uttProb, 1]
-        })
-        var L0 = listener0_forL1(utterance, theta);
-        factor(speakerOptimality * L0.score(state))
-        return utterance
-      }
-    })
-  }, 10000)
-
-  var listener1 = cache(function(utterance) {
-    Infer({
-      model: function() {
-        var state = sample(statePrior);
-        var theta = sample(thetaPrior)
-        var S1 = speaker1(state, theta)
-        observe(S1, utterance)
-        return state
-      }
-    })
-  }, 10000)
-
-  /// UNLIFTED PRAGMATIC
-
-  var speaker1_unlifted = cache(function(state, criticalUtt) {
-    Infer({
-      model: function() {
-        var utterance = categorical({
-          vs: [criticalUtt, "silence"],
+        }) :
+        categorical({
+          vs: ["individual", "silence"],
           ps: [cost_uttProb, 1]
-        })
-        var L0 = listener0(utterance);
-        factor(speakerOptimality * L0.score(state))
+        });
+        var L0 = listener0_forL1(utterance, theta, qud);
+        factor(speakerOptimality * L0.score(qudVal))
         return utterance
       }
     })
   }, 10000)
 
-  var listener1_unlifted = cache(function(utterance) {
+  var listener1 = cache(function(utterance, qud) {
     Infer({
       model: function() {
-        var state = sample(statePrior);
-        var S1 = speaker1_unlifted(state, utterance)
-        observe(S1, utterance)
+        var joint_state = sample(StatePrior);
+        // var state = sample(marginalize(StatePrior, qud));
+        var qudVal = joint_state[qud]
+        var theta = sample(thetaPrior);
+        var S1 = speaker1(qudVal, theta, qud);
+        observe(S1, utterance);
         return state
       }
     })
   }, 10000)
+
 
   var interpretationPrediction = modelName == "literal" ? listener0("generic") :
     modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
