@@ -64,6 +64,60 @@
 \def\footnote{\protect\rmarkdownfootnote}
 
 
+
+% these packages are needed to insert results 
+% obtained from R into the LaTeX document
+\usepackage{pgfplotstable}
+\usepackage{csvsimple}
+\usepackage{siunitx}
+
+% set the name of the folder in which the CSV files with 
+% information from R is stored
+\newcommand{\datafoldername}{csv_to_tex}
+
+% the following code defines the convenience functions
+% as described in the main text below
+
+% rlgetvalue returns whatever is the in cell of the CSV file
+% be it string or number; it does not format anything
+\newcommand{\rlgetvalue}[4]{\csvreader[filter strcmp={\mykey}{#3},
+             late after line = {{,}\ }, late after last line = {{}}]
+            {\datafoldername/#1}{#2=\mykey,#4=\myvalue}{\myvalue}}
+
+% rlgetvariable is a shortcut for a specific CSV file (myvars.csv) in which
+% individual variables that do not belong to a larger chunk can be stored
+\newcommand{\rlgetvariable}[1]{\csvreader[]{\datafoldername/myvars.csv}{#1=\myvar}{\myvar}\xspace}
+
+% rlnum format a decimal number
+\newcommand{\rlnum}[2]{\num[output-decimal-marker={.},
+                             exponent-product = \cdot,
+                             round-mode=places,
+                             round-precision=#2,
+                             group-digits=false]{#1}}
+
+\newcommand{\rlnumsci}[2]{\num[output-decimal-marker={.},
+                          scientific-notation = true,
+                             exponent-product = \cdot,
+                             round-mode=places,
+                             round-precision=#2,
+                             group-digits=false]{#1}}
+
+\newcommand{\rlgetnum}[5]{\csvreader[filter strcmp={\mykey}{#3},
+             late after line = {{,}\ }, late after last line = {{}}]
+            {\datafoldername/#1}{#2=\mykey,#4=\myvalue}{\rlnum{\myvalue}{#5}}}
+
+\newcommand{\rlgetnumsci}[5]{\csvreader[filter strcmp={\mykey}{#3},
+             late after line = {{,}\ }, late after last line = {{}}]
+            {\datafoldername/#1}{#2=\mykey,#4=\myvalue}{\rlnumsci{\myvalue}{#5}}}
+
+\newcommand{\brmresults}[2]{\(\beta = \rlgetnum{#1}{key}{#2}{mean}{3}\) (\rlgetnum{#1}{key}{#2}{l95}{3}, \rlgetnum{#1}{key}{#2}{u95}{3})}
+\newcommand{\brmresultsp}[2]{\(\beta = \rlgetnum{#1}{key}{#2}{mean}{3}\) [\rlgetnum{#1}{key}{#2}{l95}{3}, \rlgetnum{#1}{key}{#2}{u95}{3}]}
+\newcommand{\effsize}[2]{\(d = \rlgetnum{#1}{key}{#2}{mean}{2}\) [\rlgetnum{#1}{key}{#2}{l95}{2}, \rlgetnum{#1}{key}{#2}{u95}{2}]}
+
+
+
+
+
   \title{Learning from Generic Language}
     \author{Michael Henry Tessler\textsuperscript{1}\textsuperscript{,2}~\& Noah D. Goodman\textsuperscript{1}}
     \date{}
@@ -212,10 +266,10 @@ This paper is organized as follows.
 In the first section, we review the model of generic meaning proposed by \citeA{Tessler2019psychrev} and incorporate it into the Rational Speech Act modeling framework \cite{Frank2012, Goodman2016}.
 We compare literal and pragmatic versions of the model against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
 In a preliminary study, we replicate and extend the findings of \citeA{Cimpian2010} (Expt.~3) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
-In Experiment 1, we use a diverse stimulus set better able to reliably elicit high variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
+In Experiment 1, we use a diverse stimulus set better able to elicit reliable variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
 In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to the interpretation of a novel generic as predicted by the models.
 Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as a vague quantifier understood with a communicative intent.
-We conclude by discussing the broader context of these results and their importance for our understanding of learning and development.
+%We conclude by discussing the broader context of these results and their importance for our understanding of learning and development.
 
 
 
@@ -232,32 +286,63 @@ The literal listener interprets the utterance (\emph{literal interpretation}) by
 \hypertarget{computational-model}{%
 \section{Computational Model}\label{computational-model}}
 
-Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ (Carlson, 1977; Leslie, 2008).
-Given that human generalization from observations can be well described using the language of probability (Shepard, 1987) and Bayesian belief-updating with (often structured) prior knowledge (Tenenbaum et al., 2011),  Tessler and Goodman (2019) propose that the meaning of generics---which convey generalizations---can also be formalized using the probability calculus.
-Under their model, the literal contribution of a generic sentence is a function on a listener's subjective probability that a future instance of the category $k$ will have the property $f$; in the psychological literal on generics, such a probability is often called \emph{prevalence}, though the term \emph{projectibility} may be more appropriate (for consistency with that literature, we maintain the term prevalence). %some may call this ``projectibility''). 
+Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ \cite{Carlson1977, Leslie2008}.
+Given that human generalization from observations can be well described using the language of probability \cite{Shepard1987} and Bayesian belief-updating with (often structured) prior knowledge \cite{Tenenbaum2011}.  \citeA{Tessler2019psychrev} propose that the meaning of generics---which convey generalizations---can also be formalized using the probability calculus \cite<cf.,>{Cohen1999, vanRooij2020generics}.
+Under their model, the literal contribution of a generic sentence is a function on a listener's subjective probability that a future instance of the category $k$ will have the property $f$---$P(f(x){=}\texttt{true} \mid x\in k)$; in the psychological literal on generics, such a probability is often called \emph{prevalence}, though the term \emph{projectibility} \cite{Goodman1955} may also be appropriate (for consistency with the literature, we maintain the term prevalence). %some may call this ``projectibility''). 
 %A reasonable initial hypothesis is that generics convey the same information content as a single observation, interpreted with respect to background knowledge.
-We thus begin by considering a learner trying to figure out how strongly to expect the feature in the category: The learner considers the hypothesis that the prevalence of $f$ in $k$, $P(f(x){=}\texttt{true} | x\in k)$, is a particular value $r$. 
 
-Tessler and Goodman (2019) borrow machinery from formal semantics (Montague, 1973) to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!]$} = r > \theta\)) whose threshold value is uncertain and is drawn from a uniform prior (\(\theta \sim \text{Uniform}(0, 1)\)). Thus, the generics model is like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!]$} = r > 0\), \(\mbox{ $[\![ most ]\!]$} = r > 0.5\), \(\mbox{ $[\![ all ]\!]$} = r = 1\)), but one in which the threshold is not specified a priori. 
+We begin by considering a Bayesian learner trying to determine how strongly to expect a feature $f$ in an unfamiliar category $k$. For this category, the learner is ignorant about the prevalence (including, presence or absence) of feature $f$ in $k$; in this situation, the best prior knowledge the learner can use to guide their predictions about the prevalence is their knowledge of other similar categories and/or an abstract intuitive theory of the domain in which the feature is relevant \cite<cf.,>{Nisbett1983}. For the case of unfamiliar categories, we parameterize this prevalence prior to be a function of the feature being predicated in the generic statement: $P_{f}(r)$.\footnote{
+A more general notion of the prevalence prior would explicitly take into account knowledge of the category. We return to this point in the discussion.}
+%The learner thus enters with prior beliefs about the prevalence of the feature $f$ in $k$, $P(f(x){=}\texttt{true} \mid x\in k)$, being a particular value $r$. This prevalence prior $P_{f}(r)$ is an abstract representation that guides the learner to expect the prevalence levels of a feature $f$ to be low, high, or somewhere in between, contingent on knowledge of the feature and context \cite<cf.,>{Nisbett1983}.
+ 
+ 
+Standard machinery from formal semantics \cite{Montague1973} can be used to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!][k][f]$} = r_{kf} > \theta\)), and \citeA{Tessler2019psychrev} propose the threshold value for a generic is uncertain and sampled from a uniform prior: $P(\theta) = \text{Uniform}(0, 1)$. Thus, the model of the literal meaning for a generic is much like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!][k][f]$} = r_{kf} > 0\), \(\mbox{ $[\![ most ]\!][k][f]$} = r_{kf} > 0.5\), \(\mbox{ $[\![ all ]\!][k][f]$} = r_{kf} = 1\)), but one in which the threshold is not specified \emph{a priori}. 
 Incorporating that likelihood function and prior on thresholds into the learner trying to uncover how strongly to expect the feature in the category $r$, they present a Bayesian model of literal generic interpretation: 
 
 \begin{align}
-L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P(r) \cdot P(\theta)} \label{eq:L0}
+P (r_{kf}, \theta \mid \denote{gen}[k][f]) = P (r_{kf}, \theta \mid r_{kf} >  \theta) &\propto \delta_{r_{kf} > \theta} \cdot P(\theta) \cdot P_f(r_{kf})  \label{eq:L0}
 \end{align}
 
-Here, the truth-functional meaning of a generic is a threshold-function mandating that the prevalence \(r\) is greater than the threshold \(\theta\), represented by the Kronecker delta \(\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)}\) that returns \(1\) when the utterance is true (i.e., when \(r > \theta\)) and \(0\) otherwise.
-$P(\theta)$ is the prior distribution over semantic thresholds for the generic sentence (assumed to be uniform) and $P(r)$ is the learner's prior beliefs about the prevalence (plausibly varies by content and context).
+%\begin{align}
+%L_0(r, \theta \mid u) \propto {\delta_{\mbox{ $[\![ u ]\!]$}(r, \theta)} \cdot P(\theta) \cdot P(r) } \label{eq:L0}
+%\end{align}
 
-To get some intuition for the model behavior, consider the idealized belief-updating scenario of trying to infer the weight of a potentially-biased coin (i.e., a coin which potentially has some preference for landing on heads or tails), where the hypothesis space of the reasoner contains all coin-weights with equal \emph{a priori} probability.
-Tessler and Goodman (2019) propose that belief-updating from a generic is equivalent to stating that the bias of the coin is greater than $\theta$, where $\theta$ is sampled from a uniform prior probability distribution.
+Here, the truth-functional meaning of a generic is a threshold-function mandating that the prevalence $r_{kf}$ is greater than the threshold \(\theta\), represented by the Kronecker delta $\delta_{r_{kf} > \theta}$ that returns \(1\) when \(r_{kf} > \theta\) (i.e., when the utterance is true) and \(0\) otherwise.
+$P(\theta)$ is the context-invariant prior distribution over semantic thresholds for the generic sentence and $P_{f}(r^{kf})$ is the learner's property-specific prior beliefs about the prevalence.
+$P(\theta)$ is assumed to be uniform, and hence $P(\theta = \theta') \propto 1; \forall \theta' \in (0, 1)$. 
 
-If $\theta$ is low, then many prevalence levels $r$ will be consistent with the threshold semantics.
-If $\theta$ is high, only the highest prevalence levels will be consistent with the threshold. 
+To get some intuition for the model behavior, consider a simplified, discrete scenario where $\theta$ could only take 3 values -- \{0.25, 0.5, 0.75\} -- and $r$ could take 4 values -- \{0.2, 0.4, 0.6, 0.8 \}. Further, assume that the prevalence prior is uniform (i.e., each of the four levels of prevalence is equally likely \emph{a priori}). (Recall that the prior on thresholds $P(\theta)$ is always assumed to be uniform.)
+The belief-updating rule for a generic specified by Eq.\ref{eq:L0} states that the prevalence is greater than $\theta$.
+For $\theta = 0.75$, only the highest level of prevalence $r = 0.8$ will be above the threshold.  
+For $\theta = 0.5$, both the highest level of prevalence and the second highest $r \in \{0.6, 0.8\}$ will be above the threshold.  
+For $\theta = 0.25$, all but the lowest level of prevalence---$r \in \{0.4, 0.6, 0.8\}$---will be above the threshold.  
+To schematically represent the poster, we count, for each level of prevalence, how many times it lies above a threshold; then, the relative (unnormalized) posterior weights for levels \{0.2, 0.4, 0.6, 0.8\} are \{0, 1, 2, 3\}, or after normalization  $\{0, \frac{1}{6}, \frac{1}{3}, \frac{1}{2}\}$.
+
+
+%If $\theta$ is low, then many prevalence levels $r$ will be consistent with a generic statement that is true.
+%Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
+
+
+
+
+The marginal posterior distributions over prevalences and thresholds are given by the following (for derivations, see Appendix):
+
+\begin{align}
+P(r_{kf} \mid \denote{gen}[k][f]) = &\int_{\theta}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff \theta \propto r_{kf} \cdot P(r_{kf}) \label {eq:L0r} \\
+P(\theta \mid \denote{gen}[k][f]) = &\int_{r_{kf}}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff r_{kf}  \propto 1 - F_{r_{kf}}(\theta) \label {eq:L0theta}
+\end{align}
+
+where $F_r(\theta)$ is the cumulative distribution function of $r$. \mht{check this (CDF of r vs theta)}. As is shown in Eqs.\ref{eq:L0r} \& \ref{eq:L0theta}, 
+
+%This literal update rule 
+
+
+
 
 Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
 Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
 The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
-Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
+
  
  The vague quantifier generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P(r)$. 
  Prevalence prior distributions that display more structure (e.g., multimodal distributions) receive interpretations that are highly reflective of that underlying structure.
@@ -570,7 +655,7 @@ Items were generated by the first author by considering eight different classes 
 
 On the first trial, participants were asked to list three kinds of animals for each of five different classes of animals: mammals, fish, birds, insects/bugs, amphibians/reptiles.
 The five classes of animals were presented in a randomized order on the screen and there were three text boxes for each in which participants could type an animal kind.
-On subsequent trials, participants were shown a random subset of five animal kinds and asked what percentage of each of these categories they believed had a property (e.g., \enquote{Out of all of the cheetahs in the world, what percentage do you think attack hikers?}).\footnote{Pilot results indicated similar responses were generated by a question about frequency (e.g., \enquote{Out of 100 cheetahs, how many do you think attack hikers?}).} 
+On subsequent trials, participants were shown a random subset of five of the animal kinds they generated on the initial trial and asked what percentage of each of these categories they believed had a property (e.g., \enquote{Out of all of the cheetahs in the world, what percentage do you think attack hikers?}).\footnote{Pilot results indicated similar responses were generated by a question about frequency (e.g., \enquote{Out of 100 cheetahs, how many do you think attack hikers?}).} 
 Participants responded using a slider bar with endpoints labeled 0\% and 100\%, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
 Each participant saw a random selection of twelve properties.
 
@@ -595,13 +680,24 @@ For example, the property \emph{have four legs} is most likely either completely
 \emph{Live in zoos} is expected to be even less prevalent, and the property \emph{has seizures} is expected to not be widespread at all.
 The property \emph{get erections} is only expected to be present in 50\% of the population (presumably, the males) when it is present at all.
 
-Most of the elicited prevalence prior distributions are at least bi-modal.
+Most of the elicited prevalence prior distributions appear at least bi-modal.
 To visualize all properties simultaneously, we represent each distribution by two statistics: the relative probability mass at 0\%---\(P(\text{feature is present})\), or \(P(r > 0)\)---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---\(\mathbb{E}[P(r \mid r>0)]\) or the property's \emph{prevalence when present}.
 The $P(\text{feature is present})$ is a measure of the (inverse-)distinctiveness of the feature (i.e., among how many animal categories is the property expected to be present). 
 \emph{Prevalence when present} is the average prevalence among the categories for which the property \emph{can} occur. 
 Figure~\ref{fig:genInt-prevPrior}B shows the distributions of these two parameters: The stimulus set covers a wide range of possible values of both of these parameters.
 This suggests we have sampled items with priors that exhibit a lot of quantitative variability, as desired.
-Given these priors, our model makes quantitative predictions about the prevalence implied by a novel generic sentence (e.g., \enquote{Lorches live in zoos}).
+
+To confirm the multi-modality of the empirical prior distributions, we conduct a Bayesian analysis where we model the prior elicited data (on a by-item basis) as being generated from some combination of mixtures of Beta distributions.\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.} 
+We compare the likelihood of the prior elicited data, modeling each item independently, under a single Beta distribution as well as  mixtures of 2-, 3-, and 4- Beta distributions; this comparison allows us to determine the best functional form of the priors, which will be useful for more complex data modeling. 
+The method of model comparison we employ---Bayes Factors---averages across all values of any free parameters of the model and thus,  penalizes models with extra free parameters if, in fact, the model's predictions are not greatly improved by the addition of free parameters or are highly sensitive to the exact values of those parameters.
+Each prevalence prior component (i.e., each Beta distribution) has two parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\); in addition, for models that use mixtures of 2-, 3-, or 4-Beta distributions, we have an additional 1, 2, or 3 parameters (respectively) governing the relative contribution (i.e., the weight) of each mixture component. 
+We put uninformative priors over these parameters \(\gamma \sim \text{Uniform}(0, 1)\), \(\xi \sim \text{Exponential}(1)\), \(\phi \sim \text{Dirichlet}([1]^n)\).
+We find that the most parsimonious account of the prior elicited data is that of a mixture of two Beta distributions (log Bayes Factors of 2-vs.1-Beta: $\log \text{BF}_{2,1}= 
+\rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{1}{log_bf}{0}$; 2-~vs.~3-Betas: $\log \text{BF}_{2,3}= 
+\rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{3}{log_bf}{0}$; 2-~vs.~4-Betas: $\log \text{BF}_{2,4}= 
+\rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{4}{log_bf}{0}$).
+
+Given these priors, our model makes quantitative predictions about the prevalence implied by a novel generic sentence (e.g., \enquote{Lorches live in zoos}), which we test in Experiment 1b.
 
 \begin{figure}
 \centering
@@ -828,7 +924,9 @@ The experiment took on average 3 minutes and participants were compensated \$0.3
 The goal of this experiment was to manipulate the prevalence prior.
 Participants were familiarized with one of ten prevalence prior distributions, shown in Figure~\ref{fig:priorManipulationExpt}E.
 Nine of the ten distributions were bimodal with modes either at 0\%, 25\%, 50\%, 75\%, or 100\%; the tenth distribution was uniform over all prevalence levels between 0\% and 100\%.
-The mixture between the two modes was always 50\% (half of samples were from one mode and half from the other, as shown in Figure~\ref{fig:priorManipulationExpt}B).
+For the bimodal distributions, the mixture between the two modes was always 50\% (half of samples were from one mode and half from the other, as shown in Figure~\ref{fig:priorManipulationExpt}B).
+
+\mht{We chose bimodal distributions because the priors in Experiment 1 were reasonably well-modeled as a mixture of two Beta distributions.}
 
 Our cover story involved learning about a single property---\emph{know when earthquakes are about to happen}.
 We used this property because its prevalence prior elicited in Expt. 1a suggested participants had high uncertainty as to what prevalence levels to expect for this property; we thus expected this property might be particularly amenable to manipulation.\footnote{Pilot testing using a completely novel property (e.g., \emph{daxing}) appeared to make the task too artificial. }

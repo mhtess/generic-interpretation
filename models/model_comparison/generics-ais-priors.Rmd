@@ -1,0 +1,19 @@
+---
+title: "generics-ais-priors"
+author: "MH Tessler"
+date: "7/10/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(jsonlite)
+```
+
+## R Markdown
+
+```{r}
+results.files <- list.files(path = "../../models/results/genint/marginal_likelihood/",
+           pattern = "steps100000")
+
+```
+
