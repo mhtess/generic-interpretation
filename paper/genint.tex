@@ -567,44 +567,59 @@ This comparison informs us as to whether or not participants actually \emph{upda
 \section{Overview of Experiments}\label{overview-of-experiments}}
 
 Our models of generic interpretation predict that the interpretations of generics should vary with the prevalence prior for the property in question.
-Cimpian et al. (2010) found a difference in the implied prevalence between biological properties described with color adjectives (e.g., \emph{yellow fur}) and accidental properties (e.g., \emph{fungus-covered claws}).
-We begin our experiments by first replicating and extending this result; this study serves to validate our paradigm, which we then adapt to test our models.
-Experiment 1 is a larger scale version of Cimpian et al. (2010)'s \emph{implied prevalence} task, with sufficient measurements on the by-item level to reveal graded, quantitative variability among properties. We explicitly measure participants prior beliefs for these items in order to perform quantitative comparison among the models described above.
-Experiment 2 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors.
+\citeA{Cimpian2010} reported differences in the implied prevalence between biological properties (in particular, body parts with color modifiers e.g., \emph{yellow fur}) and accidental properties (e.g., \emph{fungus-covered claws}).
+Experiment 1 replicates and extending this result; this study serves to validate our paradigm, which we then adapt to test the computational models.
+Experiment 2 is a larger scale version of \citeA{Cimpian2010}'s \emph{implied prevalence} task, with sufficiently dense measurements on the by-item level to reveal graded, quantitative variability among interpretations of generics of different properties. 
+We explicitly measure participants prior beliefs for these items in order to perform quantitative comparisons among the models described above.
+Experiment 3 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors.
 The sample size, exclusion criteria, and planned statistical contrasts for each study were pre-registered on the Open Science Framework.
-All cognitive and Bayesian data analytic models were implemented in the probabilistic programming language WebPPL (Goodman \& Stuhlmüller, 2014).
+All cognitive and Bayesian data analytic models were implemented in the probabilistic programming language WebPPL \cite{dippl}. 
 All data, analysis scripts, models, and links to experiments and pre-registration reports can be found at \url{www.github.com/mhtess/generic-interpretation}.
 
 \hypertarget{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}{%
-\section{Preliminary Study: Replication and Extension of Cimpian et al. (2010)}\label{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}}
+\section{Experiment 1: Replication and Extension of Cimpian et al. (2010)}\label{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}}
 
 %\hypertarget{method}{%
-%\subsection{Method}\label{method}}
+\subsection{Method}\label{method}
 
-\hypertarget{participants}{%
-\subsection{Participants, procedure, and materials}\label{participants}}
+\subsubsection{Participants}
+
+%\hypertarget{participants}{%
+%\subsection{Participants, procedure, and materials}\label{participants}}
 
 We recruited 40 participants over Amazon's crowd-sourcing platform Mechanical Turk.
-The experimental design is very similar to Cimpian et al. (2010), and we chose to have a sample size at least twice as large as the original study (original n=15).
+The experimental design is very similar to \citeA{Cimpian2010}, and we chose to have a sample size at least twice as large as the original study (original n=15).
 All participants were native English speakers.
 The experiment took about 5 minutes and participants were compensated \$0.60.
 
 %\hypertarget{procedure-and-materials}{%
 %\subsubsection{Procedure and materials}\label{procedure-and-materials}}
 
-In order to get participants motivated to reason about novel kinds, they were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals; their task was to provide their expert opinion on questions about these animals.
-Participants were supplied with a bare plural about a novel category (e.g., \enquote{Feps have yellow fur}) and asked to judge prevalence: \enquote{What percentage of feps do you think have yellow fur?}
-The stimulus set was comprised of 40 properties, which we divided into three sets of eight biological properties (body parts described with a color adjective e.g., \emph{purple feathers}, body parts described with a gradable adjective  e.g., \emph{long teeth}, and body parts with no adjective e.g., \emph{fur}) and a set of 16 body parts in accidental or diseased states (e.g., \emph{wet fur} or \emph{broken legs}).
-Properties were mostly taken from Cimpian et al. (2010), though were elaborated to create more classes of stimuli (the original stimuli only used color body parts and accidental properties). 
+\subsubsection{Procedure}
+
+
+In order to motivate participants to reason about novel kinds, participants were told they were the resident zoologist of a team of scientists on a recently discovered island with many unknown animals, and their task was to provide their expert opinion on questions about these animals.
+On each trial, participants were supplied with a bare plural sentence of the form ``Ks have F'', where K was a novel category label and F was a familiar property (e.g., \enquote{Feps have yellow fur}).
+Participants were then asked to judge prevalence: \enquote{What percentage of feps do you think have yellow fur?}
+This kind of explicit question about prevalence has been used to reveal differences in the interpretations of generics~vs.~quantified statements in adults and young children \cite{Gelman2002, Brandone2014} as well as differences in interpretations of generics about different properties \cite{Cimpian2010}. 
+It is not a measure of unconscious probabilistic expectations, which can often deviate from this kind of conscious probabilistic judgment \cite<e.g.,>{wu2017asking}.
+
+\subsubsection{Materials}
+
+The familiar properties were mostly taken from \citeA{Cimpian2010}, though were elaborated to create more classes of stimuli (the original stimuli only used color body parts and accidental properties). 
+Our stimulus set was comprised of 40 properties, which we divided into three sets of eight biological properties (body parts described with a color adjective e.g., \emph{purple feathers}, body parts described with a gradable adjective  e.g., \emph{long teeth}, and body parts with no adjective e.g., \emph{fur}) and one set of 16 body parts in accidental or diseased states (e.g., \emph{wet fur} or \emph{broken legs}).
 Participants completed in randomized order 25 trials: 5 for each of the biological properties and 10 for the accidental.
 %\ndg{need a sentence about the classes of properties and where the items come from... all are from cimpian, or we added some?}
 
 \hypertarget{results-and-discussion}{%
 \subsection{Results and discussion}\label{results-and-discussion}}
 
-Interpreting a novel generic sentence \enquote{Ks have F} often has the possibility of being understood as a universal or near-universal claim (\emph{all or almost all Ks have F)}.
-Across the forty items in this experiment, however, we observe a gradient in the implied prevalence ratings, mostly clustered by the type of property (Figure~\ref{fig:cimpian-modelingResults}A).
-At the level of property type, Cimpian et al. (2010) found a difference between the implied prevalence of generics about biological parts described with color adjectives (e.g., \emph{purple feathers}) and accidental properties (e.g., \emph{fungus-covered claws});  we replicate this result and extend it to show further gradability among types of properties (Figure~\ref{fig:cimpian-modelingResults}B) as well as within types.
+Interpreting a novel generic sentence \enquote{Ks F} often has the possibility of being understood as a universal or near-universal claim (\emph{all or almost all Ks F)}.
+Across the forty items in this experiment, however, we observe a gradient in the implied prevalence ratings, mostly clustered by the higher-order type of property (Figure~\ref{fig:cimpian-modelingResults}A).
+At the level of property type, \citeA{Cimpian2010} found a difference between the implied prevalence of generics about biological parts described with color adjectives (e.g., \emph{purple feathers}) and accidental properties (e.g., \emph{fungus-covered claws}).
+We replicate this result and extend it to show further gradability among types of properties (Figure~\ref{fig:cimpian-modelingResults}B) as well as within types.
+
+\mht{add brm results for prevalence $\sim$ property type ?}
 
 \begin{figure}
 \centering
@@ -612,26 +627,29 @@ At the level of property type, Cimpian et al. (2010) found a difference between 
 \caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\enquote{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
 \end{figure}
 
-Broadly, these results validate the measurement as one that can elicit variability, and it is this variability that is of primary concern to us.
+Broadly, these results validate the implied prevalence measurement as one that can elicit variability in interpretations, and it is this variability that is of primary concern to us.
 The items that elicited the most variability in implied prevalence ratings were those of accidental or diseased states (e.g., \enquote{Lorches have broken legs}, \enquote{Wugs have fungus-covered claws}).
-As Cimpian et al. (2010) noted, \enquote{properties of this type do not lend themselves very well to generic predication (Cimpian \& Markman, 2008; Gelman, 1988), so generics about broken legs, itchy skin, etc. are infrequent outside the laboratory.} (p.1472)
+As \citeA{Cimpian2010} noted, \enquote{properties of this type do not lend themselves very well to generic predication \cite{gelman1988development, Cimpian2008}, so generics about broken legs, itchy skin, etc. are infrequent outside the laboratory.} (p.1472)
 Not only are these kinds of statements infrequent outside the laboratory, bare plurals about accidental or diseased states (\enquote{Lorches have broken legs}) can easily be interpreted as non-generic, existential claims about the here-and-now, analogous to how \enquote{Dogs are on my front lawn} describes a particular state of affairs as opposed to something generalizable about dogs.
-Since the strongest test of our models of generic interpretation will come from having to predict variability in implied prevalence ratings, we aim to elicit high variability in Experiment 1 using naturalistic properties that more easily lend themselves to generic predication (i.e., you could imagine a speaker saying the sentence).
+Since the strongest test of our models of generic interpretation will come from having to predict variability in implied prevalence ratings, we aim to elicit high variability in Experiment 2 using naturalistic properties that more easily lend themselves to generic predication.
 
+
+%The development of induction within natural kind and artifact categories. Cognitive Psy- chology,
 
 
 \hypertarget{experiment-1}{%
-\section{Experiment 1: Generic Interpretation}\label{experiment-1}}
+\section{Experiment 2: Generic Interpretation}\label{experiment-1}}
 
-This experiment is designed to measure the prevalence implied by a generic about a novel kind, using a diverse set of properties (Expt. 1b).
-We first elicit participants' beliefs about the likely prevalence levels expected for these properties (Expt. 1a).
+This experiment is designed to measure the prevalence implied by a generic about a novel kind, using a diverse set of properties (Expt. 2b).
+We first elicit participants' beliefs about the likely prevalence levels expected for these properties (Expt. 2a).
 We then use the elicited prevalence priors to make model predictions about the prevalence implied by a generic.
 
 \hypertarget{experiment-1a-prevalence-prior-elicitation}{%
-\subsection{Experiment 1a: Prevalence prior elicitation}\label{experiment-1a-prevalence-prior-elicitation}}
+\subsection{Experiment 2a: Prevalence prior elicitation}\label{experiment-1a-prevalence-prior-elicitation}}
 
-In this experiment, we elicit prevalence knowledge about a diverse set of properties.
-Because the properties are relatively familiar, we elicit participants' knowledge by asking about the prevalence of the property among familiar categories.
+In this experiment, we elicit prior beliefs about prevalence for a diverse set of properties.
+These prior beliefs will be used inside the computational models in order to predict interpretations of generic statements about novel categories (akin to Expt.~1). 
+Because the properties are familiar properties, we can elicit participants' knowledge by asking about the property among familiar  categories.
 
 \hypertarget{methods}{%
 \subsubsection{Methods}\label{methods}}
@@ -1077,7 +1095,7 @@ In computing marginal likelihood of the data we sum over this mixture parameter 
 %\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
 We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
 To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is ot unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distiguish models, which was the goal of the previous experiment.}
+As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is not unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distinguish models, which was the goal of the previous experiment.}
 We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
 
 \begin{table}[h]
