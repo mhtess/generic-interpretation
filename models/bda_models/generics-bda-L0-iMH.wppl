@@ -107,7 +107,7 @@ var model = function(){
 
   var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
-  var numberOfComponents = 3;//poisson(1) + 1;
+  var numberOfComponents = 2;//poisson(1) + 1;
 
   foreach(properties, function(item){
     // display(item)
@@ -116,15 +116,18 @@ var model = function(){
         interpretation: _.filter(data.interpretation, {property: item})
     };
 
-    var weights = normalize(repeat(numberOfComponents,
-      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    ))
+    // var weights = normalize(repeat(numberOfComponents,
+    //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    // ))
+
+		var weight = uniformDrift({a: 0, b: 1, width:0.2}) }
+		var weights = [weight, 1 - weight]
 
     var componentParameters = repeat(numberOfComponents,
      function(){
       return betaShape({
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
+					d: exponential({a: 1})
         })
     })
 
@@ -137,20 +140,20 @@ var model = function(){
   		factor(scr)
   	})
 
-    // foreach(_.range(numberOfComponents), function(i){
+    foreach(_.range(numberOfComponents), function(i){
 
-    //   query.add(["componentParameters", item, i, "weight"],
-    //     weights[i]
-    //   )
-    //   query.add(["componentParameters", item, i, "alpha"],
-    //     componentParameters[i]["a"]
-    //   )
+      query.add(["componentParameters", item, i, "weight"],
+        weights[i]
+      )
+      query.add(["componentParameters", item, i, "alpha"],
+        componentParameters[i]["a"]
+      )
 
-    //   query.add(["componentParameters", item, i, "beta"],
-    //     componentParameters[i]["b"]
-    //   )
+      query.add(["componentParameters", item, i, "beta"],
+        componentParameters[i]["b"]
+      )
 
-    // })
+    })
 
   	var statePrior = Infer({model: function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
@@ -221,7 +224,7 @@ var totalIterations = 100000, lag =  100;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
@@ -236,8 +239,5 @@ Infer({model,
        verbose: T,
        verboseLag: totalIterations / 20,
        callbacks: [callback]});
-
-
-
 
 "written to " + outfile;

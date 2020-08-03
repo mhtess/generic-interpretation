@@ -137,7 +137,7 @@ var model = function(){
 
   var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
-  var numberOfComponents = 3;//poisson(1) + 1;
+	var numberOfComponents = 2;//poisson(1) + 1;
   var speakerOptimality = uniformDrift({a: 0, b: 20, width: 0.2})
   var cost = uniformDrift({a: 0, b: 10, width: 0.4})
   var cost_uttProb = Math.exp(-cost)
@@ -155,15 +155,19 @@ var model = function(){
     assert.ok(propertyData.interpretation.length > 0)
     // assert.ok(propertyData.observation.length > 0)
 
-    var weights = normalize(repeat(numberOfComponents,
-      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    ))
+    // var weights = normalize(repeat(numberOfComponents,
+    //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    // ))
+
+		var weight = uniformDrift({a: 0, b: 1, width:0.2}) }
+		var weights = [weight, 1 - weight]
+
 
     var componentParameters = repeat(numberOfComponents,
      function(){
       return betaShape({
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
+					d: exponential({a: 1})
         })
     })
 
@@ -273,7 +277,7 @@ var totalIterations = 400000, lag =  800;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 // var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
-var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
