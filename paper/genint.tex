@@ -2,6 +2,9 @@
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+
 \usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
@@ -729,7 +732,7 @@ Thus, we will assume the prevalence prior data follows a mixture of 2-Beta distr
 \begin{figure}
 \centering
 \includegraphics{genint_files/figure-latex/genInt-prevPrior-1.pdf}
-\caption{\label{fig:genInt-prevPrior}Prevalence priors for a diverse set of animal properties. A: Ten example prevalence priors elicited in Expt. 2a. Different prevalence priors give rise to different model predicted implied prevalence. B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. The stimulus set covers a wide range of possible values of both of these parameters. Error bars denote bootstrapped 95\% confidence intervals.}
+\caption{\label{fig:genInt-prevPrior}Prevalence priors for a diverse set of animal properties. A: Ten example prevalence priors elicited in Expt. 2a. Distributions vary in terms of how rare the property is across categories (probability mass at 0\% prevalence) as well as the prevalence within a category where the property is present (shape of non-0\% part of the distribution). B: Prevalence priors summarized by their relative probability mass at zero-prevalence P(feature is present), and their expected value among non-zero prevalence levels: Prevalence when present. The stimulus set covers a wide range of possible values of both of these parameters. Error bars denote bootstrapped 95\% confidence intervals.}
 \end{figure}
 
 \hypertarget{experiment-1b-generic-interpretation}{%
@@ -748,10 +751,10 @@ The experiment took on average 5.50 minutes and participants were compensated \$
 \hypertarget{procedure-and-materials-2}{%
 \paragraph{Procedure and materials}\label{procedure-and-materials-2}}
 
-The materials were the same as in Expt. 1a.
+The materials were the same as in Expt. 2a.
 Participants were told that scientists had recently discovered lots of new animals that we did not know existed.
 On each trial, they would be told facts about the new animals and be asked to translate it into the percentage of that animal it applies to.
-On each trial, participants read \enquote{You are told: \emph{generic sentence}}, where the generic sentence was a bare plural statement about a familiar property \(F\) applying to a novel animal category \(K\) (e.g., \enquote{Javs attack hikers}).
+On each trial, participants read \enquote{You are told: \emph{generic}}, where the generic sentence was a bare plural statement about a familiar property \(F\) applying to a novel animal category \(K\) (e.g., \enquote{Javs attack hikers}).
 They were then asked \enquote{Out of all of the \emph{K}s on the planet, what percentage do you think \emph{F}?} (e.g., \enquote{Out of all of the javs on the planet, what percentage do you think attack hikers?}).
 Novel animal category names were mostly taken from Cimpian et al. (2010) and similar studies on generic language.
 Participants responded using a slider bar with endpoints labeled 0\% and 100\%, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
@@ -768,19 +771,18 @@ If participants gave no ratings less than 50\%, they did not complete any explan
 \hypertarget{descriptive-results}{%
 \subsubsection{Descriptive results}\label{descriptive-results}}
 
-We used preregistered exclusion criteria, which were also used for Expt. 1a.
+We used preregistered exclusion criteria, which were also used for Expt. 2a.
 Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded (\(n = 62\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 8\)).
 This left a total of \(n = 132\) participants, with items receiving on average 62 responses (range = {[}50, 77{]}).
 
-As in the replication of Cimpian et al. (2010), we observe a clear gradient in the implied prevalence ratings across our seventy-five items (Figure~\ref{fig:genint-empiricalData}).
-On one end of the continuum, there is a generic like \enquote{Wugs have four legs}, which is interpreted as a universal (applying to exactly 100\% of wugs) by 36 out of 70 participants and which received a mean implied prevalence rating of 0.96 (95\% confidence interval: [0.93, 0.98]).\footnote{Note the novel category term is randomized for each participant and property.
-  We use particular novel category terms in the text for ease of exposition.}
-On the other end is \enquote{Glippets perform in the circus}, which is interpreted as applying to less than 25\% of glippets by 35 out of 61 participants and which receives a mean rating below 50\% (\(0.31 [0.23, 0.39]\)).
-Additionally remarkable is the distribution of responses for individual items: Though \enquote{Feps live in zoos} probably means around 25\% of feps live in zoos, it is still quite possible that almost 100\% live in zoos (e.g., in the real world, 100\% of Micronesian Kingfishers live in zoos).
-In addition to the extreme endpoints, we find average ratings at all levels of prevalence in between, even for properties that all the same kind of property (e.g., \emph{live in} \emph{trees}~vs.~\emph{urban areas}~vs.~\emph{high-rise buildings}~vs.~\emph{zoos}; compare also properties involving the verb \emph{eat}; Figure~\ref{fig:genint-empiricalData}).
-This extreme gradience stands in contrast to the results of Cimpian et al. (2010), which left open the possibility that were just a few kinds of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see Figure \ref{fig:cimpian-modelingResults}). 
-A quantitative model is necessary to account for the extreme gradience we observe in our data set.
+As in the replication of \citeA{Cimpian2010}, we observe a clear gradient in the implied prevalence ratings across our seventy-five items (Figure~\ref{fig:genint-empiricalData}).
+On one end of the continuum, the generic \enquote{Wugs have four legs} is interpreted as a universal (applying to exactly 100\% of wugs) by half of participants (36 out of 70) and which received a mean implied prevalence rating of 0.96 (95\% confidence interval: [0.93, 0.98]).\footnote{Note the novel category term is randomized for each participant and property. We use particular novel category terms in the text for ease of exposition.}
+On the other end of the spectrum is \enquote{Glippets perform in the circus}, which is interpreted as applying to less than 25\% of glippets by over half of participants (35 out of 61) and which receives a mean rating of 0.31 [0.23, 0.39].
+Additionally remarkable is the distribution of responses for individual items: Though \enquote{Feps live in zoos} is taken by many participants to mean that around 25\% of feps live in zoos, others take it to mean that almost 100\% live in zoos; such variability in interpretation is not unreasonable: some animal categories (e.g., Micronesian Kingfishers) exist entirely in zoos, while others do not.
+In addition to the extreme endpoints, we find average ratings at all levels of prevalence in between, even for predicates that have the same main verb (e.g., \emph{live in} \emph{trees}~vs.~\emph{urban areas}~vs.~\emph{high-rise buildings}~vs.~\emph{zoos}; compare also properties involving the verb \emph{eat}; Figure~\ref{fig:genint-empiricalData}).
+This extreme gradience stands in contrast to the results of \citeA{Cimpian2010}, which left open the possibility that were just a few special distinctions of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see Figure \ref{fig:cimpian-modelingResults}). 
+Explaining the extreme gradience we observe in our data set requires a quantitative model. 
 
 %\ndg{emphasize the gradience, in contrast with cimpian results which left open the possibility that there were just a few categories... this means we really want a quant model.}
 
@@ -798,8 +800,8 @@ The empirical by-item means between these data and the original data are highly 
 \hypertarget{model-based-analyses}{%
 \subsubsection{Model-based analyses}\label{model-based-analyses}}
 
-Our model-based analyses ask how well the various semantics models accommodate the human generic interpretation data and which model provides the most parsimonous view of the data.
-We estimate all model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in Tessler and Goodman (2019) provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that the prevalence priors are not significantly distorted by this method in order to provide a stronger quantitative fit to the generic interpretation data.}
+Our model-based analyses ask how well the various belief-updating models accommodate the human generic interpretation data and which model provides the most parsimonious view of the data.
+We estimate all model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in \citeA{Tessler2019psychrev} provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that in order to provide a stronger quantitative fit to the generic interpretation data, the prevalence priors are not significantly distorted by this method.}
 %That is, we ask if there is some reasonable setting of the prevalence priors \ndg{"setting of the prevalence priors" dosn't exactly make sense to me...} that, together with a particular model of generic interpretation, could give rise to the generic interpretation results.
 We then integrate over parameters to compare the generic interpretation models to each other and alternatives using the standard Bayesian model comparison metric: marginal likelihoods, or Bayes factors.
 
@@ -819,8 +821,62 @@ We then integrate over parameters to compare the generic interpretation models t
 \label{model-definition-and-inference}}
 
 
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tabular}{cc}
+\begin{tikzpicture}
+  \node[obs]          (d-c)   {$d^f_{gen}$}; %
+  \node[obs, left=3.5 of d-c, yshift=2cm]          (x)   {$d^f_{prior}$}; %
+  \node[latent, above=1cm of x, xshift=-0.5cm] (mx) {$\phi^f$} ; %
+  \node[latent, above=2cm of x, xshift=0.75cm]  (sx) {$\gamma^f_i$} ; %
+  \node[latent, above=2cm of x, xshift=1.75cm]  (dx) {$\delta^f_i$} ; %
+%  \factor[above=of x] {x-f} {left:$\text{mixture of Betas}$} {mx, sx,dx} {x} ; %
+  \edge[above=of x]{mx, sx,dx} {x} ; %
+    \node[obs]          (d-c)   {$d^f_{gen}$}; %
+      \node[latent, right=2cm of x]  (xf)   {$x^{f}$}; 
+  \edge[above=of xf]  {mx, sx,dx} {xf} ; %
 
-For each candidate model of generic interpretation (literal, pragmatic, \enquote{some}, \enquote{most}), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 1a) and the generic interpretation data (Expt. 1b), similar to the methods of Tessler and Goodman (2019).
+  \node[det, above=0.75cm of d-c] (L1) {$L_1(x \mid u)$} ; % 
+   \node[latent, right=0.6cm of L1, yshift=0.5cm] (alpha) {$\alpha$}; %
+   \node[latent, right=0.6cm of L1, yshift=-0.5cm] (cost) {$c$}; %
+  \edge[-] {xf} {L1} ;
+  \edge[-] {alpha} {L1} ;
+  \edge[-] {cost} {L1} ;
+  \edge{L1} {d-c} ;
+
+\gate {RSAgate} {(L1)(xf)} {} ; %
+\node[text width=1cm] at (-1,2.75) {$RSA$};
+
+\plate{mix} {
+(sx)(dx)
+}{$i \in \{1, 2\}$};
+\plate{items}{
+(mx)(sx)(dx)(d-c)(x)(mix)(RSAgate)
+}{$f \in \mathcal{F}$}
+
+\node[] at (4.5,4) {$\phi_f \sim \text{Uniform}(0, 1)$};
+%\node[] at (4,5.5) {$\beta^0_1, \beta^1_1 \sim \text{Uniform}(-3, 3)$};
+\node[] at (4.5,3.25) {$\gamma^f_i \sim \text{Uniform}(0, 1)$};
+\node[] at (4.5,2.5) {$\delta^f_i \sim \text{Exponential}(1)$};
+
+\node[] at (5,0) {$\phi_{d,k} = \text{logistic} (\begin{cases} 
+	\beta^0_0 +\beta^0_1\cdot \hat{f}_k  &\mbox{if } z_{k, d} = 0 \\ 
+	\beta^1_0 +\beta^1_1\cdot \hat{f}_k  &\mbox{if } z_{k, d} = 1 
+	\end{cases}$)};
+\node[] at (4,-1) {$c_{d,k} \sim \text{Bernoulli}(\phi_{d,k})$};
+\node[] at (4,-1.5) {$x_{d,k} \sim \text{Gaussian}(\mu_{d,k}, \sigma_{d,k})$};
+
+
+\end{tikzpicture}
+    \end{tabular}
+  \end{center}
+  \caption{Fully Bayesian data analytic approach.}
+  \label{fig:bayesnet}
+\end{figure}
+
+%  \factor[above=of d-c] {d-f} {} {mx, sx,dx} {d-c} ; %
+
+For each candidate model of generic interpretation (literal, pragmatic, \enquote{some}, \enquote{most}), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 2a) and the generic interpretation data (Expt. 2b), similar to the methods of Tessler and Goodman (2019).
 We model the prevalence prior data as coming from a mixture of three Beta distributions\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.} and we model the generic interpretation data as being generated from the candidate computational model of generic interpretation.
 %For data analysis, we assume that the prevalence priors take the form of a three-component mixture of Beta distributions\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.}, whose parameter uncertainty is strongly constrained by data from our prior elicitation task.
 Each prevalence prior has eight parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\) for each of the three Beta components and two parameters \(\phi_1\), \(\phi_2\) that describe the relative weighting among the three components.
