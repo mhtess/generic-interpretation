@@ -825,18 +825,17 @@ We then integrate over parameters to compare the generic interpretation models t
   \begin{center}
     \begin{tabular}{cc}
 \begin{tikzpicture}
-  \node[obs]          (d-c)   {$d^f_{gen}$}; %
-  \node[obs, left=3.5 of d-c, yshift=2cm]          (x)   {$d^f_{prior}$}; %
+  \node[obs]          (d-c)   {$d^{gen}_{f,i}$}; %
+  \node[obs, left=3.5 of d-c, yshift=2cm]          (x)   {$d_{f, i'}^{prior}$}; %
   \node[latent, above=1cm of x, xshift=-0.5cm] (mx) {$\phi^f$} ; %
-  \node[latent, above=2cm of x, xshift=0.75cm]  (sx) {$\gamma^f_i$} ; %
-  \node[latent, above=2cm of x, xshift=1.75cm]  (dx) {$\delta^f_i$} ; %
+  \node[latent, above=2cm of x, xshift=0.75cm]  (sx) {$\gamma^f_j$} ; %
+  \node[latent, above=2cm of x, xshift=1.75cm]  (dx) {$\delta^f_j$} ; %
 %  \factor[above=of x] {x-f} {left:$\text{mixture of Betas}$} {mx, sx,dx} {x} ; %
   \edge[above=of x]{mx, sx,dx} {x} ; %
-    \node[obs]          (d-c)   {$d^f_{gen}$}; %
       \node[latent, right=2cm of x]  (xf)   {$x^{f}$}; 
   \edge[above=of xf]  {mx, sx,dx} {xf} ; %
 
-  \node[det, above=0.75cm of d-c] (L1) {$L_1(x \mid u)$} ; % 
+  \node[det, above=0.6cm of d-c] (L1) {$L_1(x^f \mid u)$} ; % 
    \node[latent, right=0.6cm of L1, yshift=0.5cm] (alpha) {$\alpha$}; %
    \node[latent, right=0.6cm of L1, yshift=-0.5cm] (cost) {$c$}; %
   \edge[-] {xf} {L1} ;
@@ -847,24 +846,46 @@ We then integrate over parameters to compare the generic interpretation models t
 \gate {RSAgate} {(L1)(xf)} {} ; %
 \node[text width=1cm] at (-1,2.75) {$RSA$};
 
+    \plate{gen-data}{
+    (d-c)
+  }{$i \in \mathcal{P}$}
+    \plate{prior-data}{
+    (x)
+  }{$i' \in \mathcal{P'}$}
+{
+\tikzset{plate caption/.append style={above right=5pt and 12pt of #1.north west}}
 \plate{mix} {
 (sx)(dx)
-}{$i \in \{1, 2\}$};
+}{$j \in \{1, 2\}$};
+}
 \plate{items}{
+(gen-data) (prior-data)
 (mx)(sx)(dx)(d-c)(x)(mix)(RSAgate)
 }{$f \in \mathcal{F}$}
 
-\node[] at (4.5,4) {$\phi_f \sim \text{Uniform}(0, 1)$};
-%\node[] at (4,5.5) {$\beta^0_1, \beta^1_1 \sim \text{Uniform}(-3, 3)$};
-\node[] at (4.5,3.25) {$\gamma^f_i \sim \text{Uniform}(0, 1)$};
-\node[] at (4.5,2.5) {$\delta^f_i \sim \text{Exponential}(1)$};
+\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (7,4) { 
+$\alpha \sim \text{Uniform}(0,30) $\\
+ $c \sim  \text{Uniform}(0,10) $ \\
+ \\
+$\phi_f \sim \text{Uniform}(0, 1)$ \\
+ $\gamma^f_j \sim \text{Uniform}(0, 1), \delta^f_j \sim \text{Exponential}(1)$ \\
+  $d^{prior}_{f, i'} \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \delta^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \delta^f_2)$ \\
+    $x^f \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \delta^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \delta^f_2)$ \\
 
-\node[] at (5,0) {$\phi_{d,k} = \text{logistic} (\begin{cases} 
-	\beta^0_0 +\beta^0_1\cdot \hat{f}_k  &\mbox{if } z_{k, d} = 0 \\ 
-	\beta^1_0 +\beta^1_1\cdot \hat{f}_k  &\mbox{if } z_{k, d} = 1 
-	\end{cases}$)};
-\node[] at (4,-1) {$c_{d,k} \sim \text{Bernoulli}(\phi_{d,k})$};
-\node[] at (4,-1.5) {$x_{d,k} \sim \text{Gaussian}(\mu_{d,k}, \sigma_{d,k})$};
+ \\
+
+$ d^{gen}_{f, i} \sim L(x^f \mid u  = \text{generic}) = \int_{\theta} L(x^f, \theta \mid u) \diff \theta$
+};
+
+
+
+
+\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (6,0) {Rational Speech Act model\\ 
+$L_1(x^f, \theta \mid u) \propto S_1(u \mid x^f, \theta) \cdot P(x^f) \cdot P(\theta) $\\ 
+$S_1(u \mid x^f, \theta)\propto \exp{( \alpha \cdot [ \ln L_0(x \mid u, \theta) - c(u)])} $\\
+$L_0(x^f \mid u, \theta) \propto  \delta_{\denote{u}(x^f, \theta)} \cdot P(x^f)$
+};
+
 
 
 \end{tikzpicture}
