@@ -1,5 +1,6 @@
 // time ~/webppl-fork/webppl generics-bda-L1-iMH.wppl --require utils uncertain 1
 //  time webppl generics-bda-L1-iMH.wppl  --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
+// time webppl bda_models/generics-bda-L1-iMH.wppl --require ./node_modules/utils --require ~/tools/webppl-sample-writer-fork uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -111,7 +112,7 @@ var model = function(){
     //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
     // ))
 
-		var weight = uniformDrift({a: 0, b: 1, width:0.2}) }
+		var weight = uniformDrift({a: 0, b: 1, width:0.2})
 		var weights = [weight, 1 - weight]
 
     var componentParameters = repeat(numberOfComponents,
@@ -217,7 +218,9 @@ var model = function(){
 	return query
 }
 
-var totalIterations = 400000, lag =  400;
+var totalIterations = 1000000, lag = 1000;
+// var totalIterations = 5000, lag =  5;
+// var totalIterations = 400000, lag =  400;
 // var totalIterations = 250000, lag = 75;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 

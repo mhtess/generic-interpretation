@@ -1,5 +1,6 @@
 // time ~/tools/webppl-fork/webppl generics-bda-L0-iMH-inferThetaPrior.wppl --require utils uncertain 1
 // time webppl generics-bda-L0-iMH-inferThetaPrior.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
+// time webppl bda_models/generics-bda-L0-iMH-inferThetaPrior.wppl --require ./node_modules/utils --require ~/tools/webppl-sample-writer-fork uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -111,10 +112,10 @@ var model = function(){
 
   var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
-  var numberOfComponents = 3;//poisson(1) + 1;
+  var numberOfComponents = 2;//poisson(1) + 1;
 
 	var theta_mean = uniformDrift({a: 0, b: 1, width:0.2})
-	var theta_concentration = uniformDrift({a: 0, b: 50, width:2})
+	var theta_concentration = exponential({a: 1})// uniformDrift({a: 0, b: 50, width:2})
 
 	var thetaParams = {
 		a: theta_mean * theta_concentration,
@@ -146,7 +147,7 @@ var model = function(){
      function(){
       return betaShape({
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
+					d: exponential({a: 1})
         })
     })
 
@@ -160,20 +161,19 @@ var model = function(){
   		factor(scr)
   	})
 
-    // foreach(_.range(numberOfComponents), function(i){
+    foreach(_.range(numberOfComponents), function(i){
 
-    //   query.add(["componentParameters", item, i, "weight"],
-    //     weights[i]
-    //   )
-    //   query.add(["componentParameters", item, i, "alpha"],
-    //     componentParameters[i]["a"]
-    //   )
+      query.add(["componentParameters", item, i, "weight"],
+        weights[i]
+      )
+      query.add(["componentParameters", item, i, "alpha"],
+        componentParameters[i]["a"]
+      )
 
-    //   query.add(["componentParameters", item, i, "beta"],
-    //     componentParameters[i]["b"]
-    //   )
-
-    // })
+      query.add(["componentParameters", item, i, "beta"],
+        componentParameters[i]["b"]
+      )
+    })
 
   	var statePrior = Infer({model: function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
@@ -201,9 +201,10 @@ var model = function(){
 
    var supp = interpretationPrediction.support()
 
-   // foreach(supp, function(s){
-   //   query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
-   // })
+   foreach(supp, function(s){
+     query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+		 query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
+   })
 
    // var speaker1 = function(state, speakerOptimality) {
    //  Infer({model: function(){
@@ -225,13 +226,14 @@ var model = function(){
 
     // })
 
-   query.add(["prediction", item, "prior", "posterior"], [expectation(statePrior), expectation(interpretationPrediction)])
+   // query.add(["prediction", item, "prior", "posterior"], [expectation(statePrior), expectation(interpretationPrediction)])
  })
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
    // semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
-   query.add(["parameter", "theta", "mean", "concentration"], [theta_mean, theta_concentration])
+	 query.add(["parameter", "theta", "prior", "mean"], theta_mean)
+	 query.add(["parameter", "theta", "prior", "concentration"], theta_concentration)
 	 // query.add(["theta_mean", -99, -99, -99], theta_mean)
 
 	return query
@@ -241,16 +243,17 @@ var model = function(){
 // data.endorsement
 // var totalIterations = 500, lag =  1;
 // var totalIterations = 500000, lag =  250;
-var totalIterations = 100000, lag =  50;
+// var totalIterations = 100000, lag =  100;
+// var totalIterations = 5000, lag =  5;
+var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 10000, lag =  5;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 // var outfile = 'results-genint-S1-endorsePrediction-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 // var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
-var outfile = 'results-genint-L0-inferTheta-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0inferTheta-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
-
-var header = "type,param,property,category,val,score"
+var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
 
 // In practice this would be combined with onlyMAP inference option to
@@ -263,17 +266,5 @@ Infer({model,
        verbose: T,
        verboseLag: totalIterations / 20,
        callbacks: [callback]});
-
-// var posterior = Infer({
-//   model: model,
-// 	method: "incrementalMH",
-  // samples: samples, burn: burn, lag: lag,
-  // verbose: T,
-  // verboseLag: totalIterations / 20,
-// 	stream: {
-// 		path: "results/" + outfile,
-// 		header: ["type", "param", "property", "category", "val"]
-// 	}
-// })
 
 "written to " + outfile;
