@@ -139,9 +139,8 @@ var model = function(){
         interpretation: _.filter(data.interpretation, {property: item})
     };
 
-    var weights = normalize(repeat(numberOfComponents,
-      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    ))
+		var weight = uniformDrift({a: 0, b: 1, width:0.2})
+		var weights = [weight, 1 - weight]
 
     var componentParameters = repeat(numberOfComponents,
      function(){
