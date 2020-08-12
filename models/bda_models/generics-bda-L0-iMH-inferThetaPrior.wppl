@@ -14,17 +14,19 @@ var priorFilePrefix = "prior-3",
     interpretationFilePrefix = "interpretation-6",
     endorsementFilePrefix = "endorsement-1";
 
+// var dataPath = "../data/paper_data/expt1";
+var dataPath = "data/paper_data/expt1";
+
 // expt 2: measured priors
-var d_prior = readDataFile("expt1a-prior"),
-    d_prior_catch = readCatchFile("expt1a-prior"),
-    d_prior_subj = readSubjFile("expt1a-prior"),
-    d_interpretation = readDataFile("expt1b-interpretation"),
-    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
-    d_interpretation_subj = readSubjFile("expt1b-interpretation");
+var d_prior = readDataFile(dataPath, "expt1a-prior"),
+    d_prior_catch = readCatchFile(dataPath, "expt1a-prior"),
+    d_prior_subj = readSubjFile(dataPath, "expt1a-prior"),
+    d_interpretation = readDataFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile(dataPath, "expt1b-interpretation");
     // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
     // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
     // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
-
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
 //     d_prior_catch = readCatchFile("prior-manipulation", priorFilePrefix),

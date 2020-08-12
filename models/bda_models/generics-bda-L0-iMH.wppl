@@ -14,13 +14,16 @@ var priorFilePrefix = "prior-3",
     interpretationFilePrefix = "interpretation-6",
     endorsementFilePrefix = "endorsement-1";
 
+// var dataPath = "../data/paper_data/expt1";
+var dataPath = "data/paper_data/expt1";
+
 // expt 2: measured priors
-var d_prior = readDataFile("expt1a-prior"),
-    d_prior_catch = readCatchFile("expt1a-prior"),
-    d_prior_subj = readSubjFile("expt1a-prior"),
-    d_interpretation = readDataFile("expt1b-interpretation"),
-    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
-    d_interpretation_subj = readSubjFile("expt1b-interpretation");
+var d_prior = readDataFile(dataPath, "expt1a-prior"),
+    d_prior_catch = readCatchFile(dataPath, "expt1a-prior"),
+    d_prior_subj = readSubjFile(dataPath, "expt1a-prior"),
+    d_interpretation = readDataFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile(dataPath, "expt1b-interpretation");
     // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
     // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
     // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
@@ -100,13 +103,27 @@ var addNoise = function(dist, noise){
   }})
 }
 
-var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
-  (semantics == "most") ? 0.5 :
-  false
+var nBins = thetaBins.length;
+var thetaWeights = map(function(s){ return exp(thetaPrior.score(s)) }, thetaBins)
+var kernelWidth = 3//nBins / 4;
+
+var kernelFn = function(prevVal){
+  var i = thetaBins.indexOf(prevVal);
+  var upper = (i + kernelWidth) > nBins ? nBins : i + kernelWidth;
+  var lower = (i - kernelWidth) < 0 ? 0 : i - kernelWidth;
+  return Categorical({vs: thetaBins.slice(lower,upper),
+                      ps: thetaWeights.slice(lower,upper)})
+}
 
 var model = function(){
 
-  var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
+  var noise = _.includes(["most", "best"], semantics) ?
+		uniformDrift({a: 0, b: 1, width:0.2}) : 0
+
+	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+	  (semantics == "most") ? 0.5 :
+		(semantics == "best") ? sample(thetaPrior, {driftKernel: kernelFn}) :
+	  false
 
   var numberOfComponents = 2;//poisson(1) + 1;
 
@@ -214,7 +231,8 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   // semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
+   _.includes(["most", "best"], semantics) ? query.add(["noise", -99, -99, -99], noise) : null
+	 semantics == "best" ? query.add(["fixed_threshold", -99, -99, -99], fixedThreshold) : null
 
 	return query
 }
@@ -222,8 +240,8 @@ var model = function(){
 
 // data.endorsement
 // var totalIterations = 100000, lag =  100;
-// var totalIterations = 5000, lag =  5;
-var totalIterations = 1000000, lag = 1000;
+var totalIterations = 5000, lag =  5;
+// var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 

@@ -13,13 +13,19 @@ var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
     interpretationFilePrefix = "interpretation-6"
 
+var dataPath = "../data/paper_data/expt1";
+var dataPath = "data/paper_data/expt1";
+
 // expt 2: measured priors
-var d_prior = readDataFile("expt1a-prior"),
-    d_prior_catch = readCatchFile("expt1a-prior"),
-    d_prior_subj = readSubjFile("expt1a-prior"),
-    d_interpretation = readDataFile("expt1b-interpretation"),
-    d_interpretation_catch = readCatchFile("expt1b-interpretation"),
-    d_interpretation_subj = readSubjFile("expt1b-interpretation");
+var d_prior = readDataFile(dataPath, "expt1a-prior"),
+    d_prior_catch = readCatchFile(dataPath, "expt1a-prior"),
+    d_prior_subj = readSubjFile(dataPath, "expt1a-prior"),
+    d_interpretation = readDataFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_catch = readCatchFile(dataPath, "expt1b-interpretation"),
+    d_interpretation_subj = readSubjFile(dataPath, "expt1b-interpretation");
+    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
 
 // expt 3: Prior manipulation
 // var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
@@ -94,8 +100,11 @@ var model = function(){
 
   var numberOfComponents = 2;//poisson(1) + 1;
   var speakerOptimality = uniformDrift({a: 0, b: 50, width: 10})
-	var cost = uniformDrift({a: 0, b: 10, width: 0.4})
-  var cost_uttProb = Math.exp(-cost)
+	var cost = uniformDrift({a: -5, b: 5, width: 0.4})
+	var cost_fn = function(utterance){
+		return utterance == "silence" ? 0 : cost
+	}
+  // var cost_uttProb = Math.exp(-cost)
 
   foreach(properties, function(item){
     // display(item)
@@ -162,9 +171,10 @@ var model = function(){
      var speaker1 = cache(function(state, theta) {
       Infer({model: function(){
         // var utterance = sample(utterancePrior);
-        var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+        // var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+				var utterance = categorical({vs: ["generic", "silence"], ps: [1, 1]})
         var L0 = listener0(utterance, theta);
-        factor(speakerOptimality * L0.score(state))
+        factor(speakerOptimality * (L0.score(state) - cost_fn(utterance)))
         return utterance
       }})}, 10000)
 
@@ -196,12 +206,12 @@ var model = function(){
    foreach(supp, function(s){
 
 		 query.add(
-			 ["prediction", itemName, s, "prior"],
+			 ["prediction", itemName, "priorDist", s],
 			 Math.exp(statePrior.score(s))
 		 )
 
 		 query.add(
-			 ["prediction", itemName, s, "posterior"],
+			 ["prediction", itemName,  "postDist", s],
 			 Math.exp(interpretationPrediction.score(s))
 		 )
 
@@ -225,7 +235,7 @@ var totalIterations = 1000000, lag = 1000;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 var header = "iter,type,param,property,category,val,score"
-var outfile = 'results-genint-L1lifted-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L1liftedrefacCost-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
 
