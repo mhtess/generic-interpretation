@@ -1,6 +1,6 @@
 // time ~/tools/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
 // time webppl generics-bda-L0-iMH.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
-// time webppl bda_models/generics-bda-L0-iMH.wppl  --require ./node_modules/utils --require ~/tools/webppl-sample-writer-fork uncertain 1
+// time webppl bda_models/generics-bda-L0-iMH.wppl  --require ./node_modules/utils --require ~/tools/webppl-sample-writer-fork fifteen 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -115,13 +115,19 @@ var kernelFn = function(prevVal){
                       ps: thetaWeights.slice(lower,upper)})
 }
 
+var fixed_threshold_options = ["most", "best", "fifteen", "thirty", "forty", "sixtyfive"]
+
 var model = function(){
 
-  var noise = _.includes(["most", "best"], semantics) ?
+  var noise = _.includes(, semantics) ?
 		uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
 	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+		(semantics == "fifteen") ? 0.13 :
+		(semantics == "thirty") ? 0.28 :
+		(semantics == "forty") ? 0.38 :
 	  (semantics == "most") ? 0.5 :
+		(semantics == "sixtyfive") ? 0.63 :
 		(semantics == "best") ? sample(thetaPrior, {driftKernel: kernelFn}) :
 	  false
 
@@ -231,16 +237,16 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   _.includes(["most", "best"], semantics) ? query.add(["noise", -99, -99, -99], noise) : null
-	 semantics == "best" ? query.add(["fixed_threshold", -99, -99, -99], fixedThreshold) : null
+   _.includes(fixed_threshold_options, semantics) ? query.add(["noise", -99, -99, -99], noise) : null
+	 _.includes(fixed_threshold_options, semantics) ? query.add(["fixed_threshold", -99, -99, -99], fixedThreshold) : null
 
 	return query
 }
 
 
 // data.endorsement
-// var totalIterations = 100000, lag =  100;
-var totalIterations = 5000, lag =  5;
+var totalIterations = 100000, lag =  100;
+// var totalIterations = 1000, lag =  1;
 // var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
