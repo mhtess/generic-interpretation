@@ -115,7 +115,8 @@ var kernelFn = function(prevVal){
                       ps: thetaWeights.slice(lower,upper)})
 }
 
-var fixed_threshold_options = ["most", "best", "fifteen", "thirty", "forty", "sixtyfive"]
+var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
+"thirty", "forty", "sixtyfive"]
 
 var model = function(){
 
@@ -123,7 +124,10 @@ var model = function(){
 		uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
 	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+		(semantics == "ten") ? 0.08 :
 		(semantics == "fifteen") ? 0.13 :
+		(semantics == "twenty") ? 0.18 :
+		(semantics == "twentyfive") ? 0.23 :
 		(semantics == "thirty") ? 0.28 :
 		(semantics == "forty") ? 0.38 :
 	  (semantics == "most") ? 0.5 :
@@ -237,17 +241,17 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   _.includes(fixed_threshold_options, semantics) ? query.add(["noise", -99, -99, -99], noise) : null
-	 _.includes(fixed_threshold_options, semantics) ? query.add(["fixed_threshold", -99, -99, -99], fixedThreshold) : null
+   _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "noise", -99, -99], noise) : null
+	 _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "fixed_threshold", -99, -99], fixedThreshold) : null
 
 	return query
 }
 
 
 // data.endorsement
-var totalIterations = 100000, lag =  100;
+// var totalIterations = 100000, lag =  100;
 // var totalIterations = 1000, lag =  1;
-// var totalIterations = 1000000, lag = 1000;
+var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
