@@ -115,7 +115,7 @@ var kernelFn = function(prevVal){
                       ps: thetaWeights.slice(lower,upper)})
 }
 
-var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
+var fixed_threshold_options = ["some", "most", "best", "ten", "fifteen", "twenty", "twentyfive",
 "thirty", "forty", "sixtyfive"]
 
 var model = function(){
