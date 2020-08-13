@@ -119,7 +119,7 @@ var fixed_threshold_options = ["most", "best", "fifteen", "thirty", "forty", "si
 
 var model = function(){
 
-  var noise = _.includes(, semantics) ?
+  var noise = _.includes(fixed_threshold_options, semantics) ?
 		uniformDrift({a: 0, b: 1, width:0.2}) : 0
 
 	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
