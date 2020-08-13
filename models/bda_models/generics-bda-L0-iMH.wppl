@@ -8,7 +8,7 @@ var chain = last(process.argv) // load index as last command line index
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
 var semantics = process.argv[process.argv.length - 2]
-// console.log(semantics)
+display(semantics)
 var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
     interpretationFilePrefix = "interpretation-6",
