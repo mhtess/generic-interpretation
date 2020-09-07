@@ -115,7 +115,7 @@ var kernelFn = function(prevVal){
                       ps: thetaWeights.slice(lower,upper)})
 }
 
-var fixed_threshold_options = ["some", "most", "best", "ten", "fifteen", "twenty", "twentyfive",
+var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
 "thirty", "forty", "sixtyfive"]
 
 var model = function(){
@@ -210,10 +210,10 @@ var model = function(){
 
    var supp = statePrior.support()
 
-   foreach(supp, function(s){
-     query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
-     query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
-   })
+   // foreach(supp, function(s){
+   //   query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
+   //   query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   // })
 
    // var speaker1 = function(state, speakerOptimality) {
    //  Infer({model: function(){
@@ -235,8 +235,8 @@ var model = function(){
 
     // })
 
-   // query.add(["prediction", item, -99, "prior"], expectation(statePrior))
-   // query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+   query.add(["prediction", item, "priorDist", -99], expectation(statePrior))
+   query.add(["prediction", item, "postDist", -99], expectation(interpretationPrediction))
  })
 
    // RECORD PARAMETERS AND PREDICTIVES
