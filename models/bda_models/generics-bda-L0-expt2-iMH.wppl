@@ -1,12 +1,13 @@
 // time ~/tools/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
 // time webppl generics-bda-L0-iMH.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
-// time webppl models/bda_models/generics-bda-L0-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork uncertain 1
+// time webppl models/bda_models/generics-bda-L0-expt2-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork prior uncertain 1
 
 var chain = last(process.argv) // load index as last command line index
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
+var noise_model = process.argv[process.argv.length - 3]
 var semantics = process.argv[process.argv.length - 2]
 display(semantics)
 var priorFilePrefix = "prior-3",
@@ -131,8 +132,8 @@ var fixed_threshold_options = [
 
 var model = function(){
 
-  var noise = _.includes(fixed_threshold_options, semantics) ?
-		uniformDrift({a: 0, b: 1, width:0.2}) : 0
+	var noise = (noise_model == "uniform"  && !(_.includes(fixed_threshold_options, semantics))) ? 0 :
+		uniformDrift({a: 0, b: 1, width:0.2})
 
 	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
 		(semantics == "ten") ? 0.08 :
@@ -198,6 +199,11 @@ var model = function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
 
+		var addPriorNoise = function(dist, noise_level){
+			return Infer({model: function(){
+				return flip(noise_level) ? sample(statePrior) : sample(dist)
+			}})
+		}
   	/// RSA model
   	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
@@ -209,7 +215,8 @@ var model = function(){
   	 }})}, 10000)
 
   var L0 = listener0("generic")
-  var interpretationPrediction = addNoise(L0, noise)
+	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
+		addPriorNoise(L0, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -254,7 +261,7 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "noise", -99, -99], noise) : null
+   query.add(["parameter", "noise", -99, -99], noise)
 	 _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "fixed_threshold", -99, -99], fixedThreshold) : null
 
 	return query
@@ -263,13 +270,13 @@ var model = function(){
 
 // data.endorsement
 // var totalIterations = 100000, lag =  100;
-// var totalIterations = 1000, lag =  1;
-var totalIterations = 1000000, lag = 1000;
+var totalIterations = 1000, lag =  1;
+// var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
 // var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
-var outfile = 'results-genint-L0-fullDist-expt2-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-fullDist-expt2-2Components_'+semantics+'-semantics_'+ noise_model + "-noise_"+totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
