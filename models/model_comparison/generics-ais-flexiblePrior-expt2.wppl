@@ -197,7 +197,7 @@ var marginalLikelihood = function(){
   	    return state
   	 }})}, 10000)
 
-  var L0 = listener0("generic")
+  var L0 = semantics == "prior" ? statePrior : listener0("generic")
 	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
 		addPriorNoise(L0, noise)
 
@@ -221,7 +221,7 @@ var samples = 100
 
 var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
-var resultsOutFile = 'results/ais-expt2-2Components_'+ semantics +'semantics_'+
+var resultsOutFile = 'results/ais-expt2-2Components_'+ semantics +'-semantics_'+
  noise_model + "-noise" + '-steps-' + steps + '-samples-' + samples + '_iter' + iter + '.csv'
 
 // // postOut
