@@ -214,7 +214,7 @@ var model = function(){
   	    return state
   	 }})}, 10000)
 
-  var L0 = listener0("generic")
+  var L0 = semantics == "prior" ? statePrior : listener0("generic")
 	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
 		addPriorNoise(L0, noise)
 
