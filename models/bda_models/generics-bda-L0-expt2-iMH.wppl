@@ -131,7 +131,7 @@ var fixed_threshold_options = [
 // display(properties)
 
 var model = function(){
-
+	// "uniform" noise label for uncertain or some models --> no noise
 	var noise = (noise_model == "uniform"  && !(_.includes(fixed_threshold_options, semantics))) ? 0 :
 		uniformDrift({a: 0, b: 1, width:0.2})
 
