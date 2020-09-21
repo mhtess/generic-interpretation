@@ -1,0 +1,229 @@
+// time webppl models/model_comparison/generics-ais-flexiblePrior-expt2.wppl  --require models/node_modules/utils --require webppl-json prior uncertain 1
+
+var iter = last(process.argv) // load index as last command line index
+
+// penultimate argument is the semantics
+// uncertain = uncertain threshold
+// fixed = fixed threshold at lowest threshold value
+var noise_model = process.argv[process.argv.length - 3]
+var semantics = process.argv[process.argv.length - 2]
+display(semantics)
+var priorFilePrefix = "prior-3",
+    // priorFilePrefix = "prior-manipulation-3",
+    interpretationFilePrefix = "interpretation-6",
+    endorsementFilePrefix = "endorsement-1";
+
+// var dataPath = "../data/paper_data/expt1";
+// var dataPath = "data/paper_data/expt1";
+var dataPath = "data/paper_data/expt2";
+
+// expt 2: measured priors
+// var d_prior = readDataFile(dataPath, "expt1a-prior"),
+//     d_prior_catch = readCatchFile(dataPath, "expt1a-prior"),
+//     d_prior_subj = readSubjFile(dataPath, "expt1a-prior"),
+//     d_interpretation = readDataFile(dataPath, "expt1b-interpretation"),
+//     d_interpretation_catch = readCatchFile(dataPath, "expt1b-interpretation"),
+//     d_interpretation_subj = readSubjFile(dataPath, "expt1b-interpretation");
+    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
+    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
+
+// expt 3: Prior manipulation
+var d_prior = readDataFile(dataPath, "expt2a-prior-filtered"),
+    d_prior_catch = readCatchFile(dataPath, "expt2a-prior"),
+    d_prior_subj = readSubjFile(dataPath, "expt2a-prior"),
+    d_interpretation = readDataFile(dataPath, "expt2b-interpretation-filtered"),
+    d_interpretation_catch = readCatchFile(dataPath, "expt2b-interpretation"),
+    d_interpretation_subj = readSubjFile(dataPath, "expt2b-interpretation");
+
+// var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
+//     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
+//     // endorsementWorkeridsPassed = passCatchTrials(d_endorsement_catch),
+//     priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
+//     interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
+    // endorsementWorkeridsEnglish = nativeEnglish(d_endorsement_subj);
+
+var data = {
+	prior: filter(function(di){
+    return (
+			// (priorWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      // (priorWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+      di.trial_type == "prior_manipulation")
+  }, map(function(d){ return extend(d, {
+		avoided_endval: avoidEnds(d.response)
+  })}, d_prior)),
+	interpretation: filter(function(di){
+    return (
+			// (interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
+      // (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+      utils.isNumber(di.response) &&
+			di.response > 0 &&
+      di.trial_type == "prior_manipulation")
+  }, map(function(d){ return extend(d, {
+		binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	})}, d_interpretation))//,
+  // endorsement: filter(function(di){
+  //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) &&
+  //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) &&
+  //     utils.isNumber(di.response) &&
+  //     di.trial_type == "truth_conditions")
+  // }, map(function(d){ return extend(d, {
+  //   binned_prevalence:  utils.closest( midBins, d.prevalence_level / 100)
+  // })}, d_endorsement))
+};
+
+
+// var prevalence_levels = map(function(x){ utils.closest(midBins, x) }, [0.1,0.3,0.5,0.7,0.9])
+
+// // // test that removing Ss who failed catch trial works properly (computed in R)
+// assert.ok(levels(data.interpretation, "workerid").length == 132)
+// assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
+
+
+
+// assert.ok(levels(data.interpretation, "workerid").length == 107)
+// assert.ok(levels(data.prior, "workerid").length == 131)
+// assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
+// assert.ok(levels(data.endorsement, "workerid").length == 150) // endorsement 1
+
+var utterancePrior = Infer({model: function(){
+	return uniformDraw(["generic", "silence"])
+}});
+
+var meaning = function(utt,state, theta) {
+  return utt=="generic"? state > theta :
+         utt=="generic is false"? state<=theta :
+         utt=='silence'? true :
+         utt=='some'? state > 0 :
+         true
+}
+//
+var properties = levels(data.interpretation, "distribution");
+var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
+// properties
+
+var addNoise = function(dist, noise){
+  return Infer({model: function(){
+    return flip(noise) ? uniformDraw(midBins) : sample(dist)
+  }})
+}
+
+var nBins = thetaBins.length;
+var thetaWeights = map(function(s){ return exp(thetaPrior.score(s)) }, thetaBins)
+var kernelWidth = 3//nBins / 4;
+
+var kernelFn = function(prevVal){
+  var i = thetaBins.indexOf(prevVal);
+  var upper = (i + kernelWidth) > nBins ? nBins : i + kernelWidth;
+  var lower = (i - kernelWidth) < 0 ? 0 : i - kernelWidth;
+  return Categorical({vs: thetaBins.slice(lower,upper),
+                      ps: thetaWeights.slice(lower,upper)})
+}
+
+var fixed_threshold_options = [
+	"most", "best", "ten", "fifteen", "twenty",
+	"twentyfive", "thirty", "forty", "sixtyfive"
+]
+
+// display(properties)
+
+var marginalLikelihood = function(){
+	// "uniform" noise label for uncertain or some models --> no noise
+	var noise = (noise_model == "uniform"  && !(_.includes(fixed_threshold_options, semantics))) ? 0 :
+		uniformDrift({a: 0, b: 1, width:0.2})
+
+	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+		(semantics == "ten") ? 0.08 :
+		(semantics == "fifteen") ? 0.13 :
+		(semantics == "twenty") ? 0.18 :
+		(semantics == "twentyfive") ? 0.23 :
+		(semantics == "thirty") ? 0.28 :
+		(semantics == "forty") ? 0.38 :
+	  (semantics == "most") ? 0.5 :
+		(semantics == "sixtyfive") ? 0.63 :
+		(semantics == "best") ? sample(thetaPrior, {driftKernel: kernelFn}) :
+	  false
+
+  var numberOfComponents = 2;//poisson(1) + 1;
+
+  foreach(properties, function(item){
+    // display(item)
+    var propertyData = {
+        prior: _.filter(data.prior, {distribution: item}),
+        interpretation: _.filter(data.interpretation, {distribution: item})
+    };
+
+    var weights = normalize(repeat(numberOfComponents,
+      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    ))
+
+		// var weight = uniformDrift({a: 0, b: 1, width:0.2})
+		// var weights = [weight, 1 - weight]
+
+    var componentParameters = repeat(numberOfComponents,
+     function(){
+      return betaShape({
+          g: uniformDrift({a: 0, b: 1, width: 0.2}),
+					d: exponential({a: 1})
+        })
+    })
+
+  	mapData({data: propertyData.prior}, function(d){
+      var componentLogLikelihood = map2(function(w, params){
+        Math.log(w) + Beta(params).score(d.avoided_endval)
+      }, weights, componentParameters)
+      var scr = util.logsumexp(componentLogLikelihood)
+      scr == -Infinity ? displayObj(d) : null
+  		factor(scr)
+  	})
+
+  	var statePrior = Infer({model: function(){
+      sample(DiscretizedBeta(componentParameters[discrete(weights)]))
+  	}});
+
+		var addPriorNoise = function(dist, noise_level){
+			return Infer({model: function(){
+				return flip(noise_level) ? sample(statePrior) : sample(dist)
+			}})
+		}
+  	/// RSA model
+  	var listener0 = cache(function(utterance) {
+  	  Infer({model: function(){
+  	    var state = sample(statePrior);
+        var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+  	    var m = meaning(utterance, state, theta)
+  	    condition(m)
+  	    return state
+  	 }})}, 10000)
+
+  var L0 = listener0("generic")
+	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
+		addPriorNoise(L0, noise)
+
+   mapData({data:propertyData.interpretation}, function(d){
+     // display(d)
+     var scr = interpretationPrediction.score(d.binnedResponse)
+     scr == -Infinity ? displayObj(d) : null
+     // display(scr)
+     observe(interpretationPrediction, d.binnedResponse)
+   })
+
+ })
+
+}
+
+
+// steps = 10000, samples = 10 --> 30m
+// samples = 100 --> 5h
+var steps = 10000
+var samples = 100
+
+var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
+
+var resultsOutFile = 'results/ais-expt2-2Components_'+ semantics +'semantics_'+
+ noise_model + "-noise" + '-steps-' + steps + '-samples-' + samples + '_iter' + iter + '.csv'
+
+// // postOut
+json.write(resultsOutFile, mll)
+'results written to ' + resultsOutFile
