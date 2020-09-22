@@ -300,7 +300,7 @@ A more general notion of the prevalence prior would explicitly take into account
  
  
 Standard machinery from formal semantics \cite{Montague1973} can be used to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!][k][f]$} = r_{kf} > \theta\)), and \citeA{Tessler2019psychrev} propose the threshold value for a generic is uncertain and sampled from a uniform prior: $P(\theta) = \text{Uniform}(0, 1)$. Thus, the model of the literal meaning for a generic is much like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!][k][f]$} = r_{kf} > 0\), \(\mbox{ $[\![ most ]\!][k][f]$} = r_{kf} > 0.5\), \(\mbox{ $[\![ all ]\!][k][f]$} = r_{kf} = 1\)), but one in which the threshold is not specified \emph{a priori}. 
-Incorporating that likelihood function and prior on thresholds into the learner trying to uncover how strongly to expect the feature in the category $r$, they present a Bayesian model of literal generic interpretation: 
+Incorporating that likelihood function and prior on thresholds into the learner trying to uncover how strongly to expect the feature in the category $r$, they present a Bayesian model of generic interpretation: 
 
 \begin{align}
 P (r_{kf}, \theta \mid \denote{gen}[k][f]) = P (r_{kf}, \theta \mid r_{kf} >  \theta) &\propto \delta_{r_{kf} > \theta} \cdot P(\theta) \cdot P_f(r_{kf})  \label{eq:L0}
@@ -340,11 +340,9 @@ where $F_r(\theta)$ is the cumulative distribution function of $r$. \mht{check t
 %This literal update rule 
 
 
-
-
-Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
-Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
-The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
+%Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
+%Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
+%The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
 
  
  The vague quantifier generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P(r)$. 
@@ -355,135 +353,51 @@ The explanation that would make the single, heads outcome most likely is that th
 	%Bayesians in general do not like to assign 0 probabilities to outcomes, which is what a mode at 0\% would entail for this cognitive model. 
 	%Instead, the model assigns some low but non-zero probability that an instance of a category having a property which is not in general true of the category  (e.g., a dog flying), because it is not impossible to imagine some intuitive chain of causal events that could give rise to the property (e.g., a genetic mutation or a cross-species cloning experiment). }
 A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which would manifest as a probability distribution with a different bimodal structure, favoring prevalence levels near 0\% and 50\% (Figure~\ref{fig:tripartite}A, third row).  
-Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013) which would follow a distribution  favoring low prevalence values (Figure \ref{fig:tripartite}A, bottom row). 
+Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., \citeNP{Prasada2013}) which would follow a distribution  favoring low prevalence values (Figure \ref{fig:tripartite}A, bottom row). 
 
- The formalization of prior beliefs in this model and the vague semantics can be used to explain human truth judgments (or, endorsements) of generics (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not) as well as other kinds of linguistic expressions that are thought to convey generalizations (e.g., habituals;  ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week; Tessler and Goodman, 2019).
-Human endorsement judgments can be traced back to the shared beliefs about the property in question represented by the prevalence prior distribution $P(r)$ (Eq. \ref{eq:L0}) and the formalization of endorsement as a speech act in which a sentence is judged as relatively good at achieving a speaker's goals in comparison to some set of alternative utterances. 
-Formally, the view of truth judgments as an endorsement speech act can represented by a speaker reasoning about the listener model defined by Eq. \ref{eq:L0} (see also Degen and Goodman, 2014).
-The speaker reasons about whether the generic statement would be good at conveying the speaker's beliefs or whether an alternative would be better; the utility of a generic in this task is in conveying a speaker's subjective prevalence (which, under certain circumstances, may be similar to the objective frequency) and the space of alternative utterances only includes the generic and an informationless, silent alternative.\footnote{
-Tessler and Goodman (2019) also consider utterances that convey the opposite meaning to the generic being considered (e.g., to evaluate ``Robins lay eggs'', the alternative is ``Robins do not lay eggs'' or ``It is not the case that robins lay eggs''). The original authors report that model predictions are highly consistent across these alternatives, and we keep the informationless, silent utterance for consistency and simplicity. 
-}
-The overall utility of an utterance takes into account the action cost associated with producing the utterance, which for such a model operates as a global free parameter.
-In addition, the generic production speaker model uses a soft-max decision rule (which interpolates between probability matching and utility-maximizing behavior) to compute a posterior distribution on utterances $u$ given some level of prevalence $r$:
+The formalization of prior beliefs in this model and the vague semantics has been used to explain human truth judgments (or, endorsements) of generics (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not) as well as other kinds of linguistic expressions that are thought to convey generalizations \cite<e.g., habituals;  ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week;>{Tessler2019psychrev}.
+Here we ask how well human generic interpretations can be modeled as a function of an uncertain threshold operating over diverse prior beliefs about properties. 
 
-\begin{align}
-S_1(u \mid r) \propto &\exp{(\alpha \cdot ( \ln L_0(r \mid u) - C(u))}) \label{eq:S1} \\
-L_0(r \mid u) = &\int_\theta L_0(r, \theta \mid u) \diff\theta
-\end{align}
-
-The model in Equation \ref{eq:S1} is a model of an approximately rational speaker who produces utterances to convey information to a naive listener. 
-Following standard practice in the Rational Speech Act modeling framework (Frank and Goodman, 2012; Goodman and Frank, 2016), we define a pragmatic generic interpretation model, who updates his beliefs about the prevalence not given the literal meaning of the generic but rather by inverting their generative model of the speaker:
-
-\begin{eqnarray}
-L_1(r, \mid u) \propto S_1(u \mid r) \cdot P(r) \label{eq:L1}
-\end{eqnarray}
-
-Equations \ref{eq:S1}-\ref{eq:L1} extend the literal generic interpretation model defined by Equation \ref{eq:L0} with a standard, RSA architecture; this same RSA architecture has been used to account for a number of diverse pragmatic language understanding phenomena (for a review, see Goodman \& Frank, 2016; for a tutorial, see Scontras, Tessler, \& Franke, 2018).
-%Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce an utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}), while taking into account the cost of producing the utterance (e.g., longer utterances are more costly to produce).
-Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker \(S_1\) (Figure \ref{fig:cartoon}).
-As with the literal model, interpretations are strongly driven by the prevalence priors (Figure \ref{fig:tripartite}C). 
-However, pragmatic reasoning allows the utterances to imply stronger generalizations than literal interpretation because a speaker might not have bothered to produce the generic if the prevalence was not sufficiently high, especially if the speaker incurred some cost in producing the utterance (compare Figure~\ref{fig:tripartite}A~vs.~\ref{fig:tripartite}C).
-The pragmatic interpretation mechanism can also lead to asymmetry in speaker--listener behavior, a point which we return to in the General Discussion. 
-
-
-%The differences between literal and pragmatic interpretations are most pronounced for priors with more uncertainty, such as the uniform prior. 
-
-
-
-
-Since we are interested in testing models of interpretation, the question naturally arises of what is the best model for modeling prevalence interpretations of generics: The literal vague quantifier model (Eq. \ref{eq:L0}) or a model that updates their beliefs about the prevalence not given the literal contribution of the generic, but given the fact that a speaker chose to say the generic?
-We design our items in Expt.~1 to elicit a wide range of implied prevalence ratings in order to have sufficient quantitative variability to distinguish the predictions of the literal~vs.~pragmatic models.
-
-
-%The speaker's decision is relative to a set of alternative utterances; since Tessler and Goodman (2019) were interested in modeling sentence endorsements, the alternative set consisted only of producing the generic and staying silent.
-%The act of silence is an information-less utterance that produces a posterior distribution in the literal listener that is identical to the prior and incorporating such an utterance into a pragmatic model is a minimal mechanism go encode speaker intentionality into utterance production: Why did the speaker choose to say the utterance they said?
-%In summary, in addition to the cost of the utterance, the speaker's production decision reflects the prevalence level the speaker intends to convey, $r$ (i.e., their belief about how many of the category have the property), under the literal generic interpretation distribution~vs.~the prior distribution The modeled truth judgments as a speaker decision of whether or not to say the generic sentence to the listener defined by Equation \ref{eq:L0}.
-%Following a typical Rational Speech Act model (Frank and Goodman, 2012; Goodman and Frank, 2016), the speaker is a soft-max rational agent whose utility function is given by the information conveyed to the listener by the utterance $u$ -- $\ln L_0(r \mid u)$ -- minus the cost of the utterance $C(u)$ (e.g., taking into account that certain utterances will be costlier to produce because they are longer):
-%(Figure~\ref{fig:tripartite}A). 
-
-
-%This formulation results in production probabilities that vary as a function of subjective prevalence of the feature, the prevalence prior, and the cost of the utterance (Figure~\ref{fig:tripartite}B).
-
-
-%\red{END EDITS}
-%In the setting of observations, we denote the function that maps an observed item to all of its observable features as $F(x)$; we imagine the learner observes a particular $x$ in category $k$ that has the property of interest  among its features: $f(x)=\texttt{true}$. Bayes' rule then tells us:
-%$$
-%P(r \mid F(x); x \in k) \propto P( F(x) \mid r; x \in k) \cdot P(r)
-%$$	
-%In the setting of a minimal example, the learner observes that $x$ has property $f$, but has not observed any of its other properties.
-%If we assume that properties are conditionally independent given the category, then unobserved properties can be marginalized away.
-%We have:
-%\begin{align}
-%P(r \mid  f(x){=}\texttt{true}; x \in k) &\propto P(f(x){=}\texttt{true} \mid r;   x \in k) \cdot P(r) \nonumber \\
-%&\propto r\cdot P(r), \nonumber
-%\end{align}
-%where we have used the fact that the hypothesis, $r$, is the likelihood in this setting.
-%Adopting this minimal-example belief-update as the effect of hearing the generic utterance $u_{gen}$ yields:
-%\begin{equation}
-%L_0(r \mid u_{gen}) \propto  r \cdot P(r). 
-%\label{eq:L0}
-%\end{equation}
-%Formally, if a listener integrates their prior knowledge about the underlying probability or prevalence of the property---$P(f \mid k)$, denoted by \(r \in [0, 1]\)---with a single positive observation according to Bayes' rule:
-%\begin{align}
-%L_0(r, \mid u = gen) &= \frac{P(u = gen \mid r) \cdot P(r)}{\int_0^1 {P(u = gen \mid r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
-% &= \frac{P(x = 1 \mid n = 1; r) \cdot P(r)}{\int_0^1 {P(x = 1 \mid n = 1; r') \cdot P(r') \mathop{}\!\mathrm{d}r'}}  \nonumber \\
-% &= \frac{r \cdot P(r)}{\int_0^1 {r' \cdot P(r') \mathop{}\!\mathrm{d}r'}} \label{eq:L0}
-%\end{align}
-%\begin{align}
-%L_0(r \mid u = u_{gen}) &\propto P(u = u_{gen} \mid r) \cdot P(r)  \nonumber \\
-% &= P(x = 1 \mid n = 1; r) \cdot P(r) \nonumber \\
-% &= r \cdot P(r) \label{eq:L0}
-%\end{align}
-%\ndg{notation is weird. x,n, etc... maybe start by writing bayes rule?}
-%where \(x\) denotes the number of positive examples and \(n\) denotes the number of observed examples, which are both equal to 1.
-%We take the conditional probability of the generic utterance \(u\) given some prevalence \(r\)---\(P(u\mid r)\)---to represent the literal semantic content of the generic utterance (Frank \& Goodman, 2012), which we define to be belief-updating from a single positive observation: \(P(x =1 \mid n = 1; r)\).
-%The latter is simply the probability of a coin with weight \(r\) landing on hands once, given that was flipped once, which is simply \(r\).
-
-%\noindent Equation \ref{eq:L0} is derived from the principle that belief updating from examples is cognitively available as a means of generalization, and so generics may make use of it (cf., Leslie, 2008).
-%We show in Appendix A that this model is mathematically equivalent to the model in Tessler and Goodman (2019), wherein generics update beliefs according to an uncertain threshold function like a vague quantifier. 
-%
-%To get some intuition for the model behavior, consider the idealized belief-updating scenario of trying to infer the weight of a potentially-biased coin (i.e., a coin which potentially has some preference for landing on heads or tails), where the hypothesis space of the reasoner contains all coin-weights with equal \emph{a priori} probability.
-%We are positing that belief-updating from a generic is informationally equivalent to observing the coin flipped once and it landing on heads.
-%Inference about the weight of the coin amounts to finding a good explanation of this single heads outcome.
-%Rational, Bayesian belief-updating in this setting says a reasoner should \emph{a posteriori} believe explanations (coin-weights) proportional to their likelihood of generating the data.
-%The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
-%Thus, given uniform prior beliefs about $r$ (i.e., all prevalence levels are equally likely \emph{a priori}), this model produces a posterior distribution that favors higher values of $r$, with probability proportional to their value (Figure~\ref{fig:tripartite}A, top panel). 
-%
-%\subsection{Prevalence priors}
-%
-%According to the model of literal generic interpretation given by Equation \ref{eq:L0}, the derivation of a literal interpretation of a generic strongly depends upon the prior probability of different prevalence levels \(P(r)\), which a listener could construct via their knowledge of other categories (Figure \ref{fig:cartoon}). 
-%%with the overall preference for higher prevalence levels \(r\). %, which results from observing a positive example.
-%In a more abstract sense, the prevalence prior \(P(r)\) is a representation of intuitive beliefs about properties, which could exhibit interesting structure.
-%%The distribution can also be understood as a distribution over different categories (and their associated prevalence of the feature).
-%For instance, according to a veridical theory of biological properties like \emph{flying} (like in ``Ducks fly''), a learner would know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}), but is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence the distribution would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:tripartite}A, second row).\footnote{
-%	We assume that people have graded degrees of belief about the prevalence and hence the mode at 0\% is not a Delta distribution at exactly 0\%. That is, the model assumes there are categories in which almost no members have the property (e.g., a dog flying), but that the existence of such an individual is not entirely impossible.}
-%	%Bayesians in general do not like to assign 0 probabilities to outcomes, which is what a mode at 0\% would entail for this cognitive model. 
-%	%Instead, the model assigns some low but non-zero probability that an instance of a category having a property which is not in general true of the category  (e.g., a dog flying), because it is not impossible to imagine some intuitive chain of causal events that could give rise to the property (e.g., a genetic mutation or a cross-species cloning experiment). }
-%A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which results in an intuitive distribution with a different bimodal structure (Figure~\ref{fig:tripartite}A, third row).  
-%Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013) which would follow a different distribution as well (Figure \ref{fig:tripartite}A, bottom row). 
-%Belief updating based on an underspecified threshold produces posterior distributions that are radically different depending on the prevalence prior distribution  (Figure \ref{fig:tripartite}A, solid lines).
-%In our experiments, we both measure the prevalence priors for familiar properties  (Expt.~1) and manipulate the prevalence prior for an unfamiliar property (Expt.~2) in order to test the fine-grained quantitative influence of the prevalence prior on the implied prevalence of a generic statement. 
-
-
-%Figure~\ref{fig:modelSimulations}A shows hypothetical prevalence priors for the features \emph{fly}, \emph{lay eggs}, and \emph{carry malaria} as well as an abstract property \emph{Y} without structured background knowledge.
-%
-%In a more abstract sense, the prevalence prior reflects beliefs about kinds and properties (e.g., there is something internal or external to the entity which causes it to have the property; cf., Prasada, Khemlani, Leslie, \& Glucksberg, 2013); if such a causal mechanism is believed to exist for some kinds and not others, we would expect the prevalence prior distribution to follow a mixture distribution (e.g., a mixture of Beta distributions as is shown for the \emph{fly}, \emph{lay eggs}, and \emph{carry malaria} cases above).\footnote{This assumption is similar in spirit to that employed by \emph{Hurdle Models} of epidemiological data, where the observed count of zeros is often substantially greater than one would expect from standard models, such as the Poisson (e.g., when modeling adverse reactions to vaccines; Rose, Martin, Wannemuehler, \& Plikaytis, 2006)}
-%Such a structured prior distribution could vary by the mixture component (e.g., for how many different kinds does the mechanism exist?) as well as for the parameters of the component(s) that govern the prevalence for the kinds with the mechanism (i.e., given that there is such a mechanism, how strong do we expect that mechanism to be and do we expect further distinctions among those with a causal mechanism?).
-%In the following simulations, we assume some mixture distribution structure.
-%
-%Interpretations from the literal generic interpretation model (Figure~\ref{fig:modelSimulations}B) can be understood as similar to different quantified statements (e.g., \emph{some} or \emph{most}) depending on the property. 
-%For a biological property, a generic (\enquote{Xs fly}) is interpreted most similarly to \enquote{Most Xs fly}.
-%This results from the prior distribution over a biological property like \emph{fly} being bimodal with modes near 0\% and 100\%.
-%For the accidental property prior, \enquote{Xs carry malaria} is most similar to \enquote{Some Xs carry malaria} because the property is expected to be rare within categories in which the property is present.
-%If a listener knows the existence of the property depends upon the sex of the creature (e.g., \emph{lays eggs}), the prevalence interpretation from a generic (\enquote{Xs lay eggs}) should be roughly that 50\% of the Xs lay eggs (only the females).
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{figs/tripartite.pdf}
-\vspace{0.5cm}
-\caption{Examples of the three layers of the pragmatic interpretation model for four different properties. A: Literal listener $L_0$ interpretations (solid) for different prevalence priors (dashed). Priors also correspond to the literal interpretations of the ``silent'' utterance produced by the speaker $S_1$. B: Speaker $S_1$ production probabilities at different levels of prevalence for the generic utterance for three different costs of the generic utterance. C: Pragmatic listener interpretations of the generic utterance under different assumed costs of utterances. Differences between pragmatic and literal models are most pronounced for the priors with more uncertainty, such as the uniform prior. Speaker optimality parameter $\alpha$ set to 10 for panels B and C. Probability distributions are scaled so that the maximum density value in each panel is equal to 1. }
-\label{fig:tripartite}
+%\includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
+\includegraphics{figs/modelSimulations-noPrag.pdf}
+\caption{\label{fig:modelSimulations}Comparison of literal generic interpretation to fixed-threshold models with various thresholds. A: Prevalence priors for four properties. B: Posterior distributions over prevalence (interpretations) given different belief updating rules: fixed-threshold quantifiers and the literal generic meaning as a single positive example.}
 \end{figure}
+
+
+\hypertarget{alternative-semantic-models}{%
+\subsection{Alternative semantic models}\label{alternative-semantic-models}}
+
+We compare the uncertain threshold model to alternative models that update beliefs according to a fixed-threshold semantics (\emph{a la} quantifiers \emph{some} or \emph{most}). 
+To isolate the contribution of the semantics model,  we endow the alternative models with the same background knowledge in the form of the prevalence prior distribution \(P(r)\).
+
+Models with a fixed semantics are given by:
+\begin{eqnarray}
+%L_0^{some}(r \mid u) \propto  P(r \mid r > 0)  \label{eq:someModel}
+P (r_{kf} \mid r_{kf} >  \theta^*) \propto \delta_{r_{kf} > \theta^*} \cdot P_f(r_{kf})  \label{eq:L0fixed}
+\end{eqnarray}
+If $\theta^* = 0$, then the model is analogous to a literal interpretation for \enquote{some}, which rules out the lowest possible prevalence level ($0\%$).\footnote{Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that \enquote{some} often implies \enquote{not all}). Such a model can be implemented in the same probabilistic modeling framework \cite{Goodman2013} but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.} 
+If $\theta^* = 0.5$, the model would be analogous to \enquote{most}, with a literal meaning meaning \emph{more than half}. 
+Other fixed thresholds are possible as well (e.g., $\theta^* = 0.25$; \enquote{more than a quarter}).
+Predictions of these control models are shown in Figure~\ref{fig:modelSimulations}.
+
+A model that assumes a fixed threshold $> 0\%$ is a very restricted model; it places zero probability on any response less than the fixed threshold $\theta^*$.
+In case there are ratings in the experimental data sets that are less than  $\theta^*$, we must supplement these models with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
+We infer this noise probability parameter from the data for the fixed threshold models.
+
+Finally, we will also compare the generic interpretation models to a model that does not update beliefs, predicting prevalence ratings according to the prior distribution \(P(r)\).
+This comparison informs us as to whether or not participants actually \emph{update} their beliefs when they hear a generic statement.
+
+
+
+
+
+
+
+
+
 %
 %
 %\hypertarget{pragmatic-enrichment}{%
@@ -512,13 +426,6 @@ We design our items in Expt.~1 to elicit a wide range of implied prevalence rati
 %\subsection{The influence of prevalence priors and pragmatic reasoning}\label{the-influence-of-prevalence-priors-and-pragmatic-reasoning}}
 
 
-\begin{figure}
-\centering
-%\includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
-\includegraphics{figs/modelSimulations-noPrag.pdf}
-\caption{\label{fig:modelSimulations}Comparison of literal generic interpretation to fixed-threshold models with various thresholds. A: Prevalence priors for four properties. B: Posterior distributions over prevalence (interpretations) given different belief updating rules: fixed-threshold quantifiers and the literal generic meaning as a single positive example.}
-\end{figure}
-
 
 
 
@@ -539,31 +446,6 @@ We design our items in Expt.~1 to elicit a wide range of implied prevalence rati
 
 
 
-
-\hypertarget{alternative-semantic-models}{%
-\subsection{Alternative semantic models}\label{alternative-semantic-models}}
-
-Both the literal and the pragmatic generic interpretation models treat the literal meaning of a generic as equivalent to observing a single minimal example from the category.
-We compare these to alternative models that update beliefs according to a more standard literal meaning: quantification.
-The alternative models take the literal meaning of a generic to be a fixed-threshold function, corresponding to models of quantifier semantics.\footnote{Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that \enquote{some} often implies \enquote{not all}). Such a model can be implemented in the same probabilistic modeling framework (Goodman \& Stuhlmüller, 2013) but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.} 
-In order to permit direct comparison, we construct the alternative models with the same background knowledge in the form of the prevalence prior distribution \(P(r)\).
-This comparison allows us to better understand how model predictions are influenced by the precise specification of literal meaning.
-
-The first alternative we consider is a model of the quantifier \enquote{some} which rules out the lowest possible prevalence level:
-\begin{eqnarray}
-L_0^{some}(r \mid u) \propto  P(r \mid r > 0)  \label{eq:someModel}
-\end{eqnarray}
-The second is analogous to \enquote{most}, with a threshold at 50\% prevalence:
-\begin{eqnarray}
-L_0^{most}(r \mid u) \propto  P(r \mid r > 0.5)  \label{eq:mostModel}
-\end{eqnarray}
-Predictions of these control models are shown in Figure~\ref{fig:modelSimulations}.
-A model that assumes a fixed threshold at 50\% is a very restricted model; it places zero probability on any response less than 50\%.
-In case there are ratings in the experimental data sets that are less than 50\%, we must supplement the \enquote{most} model with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
-We infer this noise probability parameter for the \enquote{most} model from the data.
-
-Finally, we will also compare the generic interpretation models to a model that does not update beliefs, predicting prevalence ratings according to the prior distribution \(P(r)\).
-This comparison informs us as to whether or not participants actually \emph{update} their beliefs when they hear a generic statement.
 
 
 \hypertarget{overview-of-experiments}{%
@@ -586,7 +468,7 @@ All cognitive and Bayesian data analytic models were implemented in the probabil
 All data, analysis scripts, models, and links to experiments and pre-registration reports can be found at \url{www.github.com/mhtess/generic-interpretation}.
 
 \hypertarget{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}{%
-\section{Experiment 1: Replication and Extension of Cimpian et al. (2010)}\label{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}}
+\section{Preliminary Experiment: Replication and Extension of Cimpian et al. (2010)}\label{preliminary-study-replication-and-extension-of-cimpian-et-al.-2010}}
 
 %\hypertarget{method}{%
 \subsection{Method}\label{method}
@@ -647,17 +529,17 @@ Since the strongest test of our models of generic interpretation will come from 
 
 
 \hypertarget{experiment-1}{%
-\section{Experiment 2: Generic Interpretation}\label{experiment-1}}
+\section{Experiment 1: Generic Interpretation}\label{experiment-1}}
 
 This experiment is designed to measure the prevalence implied by a generic about a novel kind, using a diverse set of properties.
-We first elicit participants' prior beliefs about the likely prevalence levels expected for these properties (Expt. 2a).
-We then use the elicited prevalence priors to make model predictions about the prevalence implied by a generic (Expt. 2b).
+We first elicit participants' prior beliefs about the likely prevalence levels expected for these properties (Expt. 1a).
+We then use the elicited prevalence priors to make model predictions about the prevalence implied by a generic (Expt. 1b).
 
 \hypertarget{experiment-1a-prevalence-prior-elicitation}{%
-\subsection{Experiment 2a: Prevalence prior elicitation}\label{experiment-1a-prevalence-prior-elicitation}}
+\subsection{Experiment 1a: Prevalence prior elicitation}\label{experiment-1a-prevalence-prior-elicitation}}
 
 In this experiment, we elicit prior beliefs about prevalence for a diverse set of properties.
-These prior beliefs will be used inside the computational models in order to predict interpretations of generic statements about novel categories (akin to Expt.~1). 
+These prior beliefs will be used inside the computational models in order to predict interpretations of generic statements about novel categories. %(akin to Expt.~1). 
 Because the properties are familiar properties, we can elicit participants' knowledge by asking about the property among familiar  categories.
 
 \hypertarget{methods}{%
@@ -673,13 +555,11 @@ The experiment took on average 7 minutes and participants were compensated \$0.8
 
 \hypertarget{materials}{%
 \paragraph{Materials}\label{materials}}
-
 We created a stimulus set composed of seventy-five properties.
 Items were generated by the first author by considering eight different classes of properties: physical characteristics (e.g., \emph{have brown spots}, \emph{have four legs}), psychological characteristics (e.g., \emph{experience emotions}), dietary habits (e.g., \emph{eat human food}), habitat (e.g., \emph{live in zoos}), disease (e.g., \emph{get cancer}, \emph{carry malaria}), reproductive behavior (e.g., \emph{have a menstrual cycle}), aggressive behaviors (e.g., \emph{pound their chests to display dominance}, \emph{hunt other animals}), and other miscellaneous behaviors (e.g., \emph{perform in the circus}, \emph{sing beautiful songs}); online sources about strange animal behaviors were consulted in order to find the more obscure properties. Full list of materials can be found in Table B.1 in Appendix B.
 
 \hypertarget{procedure-and-materials-1}{%
 \paragraph{Procedure and materials}\label{procedure-and-materials-1}}
-
 The task comprised two different kinds of trials: a category elicitation trial, which appeared first, and twelve prevalence elicitation trials, which used the responses generated in the category elicitation trial.
 In the category elicitation trial, participants were asked to list three kinds of animals for each of five different classes of animals: mammals, fish, birds, insects/bugs, amphibians/reptiles.
 The five classes of animals were presented in a randomized order on the screen and there were three text boxes for each in which participants could type an animal kind.
@@ -693,7 +573,6 @@ The list included five properties that they had been tested on and five distract
 
 \hypertarget{results}{%
 \subsubsection{Results}\label{results}}
-
 We used the same exclusion criteria that were preregistered for the subsequent generic interpretation study: \url{https://osf.io/bwn4t/register/5771ca429ad5a1020de2872e}.
 Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded (\(n = 15\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 13\)).
@@ -736,24 +615,24 @@ Thus, we will assume the prevalence prior data follows a mixture of 2-Beta distr
 \end{figure}
 
 \hypertarget{experiment-1b-generic-interpretation}{%
-\subsection{Experiment 2b: Generic interpretation}\label{experiment-1b-generic-interpretation}}
+\subsection{Experiment 1b: Generic interpretation}\label{experiment-1b-generic-interpretation}}
 
 \hypertarget{methods-1}{%
 \subsubsection{Methods}\label{methods-1}}
 
 \hypertarget{participants-2}{%
 \paragraph{Participants}\label{participants-2}}
-
+%
 We recruited 200 participants from MTurk.
 This number was arrived at with the intention of getting approximately 50 ratings for each unique item in the experiment.
 The experiment took on average 5.50 minutes and participants were compensated \$0.80.
 
 \hypertarget{procedure-and-materials-2}{%
 \paragraph{Procedure and materials}\label{procedure-and-materials-2}}
-
-The materials were the same as in Expt. 2a.
+%
+The materials were the same as in Expt. 1a.
 Participants were told that scientists had recently discovered lots of new animals that we did not know existed.
-On each trial, they would be told facts about the new animals and be asked to translate it into the percentage of that animal it applies to.
+On each trial, they would be told facts about the new animals and be asked to translate it into the percentage of that animal to which it applies.
 On each trial, participants read \enquote{You are told: \emph{generic}}, where the generic sentence was a bare plural statement about a familiar property \(F\) applying to a novel animal category \(K\) (e.g., \enquote{Javs attack hikers}).
 They were then asked \enquote{Out of all of the \emph{K}s on the planet, what percentage do you think \emph{F}?} (e.g., \enquote{Out of all of the javs on the planet, what percentage do you think attack hikers?}).
 Novel animal category names were mostly taken from Cimpian et al. (2010) and similar studies on generic language.
@@ -771,7 +650,7 @@ If participants gave no ratings less than 50\%, they did not complete any explan
 \hypertarget{descriptive-results}{%
 \subsubsection{Descriptive results}\label{descriptive-results}}
 
-We used preregistered exclusion criteria, which were also used for Expt. 2a.
+We used preregistered exclusion criteria, which were also used for Expt. 1a.
 Participants who did not have at least 4 out of 5 hits and at least 4 out of 5 correct rejections during the memory trial were excluded (\(n = 62\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 8\)).
 This left a total of \(n = 132\) participants, with items receiving on average 62 responses (range = {[}50, 77{]}).
@@ -915,7 +794,7 @@ Convergence was checked qualitatively by confirming the similarity of the result
 
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/genint-modelingResults-1.pdf}
+\includegraphics{figs/genint-modelingResults-variousFixeds-1.pdf}
 \caption{\label{fig:genint-modelingResults}Posterior predictive model fits for quantitative models based on (from left to right): (i) the mean of the prevalence prior, (ii) a threshold semantics fixed at 0.01 (\enquote{some}), (iii) a threshold semantics fixed at 0.5 (\enquote{most}), (iv) a single positive observation (literal generic), and (v) a pragmatically interpreted single positive observation (pragmatic generic). The model for \enquote{most} is outfitted with a noise parameter to accomodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
 \end{figure}
 
@@ -1363,6 +1242,51 @@ To the extent that a listener has a different set of assumptions of the distribu
 %For many properties, the difference in implied prevalence may be inconsequential.
 We saw that the biggest differences between the literal interpretation model (which guides the predictions of the generic speaker model used in Tessler \& Goodman, 2019) and the pragmatic generic interpretation model occur when the distribution of the property is most uncertain.
 For features of social categories, which have difficult-to-understand statistical properties (e.g., Judd, Ryan, \& Park, 1991), the misalignment of background beliefs can lead to the propagation of stereotypes.
+
+
+\subsection{Pragmatic strengthening of an uncertain threshold semantics}
+
+Human endorsement judgments can be traced back to the shared beliefs about the property in question represented by the prevalence prior distribution $P(r)$ (Eq. \ref{eq:L0}) and the formalization of endorsement as a speech act in which a sentence is judged as relatively good at achieving a speaker's goals in comparison to some set of alternative utterances. 
+Formally, the view of truth judgments as an endorsement speech act can represented by a speaker reasoning about the listener model defined by Eq. \ref{eq:L0} (see also Degen and Goodman, 2014).
+The speaker reasons about whether the generic statement would be good at conveying the speaker's beliefs or whether an alternative would be better; the utility of a generic in this task is in conveying a speaker's subjective prevalence (which, under certain circumstances, may be similar to the objective frequency) and the space of alternative utterances only includes the generic and an informationless, silent alternative.\footnote{
+Tessler and Goodman (2019) also consider utterances that convey the opposite meaning to the generic being considered (e.g., to evaluate ``Robins lay eggs'', the alternative is ``Robins do not lay eggs'' or ``It is not the case that robins lay eggs''). The original authors report that model predictions are highly consistent across these alternatives, and we keep the informationless, silent utterance for consistency and simplicity. 
+}
+The overall utility of an utterance takes into account the action cost associated with producing the utterance, which for such a model operates as a global free parameter.
+In addition, the generic production speaker model uses a soft-max decision rule (which interpolates between probability matching and utility-maximizing behavior) to compute a posterior distribution on utterances $u$ given some level of prevalence $r$:
+
+\begin{align}
+S_1(u \mid r) \propto &\exp{(\alpha \cdot ( \ln L_0(r \mid u) - C(u))}) \label{eq:S1} \\
+L_0(r \mid u) = &\int_\theta L_0(r, \theta \mid u) \diff\theta
+\end{align}
+
+The model in Equation \ref{eq:S1} is a model of an approximately rational speaker who produces utterances to convey information to a naive listener. 
+Following standard practice in the Rational Speech Act modeling framework (Frank and Goodman, 2012; Goodman and Frank, 2016), we define a pragmatic generic interpretation model, who updates his beliefs about the prevalence not given the literal meaning of the generic but rather by inverting their generative model of the speaker:
+
+\begin{eqnarray}
+L_1(r, \mid u) \propto S_1(u \mid r) \cdot P(r) \label{eq:L1}
+\end{eqnarray}
+
+Equations \ref{eq:S1}-\ref{eq:L1} extend the literal generic interpretation model defined by Equation \ref{eq:L0} with a standard, RSA architecture; this same RSA architecture has been used to account for a number of diverse pragmatic language understanding phenomena (for a review, see Goodman \& Frank, 2016; for a tutorial, see Scontras, Tessler, \& Franke, 2018).
+%Equation \ref{eq:S1} is a model of a softmax rational agent deciding whether or not to produce an utterance in order to convey information to a literal listener $L_0$  (as defined in Equation \ref{eq:L0}), while taking into account the cost of producing the utterance (e.g., longer utterances are more costly to produce).
+Equation \ref{eq:L1} is a model of a pragmatic listener who understands that the generic utterance was produced by an intentional speaker \(S_1\) (Figure \ref{fig:cartoon}).
+As with the literal model, interpretations are strongly driven by the prevalence priors (Figure \ref{fig:tripartite}C). 
+However, pragmatic reasoning allows the utterances to imply stronger generalizations than literal interpretation because a speaker might not have bothered to produce the generic if the prevalence was not sufficiently high, especially if the speaker incurred some cost in producing the utterance (compare Figure~\ref{fig:tripartite}A~vs.~\ref{fig:tripartite}C).
+The pragmatic interpretation mechanism can also lead to asymmetry in speaker--listener behavior, a point which we return to in the General Discussion. 
+
+
+Since we are interested in testing models of interpretation, the question naturally arises of what is the best model for modeling prevalence interpretations of generics: The literal vague quantifier model (Eq. \ref{eq:L0}) or a model that updates their beliefs about the prevalence not given the literal contribution of the generic, but given the fact that a speaker chose to say the generic?
+We design our items in Expt.~1 to elicit a wide range of implied prevalence ratings in order to have sufficient quantitative variability to distinguish the predictions of the literal~vs.~pragmatic models.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{figs/tripartite.pdf}
+\vspace{0.5cm}
+\caption{Examples of the three layers of the pragmatic interpretation model for four different properties. A: Literal listener $L_0$ interpretations (solid) for different prevalence priors (dashed). Priors also correspond to the literal interpretations of the ``silent'' utterance produced by the speaker $S_1$. B: Speaker $S_1$ production probabilities at different levels of prevalence for the generic utterance for three different costs of the generic utterance. C: Pragmatic listener interpretations of the generic utterance under different assumed costs of utterances. Differences between pragmatic and literal models are most pronounced for the priors with more uncertainty, such as the uniform prior. Speaker optimality parameter $\alpha$ set to 10 for panels B and C. Probability distributions are scaled so that the maximum density value in each panel is equal to 1. }
+\label{fig:tripartite}
+\end{figure}
+
+
 
 
 %Adults flexibly use their causal knowledge of the world to restrict the interpretation of a generic statement to a reasonable population, as evidenced by their explanations (e.g., \enquote{I thought that there would be many more Dobles in the wild than in zoos}).
