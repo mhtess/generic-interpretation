@@ -115,6 +115,11 @@ var fixed_threshold_options = [
 	"twentyfive", "thirty", "forty", "sixtyfive"
 ]
 
+var nBins = thetaBins.length;
+var thetaWeights = map(function(s){ return exp(thetaPrior.score(s)) }, thetaBins)
+var kernelWidth = 3//nBins / 4;
+
+
 var kernelFn = function(prevVal){
   var i = thetaBins.indexOf(prevVal);
   var upper = (i + kernelWidth) > nBins ? nBins : i + kernelWidth;
