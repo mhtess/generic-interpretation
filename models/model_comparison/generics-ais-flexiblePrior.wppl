@@ -115,6 +115,14 @@ var fixed_threshold_options = [
 	"twentyfive", "thirty", "forty", "sixtyfive"
 ]
 
+var kernelFn = function(prevVal){
+  var i = thetaBins.indexOf(prevVal);
+  var upper = (i + kernelWidth) > nBins ? nBins : i + kernelWidth;
+  var lower = (i - kernelWidth) < 0 ? 0 : i - kernelWidth;
+  return Categorical({vs: thetaBins.slice(lower,upper),
+                      ps: thetaWeights.slice(lower,upper)})
+}
+
 
 // var priors = _.fromPairs(map(function(p){
 //   var property_data = _.filter(data.prior, {property: p})
