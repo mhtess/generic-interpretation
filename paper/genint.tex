@@ -993,55 +993,59 @@ This is extremely strong evidence that the best model for how generics update be
 \section{Experiment 2: Prior Manipulation}\label{experiment-2-prior-manipulation}}
 
 In this experiment, we test the causal role of the prevalence prior in generic interpretation.
-In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the pragmatic generic interpretation model.
-Though the pragmatic generics model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational.
+In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
+Though the uncertain threshold model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational.
 Here we manipulate the prevalence prior and measure the resulting influence on interpretation.
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
 
 \hypertarget{experiment-2a-prior-elicitation-manipulation-check}{%
 \subsection{Experiment 2a: Prior elicitation (manipulation check)}\label{experiment-2a-prior-elicitation-manipulation-check}}
 
+In this experiment, we elicit participants' beliefs about the prevalence of a property among different categories following a manipulation designed to alter participants' beliefs about a property.
+
+
 \hypertarget{methods-2}{%
 \subsubsection{Methods}\label{methods-2}}
 
 \hypertarget{participants-3}{%
 \paragraph{Participants}\label{participants-3}}
-
+%
 We recruited 450 participants from MTurk.
 This number was arrived at with the intention of getting approximately 40 participants to provide ratings for each unique condition in the experiment.
 The experiment took on average 3 minutes and participants were compensated \$0.30.
 
 \hypertarget{materials-1}{%
 \paragraph{Materials}\label{materials-1}}
-
+%
 The goal of this experiment was to manipulate the prevalence prior.
 Participants were familiarized with one of ten prevalence prior distributions, shown in Figure~\ref{fig:priorManipulationExpt}E.
-Nine of the ten distributions were bimodal with modes either at 0\%, 25\%, 50\%, 75\%, or 100\%; the tenth distribution was uniform over all prevalence levels between 0\% and 100\%.
+In Experiment 1a, we found that the prevalence priors for familiar properties were best-modeled as a mixture of two Beta distributions.
+Hence, in these experiments, nine of our ten distribution were bimodal, with modes either at 0\%, 25\%, 50\%, 75\%, or 100\%; the tenth distribution was uniform over all prevalence levels between 0\% and 100\%.
 For the bimodal distributions, the mixture between the two modes was always 50\% (half of samples were from one mode and half from the other, as shown in Figure~\ref{fig:priorManipulationExpt}B).
 
-\mht{We chose bimodal distributions because the priors in Experiment 1 were reasonably well-modeled as a mixture of two Beta distributions.}
-
-Our cover story involved learning about a single property---\emph{know when earthquakes are about to happen}.
-We used this property because its prevalence prior elicited in Expt. 1a suggested participants had high uncertainty as to what prevalence levels to expect for this property; we thus expected this property might be particularly amenable to manipulation.\footnote{Pilot testing using a completely novel property (e.g., \emph{daxing}) appeared to make the task too artificial. }
+%\mht{}
+Our cover story involved learning about a single property, so that we could assign credit of differences in interpretations back to the manipulated prior distribution, rather than knowledge about properties (which we studied in Experiment 1). 
+Pilot testing revealed that using a completely novel property (e.g., \emph{daxing}) made our task highly artificial. 
+Thus, we used a property from Experiment 1 that we though would be particularly amenable to manipulation by selecting a property whose prevalence prior had high entropy (i.e., participants had lots of uncertainty as to what prevalence levels to expect for this property); the property we used was the predicate \emph{know when earthquakes are about to happen}.
 
 \hypertarget{procedure}{%
 \paragraph{Procedure}\label{procedure}}
-
+%
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/priorManipulationExpt-1.pdf}
-\caption{\label{fig:priorManipulationExpt}Overview of Experiment 2. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence. E: Experimentally manipulated prevalence prior distributions. The distribution shown in B is the \emph{weak or deterministic} distribution.}
+\includegraphics{figs/expt2-overview.pdf}
+\caption{\label{fig:priorManipulationExpt}Overview of Experiment 2. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence. E: Experimentally manipulated prevalence prior distributions. The distribution shown in B is the \emph{25/100} distribution.}
 \end{figure}
-
-In order to avoid participants learning the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
+%
+In order to avoid participants learning and reasoning about the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
 Participants were given a cover story in which they were asked to imagine they were an astronaut-scientist exploring a distant planet with many new animals on it.
 They were studying these animals with another scientist to understand the animals' ability to \enquote{know when earthquakes are about to happen}.
 Participants were then shown data that they and their fellow scientist had collected about the prevalence of the property among different novel animals.
 In order to minimize distraction, novel animals were simply labeled by a letter (e.g., \enquote{Animal C} or just \enquote{Cs}).
-Information about the animal appeared in an \emph{evidence statement} (e.g., \enquote{After studying the animal, you and your partner determine that 98\% of Cs \emph{know when earthquakes are about to happen}.}) and were displayed in a table showing the corresponding numerical data (Figure~\ref{fig:priorManipulationExpt}A).
-Participants proceed in a self-paced way by clicking a button to reveal information about the next animal.
+Information about the animal appeared in an \emph{evidence statement} (e.g., \enquote{After studying the animal, you and your partner determine that 98\% of Cs \emph{know when earthquakes are about to happen}.}) and was displayed in a table showing the corresponding numerical data (Figure~\ref{fig:priorManipulationExpt}A).
+Participants proceeded in a self-paced way by clicking a button to reveal information about the next animal.
 After participants viewed the data for ten categories, they are told to review the information about the animals before continuing (Figure~\ref{fig:priorManipulationExpt}B).
-Then, the data table is removed and participants are provided the following prompt:
+Then, the data table was removed and participants were provided the following prompt:
 
 \begin{quote}
 Tomorrow, you and your partner will study 5 other new species of animals. What percentage of each do you think will know when earthquakes are about to happen?
@@ -1067,12 +1071,15 @@ Many distributions exhibit a regression to the mean in some participants' predic
 \hypertarget{experiment-2b-generic-interpretation}{%
 \subsection{Experiment 2b: Generic interpretation}\label{experiment-2b-generic-interpretation}}
 
-We use the empirically measured prevalence distributions from Expt. 2a to generate \emph{a priori} model predictions about the generic interpretation data from our five models.\footnote{For the pragmatic model, we fix the two parameters to be the maximum a-posteriori inferred values from the Expt. 1 analysis: \(\alpha = 2; c = 3.5\).}
-To account for our uncertainty in the measurement of the prevalence priors, we bootstrap the priors by resampling subjects (with replacement), calculating the empirical prevalence distributions (by binning, as above), and generating model predictions.
-We repeated this procedure 10,000 times to generate distributions of predictions.
-The bootstrapped mean and 95\% quantiles for each prevalence bin in each distribution are shown in Figure~\ref{fig:priorManipulationResults}A (middle rows).
-We see that context-sensitive interpretations are predicted, with idiosyncrasies that reflect empirically measured distributions.
-In this experiment, we test these predictions against interpretations in the same empirical paradigm as Expt. 2a.
+In this experiment, we measure participants' interpretations of generic statements about novel categories following the same manipulation of Expt.~2a, whited altered participants' beliefs about the prevalence of a property among different categories (i.e., the prevalence prior). 
+
+
+%We use the empirically measured prevalence distributions from Expt. 2a to generate \emph{a priori} model predictions about the generic interpretation data from our five models.\footnote{For the pragmatic model, we fix the two parameters to be the maximum a-posteriori inferred values from the Expt. 1 analysis: \(\alpha = 2; c = 3.5\).}
+%To account for our uncertainty in the measurement of the prevalence priors, we bootstrap the priors by resampling subjects (with replacement), calculating the empirical prevalence distributions (by binning, as above), and generating model predictions.
+%We repeated this procedure 10,000 times to generate distributions of predictions.
+%The bootstrapped mean and 95\% quantiles for each prevalence bin in each distribution are shown in Figure~\ref{fig:priorManipulationResults}A (middle rows).
+%We see that context-sensitive interpretations are predicted, with idiosyncrasies that reflect empirically measured distributions.
+%In this experiment, we test these predictions against interpretations in the same empirical paradigm as Expt. 2a.
 
 \hypertarget{methods-3}{%
 \subsubsection{Methods}\label{methods-3}}
@@ -1089,8 +1096,8 @@ The experiment took on average 2.70 minutes and participants were compensated \$
 \hypertarget{materials-and-procedure}{%
 \paragraph{Materials and procedure}\label{materials-and-procedure}}
 
-The materials and procedure were identical to those of Expt. 2a with the following exception.
-After the familiarization period, the data table is removed and participants are provided the following prompt:
+The materials and procedure were almost identical to those of Expt. 2a.
+The only difference was that following the familiarization period, the data table was removed and participants were provided the following prompt:
 
 \begin{quote}
 The next day, you are busy and your partner studies a new animal on their own: Animal K.
@@ -1100,11 +1107,21 @@ Your partner tells you: \enquote{Ks know when earthquakes are about to happen.}
 In order to encourage participants to pay attention to the language, this text is on the screen for five seconds before participants are asked: \enquote{What percentage of Ks do you think know when earthquakes are about to happen?} and provided with a slider bar ranging from 0\%-100\% (Figure~\ref{fig:priorManipulationExpt}D).
 As in Expt. 2a, participants then completed an attention check survey where they were asked what property was being investigated and to input one of the prevalence levels they saw on the familiarization screen.
 
+%\begin{figure}
+%\centering
+%\includegraphics{genint_files/figure-latex/priorManipulationResults-1.pdf}
+%\caption{\label{fig:priorManipulationResults}Experiment 2 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 2a; top row), literal and pragmatic generics model predictions based on those empirical distributions (middle two rows), and empirical distributions of responses for the generic interpretation task (Expt. 2b; bottom row). Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Model predicted means for alternative models and empirical means.}
+%\end{figure}
+
+
+
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/priorManipulationResults-1.pdf}
-\caption{\label{fig:priorManipulationResults}Experiment 2 results. A: Empirical distribution of responses for the prior elicitation task (Expt. 2a; top row), literal and pragmatic generics model predictions based on those empirical distributions (middle two rows), and empirical distributions of responses for the generic interpretation task (Expt. 2b; bottom row). Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Model predicted means for alternative models and empirical means.}
+\includegraphics{figs/expt2_model-results.pdf}
+\caption{\label{fig:genint-modelingResults2}Experiment 2 results. A: Empirical distribution of responses for the generic interpretation task (Expt. 2a; top row), uncertain threshold model predictions, and alternative model predictions. Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Posterior predictive expected values quantitative models in comparison to the human empirical means. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
 \end{figure}
+
+
 
 \hypertarget{results-2}{%
 \subsubsection{Results}\label{results-2}}
