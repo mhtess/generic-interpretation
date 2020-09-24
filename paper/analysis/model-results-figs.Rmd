@@ -1,0 +1,1317 @@
+---
+title: "Generics BDA"
+output: html_notebook
+---
+
+
+```{r}
+library(rwebppl)
+library(tidyverse)
+library(knitr)
+library(purrr)
+library(coda)
+library(ggthemes)
+library(parallel)
+library(viridis)
+theme_set(theme_few())
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+hdi_upper<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+hdi_lower<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+```
+
+```{r}
+readData = function(folder, proj){
+  read_csv(
+    paste("../../data/paper_data/",folder,"/",
+          proj,"-trials.csv", sep = "")
+    )
+}
+
+readCatchInfo = function(folder, proj){
+  read_csv(
+    paste("../../data/paper_data/",folder,"/",
+          proj,"-catch_trials.csv", sep = "")
+    )
+}
+
+priorDataLabel = "expt1a-prior"
+interpretationDataLabel = "expt1b-interpretation"
+```
+# Load data
+
+## Load human data
+Prior data
+
+```{r}
+df.prior <- readData("expt1/", priorDataLabel)
+df.prior.catch <- readCatchInfo("expt1/", priorDataLabel)
+
+df.prior.catch.summary <- df.prior.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.prior <- left_join(df.prior, df.prior.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.prior.filtered <- df.prior %>% 
+  filter(pass == 1, trial_type == "prevalence_elicitation") %>%
+  mutate(response = as.numeric(response))
+
+```
+
+Interpretation (posterior) data
+
+```{r}
+df.int.catch <- readCatchInfo("expt1/", interpretationDataLabel)
+
+df.int.catch.summary <- df.int.catch %>%
+  group_by(workerid, tested_on) %>%
+  summarize(totalCorrect = sum(correct)) %>%
+  ungroup() %>%
+  spread(tested_on, totalCorrect) %>%
+  rename(correct_rejection = `0`, 
+         hit = `1`) %>%
+  mutate(pass = ifelse(hit >= 4 & correct_rejection >= 4, 1, 0),
+         totalCorrect = correct_rejection + hit)
+
+df.int <- readData("expt1/", interpretationDataLabel) %>%
+  group_by(workerid) %>%
+  mutate(normalizedResponse = (response - mean(response)) / sd(response))
+
+df.int <- left_join(df.int, df.int.catch.summary %>%
+                         select(workerid, totalCorrect, pass))
+
+df.int.filtered <- df.int %>% filter(pass == 1) %>%
+  mutate(response = as.numeric(response)) %>%
+    mutate(property = gsub("&quotechar", "", property))
+
+df.int.filtered.bs <- df.int.filtered %>%
+    #filter(property %in% levels(factor(m.samp$param))) %>%
+    group_by(property) %>%
+    tidyboot::tidyboot_mean(column = response)
+```
+
+## Load model results
+
+```{r}
+# m.pp.expval
+# m.pdf.summary 
+load("../../models/results/om_runs_L0_1000k_all-semantics_expval_pdf_summary.RData")
+```
+
+
+# Posterior Predictives
+
+## Expected Values
+
+```{r}
+md.impprev <- left_join(
+  m.pp.expval,
+  df.int.filtered.bs
+) %>% 
+  ungroup() %>% ## keep "prior model" only for uncertain threshold
+  filter(((semantics == "uncertain" & src == "L0_priorDist") | (src == "L0_postDist"))) 
+
+glimpse(md.impprev)
+glimpse(md.impprev %>% tail())
+
+# save(df.int.filtered, df.int.filtered.bs, md.impprev,
+#      file = "../paper/cached_results/genInt_interpretation6_prior3_modelData2.RData")
+```
+
+### Scatterplot: Model vs. Data
+
+#### All models
+
+```{r}
+md.impprev %>%
+  mutate(semantics = factor(semantics, levels = c("some-wNoise", "ten", "fifteen", "twenty", "twentyfive", "thirty", "forty", "most","sixtyfive", "best", "uncertain")),
+         src = factor(src, levels = c("L0_priorDist", "L0_postDist"))) %>%
+ggplot(., aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2)+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+
+  geom_errorbarh(alpha = 0.3)+
+  facet_wrap(~src + semantics, nrow = 1)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+  coord_fixed()
+```
+
+#### Subset of models
+
+```{r}
+conditions.of.interest <- c("L0_priorDist_uncertain", 
+                        "L0_postDist_some-wNoise", 
+                        "L0_postDist_ten", 
+                        #"L0_postDist_fifteen", 
+                        "L0_postDist_twenty", 
+                        "L0_postDist_thirty", 
+                        "L0_postDist_most", 
+                        #"L0_postDist_sixtyfive", 
+                        "L0_postDist_uncertain")
+
+
+md.impprev %>% 
+  mutate(src = paste(src, "_", semantics, sep ="")) %>%
+  filter(src %in% conditions.of.interest) %>%
+  mutate(src = factor(src, 
+                      levels = c("L0_priorDist_uncertain", 
+                        "L0_postDist_some", "L0_postDist_some-wNoise",  "L0_postDist_ten", "L0_postDist_fifteen", "L0_postDist_twenty", 
+                        "L0_postDist_twentyfive", "L0_postDist_thirty", "L0_postDist_forty","L0_postDist_most", "L0_postDist_sixtyfive", 
+                        "L0_postDist_best", "L0_postDist_uncertain"),
+                      labels = c("Prevalence prior",
+                                 '"some"\n(threshold = 0.01)',
+                                 '"some" + noise\n(threshold = 0)',
+                                 '"10%" + noise\n(threshold = 0.10)',
+                                 '"15%" + noise\n(threshold = 0.15)',
+                                 '"20%" + noise\n(threshold = 0.20)',
+                                 '"25%" + noise\n(threshold = 0.25)',
+                                 '"30%" + noise\n(threshold = 0.30)',
+                                 '"40%" + noise\n(threshold = 0.40)',
+                                 '"most" + noise\n(threshold = 0.50)',
+                                 '"65%" + noise\n(threshold = 0.65)',
+                                 'best threshold + noise\n(threshold)',
+                                 'generic\n(uncertain threshold)'))) %>%
+  ggplot(., aes( x = model_MAP, xmin = model_lower, xmax = model_upper, 
+                        y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2, alpha = 0.3)+
+  geom_errorbar(alpha = 0.3)+geom_errorbarh(alpha = 0.3)+
+  geom_point(alpha = 0.7)+
+  facet_wrap(~src, nrow = 1)+
+  scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 1)) +
+  coord_fixed()+
+  xlab("Model Prediction (Expected Value)")+
+  ylab("Human Implied Prevalence (Mean)")
+
+ggsave(filename = "../../paper/figs/genint-modelingResults-variousFixeds-1.pdf",
+       width = 10, height = 5)
+```
+
+
+### Full Distributions
+
+```{r}
+lower_bins <-seq(0, 0.95, 0.05)
+upper_bins <- seq(0.05, 1, 0.05)
+#lower_bins <-seq(0, 1, 0.05)
+#upper_bins <- seq(0.01, 1.01, 0.05)
+#mid_bins <- (upper_bins - lower_bins)/2 + lower_bins
+
+mid_bins <- sort(unique(m.pdf.summary$state))
+
+
+mid_bins <- mid_bins[2:length(mid_bins)]
+
+
+round_to_bin <- function(x){
+  mid_bins[which.min(abs(mid_bins-x))]
+}
+
+ave.n.ratings.per.item <- df.int.filtered %>%
+  group_by(property) %>%
+  count() %>%
+  ungroup() %>%
+  summarize(ave_n = round(mean(n))) %>%
+  pull(ave_n)
+
+
+ bootstrapInterpretationDistributions<- function(i){
+  
+  df.int.filtered.i <- df.int.filtered %>% 
+    # filter(response > 0) %>%
+    group_by(property) %>%
+    sample_n(ave.n.ratings.per.item, replace = TRUE) %>%
+    rowwise() %>%
+    mutate(binned_response = round_to_bin(response)) %>%
+    group_by(property, binned_response) %>%
+    count() %>%
+    ungroup() %>%
+    spread(binned_response, n)
+
+  df.int.filtered.i[is.na(df.int.filtered.i)] <- 0
+
+  df.int.filtered.i %>%
+    gather(state, n, -property) %>%
+    group_by(property) %>%
+    mutate(prop = n / sum(n),
+           prop = round(prop, 5),
+           i = i)
+}
+
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores, type="FORK")
+start_time <- Sys.time()
+df.int.filtered.dist.bs <- bind_rows(
+  parLapply(cl, 1:500, bootstrapInterpretationDistributions)
+)
+
+end_time <- Sys.time()
+print(end_time - start_time) 
+stopCluster(cl)
+
+
+
+df.int.filtered.dist.bs.summary <- df.int.filtered.dist.bs %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, state) %>%
+  summarize(data_lower = quantile(prop, 0.025),
+            data_mean = mean(prop),
+            data_upper = quantile(prop, 0.975))
+
+
+bind_rows(
+  df.int.filtered.dist.bs.summary %>%
+  mutate(state = as.numeric(state),
+         MAP = data_mean,
+         cred_upper = data_upper,
+         cred_lower = data_lower,
+         src = "data"),
+  m.pdf.summary
+) -> md.pdf.summary
+```
+
+```{r}
+example.items <- c("have spots", 
+                   #"live in trees", 
+                   #"sleep during the day", 
+                   #"eat insects", 
+                   "chase their tails",
+                   #"lay eggs without needing fertilization",
+                   #"ride the subway",
+                   "perform in the circus",
+                   "drink soda",
+                   "hunt other animals", 
+                   "have four legs",
+                   "carry Lyme disease", 
+                   "live to be 100 years old")
+
+
+
+conditions.of.interest <- rev(c("L0_priorDist_uncertain", 
+                        "L0_postDist_some-wNoise", 
+                        "L0_postDist_ten", 
+                        #"L0_postDist_fifteen", 
+                        #"L0_postDist_twenty", 
+                        "L0_postDist_thirty", 
+                        "L0_postDist_most", 
+                        #"L0_postDist_sixtyfive", 
+                        "L0_postDist_uncertain",
+                        "data"))
+
+
+count <- 0
+breaks_fun <- function(x) {
+  count <<- count + 1L
+  switch(
+    count,
+    c(0, 0.5),
+    c(0, 0.3),
+    c(0, 0.3),
+    c(0, 0.5),
+    c(0, 0.5),
+    c(0, 0.5)
+  )
+}
+
+md.pdf.summary %>%
+  filter(src %in% conditions.of.interest) %>%
+  filter(property %in% example.items) %>%
+  mutate(src = factor(src, levels = conditions.of.interest,
+                      labels = rev(c("Prevalence prior",
+                                 '"Some"+ noise\n(threshold = 0)',
+                                 '"10%" + noise\n(threshold = 0.10)',
+                                 #'"15%" + noise\n(threshold = 0.15)',
+                                 #'"20%" + noise\n(threshold = 0.20)',
+                                 #'"25%" + noise\n(threshold = 0.25)',
+                                 '"30%" + noise\n(threshold = 0.30)',
+                                 #'"40%" + noise\n(threshold = 0.40)',
+                                 '"Most" + noise\n(threshold = 0.50)',
+                                 #'"65%" + noise\n(threshold = 0.65)',
+                                 #'best threshold + noise\n(threshold)',
+                                 'Uncertain threshold',
+                                 "Human data")))) %>%
+  ggplot(., aes( x = state, y = MAP, ymin = cred_lower, ymax = cred_upper, fill = state))+
+  geom_col(position= position_dodge(), alpha = 0.8, color = 'black')+
+  geom_errorbar(position = position_dodge(),  alpha = 1)+
+  facet_grid(src~property, scales = 'free_y')+
+  scale_x_continuous(breaks = c(0 , 1))+
+  scale_y_continuous(breaks = scales::pretty_breaks(2)) + 
+  scale_fill_viridis(discrete = F)+
+  ylab("Predicted probability / Proportion of responses")+
+  xlab("Implied prevalence")+
+  theme(strip.text.y = element_text(angle = 0))+
+  guides(fill = F)
+
+ggsave(filename = "../../paper/figs/genint-fullDistributions-variousFixeds-1.pdf",
+       width = 11.5, height = 6.5)
+```
+
+```{r}
+
+
+
+
+
+
+
+md.pdf.summary %>%
+  filter(src %in% conditions.of.interest) %>%
+  filter(property %in% example.items) %>%
+  mutate(src = factor(src, conditions.of.interest)) %>%
+  #filter(src %in% c("data", "L0_priorDist_uncertain", "L0_postDist")) %>%
+  ggplot(., aes( x = state, y = MAP, fill = src, ymin = cred_lower, ymax = cred_upper))+
+  geom_col(position = position_dodge())+
+  #geom_linerange(position = position_dodge())+
+  facet_grid(src~property, scales = 'free')+
+  theme(strip.text.y = element_text(angle = 0))
+
+#ggsave(paste("figs/", model.prefix, "speakerOptimality.pdf", sep = ""),
+#        width = 4, height = 4))
+#ggsave("../figs/fulldists_pdf-2models-fullDistBins-int6-prior3-3Components_uncertain-semantics_1000000_burn500000_lag1000_scaled.pdf", width = 18, height = 10)
+
+```
+
+## Tables
+
+#### Correlation, MSE
+
+```{r}
+
+md.impprev %>%
+  group_by(src, semantics) %>%
+  summarize(
+    r = cor(model_MAP, mean),
+    r2 = r^2,
+    MSE = mean((model_MAP - mean) ^ 2)
+  ) -> mp.expval.corr.mse
+
+```
+
+
+
+
+## Model Comparison
+
+
+### Model likelhoods / model comparison
+```{r load model likelihood results}
+#model.likelihoods <- read_csv("../../models/results/bootstrap/generics-bda-L0-btstrpPriors-likelihood-results_sampleFromPriorProb0.01.csv")
+
+
+
+model.path <- "../../models/results/openmind/ais_expt1/"
+model.prefix <- "ais-expt1-2Components_"
+all.semantics <- c("uncertain", "some", "prior", "ten", "twenty", "forty", "best")
+all.noises <- c("uniform")
+
+m.ll <- data.frame()
+
+
+for (sem in all.semantics){
+  for (noise in all.noises){
+    
+    model.files <- list.files(
+      path = model.path,
+      pattern = paste(model.prefix, sem, "-semantics_", noise, "-noise", sep = "")
+    )
+  
+    for (modfile in model.files){
+      m.item <- jsonlite::fromJSON(paste(model.path , modfile, sep = ""))
+    
+      m.ll <- bind_rows(
+        m.ll,
+        data.frame(
+          semantics = sem,
+          noise = noise,
+          weights = m.item$weights
+        )
+      ) 
+      
+    }
+  }  
+}
+
+m.ll %>%
+  group_by(semantics, noise) %>%
+  summarize(marg_ll = mean(weights)) -> m.ll.summary
+```
+
+### Table of Summary Stats
+
+```{r}
+m.ll.summary %>%
+  filter(semantics == "uncertain") %>% 
+  rename(uncertain = marg_ll) %>%
+  ungroup() %>%
+  select(-semantics) %>%
+  right_join(., m.ll.summary) %>%
+  mutate(log_bf = marg_ll - uncertain) %>%
+  select(-noise, -uncertain, -marg_ll) -> m.bf.summary
+
+
+
+mp.expval.corr.mse %>%
+  mutate(semantics = ifelse(src == "L0_priorDist", "prior", semantics), 
+         semantics = ifelse(semantics == "some-wNoise", "some", semantics)) %>%
+  ungroup() %>%
+  select(-src, -r) %>%
+  right_join(., m.bf.summary)  -> md.stats.table
+
+
+md.stats.table[c(6, 7, 3, 4, 5, 2, 1),] %>%
+  mutate(semantics = factor(semantics, 
+                            levels = c("uncertain", "best", "some", "ten", "twenty", "forty", "prior"),
+                            labels = c("Uncertain threshold", "Best fixed-threshold",
+                                       "Some (0\\% threshold)",
+                                       "10\\% threshold",
+                                       "20\\% threshold",
+                                       "Most (50\\% threshold)",
+                                       "Prevalence Prior"
+                                       ))) %>%
+  write_csv(., path = "../../paper/csv_to_tex/expt1_model_summary_stats.csv")
+```
+
+
+```{r}
+m.ll %>%
+  ggplot(., aes ( x = weights )) + 
+  geom_histogram()+
+  facet_grid(noise ~ semantics)
+```
+
+```{r}
+m.ll %>%
+  unite("model", c(semantics, noise)) %>%
+  ggplot(., aes ( x = weights, fill = model)) + 
+  geom_histogram(position = position_dodge())
+```
+
+
+
+
+
+
+# Posterior on parameters
+
+
+```{r}
+#m.samp %>%
+m.samp.global_params %>%
+  # filter(type %in% c("speakerOptimality","cost", "n_obs")) %>%
+  #filter(param %in% c("speakerOptimality","cost", "n_obs")) %>%
+  ggplot(., aes( x = val))+#, fill = factor(chain)))+
+  geom_histogram(position = position_dodge())+
+  #facet_grid(type~src + semantics, scales = 'free')
+  facet_grid(param + category ~src + semantics, scales = 'free')
+
+# ggsave(paste("figs/", model.prefix, "speakerOptimality.pdf", sep = ""),
+#        width = 4, height = 4)
+```
+
+
+
+```{r}
+
+estimate_mode <- function(s) {
+  d <- density(s, bw = 0.15)
+  return(d$x[which.max(d$y)])
+}
+
+m.genint.params <- m.samp.global_params %>%
+  #filter(type %in% c("speakerOptimality","cost")) %>%
+  group_by(type,category, src, semantics) %>%
+  summarize(MAP = estimate_mode(val),
+            cred_upper = hdi_upper(val),
+            cred_lower = hdi_lower(val))
+
+
+m.genint.params %>%
+  filter(type == "parameter") %>%
+  ungroup() %>%
+  select(-type, -category, -src) %>%
+  mutate(noise = paste(round(MAP, 2), " (", round(cred_lower, 2), " - ", round(cred_upper, 2), ")", sep = "")) %>%
+  select(-MAP, -cred_lower, -cred_upper) -> m.genint.params.table
+
+m.genint.params.table[c(4, 5, 1, 2), ] %>%
+  #@rename(semantics = ) %>%
+  mutate(semantics = factor(semantics, levels = c("ten", "twenty", "forty", "most"),
+                            labels = c("10\\%", "20\\%", "40\\%", "50\\%"))) %>%
+  write_csv(., path = "../../paper/csv_to_tex/expt1_model_param-posteriors.csv")
+#save(m.genint.params.l1, file = "../paper/cached_results/genint_L1_params.RData")
+```
+
+
+#### Model vs. Model
+
+```{r}
+
+myspread <- function(df, key, value) {
+    # quote key
+    keyq <- rlang::enquo(key)
+    # break value vector into quotes
+    valueq <- rlang::enquo(value)
+    s <- rlang::quos(!!valueq)
+    df %>% gather(variable, value, !!!s) %>%
+        unite(temp, !!keyq, variable) %>%
+        spread(temp, value)
+}
+
+m.pp.expval.wide <- m.pp.expval %>% 
+  myspread(src, c(model_MAP, model_upper, model_lower))
+
+ggplot(m.pp.expval.wide, 
+       aes( y = pragmatic_posterior_model_MAP, 
+            ymin = pragmatic_posterior_model_lower, 
+            ymax = pragmatic_posterior_model_upper, 
+            x = pragmatic_unlifted_pragmatic_unlifted_model_MAP, 
+            xmin = pragmatic_unlifted_pragmatic_unlifted_model_lower, 
+            xmax = pragmatic_unlifted_pragmatic_unlifted_model_upper))+
+  geom_abline(intercept = 0, slope = 1, lty = 2)+
+  geom_point()+
+  geom_errorbar(alpha = 0.3)+
+  geom_errorbarh(alpha = 0.3)+
+  #facet_wrap(~category)+
+  scale_x_continuous(limits = c(0.25,1.01), breaks = c(0.25, 0.5, 1)) +
+  scale_y_continuous(limits = c(0.25,1.01), breaks = c(0.25, 0.5, 1)) +
+  coord_fixed()
+```
+
+
+```{r}
+md.impprev %>%
+  filter(semantics %in% c("some", "some-wNoise")) %>%
+  View()
+```
+
+
+
+```{r genint-modelingResults-bars, fig.width = 16, fig.asp = 0.25, fig.cap="Caption.", cache = F}
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+
+
+md.litprag.long <- md.impprev %>%
+  ungroup() %>%
+  select(-mean, -ci_lower, -ci_upper, -empirical_stat) %>%
+  rename(mean = model_MAP, ci_lower = model_lower, ci_upper = model_upper) %>%
+  bind_rows(., md.impprev %>%  ungroup() %>%
+      select(property,n, mean, ci_lower, ci_upper) %>%
+        mutate(src = 'data', semantics = 'data')) %>%
+  mutate(property = ifelse(property == "live to be a hundred years old","live to be 100 years old", property))
+
+example.items <- c("have spots", 
+                   #"live in trees", 
+                   #"sleep during the day", 
+                   #"eat insects", 
+                   "chase their tails",
+                   #"ride the subway",
+                   "perform in the circus",
+                   "drink soda",
+                   "hunt other animals", 
+                   "have four legs",
+                   "carry Lyme disease", 
+                   "live to be 100 years old")
+
+
+
+conditions.of.interest <- c("L0_priorDist_uncertain", 
+                        "L0_postDist_some", 
+                        "L0_postDist_ten", 
+                        #"L0_postDist_fifteen", 
+                        "L0_postDist_twenty", 
+                        "L0_postDist_thirty", 
+                        "L0_postDist_most", 
+                        #"L0_postDist_sixtyfive", 
+                        "L0_postDist_uncertain",
+                        "data_data")
+
+md.models.bars <- md.litprag.long %>%
+  filter(((semantics == "uncertain" & src == "L0_priorDist") |
+           (src %in% c("L0_postDist", "data"))))   %>%
+  mutate(src = paste(src, "_", semantics, sep ="")) %>%
+  filter(src %in% conditions.of.interest) %>%
+  
+  mutate(src = factor(src, levels = c("L0_priorDist_uncertain", 
+                                      "L0_postDist_some", 
+                                      "L0_postDist_ten", 
+                                      "L0_postDist_twenty",
+                                      "L0_postDist_thirty", 
+                                      "L0_postDist_most",
+                                      "L0_postDist_uncertain",
+                                      "data_data"),
+                      labels = c("Prevalence prior",
+                                 '"some" (threshold = 0.01)',
+                                 '"10%" (threshold = 0.10) + noise',
+                                 '"20%" (threshold = 0.20) + noise',
+                                 '"30%" (threshold = 0.30) + noise',
+                                 '"most" (threshold = 0.50) + noise',
+                                 'generic (uncertain threshold)',
+                                 'Empirical mean')),
+         property = factor(property, 
+                           levels = unique(with(md.litprag.long %>%
+                                           filter(src == "data", property %in% example.items),
+                                         property[order(mean)])))) %>%
+ggplot(., aes( x = src, 
+               fill = src, y = mean, ymin = ci_lower, ymax = ci_upper))+
+  geom_col(position = position_dodge(), color = 'black')+
+  geom_linerange(alpha = 0.3)+
+  facet_wrap(~property, nrow = 1, 
+             labeller = labeller(property = label_wrap_gen(18)))+
+  #scale_fill_viridis(discrete = T)+
+  #scale_fill_manual(values = c('#F0FFFF', c("#984ea3", "#4daf4a", "#377eb8", "#e41a1c"), '#838B8B'))+
+  # scale_fill_manual(values = c('#F0FFFF', c("#9ecae1", "#3182bd", "#a1d99b", "#31a354"), '#838B8B'))+
+  labs(y = "Implied prevalence rating", x = "Source")+
+  #scale_x_continuous(limits = c(0.25, 1), breaks = c(0.25, 0.5, 0.75, 1))+
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+  guides(fill = guide_legend(nrow = 1, title = ""))+
+  theme(axis.text.x = element_blank(),
+        legend.position = 'bottom')
+
+# ggsave(
+#   md.models.bars,
+#   file = 
+#     "~/projects/generic-interpretation/paper/genint_files/figure-latex/genint-modelingResults-bars-1.pdf",
+#   width = 10.5, height = 3.2)
+
+
+# cowplot::plot_grid(
+#   md.models.bars,
+#   fig.litprag.scatter,
+#   nrow = 1,
+#   rel_widths = c(1, 0.3),
+#   labels = c("A", "B")
+# )
+md.models.bars
+```
+
+
+
+### Full Distributions
+
+```{r}
+#m.samp %>%
+m.samp.predictions %>%
+  filter(submodel %in% c("postDist", "pragmatic_unlifted")) %>%
+  #rename(iteration = iter) %>% # FLEXIBLE PRIOR models 
+  mutate(src = paste(src, submodel, sep = "_")) %>% # FLEXIBLE PRIOR models  
+  filter(type == "prediction") %>%
+  mutate(state = as.numeric(category)) %>%
+  group_by(property, iteration, src, chain) %>%
+  arrange(iteration, src, property, state, chain) %>%
+  mutate(cumulprob = ave(val, FUN=cumsum)) -> m.samp.cumulProb
+
+m.samp.cumulProb.bs <- m.samp.cumulProb %>%
+  ungroup() %>%
+  group_by(property, src, state) %>%
+  summarize(med = median(cumulprob),
+            ci_upper = quantile(cumulprob, 0.975),
+            ci_lower = quantile(cumulprob, 0.025))
+#  tidyboot_mean(column = cumulprob)
+```
+
+#### Visualize ECDFs
+
+```{r fig.width = 10, fig.height = 13}
+m.samp.cumulProb.bs %>%
+    # filter( src %in% c(
+    # #"pragmatic_posterior", 
+    # "pragmatic_unlifted_priorDist",
+    # "pragmatic_unlifted_pragmatic_unlifted", 
+    # "pragmatic_unlifted_literal")) %>%
+  ggplot(., aes( x = state, y = med, ymin = ci_lower, ymax = ci_upper, group = src, color = src))+
+    geom_linerange()+
+    geom_line()+
+    stat_ecdf(data = df.int.filtered %>% rename(state = response), aes(x = state), color = 'blue', inherit.aes = F)+
+    facet_wrap(~property, scales = 'free')+
+    scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+    scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))
+
+# ggsave("figs/fulldists_ecdf-unlifted-literal-prior-fullDist-int6-prior3-3Components_uncertain-semantics.pdf", width = 18, height = 10)
+#ggsave("figs/fulldists_ecdf-L0-fullDist-int6-prior3-3Components_uncertain-semantics_100000_burn50000_lag100_chain1.pdf", width = 18, height = 10)
+ggsave("../figs/fulldists_ecdf-4models-fullDist-int6-prior3-3Components_uncertain-semantics_1000000_burn500000_lag1000.pdf", width = 18, height = 10)
+```
+
+
+#### Calculate area between curves
+
+##### ECDF for human data
+```{r}
+bins <- unique(m.samp.cumulProb.bs$state)
+my_ecdf <- function(response){
+  #print(row)
+  f.ecdf <- ecdf(response)
+  data.frame(
+    #property = property,
+    state = bins, 
+    probs = f.ecdf(bins),
+    row.names = NULL)
+}
+
+df.int.ecdf <- df.int.filtered %>%
+  group_by(property) %>%
+  group_modify(~my_ecdf(.x$response))
+
+  ggplot(df.int.ecdf, aes( x = state, y = probs))+
+    geom_line()+
+    stat_ecdf(data = df.int.filtered %>% rename(state = response), aes(x = state), color = 'blue', inherit.aes = F)+
+    facet_wrap(~property, scales = 'free')+
+    scale_x_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))+
+    scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))
+```
+
+##### Differences between model CDF and human ECDF
+
+```{r}
+left_join(
+  m.samp.cumulProb.bs, 
+  df.int.ecdf %>% rename(human_ecdf = probs)
+) %>%
+  mutate(delta = med - human_ecdf,
+         abs_delta = abs(delta),
+         sq_delta = delta^2) %>%
+  group_by(property, src) %>%
+  summarize(
+    total_delta = sum(delta),
+    total_abs_delta = sum(abs_delta),
+    total_sq_delta = sum(sq_delta)
+  ) -> md.cdf.delta
+
+
+md.cdf.delta %>%
+  gather(key, val, total_delta, total_abs_delta, total_sq_delta) %>%
+  ggplot(., aes (x = val, fill = src))+
+  geom_histogram(position = position_dodge())+
+  facet_wrap(~key, scales = 'free')
+
+md.cdf.delta %>%
+  filter( src %in% c(
+    #"pragmatic_posterior", 
+    "pragmatic_unlifted_pragmatic_unlifted", 
+                     "pragmatic_unlifted_literal")) %>%
+  gather(key, val, total_delta, total_abs_delta, total_sq_delta) %>%
+  ggplot(., aes (x = val, fill = src))+
+  geom_density(alpha = 0.5)+
+  facet_wrap(~key, scales = 'free')
+
+ggsave("figs/fulldists_ecdf_deltas_overItems-unlifted-literal_fullBayes.pdf", width = 8, height = 4)
+```
+
+
+#### Vizualise PDFs
+
+
+
+
+
+Only max-value state
+
+```{r}
+md.pdf.summary %>%
+  filter(state == 0.955) %>%
+  filter(src %in% c("data", "L1lifted_postDist", "L0_postDist")) -> md.pdf.summary.max
+
+
+
+md.pdf.summary.max %>% filter(src == "data") %>%
+  select(-starts_with("scaled"), -cred_lower, -cred_upper,
+         -src) %>%
+  rename(proportion = MAP) %>% 
+  right_join(., 
+             md.pdf.summary.max %>% 
+               filter(src %in% c("L1lifted_postDist", "L0_postDist"))) %>%
+  mutate(err = proportion - MAP,
+         abs_err= abs(err),
+         sq_err = err ^ 2) -> md.pdf.summary.max.wide
+
+md.pdf.summary.max.wide %>% 
+  select(property, src, sq_err) %>%
+  spread(src, sq_err) %>%
+  mutate(diff_sq_err = L0_postDist - L1lifted_postDist) -> md.pdf.summary.max.diff_err
+
+top.15 <- with(md.pdf.summary.max.diff_err, property[order(-diff_sq_err)])[1:15]
+
+md.pdf.summary.max.diff_err %>%
+  ungroup() %>%
+  count(diff_sq_err > 0)
+
+md.pdf.summary.max.diff_err %>%
+  ungroup() %>%
+  summarize(sum_diff_sq_err = sum(diff_sq_err))
+
+md.pdf.summary.max.diff_err %>%
+  ggplot(., aes ( x = diff_sq_err))+
+  geom_histogram()
+
+md.pdf.summary.max %>%
+  filter(property %in% top.15) %>%
+  mutate(property = factor(property, 
+                           levels =  top.15),
+         src = factor(src, levels = c("data", "L1lifted_postDist",
+                                      "L0_postDist"),
+                      labels = c("data", "pragmatic", "literal"))) %>%
+  # mutate(property = factor(property, 
+  #                          levels =  with(md.pdf.summary.max %>% filter(src == "data"),
+  #                                         property[order(MAP)]))) %>%
+  ggplot(., aes( x = property, y = MAP, 
+                 ymin = cred_lower, ymax = cred_upper, fill = src)) +
+  geom_col(position = position_dodge(0.8), width = 0.8,
+           color = 'black')+
+  geom_linerange(position = position_dodge(0.8))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
+  ylab("Probability mass at 100%")
+  #coord_flip()
+
+ggsave("../figs/probMass100-int6-prior3-3Components_uncertain-semantics_1000000_burn500000_lag1000.pdf", width = 8, height = 4)
+```
+
+
+sum of prob (how much probability mass do the model/data put on each state, averaged over predicate?)
+
+```{r}
+
+md.pdf.summary %>%
+  filter(src %in% c("data", "L1lifted_postDist", "L0_postDist"),
+         state > 0.005) %>%
+  mutate(src = factor(src, levels = c("data", "L1lifted_postDist",
+                                      "L0_postDist"),
+                      labels = c("data", "pragmatic", "literal"))) %>%
+  ungroup() %>%
+  group_by(state, src) %>%
+  summarize(total_prob_at_val = mean(MAP)) %>%
+  ggplot(., aes ( x = state , y = total_prob_at_val, fill = src ))+
+  geom_col(position = position_dodge(),
+           color = 'black')+
+  labs(x = "prevalence", y = "proportion of responses / predicted probability",
+       fill = "source")+
+  scale_fill_manual(values = c("#636363", "#3182bd", "#9ecae1"))
+
+ggsave("../figs/aveProb-int6-prior3-3Components_uncertain-semantics_1000000_burn500000_lag1000.pdf", width = 7, height = 4)
+```
+
+region of interest < 15%, max prob
+
+```{r}
+md.pdf.summary %>%
+  filter(src %in% c("data", "L1lifted_postDist", "L0_postDist"),
+         state > 0.005) %>%
+  filter( state < 0.15 | state == 0.955 ) %>%
+  ungroup() %>%
+  mutate(roi = ifelse(state < 0.15, "very low prevalence", "very high prevalence")) %>%
+  mutate(src = factor(src, levels = c("data", "L1lifted_postDist",
+                                      "L0_postDist"),
+                      labels = c("data", "pragmatic", "literal")),
+         roi = factor(roi, levels = c("very low prevalence", 
+                                      "very high prevalence"))) %>%
+  ungroup() %>%
+  group_by(roi, src) %>%
+  summarize(total_prob_at_val = mean(MAP)) %>%
+  ggplot(., aes ( x = roi , y = total_prob_at_val, fill = src ))+
+  geom_col(position = position_dodge(),
+           color = 'black')+
+  labs(x = "", y = "proportion of responses / predicted probability",
+       fill = "source")+
+  scale_fill_manual(values = c("#636363", "#3182bd", "#9ecae1"))
+
+ggsave("../figs/aveProb-roi-int6-prior3-3Components_uncertain-semantics_1000000_burn500000_lag1000.pdf", width = 6, height = 4)
+```
+
+
+
+
+
+```{r}
+md.pdf.summary %>% 
+  filter(src == "data") %>%
+  select(-starts_with("scaled"), -cred_lower, -cred_upper,
+         -src) %>%
+  rename(proportion = MAP) %>% 
+  right_join(., 
+             md.pdf.summary %>% 
+               filter(src != "data")) %>%
+  mutate(err = proportion - MAP,
+         abs_err= abs(err),
+         sq_err = err ^ 2) -> md.pdf.summary.wide
+
+md.pdf.summary.wide %>%
+  filter(src %in% c("L1lifted_postDist", "L0_postDist")) %>%
+  ggplot(., aes( x = err ))+
+  geom_histogram()+
+  facet_wrap(~src)
+
+
+md.pdf.summary.wide %>%
+  group_by(src) %>%
+  summarize(mse = mean(sq_err))
+```
+
+
+
+
+
+
+```{r}
+
+m.samp.predictions %>%
+  rename(iteration = iter) %>% # FLEXIBLE PRIOR models 
+  mutate(src = paste(src, submodel, sep = "_")) %>% # FLEXIBLE PRIOR models  
+  filter(type == "prediction") %>%
+  mutate(state = as.numeric(category)) %>%
+  rename(prob = val) %>%
+  rwebppl::get_samples(., num_samples = 10) -> m.samp.predictions.samples
+
+
+my_density <- function(response, adjust = 1){
+  f.dens <- density(response,
+                  from = 0, to = 1, n = 30, adjust = adjust)
+  data.frame(
+    state = f.dens$x, 
+    dens = f.dens$y,
+    scaled.dens = f.dens$y/max(f.dens$y),
+    row.names = NULL)
+}
+
+m.int.pdf.density <- m.samp.predictions.samples %>%
+  group_by(property, src) %>%
+  group_modify(~my_density(.x$state, adjust = 4))
+
+df.int.pdf.density <- df.int.filtered %>%
+  group_by(property) %>%
+  group_modify(~my_density(.x$response))
+
+```
+
+```{r}
+bind_rows(m.int.pdf.density,
+  df.int.pdf.density %>% mutate(src = 'human data')) -> md.pdf.summary
+```
+
+
+```{r densities all properties}
+bind_rows(
+  m.pdf.summary,
+  df.int.pdf.density %>%
+    mutate(src = 'human data',
+           scaled_upper = scaled.dens, 
+           scaled_lower = scaled.dens,
+           cred_upper = dens, cred_lower = dens) %>% 
+    rename(scaled_map = scaled.dens, MAP = dens)
+) -> md.pdf.summary
+  
+md.pdf.summary %>%
+  filter( src %in% 
+            c("human data", 
+    "pragmatic_unlifted_pragmatic_unlifted", 
+                     "pragmatic_unlifted_literal")) %>%
+  ggplot(., aes (x = state, y = scaled_map, ymin = scaled_lower, ymax = scaled_upper,
+                 color = src, group = src))+
+  geom_line()+
+  #geom_linerange()+
+  facet_wrap(~property, scales = 'free')
+
+ggsave("figs/fulldists_pdf-unlifted-literal-fullDist-scaledDens-int6-prior3-3Components_uncertain-semantics.pdf", width = 18, height = 10)
+```
+
+
+```{r densities select properties}
+
+properties.of.interest <- c("get addicted to nicotine", "eat people", "drink soda", "perform in the circus", "transmit HIV", "ride the subway", "eat grass", "get in fights with other animals", "capture other animals territory", "get strange genetic mutations", "mourn their dead", "sleep during the day", "swim in shallow pools")
+md.pdf.summary %>%
+  filter( src %in% 
+            c("human data", 
+    "pragmatic_unlifted_pragmatic_unlifted",# "pragmatic_unlifted_priorDist",
+                     "pragmatic_unlifted_literal"),
+    property %in% properties.of.interest) %>%
+  #ggplot(., aes (x = state, y = scaled_map, ymin = scaled_lower, ymax = scaled_upper,
+  # ggplot(., aes (x = state, y = MAP, ymin = cred_lower, ymax = cred_upper,
+  #                color = src, group = src))+
+  ggplot(., aes (x = state, y = dens, fill = src,
+                 color = src, group = src))+
+  geom_area(aes(fill=src), alpha = 0.3, position = 'identity') +
+  geom_line(position = position_dodge(0.02), size = 1)+
+  #geom_linerange()+
+  facet_wrap(~property, scales = 'free')#+
+  #scale_y_continuous(limits = c(-0.01, 1.01), breaks = c(0, 0.5, 1))
+
+# ggsave("figs/fulldists_pdf-unlifted-literal-fullDist-scaledDens-int6-prior3-3Components_uncertain-semantics.pdf", width = 18, height = 10)
+
+ggsave("figs/fulldists_12properties_pdf-unlifted-literal-fullDist-scaledDens-int6-prior3-3Components_uncertain-semantics.pdf", width = 12, height = 6)
+```
+
+Weaker
+get addicted to nicotine
+eat people
+drink soda
+perform in the circus
+transmit HIV
+ride the subway
+Stronger
+eat grass
+get in fights with other animals
+capture other animals territory
+get strange genetic mutations
+mourn their dead
+sleep during the day
+swim in shallow pools
+
+# Posterior on item parameters
+
+## Posterior predictive on prevalence priors
+
+```{r}
+
+
+literal_generic <- function(ps){
+  theta_bins <- seq(0.001, 0.99, 0.01)
+  data.frame(
+    prior_name = ps$prior_name,
+    x = bins,
+    prior =  ps$mix * dbeta(bins, shape1 = ps$params$c1$a, shape2 =  ps$params$c1$b, log = F) + 
+      (1 -  ps$mix) * dbeta(bins, shape1 = ps$params$c2$a, shape2 =  ps$params$c2$b, log = F),
+    cdf =  ps$mix * pbeta(theta_bins, shape1 =  ps$params$c1$a, shape2 = ps$params$c1$b, lower.tail = T, log.p = F) + 
+      (1 -  ps$mix) * pbeta(theta_bins, shape1 =  ps$params$c2$a, shape2 = ps$params$c2$b, lower.tail = T, log.p = F)
+  ) %>%
+    dplyr::mutate(
+      unnorm_posterior_theta = 1 - cdf,
+      norm_posterior_theta = 100*(unnorm_posterior_theta / sum(unnorm_posterior_theta)),
+      unnorm_posterior_r = prior*x,
+      norm_posterior_r = 100*(unnorm_posterior_r / sum(unnorm_posterior_r))
+    )
+}
+
+
+pdf_mixture <- function(row){
+  data.frame(
+    iter = row$iter,
+    property = row$property,
+    src = row$src,
+    semantics = row$semantics,
+    chain = row$chain,
+    lower_bin = lower_bins,
+    upper_bin = upper_bins
+  ) %>%
+    mutate(
+      mid_bin = lower_bin + (upper_bin - lower_bin)/2,
+      pdf = row$weight_0 * dbeta(mid_bin, shape1 = row$alpha_0, shape2 = row$beta_0) +
+        row$weight_1 * dbeta(mid_bin, shape1 = row$alpha_1, shape2 = row$beta_1) +
+        row$weight_2 * dbeta(mid_bin, shape1 = row$alpha_2, shape2 = row$beta_2)
+    )
+}
+
+m.samp.item_params.wide <- m.samp.item_params %>% 
+  rename(parameter = category, componentID = property, property = param) %>%
+  mutate(componentParam = paste(parameter, "_", componentID, sep = "")) %>% select(-componentID, -parameter) %>%
+  spread(componentParam, val)
+
+
+# purrr::map_dfr(1:nrow(m.samp.item_params.wide),
+#   ~ pdf_mixture(m.samp.item_params.wide[.x, ])) -> m.samp.item_priors
+
+```
+
+
+```{r}
+m.samp.item_params %>%
+  group_by(type, param, property, category, src, semantics, chain) %>%
+  summarize(
+    MAP = estimate_mode(val), cred_upper = hdi_upper(val), cred_lower = hdi_lower(val)
+  ) -> m.item_param.summary
+```
+
+
+
+
+```{r}
+f.dens <- density(df.int.filtered %>% filter(property == "get dandruff") %>% pull(response),
+                  from = 0, to = 1, n = 30)
+f.dens$f.dens(bins)
+```
+
+
+Check  that total probs are actually equalling 1
+
+```{r}
+m.samp.iter.totalProb <- m.samp.iter %>%
+  mutate(state = as.numeric(state)) %>%
+  group_by(property, iteration) %>%
+  arrange(iteration, property, state) %>%
+  summarize(totalProb = sum(val))
+```
+
+
+### Prevalence prior parameters
+
+#### Forward sample prevalence priors
+
+Add iteration number back in.
+
+```{r}
+m.samp.iter <- m.samp %>%
+  #filter(type %in% c("componentParameters")) %>%
+  filter(parameter %in% c("weight", "alpha", "beta")) %>%
+  # mutate(parameter = paste(type, param, property, category, sep = "_")) %>%
+  # select(-type, -param, -property, -category) %>%
+  mutate(parameter = paste(parameter, property, component, sep = "_")) %>%
+  select(-property, -component) %>%
+  group_by(parameter) %>%
+  mutate(iteration = ave(parameter==parameter, parameter, FUN=cumsum)) %>%
+  ungroup() %>%
+#  separate(parameter, into = c("parameter", "property", "componentID", "componentParam"), sep= "_")
+  separate(parameter, into = c("parameter", "property", "componentID"), 
+           sep= "_")
+
+m.rs.prior.parameters <- m.samp.iter %>% 
+  #mutate(componentParam = paste(componentParam, "_", componentID, sep = "")) %>% select(-componentID) %>%
+  mutate(componentParam = paste(parameter, "_", componentID, sep = "")) %>% select(-componentID, -parameter) %>%
+  spread(componentParam, val) %>%
+  rowwise() %>%
+  mutate(component = LaplacesDemon::rcat(1, c(`weight_0`, `weight_1`, `weight_2`)) - 1,
+         shape1_param = ifelse(component == 0, alpha_0, ifelse(component == 1, alpha_1, alpha_2)),
+         shape2_param = ifelse(component == 0, beta_0, ifelse(component == 1, beta_1, beta_2)),
+         prev = rbeta(shape1 = shape1_param, shape2 = shape2_param, n = 1))
+
+```
+
+##### Marginal distributions on prevalence
+
+```{r gen-prevprior2-marginals, fig.width = 8, fig.height = 5}
+md.prevpriors <- bind_rows(
+  df.prior.filtered %>% 
+    filter(property %in% levels(factor(m.rs.prior.parameters$property))) %>%
+    select(property, response) %>%
+    rename(prev = response) %>% 
+    mutate(src = 'data'),
+  m.rs.prior.parameters %>% 
+    select(property, prev, src) %>%
+    mutate(src = paste(src, semantics, sep = "_")) 
+  )
+
+ggplot(md.prevpriors , aes( x = prev, color = src))+
+  geom_density(size = 1, aes( y = ..scaled.. ), adjust = 0.5)+
+  facet_wrap( ~ property)+
+  scale_color_solarized()+
+  scale_x_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  scale_y_continuous(limits = c(0,1), breaks = c(0, 0.5, 1)) +
+  theme(strip.text.y = element_text(angle = 0))
+
+# ggsave(paste("figs/", model.prefix, "prevPriorsPDFs.pdf", sep = ""),
+#        width = 14, height = 8)
+```
+
+##### Cumulative Density Functions
+
+```{r gen-prevprior2-cdf, fig.width = 8, fig.height = 5}
+fig.prevprior.cdf.collapse <- ggplot(md.prevpriors, aes( x = prev, color = src))+
+    stat_ecdf()+
+    facet_wrap(~property)+
+    #scale_color_solarized()+
+    scale_x_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    scale_y_continuous(limits = c(-0.01,1.01), breaks = c(0, 0.5, 1)) +
+    theme(strip.text.y = element_text(angle = 0))+
+    coord_fixed()
+
+ggsave(paste("joint_prevPriorsCDFs.pdf", sep = ""),
+       width = 5.5, height = 3.5)
+
+ggsave(paste("individual_prevPriorsCDFs.pdf", sep = ""),
+       width = 14, height = 8)
+```
+
+```{r wip}
+m.samp.iter.weight <- m.samp.iter %>%
+  filter((componentParam == "weight") | (parameter == "numberOfComponents")) %>%
+  mutate(componentID = paste("component", componentID, sep = "")) %>%
+  spread(componentID, val)
+
+m.samp.iter.param <- m.samp.iter %>%
+  filter(componentParam %in% c("alpha", "beta")) %>%
+  spread(componentParam, val)
+
+# for (p in levels(factor(m.samp.iter$property))){
+#   for (i in seq(1, n_samples){
+#     
+#   }
+# }
+# 
+# m.samp.iter.weight.i <- m.samp.iter.weight %>% 
+  filter(iteration == 10, property == 'develop phobias')
+
+indices <- paste("component", 
+                 seq(0, 
+                     filter(m.samp.iter.weight.i, 
+                            parameter == 'numberOfComponents')[[1, "component-99"]]), 
+                 sep ="")
+
+ps <- as.numeric(as.vector(
+  filter(m.samp.iter.weight.i, 
+         componentParam == 'weight')[1,indices]
+  ))
+
+componentId <- LaplacesDemon::rcat(1, ps)
+
+m.samp.iter.param %>%
+  filter(property == p, iteration == i, componentID == componentId) %>%
+  mutate(prev = rbeta(shape1 = alpha, shape2 = beta, n = 1))
+
+```
+
+
+## Model comparison
+
+```{r}
+mll.results.path <- "../models/results/genint/marginal_likelihood/final_results/"
+mll.results = list.files(
+  path = mll.results.path,
+  # pattern = paste(model.prefix, format(n_samples, scientific = F), 
+  #                 "_burn", n_burn, 
+  #             "_lag", lg, "_chain", sep = "")
+)
+extractMLLfromJSON <- function(fileName){
+  name1 <- strsplit(fileName, "-")[[1]][4]
+  name2 <- strsplit(fileName, "-")[[1]][5]
+  rs <- jsonlite::fromJSON(paste(mll.results.path, fileName, sep = ""))[1]
+  return(data.frame(name1=name1, name2=name2, mll=rs))
+}
+
+rs.mll <- bind_rows(lapply(mll.results, extractMLLfromJSON)) %>%
+  mutate(name2 = ifelse(name1 == "steps2000","generic", name2))
+
+rs.mll.formatted <- rs.mll %>%
+  group_by(name1, name2) %>%
+  summarize(mll = mean(mll)) %>%
+  ungroup() %>%
+  mutate(Model = ifelse(name2 == "most", '"Most"',
+                  ifelse(name1 == "prior", "Prior", 
+                 ifelse(name2 == "some", '"Some"',
+                ifelse(name1 == "pragmatic_unlifted", 
+                       "Pragmatic Generic",
+                 ifelse(name2 == "generic", "Literal Generic", name1)))))) %>%
+  filter(!Model == "pragmatic") %>%
+  select(Model, mll)
+
+save(rs.mll.formatted, file = "../paper/cached_results/genint_BF_results.RData")
+```
+
+
+
+

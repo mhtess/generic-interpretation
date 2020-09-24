@@ -196,6 +196,8 @@ These models also predict strong dependence of interpretation on prior beliefs a
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
+\mht{might want to make the point somewhere in the intro, or model section, that it is hard to test quantitative models for generic interpretations because (a) interpretations are highly variable and (b) background knowledge is hard to partial out}
+
 Much of what we learn about the world comes not from our own experience but by learning from others, often via language.
 Language uniquely has the power to describe that which goes beyond what can be experienced, conveying abstractions and generalizations.
 Generalizations about categories are often conveyed using \emph{generic language} \cite<e.g., ``Birds have hollow bones''>{Carlson1977}, an important case of abstract knowledge transmitted through language \cite{Gelman2009}.
@@ -328,14 +330,14 @@ To schematically represent the poster, we count, for each level of prevalence, h
 
 
 
-The marginal posterior distributions over prevalences and thresholds are given by the following (for derivations, see Appendix):
-
-\begin{align}
-P(r_{kf} \mid \denote{gen}[k][f]) = &\int_{\theta}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff \theta \propto r_{kf} \cdot P(r_{kf}) \label {eq:L0r} \\
-P(\theta \mid \denote{gen}[k][f]) = &\int_{r_{kf}}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff r_{kf}  \propto 1 - F_{r_{kf}}(\theta) \label {eq:L0theta}
-\end{align}
-
-where $F_r(\theta)$ is the cumulative distribution function of $r$. \mht{check this (CDF of r vs theta)}. As is shown in Eqs.\ref{eq:L0r} \& \ref{eq:L0theta}, 
+%The marginal posterior distributions over prevalences and thresholds are given by the following (for derivations, see Appendix):
+%
+%\begin{align}
+%P(r_{kf} \mid \denote{gen}[k][f]) = &\int_{\theta}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff \theta \propto r_{kf} \cdot P(r_{kf}) \label {eq:L0r} \\
+%P(\theta \mid \denote{gen}[k][f]) = &\int_{r_{kf}}P (r_{kf}, \theta \mid r_{kf} >  \theta)\diff r_{kf}  \propto 1 - F_{r_{kf}}(\theta) \label {eq:L0theta}
+%\end{align}
+%
+%where $F_r(\theta)$ is the cumulative distribution function of $r$. \mht{check this (CDF of r vs theta)}. As is shown in Eqs.\ref{eq:L0r} \& \ref{eq:L0theta}, 
 
 %This literal update rule 
 
@@ -531,7 +533,7 @@ Since the strongest test of our models of generic interpretation will come from 
 \hypertarget{experiment-1}{%
 \section{Experiment 1: Generic Interpretation}\label{experiment-1}}
 
-This experiment is designed to measure the prevalence implied by a generic about a novel kind, using a diverse set of properties.
+This experiment is designed to test models of generic interpretation by measuring the prevalence implied by a generic about a novel kind, using a diverse set of properties.
 We first elicit participants' prior beliefs about the likely prevalence levels expected for these properties (Expt. 1a).
 We then use the elicited prevalence priors to make model predictions about the prevalence implied by a generic (Expt. 1b).
 
@@ -679,10 +681,12 @@ The empirical by-item means between these data and the original data are highly 
 \hypertarget{model-based-analyses}{%
 \subsubsection{Model-based analyses}\label{model-based-analyses}}
 
-Our model-based analyses ask how well the various belief-updating models accommodate the human generic interpretation data and which model provides the most parsimonious view of the data.
-We estimate all model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in \citeA{Tessler2019psychrev} provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that in order to provide a stronger quantitative fit to the generic interpretation data, the prevalence priors are not significantly distorted by this method.}
+Our model-based analyses ask how well the various semantic models accommodate the human generic interpretation data and provides the most parsimonious view of the data.
+We compare our uncertain threshold model to fixed-threshold models for fixed-threshold values between 0\% and 60\% (e.g., fixed-threshold at 0\% is analogous to the quantifier ``some''; fixed-threshold at 50\% is analogous to the quantifier ``most''). 
+Since fixed-threshold models assign 0-probability to all levels of prevalence below the threshold, these models must be supplemented with the extrinsic noise process (e.g., random guessing); the one exception is the 0\% threshold model, which by ruling-out only 0\%, still assigns non-zero probability to all valid responses. 
+We estimate the noise parameter and all other model parameters using Bayesian methods in order to determine the most likely values of the latent parameters given our hypotheses about how both the prior elicitation and generic interpretation data were generated.\footnote{Appendix C in \citeA{Tessler2019psychrev} provides a careful analysis of the behavior of this joint Bayesian inference strategy for jointly modeling the prevalence prior parameters together with other parameters of the model governing generic interpretation. They find imperceptibly small differences between the parameters inferred from the prevalence prior data in isolation and those inferred by jointly modeling the prior elicitation together and the generic interpretation data, suggesting that in order to provide a stronger quantitative fit to the generic interpretation data, the prevalence priors are not significantly distorted by this method.}
 %That is, we ask if there is some reasonable setting of the prevalence priors \ndg{"setting of the prevalence priors" dosn't exactly make sense to me...} that, together with a particular model of generic interpretation, could give rise to the generic interpretation results.
-We then integrate over parameters to compare the generic interpretation models to each other and alternatives using the standard Bayesian model comparison metric: marginal likelihoods, or Bayes factors.
+We compare the uncertain threshold model to the fixed-threshold + noise models using the standard Bayesian model comparison metric: marginal likelihoods, or Bayes factors \cite{LeeWagenmakers2014}.
 
 %For data analysis, we assume that the prevalence priors take the form of a three-component mixture of Beta distributions\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.}, whose parameter uncertainty is strongly constrained by data from our prior elicitation task.
 %We posit uncertainty in the parameters governing the listener prevalence prior distribution.
@@ -700,6 +704,74 @@ We then integrate over parameters to compare the generic interpretation models t
 \label{model-definition-and-inference}}
 
 
+%\begin{figure}[ht]
+%  \begin{center}
+%    \begin{tabular}{cc}
+%\begin{tikzpicture}
+%  \node[obs]          (d-c)   {$d^{gen}_{f,i}$}; %
+%  \node[obs, left=3.5 of d-c, yshift=2cm]          (x)   {$d_{f, i'}^{prior}$}; %
+%  \node[latent, above=1cm of x, xshift=-0.5cm] (mx) {$\phi^f$} ; %
+%  \node[latent, above=2cm of x, xshift=0.75cm]  (sx) {$\gamma^f_j$} ; %
+%  \node[latent, above=2cm of x, xshift=1.75cm]  (dx) {$\xi^f_j$} ; %
+%%  \factor[above=of x] {x-f} {left:$\text{mixture of Betas}$} {mx, sx,dx} {x} ; %
+%  \edge[above=of x]{mx, sx,dx} {x} ; %
+%      \node[latent, right=2cm of x]  (xf)   {$r^{f}$}; 
+%  \edge[above=of xf]  {mx, sx,dx} {xf} ; %
+%
+%  \node[det, above=0.52cm of d-c] (L1) {$L_1(r^f \mid u)$} ; % 
+%   \node[latent, right=0.6cm of L1, yshift=0.5cm] (alpha) {$\alpha$}; %
+%   \node[latent, right=0.6cm of L1, yshift=-0.5cm] (cost) {$c$}; %
+%  \edge[-] {xf} {L1} ;
+%  \edge[-] {alpha} {L1} ;
+%  \edge[-] {cost} {L1} ;
+%  \edge{L1} {d-c} ;
+%
+%\gate {RSAgate} {(L1)(xf)} {} ; %
+%\node[text width=1cm] at (-1,2.75) {$RSA$};
+%
+%    \plate{gen-data}{
+%    (d-c)
+%  }{$i \in \mathcal{P}$}
+%    \plate{prior-data}{
+%    (x)
+%  }{$i' \in \mathcal{P'}$}
+%{
+%\tikzset{plate caption/.append style={above right=5pt and 12pt of #1.north west}}
+%\plate{mix} {
+%(sx)(dx)
+%}{$j \in \{1, 2\}$};
+%}
+%\plate{items}{
+%(gen-data) (prior-data)
+%(mx)(sx)(dx)(d-c)(x)(mix)(RSAgate)
+%}{$f \in \mathcal{F}$}
+%
+%\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (7,4) { 
+%$\alpha \sim \text{Uniform}(0,30) $\\
+% $c \sim  \text{Uniform}(0,10) $ \\
+% \\
+%$\phi_f \sim \text{Uniform}(0, 1)$ \\
+% $\gamma^f_j \sim \text{Uniform}(0, 1), \xi^f_j \sim \text{Exponential}(1)$ \\
+%  $d^{prior}_{f, i'} \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \xi^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \xi^f_2)$ \\
+%    $r^f \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \xi^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \xi^f_2)$ \\
+%
+% \\
+%
+%$ d^{gen}_{f, i} \sim L(r^f \mid u  = \text{generic}) = \int_{\theta} L(r^f, \theta \mid u) \diff \theta$
+%};
+%\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (6,0) {Rational Speech Act model\\ 
+%$L_1(r^f, \theta \mid u) \propto S_1(u \mid r^f, \theta) \cdot P(r^f) \cdot P(\theta) $\\ 
+%$S_1(u \mid r^f, \theta)\propto \exp{( \alpha \cdot [ \ln L_0(r \mid u, \theta) - c(u)])} $\\
+%$L_0(r^f \mid u, \theta) \propto  \delta_{\denote{u}(r^f, \theta)} \cdot P(r^f)$
+%};
+%\end{tikzpicture}
+%    \end{tabular}
+%  \end{center}
+%  \caption{Fully Bayesian data analytic approach.}
+%  \label{fig:bayesnet}
+%\end{figure}
+
+
 \begin{figure}[ht]
   \begin{center}
     \begin{tabular}{cc}
@@ -714,16 +786,18 @@ We then integrate over parameters to compare the generic interpretation models t
       \node[latent, right=2cm of x]  (xf)   {$r^{f}$}; 
   \edge[above=of xf]  {mx, sx,dx} {xf} ; %
 
-  \node[det, above=0.52cm of d-c] (L1) {$L_1(r^f \mid u)$} ; % 
-   \node[latent, right=0.6cm of L1, yshift=0.5cm] (alpha) {$\alpha$}; %
-   \node[latent, right=0.6cm of L1, yshift=-0.5cm] (cost) {$c$}; %
+  \node[det, above=0.52cm of d-c] (L1) {$L(r^f \mid u)$} ; % 
+   \node[latent, right=1cm of d-c] (omega) {$\omega$}; %
+%   \node[latent, right=0.6cm of L1, yshift=-0.5cm] (cost) {$c$}; %
   \edge[-] {xf} {L1} ;
-  \edge[-] {alpha} {L1} ;
-  \edge[-] {cost} {L1} ;
+%  \edge[-] {alpha} {L1} ;
+%  \edge[-] {cost} {L1} ;
   \edge{L1} {d-c} ;
+    \edge{omega} {d-c} ;
+
 
 \gate {RSAgate} {(L1)(xf)} {} ; %
-\node[text width=1cm] at (-1,2.75) {$RSA$};
+\node[text width=1cm] at (-1.5,1.25) {\emph{\small{Cognitive model}}};
 
     \plate{gen-data}{
     (d-c)
@@ -742,31 +816,27 @@ We then integrate over parameters to compare the generic interpretation models t
 (mx)(sx)(dx)(d-c)(x)(mix)(RSAgate)
 }{$f \in \mathcal{F}$}
 
-\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (7,4) { 
-$\alpha \sim \text{Uniform}(0,30) $\\
- $c \sim  \text{Uniform}(0,10) $ \\
+\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (7,5) { 
+%$\alpha \sim \text{Uniform}(0,30) $\\
+% $c \sim  \text{Uniform}(0,10) $ \\
+ $\omega \sim  \text{Uniform}(0, 1) $ \emph{[fixed threshold models only]}\\
  \\
 $\phi_f \sim \text{Uniform}(0, 1)$ \\
  $\gamma^f_j \sim \text{Uniform}(0, 1), \xi^f_j \sim \text{Exponential}(1)$ \\
   $d^{prior}_{f, i'} \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \xi^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \xi^f_2)$ \\
-    $r^f \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \xi^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \xi^f_2)$ \\
-
- \\
-
-$ d^{gen}_{f, i} \sim L(r^f \mid u  = \text{generic}) = \int_{\theta} L(r^f, \theta \mid u) \diff \theta$
+    $r^f \sim \phi^f \cdot \text{Beta}(\gamma^f_1, \xi^f_1) + (1-\phi^f) \cdot \text{Beta}(\gamma^f_2, \xi^f_2)$};
+\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (7,1) {Uncertain threshold model\\ 
+%$L_1(r^f, \theta \mid u) \propto S_1(u \mid r^f, \theta) \cdot P(r^f) \cdot P(\theta) $\\ 
+%$S_1(u \mid r^f, \theta)\propto \exp{( \alpha \cdot [ \ln L_0(r \mid u, \theta) - c(u)])} $\\
+$L(r^f \mid u, \theta) \propto  \delta_{\denote{u}(r^f, \theta)} \cdot P(r^f)\cdot P(\theta) $ \\
+$ d^{gen}_{f, i} \sim L(r^f \mid u) = \int_{\theta} L(r^f, \theta \mid u) \diff \theta$
+\\ \\
+Fixed threshold models\\ 
+%$L_1(r^f, \theta \mid u) \propto S_1(u \mid r^f, \theta) \cdot P(r^f) \cdot P(\theta) $\\ 
+%$S_1(u \mid r^f, \theta)\propto \exp{( \alpha \cdot [ \ln L_0(r \mid u, \theta) - c(u)])} $\\
+$L(r^f \mid u, \theta^*) \propto  \delta_{\denote{u}(r^f, \theta^*)} \cdot P(r^f)$ \\
+$ d^{gen}_{f, i} \sim (1- \omega) \cdot L(r^f \mid u, \theta^*) + \omega \cdot \text{Uniform}(0, 1)$
 };
-
-
-
-
-\node[draw, align=left, execute at begin node=\setlength{\baselineskip}{3ex}] at (6,0) {Rational Speech Act model\\ 
-$L_1(r^f, \theta \mid u) \propto S_1(u \mid r^f, \theta) \cdot P(r^f) \cdot P(\theta) $\\ 
-$S_1(u \mid r^f, \theta)\propto \exp{( \alpha \cdot [ \ln L_0(r \mid u, \theta) - c(u)])} $\\
-$L_0(r^f \mid u, \theta) \propto  \delta_{\denote{u}(r^f, \theta)} \cdot P(r^f)$
-};
-
-
-
 \end{tikzpicture}
     \end{tabular}
   \end{center}
@@ -774,20 +844,21 @@ $L_0(r^f \mid u, \theta) \propto  \delta_{\denote{u}(r^f, \theta)} \cdot P(r^f)$
   \label{fig:bayesnet}
 \end{figure}
 
+
 %  \factor[above=of d-c] {d-f} {} {mx, sx,dx} {d-c} ; %
 
-For each candidate model of generic interpretation (literal, pragmatic, \enquote{some}, \enquote{most}), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 2a) and the generic interpretation data (Expt. 2b), similar to the methods of Tessler and Goodman (2019) (Figure \ref{fig:bayesnet}).
-We model the prevalence prior data as coming from a mixture of two Beta distributions (as determined in Expt.~2a) and we model the generic interpretation data as being generated from the candidate computational model of generic interpretation.
+For each candidate model of generic interpretation (fixed-threshold and uncertain threshold models), we build a joint Bayesian data-analytic model to simultaneously predict the prevalence prior data (Expt. 1a) and the generic interpretation data (Expt. 1b), similar to the methods of \citeA{Tessler2019psychrev} (Figure \ref{fig:bayesnet}).
+We model the prevalence prior data as coming from a mixture of two Beta distributions (as determined in Expt.~1a) and we model the generic interpretation data as being generated from the candidate computational model of generic interpretation (uncertain threshold, fixed-thresholds + noise).
 %For data analysis, we assume that the prevalence priors take the form of a three-component mixture of Beta distributions\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.}, whose parameter uncertainty is strongly constrained by data from our prior elicitation task.
-Each prevalence prior has five parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\) for each of the two Beta components and a mixture parameter $\phi$ that describe the relative weighting among the two components.
-We put uninformative priors over these parameters \(\gamma \sim \text{Uniform}(0, 1)\), \(\xi \sim \text{Uniform}(0, 100)\), \(\phi \sim \text{Uniform}(0,1)\).\footnote{Another reasonable, less structured model of the prevalence prior data would be a Dirichlet over discretized bins along the prevalence scale. We choose the mixture-of-Betas formulation because it assumes some correlation between neighboring values along the scale and has fewer parameters. }
+Each prevalence prior thus has five parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\) for each of the two Beta components and a mixture parameter $\phi$ that describe the relative weighting among the two components.
+We put uninformative priors over these parameters \(\gamma \sim \text{Uniform}(0, 1)\), \(\xi \sim \text{Exponential}(1)\), \(\phi \sim \text{Uniform}(0,1)\).\footnote{Another reasonable, less structured model of the prevalence prior data would be a Dirichlet over discretized bins along the prevalence scale. We choose the mixture-of-Betas formulation because it assumes some correlation between neighboring values along the scale and has fewer parameters. }
 This model of the prevalence prior \(P(r)\), with these parameters, also serves as the prevalence prior in whatever model of generic interpretation we are testing in order to generate predictions for the generic interpretation data. 
-In addition, the model of \enquote{most} semantics has an additional noise parameter, which adds a probability \(\omega\) of a participant responding randomly; we put a uniform prior over the value of this parameter: \(\omega \sim \text{Uniform}(0, 1)\).
-The pragmatic generic interpretation model (Eq. \ref{eq:L1}) has two free parameters: the rationality of the speaker model \(\alpha\) and the speaker's cost of producing the generic utterance (in comparison to staying silent) \(c = \text{cost}(generic)\), over which we put uninformative priors, consistent with the literature on this class of models: \(\alpha \sim \text{Uniform}(0, 30)\) and \(c \sim \text{Uniform}(0, 10)\).
-Comparing models using the marginal likelihood of the data will penalize the pragmatic model because of these additional degrees of freedom \cite{LeeWagenmakers2014}.
-The literal generic interpretation model and model of \enquote{some} quantifier semantics have no additional parameters. 
+In addition, the models that use a fixed-threshold $\theta^*$ semantics for all thresholds $\theta^* > 0$ have an additional noise parameter, which adds a probability \(\omega\) of a participant responding randomly; we put a uniform prior over the value of this parameter: \(\omega \sim \text{Uniform}(0, 1)\).
+%The pragmatic generic interpretation model (Eq. \ref{eq:L1}) has two free parameters: the rationality of the speaker model \(\alpha\) and the speaker's cost of producing the generic utterance (in comparison to staying silent) \(c = \text{cost}(generic)\), over which we put uninformative priors, consistent with the literature on this class of models: \(\alpha \sim \text{Uniform}(0, 30)\) and \(c \sim \text{Uniform}(0, 10)\).
+%Comparing models using the marginal likelihood of the data will penalize the pragmatic model because of these additional degrees of freedom \cite{LeeWagenmakers2014}.
+The uncertain threshold model and model of \enquote{some} quantifier semantics have no additional free parameters. 
 
-To learn about the credible values of the parameters as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on each model by running three chains of an incrementalized version of MCMC \cite{Ritchie2016} for 750,000 iterations, removing the first 250,000 iterations for burn-in.
+To learn about the credible values of the parameters as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on each model by running four chains of an incrementalized version of MCMC \cite{Ritchie2016} for 1,000,000 iterations, removing the first 500,000 iterations for burn-in.
 Convergence was checked qualitatively by confirming the similarity of the results across chains; there were no appreciable differences in the results between different chains.
 
 
@@ -806,21 +877,49 @@ Convergence was checked qualitatively by confirming the similarity of the result
 %The joint data analysis model accommodates the empirical patterns in the prevalence priors very well: \(r^2(825) = 0.99\), \(MSE = 0.00052\).
 %This indicates both that the mixture-of-Betas form is appropriate for the prevalence priors data and that the joint data analysis does not need to distort the prevalence priors in order to fit the generic interpretation data.
 %
-To evaluate how well each model can accommodate the implied prevalence data, we first compare the maximum a-posteriori value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
-Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, a literal \enquote{some} model, a literal \enquote{most} model (which includes an additional fit noise parameter), a literal uncertain-threshold generics model, and the pragmatic uncertain-threshold generics model.
-Figure~\ref{fig:genint-modelingResults} reveals that both the prior only model and the belief-updating model based on the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
-Though the model based on a semantics for \enquote{most} (i.e., a fixed threshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the \enquote{most} model attributes over the half of the data to noise (posterior MAP and 95\% credible interval for noise parameter $\omega = 0.57 {[}0.55, 0.59{]}$), because of the high number of responses below 50\%.
+To evaluate how well each model can accommodate the implied prevalence data, we first compare the Maximum A-Posteriori  (MAP) value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
+Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, the uncertain threshold models, and fixed-threshold models for four values of the fixed-threshold (0\% [``some''], 10\%, 20\%, and 50\% [``most'']).
+All models show a strong correlation to the observed data, because all models encode informative prior beliefs about the property. 
+Figure~\ref{fig:genint-modelingResults}, however, reveals that both the prior only model and the belief-updating model based on the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
+Increasing the threshold value for the fixed-threshold models leads the model to draw stronger interpretations from all generics, leading the model to \emph{overpredict} interpretations of weak generics,  which in turn causes the Bayesian data analysis model to infer higher values for the model's noise parameter (Table \ref{tab:noise}).
+As the fixed-threshold increases, thus, so does the inferred amount of noise, which causes these models to wash away the differences in predictions between items.
 
-Unlike each of the alternative semantic models, the two models based on belief updating according to an unspecified threshold (literal and pragmatic generics models) can accommodate the highly variable generic interpretation data with a high degree of quantitative accuracy.
-The pragmatic model slightly outperforms the literal generics model in terms of both mean squared error and variance explained at the level of average responses.
-The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1.82, 2.18{]} and the generic cost parameter \(c\) was 3.6 {[}3.16, 4.27{]}.
-\mht{update with results from new model runs}
+
+\begin{center}
+  \begin{table}[h]
+    \centering
+
+    \pgfplotstabletypeset[sci zerofill,
+    col sep = comma,
+    every head row/.style={before row = \toprule, after row = \midrule},
+    every last row/.style={after row = \bottomrule},
+    columns/semantics/.style={string type, column name={Fixed threshold}, column type = l},
+    columns/noise/.style={string type, column name={Inferred noise level}, column type = l}%,
+%    columns/Estimate/.style={column name={Estimate}, dec sep align},
+%    columns/Std. Error/.style={column name={SDE}, sci sep align, sci},
+%    columns/t value/.style={column name={$t$-value}, dec sep align},
+%    columns/Pr(>|t|)/.style={column name={$p$-value}, dec sep align }
+    ]
+    {csv_to_tex/expt1_model_param-posteriors.csv}
+
+    \caption{Inferred noise levels for fixed-threshold models with different values for the thresholds. Values reported are the Maximum A-Posteriori (MAP) estimates and 95\% Highest Posterior Density intervals.}
+    \label{tab:noise}
+  \end{table}
+\end{center}
+
+ 
+%Though the model based on a semantics for \enquote{most} (i.e., a fixed threshold at 0.5) does better in terms of mean squared error, it explains substantially less variance; the \enquote{most} model attributes over the half of the data to noise (posterior MAP and 95\% credible interval for noise parameter $\omega = 0.57 {[}0.55, 0.59{]}$), because of the high number of responses below 50\%.
+
+%Unlike each of the alternative semantic models, the two models based on belief updating according to an unspecified threshold (literal and pragmatic generics models) can accommodate the highly variable generic interpretation data with a high degree of quantitative accuracy.
+%The pragmatic model slightly outperforms the literal generics model in terms of both mean squared error and variance explained at the level of average responses.
+%The inferred values of the speaker optimality parameter \(\alpha\) was 2.03 {[}1.82, 2.18{]} and the generic cost parameter \(c\) was 3.6 {[}3.16, 4.27{]}.
+%\mht{update with results from new model runs}
 
 \begin{figure}
 \centering
-\includegraphics{genint_files/figure-latex/genint-modelingResults-bars-1.pdf}
-\caption{Implied prevalence ratings and model predictions for eight items that cover the spectrum of prevalence ratings. 
-Both generic models closely track the implied prevalence ratings, but the pragmatic model shows stronger interpretations for a number of important cases.}
+\includegraphics{figs/genint-fullDistributions-variousFixeds-1.pdf}
+\caption{Distributions of implied prevalence ratings and model predicted distributions of responses for seven items that cover the spectrum of prevalence ratings. Individual fixed-thresholds capture the item distributions for certain items, but only the uncertain threshold captures all of the key features of the distributions for all of these items.
+}
 \label{fig:genint-modelingResults-bars}
 \end{figure}
 
@@ -838,37 +937,40 @@ The evidence for pragmatic interpretations is most apparent for items that recei
 
 
 
-\begin{table}[h]
-\centering
-\begingroup\fontsize{10pt}{11pt}\selectfont
-\begin{tabular}{llll}
-  \hline
-Model & MSE & $r^2$ & Log marginal likelihood \\ 
-  \hline
-Prior & 0.2578 & 0.578 & -18006 \\ 
-  "Some" & 0.0479 & 0.879 & -15309 \\ 
-  "Most" & 0.0213 & 0.491 & -13135 \\ 
-  Literal Generic & 0.0026 & 0.933 & -12843 \\ 
-  Pragmatic Generic & 0.0015 & 0.962 & -12781 \\ 
-   \hline
-\end{tabular}
-\endgroup
-\caption{Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item averages. Marginal likelihood is computed over the full distribution of responses.} 
-\end{table}
+\begin{center}
+  \begin{table}[h]
+    \centering
+    \pgfplotstabletypeset[fixed zerofill, precision = 2,
+    col sep = comma,
+    every head row/.style={before row = \toprule, after row = \midrule},
+    every last row/.style={after row = \bottomrule},
+    columns/semantics/.style={string type, column name={Model}, column type = l},
+    columns/MSE/.style={column name={MSE}, fixed relative, dec sep, precision = 3},
+    columns/r2/.style={column name={$r^2$}, dec sep},
+    columns/log_bf/.style={column name={(log) Bayes Factor}, dec sep, fixed, precision=0}%,
+    ]
+    {csv_to_tex/expt1_model_summary_stats.csv}
 
-\begin{figure}
-\centering 
-\includegraphics[width=0.4\textwidth]{genint_files/figure-latex/genint-litPrag-scatter-1} 
-\caption{Comparison of implied prevalence predictions for the literal~vs.~pragmatic generic interpretation models. The pragmatic model shows stronger interpretations for items that have intermediate implied prevalence. \mht{draw smoothed line to show the area under curve?}}
-\label{fig:genint-litPrag-scatter}
-\end{figure}
+    \caption{Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses.}
+    \label{tab:noise}
+  \end{table}
+\end{center}
+
+
+
+%\begin{figure}
+%\centering 
+%\includegraphics[width=0.4\textwidth]{genint_files/figure-latex/genint-litPrag-scatter-1} 
+%\caption{Comparison of implied prevalence predictions for the literal~vs.~pragmatic generic interpretation models. The pragmatic model shows stronger interpretations for items that have intermediate implied prevalence. \mht{draw smoothed line to show the area under curve?}}
+%\label{fig:genint-litPrag-scatter}
+%\end{figure}
 
 
 \hypertarget{model-comparison}{%
 \paragraph{Model comparison}\label{model-comparison}}
 %
-To explore whether one model is in fact a better explanation of the data, given the better fit of the pragmatic model but fewer parameters of the literal one, we perform a formal model comparison.
-%Our second data analytic strategy is a formal model comparison to determine the extent to which the pragmatic generic interpretation model is the best explanation of the data, given it is a slightly more complex model than the literal interpretation model.
+To explore whether one model is in fact a better explanation of the data, we perform a formal model comparison.
+%given the better fit of the pragmatic model but fewer parameters of the literal one, %Our second data analytic strategy is a formal model comparison to determine the extent to which the pragmatic generic interpretation model is the best explanation of the data, given it is a slightly more complex model than the literal interpretation model.
 To do this, we compute Bayes Factors, which compare the likelihood of the observed data under each of the models, averaging across all values of any free parameters.
 This form of model comparisons penalizes models with extra free parameters if, in fact, the model's predictions are highly sensitive to those parameters.
 Comparing our models using a fully Bayesian strategy with uncertainty over the prevalence priors (analogous to what is performed in the model criticism section) is computationally intensive.
