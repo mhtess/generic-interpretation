@@ -879,10 +879,10 @@ Convergence was checked qualitatively by confirming the similarity of the result
 %
 To evaluate how well each model can accommodate the implied prevalence data, we first compare the Maximum A-Posteriori  (MAP) value of each model's posterior predictive distribution of implied prevalence ratings to the mean implied prevalence ratings for each of the 75 items.
 Table 1 shows the mean squared errors and proportion of explained variance for predictions based on the prevalence prior alone, the uncertain threshold models, and fixed-threshold models for four values of the fixed-threshold (0\% [``some''], 10\%, 20\%, and 50\% [``most'']).
-All models show a strong correlation to the observed data, because all models encode informative prior beliefs about the property. 
+All models show some correlation to the observed data, because all models encode informative prior beliefs about the property (Table \ref{tab:summary1}). 
 Figure~\ref{fig:genint-modelingResults}, however, reveals that both the prior only model and the belief-updating model based on the quantifier \enquote{some} (i.e., a fixed threshold at the lowest possible value) consistently \emph{underpredict} the implied prevalence, consistent with the intuition that assigning the semantics of \enquote{some} for generics is too weak.
 Increasing the threshold value for the fixed-threshold models leads the model to draw stronger interpretations from all generics, leading the model to \emph{overpredict} interpretations of weak generics,  which in turn causes the Bayesian data analysis model to infer higher values for the model's noise parameter (Table \ref{tab:noise}).
-As the fixed-threshold increases, thus, so does the inferred amount of noise, which causes these models to wash away the differences in predictions between items.
+As the fixed-threshold increases, thus, so does the inferred amount of noise, which causes these models to wash away the differences in predictions between items (Figure~\ref{fig:genint-modelingResults}).
 
 
 \begin{center}
@@ -923,12 +923,22 @@ As the fixed-threshold increases, thus, so does the inferred amount of noise, wh
 \label{fig:genint-modelingResults-bars}
 \end{figure}
 
-Figure~\ref{fig:genint-modelingResults-bars} shows empirical means and model predictions for eight example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
-All models exhibit some sensitivity to the variance in implied prevalence ratings, because they all use the prevalence prior in their definition.
-It is the actual magnitude of the strength of the generalization implied by the utterance that is predicted to be different, with the prior and \enquote{some} models predicting too weak of an interpretation.
-\enquote{Most} is handicapped by its high inferred rate of noise and does not make dramatically different predictions across the items.
-Both the literal and pragmatic generic interpretation models track the quantitative variance across these items.
-The evidence for pragmatic interpretations is most apparent for items that receive high but not at-ceiling implied prevalence ratings (e.g., \emph{have spots}, \emph{hunt other animals}; Figure~\ref{fig:genint-litPrag-scatter}).
+The strength of the uncertain threshold model can further by seen by examining the model's full distribution of responses on a by-item basis, rather than just the item means.
+For example, the item \emph{Ks carry Lyme disease} exhibits a high entropy empirical distribution: Participants (as a collective) are highly uncertain as to prevalence implied by the statement; it is possible that very few of the kind carries Lyme disease, and it is possible that almost all do as well. 
+The uncertain threshold model captures this diversity in responses, similar to the ``Some'' model in this case. 
+For other items, however, ``Some'' is too weak: For example, for \emph{Ks chase their tails}, the most compelling fixed-threshold model would the ``Most'' model, since responses for this item are predominantly above 50\%. 
+The uncertain threshold thus takes on the interpretations of different fixed-threshold models depending on the item, but this is not a variable that is stipulated in the model. 
+The model infers what is the best threshold by reasoning a variety of thresholds and taking into the prior distribution on prevalence. 
+
+
+%Here, the empirical distribution it still 
+%Figure~\ref{fig:genint-modelingResults-bars} shows these predicted distributions for seven example items covering the range of average responses from roughly 30\% implied prevalence to almost 100\%.
+
+%All models exhibit some sensitivity to the variance in implied prevalence ratings, because they all use the prevalence prior in their definition.
+%It is the actual magnitude of the strength of the generalization implied by the utterance that is predicted to be different, with the prior and \enquote{some} models predicting too weak of an interpretation.
+%\enquote{Most} is handicapped by its high inferred rate of noise and does not make dramatically different predictions across the items.
+%Both the literal and pragmatic generic interpretation models track the quantitative variance across these items.
+%The evidence for pragmatic interpretations is most apparent for items that receive high but not at-ceiling implied prevalence ratings (e.g., \emph{have spots}, \emph{hunt other animals}; Figure~\ref{fig:genint-litPrag-scatter}).
 
 %This result suggests that interpretations are most in dangerous of being strengthened beyond a speaker's intent for properties for which the listener is most uncertain about their distribution (cf., the asymmetry reported in Cimpian et al., 2010).\ndg{that last sentence (pointing to assymetry) needs to either be explained a lot more or cut.}
 
@@ -945,14 +955,14 @@ The evidence for pragmatic interpretations is most apparent for items that recei
     every head row/.style={before row = \toprule, after row = \midrule},
     every last row/.style={after row = \bottomrule},
     columns/semantics/.style={string type, column name={Model}, column type = l},
-    columns/MSE/.style={column name={MSE}, fixed relative, dec sep, precision = 3},
+    columns/MSE/.style={column name={MSE}, fixed relative, dec sep, precision = 2},
     columns/r2/.style={column name={$r^2$}, dec sep},
     columns/log_bf/.style={column name={(log) Bayes Factor}, dec sep, fixed, precision=0}%,
     ]
     {csv_to_tex/expt1_model_summary_stats.csv}
 
-    \caption{Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses.}
-    \label{tab:noise}
+    \caption{Summary statistics for models of generic interpretation. Mean Squared Errors and variance explained are calculated at the level of the item means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses. \mht{could add THRESHOLD column and NOISE column, merging with Table 1}}
+    \label{tab:summary1}
   \end{table}
 \end{center}
 
@@ -969,15 +979,14 @@ The evidence for pragmatic interpretations is most apparent for items that recei
 \hypertarget{model-comparison}{%
 \paragraph{Model comparison}\label{model-comparison}}
 %
-To explore whether one model is in fact a better explanation of the data, we perform a formal model comparison.
+Finally, we ask whether one model is in fact a better explanation of the data using a formal model comparison technique.
 %given the better fit of the pragmatic model but fewer parameters of the literal one, %Our second data analytic strategy is a formal model comparison to determine the extent to which the pragmatic generic interpretation model is the best explanation of the data, given it is a slightly more complex model than the literal interpretation model.
-To do this, we compute Bayes Factors, which compare the likelihood of the observed data under each of the models, averaging across all values of any free parameters.
+We compute Bayes Factors, which compare the likelihood of the observed data under each of the models, averaging across all values of any free parameters.
 This form of model comparisons penalizes models with extra free parameters if, in fact, the model's predictions are highly sensitive to those parameters.
-Comparing our models using a fully Bayesian strategy with uncertainty over the prevalence priors (analogous to what is performed in the model criticism section) is computationally intensive.
-Therefore, we compute the likelihood of the data under each model by fixing the prevalence priors to the raw empirical distributions. Fixing the prevalence priors reduces the overall flexibility of the models, but does so in a way that penalizes all models to an equal extent; given the strong agreement between prevalence priors data and their posteriors reported above, we expect this approximation to have minimal effect.
-The results are shown in Table 1: The pragmatic model is on the order of \(e^{60}\) times better at accounting for the implied prevalence data, even taking into the model's additional flexibility.
-This is extremely strong evidence that the best model for how generics update beliefs is pragmatic: as a single positive example understood as being produced with a pedagogical intent.
-
+We compare our models using a fully Bayesian strategy with uncertainty over the prevalence priors (analogous to what is performed in the model criticism section).
+To approximate the marginal likelihood, we used an Annealed Importance Sampling algorithm \cite{Neal2001} implemented in the probabilistic programming language WebPPL; for each model, we collected 100 samples, each of which was composed of an annealing schedule of 10,000 linearly spaced iterations.
+The results are shown in Table 2: The uncertain threshold model is on the order of \(e^{586}\) times better at accounting for the implied prevalence data, than the best-fitting model that uses a fixed-threshold. 
+This is extremely strong evidence that the best model for how generics update beliefs is via un an uncertain threshold semantics.
 
 
 \hypertarget{experiment-2-prior-manipulation}{%
