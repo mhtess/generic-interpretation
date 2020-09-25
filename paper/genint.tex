@@ -840,7 +840,7 @@ $ d^{gen}_{f, i} \sim (1- \omega) \cdot L(r^f \mid u, \theta^*) + \omega \cdot \
 \end{tikzpicture}
     \end{tabular}
   \end{center}
-  \caption{Fully Bayesian data analytic approach used in Experiments 1 and 2.}
+  \caption{Fully Bayesian data analytic approach used in Experiments 1 and 2. Prior data (Expt.~1a, 2a) $d^{prior}$ from each participant $i$ is modeled as a mixture of 2 Beta distributions, with unknown means $\gamma_j$, concentration parameters $\xi_j$, and mixture weights $\phi$. The parameters are inferred separately for each feature $f$ (item in Expt.~1, distribution condition in Expt.~2). These parameters determine the prior distribution on prevalence, represented by $r^f$, using inside the cognitive models $L$ used to predict the generic interpretation data $d^{gen}$ from each participant $i$. The cognitive model $L$ is either the uncertain threshold model (Equation \ref{eq:L0}) or a fixed threshold model (Equation \ref{eq:L0fixed}). Fixed-threshold models are supplemented with an extrinsic global noise process that can be used to generate responses that literally impossible under the fixed-threshold by randomly guessing. For these models, a noise parameter $\omega$ is used.}
   \label{fig:bayesnet}
 \end{figure}
 
@@ -858,7 +858,7 @@ In addition, the models that use a fixed-threshold $\theta^*$ semantics for all 
 %Comparing models using the marginal likelihood of the data will penalize the pragmatic model because of these additional degrees of freedom \cite{LeeWagenmakers2014}.
 The uncertain threshold model and model of \enquote{some} quantifier semantics have no additional free parameters. 
 
-To learn about the credible values of the parameters as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on each model by running four chains of an incrementalized version of MCMC \cite{Ritchie2016} for 1,000,000 iterations, removing the first 500,000 iterations for burn-in.
+To learn about the credible values of the parameters as well as generate model predictions for the generic interpretation data, we performed Bayesian inference on each model by running four chains of an incrementalized version of MCMC \cite{Ritchie2016} for $10^6$ iterations, removing the first $5 \times 10^5$ iterations for burn-in.
 Convergence was checked qualitatively by confirming the similarity of the results across chains; there were no appreciable differences in the results between different chains.
 
 
