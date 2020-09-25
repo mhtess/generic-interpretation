@@ -840,7 +840,7 @@ $ d^{gen}_{f, i} \sim (1- \omega) \cdot L(r^f \mid u, \theta^*) + \omega \cdot \
 \end{tikzpicture}
     \end{tabular}
   \end{center}
-  \caption{Fully Bayesian data analytic approach.}
+  \caption{Fully Bayesian data analytic approach used in Experiments 1 and 2.}
   \label{fig:bayesnet}
 \end{figure}
 
@@ -1088,14 +1088,14 @@ The sample size, exclusion criteria, and planned statistical contrasts were all 
 
 \hypertarget{participants-4}{%
 \paragraph{Participants}\label{participants-4}}
-
+%
 We recruited 600 participants from MTurk.
 This number was arrived at with the intention of getting approximately 50 ratings for each unique condition in the experiment.
 The experiment took on average 2.70 minutes and participants were compensated \$0.30.
 
 \hypertarget{materials-and-procedure}{%
 \paragraph{Materials and procedure}\label{materials-and-procedure}}
-
+%
 The materials and procedure were almost identical to those of Expt. 2a.
 The only difference was that following the familiarization period, the data table was removed and participants were provided the following prompt:
 
@@ -1117,7 +1117,7 @@ As in Expt. 2a, participants then completed an attention check survey where they
 
 \begin{figure}
 \centering
-\includegraphics{figs/expt2_model-results.pdf}
+\includegraphics{figs/expt2_model-results_nozero.pdf}
 \caption{\label{fig:genint-modelingResults2}Experiment 2 results. A: Empirical distribution of responses for the generic interpretation task (Expt. 2a; top row), uncertain threshold model predictions, and alternative model predictions. Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Posterior predictive expected values quantitative models in comparison to the human empirical means. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
 \end{figure}
 
@@ -1129,24 +1129,51 @@ As in Expt. 2a, participants then completed an attention check survey where they
 We used preregistered exclusion criteria, which were also used for Expt. 2a.
 Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded (\(n = 39\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 33\)).
-This left a total of \(n = 532\) participants, with items receiving on average 53 responses (range = {[}43, 62{]}).
+Finally, we employed one exclusion criterion which was not pre-registered: Participants who responded 0\% to the generic interpretation task ($n$ = 18; 3\% of participants); this response is literally impossible under all models of generic interpretation and indicates a misunderstanding of the task. 
+A post-hoc analysis of these participants' free-form explanations revealed that the majority of these respondents believed they were responding to a prior elicitation question (predict the next animal); it is likely that these participants were not attending to the generic statement when it was on the screen.
+This left a total of \(n = 514\) participants, with items receiving on average 51 responses (range = {[}40, 62{]}).
 
 Our main qualitative hypothesis is that there would be a difference across conditions in interpretations of the same generic sentence (\enquote{Ks know when earthquakes are about to happen}).
-The differences in interpretations are visually evident in the empirical distributions of responses (Figure \ref{fig:priorManipulationResults}A, bottom row).
+The differences in interpretations are visually evident in the empirical distributions of responses (Figure \ref{fig:genint-modelingResults2}A, top row).
 More specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
 To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 2a).
-There was a significant main effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\), \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations.
+There was a significant main effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\), \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations (Figure \ref{fig:genint-modelingResults2}B, left-most facet).
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors (\(\beta_0 = 0.16\), \(SE=0.04\), \(t = 4.44\)).
-These results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
-Still, there is much more to say about these data; this simple linear model explains less than a quarter of the variance in the data (\(r^2 = 0.24\)).
+To more directly test that the distributions of responses in this generic interpretation task (Expt.~2b) were indeed different from the distributions elicited in the prior task (Expt.~1a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
+We found that eight of ten generic interpretation distributions were significantly different than the prior distributions (Table \ref{tab:ks}).
+The two which were not significantly different between prior and generic interpretation were the 50/100 and 75/100 distributions. These distributions are also predicted by the uncertain threshold model to be most similar between prior and posterior; since the prior beliefs about prevalence are so strongly skewed towards high prevalence values, the updating power of a generic is more limited.
+In summary, these quantitative results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
 
-From the generics models, we are able to make a number of \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten conditions.
-These predictions were derived by examining pairs of conditions with small quantitative differences but for which the bootstrapped 95\% confidence interval around the generics model predictions did not overlap (Figure~\ref{fig:priorManipulationResults}B, \enquote{literal generic} panel).\footnote{These predictions were derived from the literal generic interpretation model. The experiment was planned before we developed the pragmatic generic interpretation model. Still, many of these predictions would have been derived from the pragmatic model following the same decision rule.}
+
+
+\begin{center}
+  \begin{table}[h]
+    \centering
+    \pgfplotstabletypeset[fixed zerofill, precision = 2,
+    col sep = comma,
+    every head row/.style={before row = \toprule, after row = \midrule},
+    every last row/.style={after row = \bottomrule},
+    columns/distribution/.style={string type, column name={Distribution Condition}, column type = l},
+    columns/D/.style={column name={D}, fixed relative, dec sep, precision = 2},
+    columns/pval/.style={column name={$p$-value}, dec sep, precision = 2},
+    ]
+    {csv_to_tex/expt2_ks_stats.csv}
+
+    \caption{Kolmogorov-Smirnoff test results testing for the dissimilarity between the prior elicitation response distributions (Expt.~2a) and the generic interpretation response distributions (Expt.~2b).}
+    \label{tab:ks}
+  \end{table}
+\end{center}
+
+
+
+
+
+From the uncertain threshold model and the prior elicitation data (Expt.~2a), we are able to make a number of \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten distribution conditions.
+These predictions were derived by bootstrapping the prevalence prior data to construct bootstrapped 95\% confidence intervals for the uncertain threshold model prediction; from this procedure, we found pairs of conditions with subtle quantitative differences but for which the bootstrapped 95\% confidence interval around the uncertain threshold model predictions did not overlap.
 With those criteria in mind, we preregistered the following contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\}.
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a \enquote{zero and one inflated beta} linking function to appropriately model the responses of exactly 0\% and 100\%, which are undefined under the beta distribution.
 The maximum a-posteriori estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 2.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
-Overall, the literal and pragmatic generic interpretation models predict much of the variance in the means of these empirical distributions: (literal results: \(r^2(10) = 0.89; MSE = 0.00429\); pragmatic results: \(r^2(10) = 0.82; MSE = 0.0162\)).
 
 \begin{table}[h]
 \centering
@@ -1168,48 +1195,90 @@ Intercept &  & 0.32 & [ 0.221, 0.418] \\
    \hline
 \end{tabular}
 \endgroup
-\caption{Regression model fits for planned comparisons. Predictions are based on whether the 95\% credible intervals for the generics model prediction overlap.} 
+\caption{Regression model fits for planned comparisons. Predictions are based on whether the 95\% bootstrapped confidence intervals for the uncertain threshold model prediction overlap.} 
 \end{table}
 
-The computational models we have articulated  predict the full distribution of responses, not only the \emph{mean} implied prevalence.
-The model performance in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
-(Recall that there are no free parameters fit for this analysis, in any of the models, since we use the best values from the analysis of the previous experiment.)
+To evaluate the quantitative predictions of the uncertain threshold model and its alternatives, we constructed a Bayesian data analysis model to jointly predict the prevalence prior data (Expt.~2a) and the generic interpretation data (Expt.~2b).
+As we did for Experiment 1, we model the prevalence prior data for each distribution condition as a mixture of two Beta distributions (with unknown means, variance, and mixture parameters) and we model the generic interpretation via the uncertain threshold model (or an alternative model) that assumes the prevalence prior inferred from the Expt.~2a data (Figure \ref{fig:bayesnet}).
+As before, fixed-threshold alternative models make an additional use of a noise parameter to accommodate data points that are literally incompatible with the model. 
+To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 4 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
+We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 1,000 samples from Annealed Importance Sampling algorithm with an annealing schedule consisting of 10,000 uniformly spaced increments. 
 
-We next aim to computed the likelihood of the data under each model, to enable model comparison.
-While the overall agreement between data and generics models is good, a number of participants responded that 0\% of Ks knew when earthquakes were about to happen when they read \enquote{Ks know when earthquakes are about to happen} (Figure~\ref{fig:priorManipulationResults}A, bottom row, \enquote{data}).
-Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question similar to the prior elicitation task: Predict the next animal.
-These \enquote{prior-type} responses are a source of noise in the data that affects all models (except the prior only model) to an equal degree: the models have no way to account for 0\% responses, which are literally impossible given the utterance of the form \enquote{Ks F}.
-%To compute the likelihood of the complete data set under these models, 
-We thus make the further data analysis assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
-In computing marginal likelihood of the data we sum over this mixture parameter in the range of 0-20\% prior-type responses (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
-%We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
-%\ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
-%\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
-We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
-To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
-As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is not unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distinguish models, which was the goal of the previous experiment.}
-We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
+Overall, the uncertain threshold model is best able to accommodate the distribution of responses observed in the ten experimental conditions and it is the most parsimonious explanation of the data (Table \ref{tab:summary2}). 
+For example, in the \emph{0/25} distribution, both the model and participants tend to draw very weak interpretations \emph{a la} the ``some'' model, whereas in the \emph{25/100} distribution, the most dominant interpretation is more like ``all'' (Figure \ref{fig:genint-modelingResults2}).
+The model is even able to accommodate subtle shifts in interpretation.
+For example, in the \emph{25/75} distribution, most participants interpret  the generic as implying roughly 75\% of the category have the property, yet others (a minority) interpret the generic as implying only 25\% have the property. This prediction is made by the uncertain threshold model: Higher prevalence levels are more likely under this model, but they are not the only interpretation of the generic; it is plausible that someone could utter this sentence with only in mind that a minority of the category have the property. 
 
-\begin{table}[h]
-\centering
-\begingroup\fontsize{9pt}{10pt}\selectfont
-\begin{tabular}{llll}
-  \hline
-Model & log Bayes Factor & expected value statistics & full distribution statistics \\ 
-  \hline
-Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\textsuperscript{2}(200) = 0.49; MSE = 0.00381 \\ 
-  Threshold = 0.01 & -48.6 (-39, -58.4) & r\textsuperscript{2}(10) = 0.83; MSE = 0.00887 & r\textsuperscript{2}(200) = 0.53; MSE = 0.00358 \\ 
-  Threshold = 0.1 & -26.4 (-17.9, -35.4) & r\textsuperscript{2}(10) = 0.76; MSE = 0.00865 & r\textsuperscript{2}(200) = 0.56; MSE = 0.00334 \\ 
-  Threshold = 0.35 & -48.6 (-39.3, -57.9) & r\textsuperscript{2}(10) = 0.7; MSE = 0.0114 & r\textsuperscript{2}(200) = 0.39; MSE = 0.00485 \\ 
-  Literal Generic & 0 & r\textsuperscript{2}(10) = 0.89; MSE = 0.00429 & r\textsuperscript{2}(200) = 0.64; MSE = 0.00275 \\ 
-  Pragmatic Generic & -2.1 (1.5, -5.6) & r\textsuperscript{2}(10) = 0.82; MSE = 0.0162 & r\textsuperscript{2}(200) = 0.55; MSE = 0.00352 \\ 
-   \hline
-\end{tabular}
-\endgroup
-\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the literal generics model. Numbers less than 0 indicate evidence in favor of the literal model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions. 
-%\ndg{use LL instead of BF here as for previous expt?} \mht{actually LL is misleading here because we are bootstrapping the priors... the range of LLs is large for any given model, but the range of ratios of LL (BFs) is much smaller, because when one model does worse due to a resampled prior, they all tend to do worse}
-} 
-\end{table}
+%We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
+
+
+%We observe that a number of participants report 0\% of Ks knew when earthquakes were about to happen when they read \enquote{Ks know when earthquakes are about to happen} (Figure~\ref{fig:priorManipulationResults}A, bottom row, \enquote{data}).
+%Examining these participants' explanations revealed that the majority of these respondents believed they were answering a slightly different question than the one being asked; they believed they were responding to a question similar to the prior elicitation task: Predict the next animal.
+%These \enquote{prior-type} responses are a source of noise in the data that affects all models (except the prior only model) to an equal degree: the models have no way to account for 0\% responses, which are literally impossible given the utterance of the form \enquote{Ks F}.
+%%To compute the likelihood of the complete data set under these models, 
+%We thus make the further data analysis assumption that the true generative process of the data is a mixture of responding according to one of the generic interpretation models and responding according to the prior.
+%In computing marginal likelihood of the data we sum over this mixture parameter in the range of 0-20\% prior-type responses (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
+%%We calculate Bayes Factors assuming a uniform distribution of noise between 0-20\% (approximated using the following discretization \(= \{0.001, 0.01, 0.05, 0.1, 0.15, 0.20\}\)).
+%%\ndg{should report posterior CI for this param -- what portion of responses are taken to be prior-type?}
+%%\mht{we didn't do a full bayesian analysis of these data; rather the predictions are either 0-parameter predictions based on the empirical priors; the pragmatic predictions are based on a fixed speaker optimality}
+%We use this to compute Bayes factors (i.e.~ratio of marginal likelihoods under competing models, discretizing the empirical distributions and model predictions into ten equally spaced bins).
+%To account for uncertainty in the measurement of the prior, we again bootstrap the model predictions by resampling the prior.
+%As is shown in Table 3, the literal and pragmatic generic interpretation models are best at predicting these data.\footnote{These data do not definitively distinguish the literal and pragmatic models from each other. This is not unexpected, since this experiment was designed to test the causal influence of the prevalence priors and not to distinguish models, which was the goal of the previous experiment.}
+
+
+
+
+%The computational models we have articulated  predict the full distribution of responses, not only the \emph{mean} implied prevalence.
+%The model performance in terms of variance-explained and mean squared errors for the full distribution of responses are shown in Table 3.
+%(Recall that there are no free parameters fit for this analysis, in any of the models, since we use the best values from the analysis of the previous experiment.)
+%
+%We next aim to computed the likelihood of the data under each model, to enable model comparison.
+%
+%While the overall agreement between data and generics models is good, a number of participants 
+
+
+\begin{center}
+  \begin{table}[h]
+    \centering
+    \pgfplotstabletypeset[fixed zerofill, precision = 2,
+    col sep = comma,
+    every head row/.style={before row = \toprule, after row = \midrule},
+    every last row/.style={after row = \bottomrule},
+    columns/model/.style={string type, column name={Model}, column type = l},
+    columns/mse/.style={column name={MSE}, fixed relative, dec sep, precision = 2},
+    columns/r2/.style={column name={$r^2$}, dec sep, precision = 3},
+    columns/log_bf/.style={column name={(log) Bayes Factor}, dec sep, fixed, precision=0}%,
+    ]
+    {csv_to_tex/expt2_model_summary_stats.csv}
+
+    \caption{Summary statistics for models of Experiment 2. Mean Squared Errors and variance explained are calculated at the level of the distribution condition means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses.}
+    \label{tab:summary2}
+  \end{table}
+\end{center}
+
+
+
+
+%\begin{table}[h]
+%\centering
+%\begingroup\fontsize{9pt}{10pt}\selectfont
+%\begin{tabular}{llll}
+%  \hline
+%Model & log Bayes Factor & expected value statistics & full distribution statistics \\ 
+%  \hline
+%Prior & -53.9 (-44, -63.6) & r\textsuperscript{2}(10) = 0.91; MSE = 0.0192 & r\textsuperscript{2}(200) = 0.49; MSE = 0.00381 \\ 
+%  Threshold = 0.01 & -48.6 (-39, -58.4) & r\textsuperscript{2}(10) = 0.83; MSE = 0.00887 & r\textsuperscript{2}(200) = 0.53; MSE = 0.00358 \\ 
+%  Threshold = 0.1 & -26.4 (-17.9, -35.4) & r\textsuperscript{2}(10) = 0.76; MSE = 0.00865 & r\textsuperscript{2}(200) = 0.56; MSE = 0.00334 \\ 
+%  Threshold = 0.35 & -48.6 (-39.3, -57.9) & r\textsuperscript{2}(10) = 0.7; MSE = 0.0114 & r\textsuperscript{2}(200) = 0.39; MSE = 0.00485 \\ 
+%  Literal Generic & 0 & r\textsuperscript{2}(10) = 0.89; MSE = 0.00429 & r\textsuperscript{2}(200) = 0.64; MSE = 0.00275 \\ 
+%  Pragmatic Generic & -2.1 (1.5, -5.6) & r\textsuperscript{2}(10) = 0.82; MSE = 0.0162 & r\textsuperscript{2}(200) = 0.55; MSE = 0.00352 \\ 
+%   \hline
+%\end{tabular}
+%\endgroup
+%\caption{Summary statistics for alternative generic interpretations. (Log) Bayes Factors quantify evidence in favor of each model in comparison to the literal generics model. Numbers less than 0 indicate evidence in favor of the literal model. Summary statistics displayed for the model fits for the expected values (means) of the distributions and the full (discretized) distributions. 
+%%\ndg{use LL instead of BF here as for previous expt?} \mht{actually LL is misleading here because we are bootstrapping the priors... the range of LLs is large for any given model, but the range of ratios of LL (BFs) is much smaller, because when one model does worse due to a resampled prior, they all tend to do worse}
+%} 
+%\end{table}
 
 
 %\begin{table}[h]
