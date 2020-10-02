@@ -178,13 +178,14 @@
 \abstract{
 Generic language (e.g., ``Birds have hollow bones'') conveys generalizations about categories and is a fundamental and ubiquitous mechanism of learning. 
 %Understanding generics, however, involves an extreme dependence on context that has made 
-Articulating precisely how generic language updates beliefs, however, is beyond the reach of any extant theory of generics.
-Recently, Tessler and Goodman (2019) proposed a model for a meaning of generics as a vague quantifier, which operates over rich prior knowledge about properties; this model predicted human truth judgments for generics with high quantitative accuracy. 
-%Here, we test the adequacy of this model to account for the belief-updating capacity of generic statements: How novel generics are interpreted by listeners.
+%Articulating precisely how generic language updates beliefs, however, is beyond the reach of any extant theory of generics.
+Recently, Tessler and Goodman (2019) proposed a model for a meaning of generics as a vague quantifier, which predicted truth judgments (or, endorsements) of generics with high quantitative accuracy. 
+Learning, however, operates via belief-updating and the question still remains about how generic language updates beliefs. 
+Here, we test the adequacy of this model to account for the belief-updating capacity of generic statements -- how novel generics are interpreted by listeners -- and compare it to other possible quantitative models of belief-updating from generics.
 %Here, we formalize a simple hypothesis about the meaning of generics:  Borrowing the machinery of learning from observations, generics convey a single, minimal example to the listener. 
 %We show this model is mathematically equivalent to a recent proposal by Tessler and Goodman (2019) for generics as a kind of vague quantifier. 
-We extend their model with a mechanism for pragmatic interpretation and test the models in their ability to account for the belief-updating resulting from generic statements---how novel generics are interpreted by listeners. 
-These models also predict strong dependence of interpretation on prior beliefs about the prevalence of features. Across two experiments, we both measure and manipulate prior beliefs. We find that prior beliefs are causally related to generic interpretations, as predicted, and that generics are best modeled as a vague quantifier understood with a communicative intent.
+%We extend their model with a mechanism for pragmatic interpretation and test the models in their ability to account for the belief-updating resulting from generic statements---how novel generics are interpreted by listeners. 
+The vague quantifier model of generics predicts strong dependence of interpretation on prior beliefs about the prevalence of features. Across two experiments, we both measure and manipulate prior beliefs. We find that prior beliefs are causally related to generic interpretations, as predicted, and that generics are best modeled as a vague quantifier.
 %We also show that the generics-as-minimal-example theory relates to traditional, quantificational views of generics in a straightforward way.
 }
 
@@ -196,7 +197,7 @@ These models also predict strong dependence of interpretation on prior beliefs a
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-\mht{might want to make the point somewhere in the intro, or model section, that it is hard to test quantitative models for generic interpretations because (a) interpretations are highly variable and (b) background knowledge is hard to partial out}
+%\mht{might want to make the point somewhere in the intro, or model section, that it is hard to test quantitative models for generic interpretations because (a) interpretations are highly variable and (b) background knowledge is hard to partial out}
 
 Much of what we learn about the world comes not from our own experience but by learning from others, often via language.
 Language uniquely has the power to describe that which goes beyond what can be experienced, conveying abstractions and generalizations.
@@ -206,28 +207,50 @@ Understanding how beliefs are updated from generic language is thus an important
 
 %\mht{THOUGHT: Is there a way to start with RSA, and then ask what is the literal contribution of a generic? TG19 give us one.... One way might be to take the Abelson intuition, and then reason through 
 
-A common intuition with generics is that they \enquote{{[}\ldots{}{]} appear to be commonly taken in a rather strong sense, as though the qualifier \emph{always} had implicitly crept into their interpretation} \cite<p.~172, >{Abelson1966}. 
-Indeed, adults learning from generics about both familiar and novel animals (e.g., \enquote{Bears like to eat ants}; \enquote{Lorches have purple feathers}) rate the \emph{implied prevalence} of the feature (e.g., the percentage of bears that like to eat ants) as very high \cite<mean implied prevalence $\sim 85\%$;>{Gelman2002, Cimpian2010}.
+The most basic dimension of belief-updating about categories and properties is the prevalence of a feature in a category, or the probability that an instance $x$ of the category $k$ has feature $f$: $P(f(x){=}\texttt{true} \mid x\in k)$, or $P(f \mid k$) for short-hand.
+In this regard, a common intuition with generics is that they \enquote{{[}\ldots{}{]} appear to be commonly taken in a rather strong sense, as though the qualifier \emph{always} had implicitly crept into their interpretation} \cite<p.~172,>{Abelson1966}. 
+Indeed, adults learning from generics about both familiar and novel animals (e.g., \enquote{Bears like to eat ants}; \enquote{Lorches have purple feathers}) rate the prevalence of the feature (e.g., the percentage of bears that like to eat ants) implied by the generic as very high \cite<mean implied prevalence $\sim 85\%$;>{Gelman2002, Cimpian2010}.
+It is not enough to say, however, that that meaning of a generic $Ks F$ is that $P(f \mid k)$ is high. 
 %Intuitively, such strong interpretations could arise through pragmatic reasoning \cite{Grice1975}: Why would a speaker assert a generic claim unless the property (e.g., eating ants) were sufficiently prevalent in the category?
-Viewing generics as fundamentally conveying high prevalence misses some key observations with respect to generics, however.
 %Generics exhibit extreme sensitivity to context, however, that has made it difficult to define quantitatively what should be learned from a generic.
 %Intuitively, generics \enquote{{[}\ldots{}{]} appear to be commonly taken in a rather strong sense, as though the qualifier \emph{always} had implicitly crept into their interpretation} (p.~172; Abelson \& Kanouse, 1966), and indeed adults learning from generics about both familiar and novel animals (e.g., \enquote{Bears like to eat ants}; \enquote{Lorches have purple feathers}) rate the \emph{implied prevalence} of the feature (e.g., the percentage of bears that like to eat ants) as very high (\(\sim 85\%\); Gelman, Star, \& Flukes, 2002; Cimpian, Brandone, \& Gelman, 2010, Expt. 1).
-Sentences like \enquote{Mosquitos carry malaria} only seem to have the quantificational force of an existential claim, meaning \emph{some mosquitos carry malaria} or \emph{mosquitos can carry malaria}.
-Consistent with this intuition, \citeA{Cimpian2010} (Expt.~3) found lower implied prevalence from generics about features that could be construed as accidental (e.g., ``Crullets have fungus-covered claws''; see also \citeNP{Khemlani2009, Khemlani2012} for evidence of weak inferences from generics such as ``Lions eat people'').
-Even more puzzling, generics can mean neither \emph{some} nor \emph{most} as in the case of \enquote{Ducks lay eggs}, where half of ducks (the females) lay eggs.
+Some generics (e.g., \enquote{Mosquitos carry malaria}) seem to only convey that the prevalence is non-zero, an existential claim, as is the qualifier ``can'' had implicitly crept in: \emph{mosquitos can carry malaria}.
+Consistent with this intuition, \citeA{Cimpian2010} (Expt.~3) found lower implied prevalence from generics about features that could be construed as accidental (e.g., ``Crullets have fungus-covered claws''; see also \citeNP{Khemlani2009, Khemlani2012} for evidence of similarly weak inferences from generics such as ``Lions eat people'').
+Even more puzzling, generics can take on other interpretations --- distinct from \emph{all}, \emph{most}, or \emph{some} --- as in the case of \enquote{Ducks lay eggs}, where half of ducks (the females) lay eggs.
+
 %And how would a learner, hearing a novel generic, know how strongly to interpret it?
 
 %If, in fact, \enquote{Mosquitos carry malaria} conveys something very weak, analogous to \emph{some mosquitos, under some circumstances, carry malaria}, then the knowledge conveyed by the generic could be similar to learning one mosquito, in one particular circumstance, was once observed carrying malaria; then, given that properties covary with kinds in systematic ways, a learner might reasonably infer that there is some larger (but unknown) subset of mosquitos in some larger (but unknown) class of situations that also carry malaria.
 
-What sort of meaning could account for the panoply of interpretations that come with generic sentences?
-\citeA{Tessler2019psychrev} proposed that the core meaning of generics is a kind of vague quantifier that operates over subjective, predictive probabilities that result from richly structured prior knowledge about categories and properties. 
-This meaning for a generic, however, was only tested via \emph{truth judgments} or \emph{endorsements} (e.g., is \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested.
-Under that model, a generic is functionally a quantifier (\emph{a la} ``some'', ``most'', ``all'') but one in which the listener does not know the quantificational threshold (i.e.,``some'' means \emph{at least one},  ``most'' means \emph{at least half}, whereas the generic means \emph{at least $\theta$}, where $\theta$ is unknown).
-In the original model of \citeA{Tessler2019psychrev}, the threshold is resolved by a listener reasoning about the prior probabilities of different levels of prevalence for a feature; for example, \emph{carrying malaria} is a property whose prevalence in a category is expected to be low because even when a member of a certain category is \emph{carrying malaria}, it is relatively unlikely that most or all other members of the category are also \emph{carrying malaria}.
-The model uses simple Bayesian reasoning to determine which threshold is likely to be true, given  prior knowledge of the property. 
-Yet, prior knowledge alone may not be the sole contributor to generic interpretation. 
-In particular, communicative, pragmatic pressures could enrich the literal meaning of the generic in fundamental ways \cite{declerck1986manifold}.
-We thus extend this original model using the tools developed in the Rational Speech Act framework \cite{Frank2012, Goodman2016, problang}, a class of probabilistic models of pragmatic communication, to better understand how pragmatic reasoning could enrich the literal interpretation of a generic.
+The fact that generic statements have such variable interpretations in terms of the property prevalence $P(f \mid k)$ has been taken by many in psychology to argue that there is no coherent relationship between the meaning of generics and the prevalence of the feature \cite{Leslie2008, Cimpian2010}. 
+% so many diverse  that the predicated property is present in all, most, half, some, or few members of a category 
+% different levels of prevalence of interpretations that are possible with generic sentences has been taken
+%This conclusion does not follow, however, since these studies only show that a single
+A systematic relationship between generics and prevalence could exist, however, and yet not be fixed across contexts and contents: Generics, like many other aspects of language more generally, may exhibit a sensitivity to context that modulates, in a consistent predictable way, a fundamentally prevalence-based meaning (see \citeNP{kochari2020generics} for a related argument). 
+Developing and testing such a context-based, statistical account of generics is methodologically challenging, however: One must articulate a model of generics that describes precisely how context and the meaning of generics combine to produce an interpretation in the mind of a learner, and one must  quantitatively validate such a model by measuring interpretations of generics and prior beliefs and related the two via the model.
+
+Here, we test such a context-baed, statistical account of generics. 
+The model --- originally proposed by \citeA{Tessler2019psychrev} --- takes the core meaning of a generic to be a kind of vague quantifier (\emph{a la} ``many'' or ``a lot'') that derives its interpreted meaning as a function of richly structured prior knowledge about categories and properties. 
+Under this model, a generic acts like a quantifier (\emph{a la} ``some'', ``most'', ``all'') in the sense that its truth conditions are determined by a threshold function (e.g., ``some'' means \emph{at least one},  ``most'' means \emph{at least half}); the generic is a special kind of quantifier, however, because the threshold for the generic is underspecified and must be inferred in context (i.e., the generic means \emph{at least $\theta$}, where $\theta$ is unknown).
+The threshold is resolved by a Bayesian listener reasoning about the probabilities of different levels of prevalence for a given feature; for example, \emph{carrying malaria} is a property whose prevalence in a category is expected to be low because among other categories, the property exists in only a few members of a category when it is present at all (e.g., a few birds may have malaria, but it is implausible that all members of a category would be carrying malaria at any particular moment in time). 
+Though initially developed  by \citeA{Tessler2019psychrev}, this \emph{uncertain threshold} model of generic interpretation was only tested indirectly through its predictions about \emph{truth judgments} or \emph{endorsements} (e.g., is the sentence \enquote{Mosquitos carry malaria} true or false?); the descriptive adequacy of such a model for belief-updating or interpretations has not been tested and is important for understanding learning from generic language.
+
+
+%even when a member of a certain category is \emph{carrying malaria}, it is relatively unlikely that most or all other members of the category are also \emph{carrying malaria}.
+
+
+% over subjective, predictive probabilities that result from richly structured prior knowledge about categories and properties. 
+%The model uses simple Bayesian reasoning to determine which threshold is likely to be true, given  prior knowledge of the property. 
+%Yet, prior knowledge alone may not be the sole contributor to generic interpretation. 
+%In particular, communicative, pragmatic pressures could enrich the literal meaning of the generic in fundamental ways \cite{declerck1986manifold}.
+%We thus extend this original model using the tools developed in the Rational Speech Act framework \cite{Frank2012, Goodman2016, problang}, a class of probabilistic models of pragmatic communication, to better understand how pragmatic reasoning could enrich the literal interpretation of a generic.
+
+%We draw a different conclusion from this evidence.
+
+
+
+%Rather than 
+%What sort of meaning could account for the panoply of interpretations that come with generic sentences?
 
 %In addition, pragmatic communicative pressures 
 %
@@ -268,31 +291,42 @@ Further, the gradience in generic interpretations has never been examined or qua
 Our formal modeling predicts gradience in interpretations and that such very weak interpretations can occur when prior knowledge indicates that the property in question is rare within kinds (e.g., the property only manifests in certain circumstances).
 
 This paper is organized as follows.
-In the first section, we review the model of generic meaning proposed by \citeA{Tessler2019psychrev} and incorporate it into the Rational Speech Act modeling framework \cite{Frank2012, Goodman2016}.
-We compare literal and pragmatic versions of the model against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
-In a preliminary study, we replicate and extend the findings of \citeA{Cimpian2010} (Expt.~3) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
-In Experiment 1, we use a diverse stimulus set better able to elicit reliable variability in implied prevalence; we use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
-In Experiment 2, we experimentally manipulate background knowledge to test whether prior beliefs about prevalence are causally related to the interpretation of a novel generic as predicted by the models.
-Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as a vague quantifier understood with a communicative intent.
+In the first section, we describe the model of generic meaning proposed by \citeA{Tessler2019psychrev} and develop a class of alternative ``fixed-threshold'' models that serve as tight comparisons for belief-updating mechanism proposed.
+%and incorporate it into the Rational Speech Act modeling framework \cite{Frank2012, Goodman2016}.
+%We compare literal and pragmatic versions of the model against additional control models that use the same prior knowledge but which update their beliefs via different semantic mechanisms: fixed-thresholds analogous to the semantics of quantifiers like \emph{some} and \emph{most}.
+Then, in a preliminary study, we replicate and extend the findings of \citeA{Cimpian2010} (Expt.~3) that biological and accidental properties receive differential interpretations and find substantial variability in implied prevalence by-item; the items that exhibit the most variability, however, have a potential confound which leads us to design our main experiments.
+In Experiment 1, we use a diverse stimulus set better able to elicit reliable variability in implied prevalence; we measure both prior beliefs and generic interpretations in order to criticize and compare the quantitative models of generic interpretation and the alternative models. 
+%use these data to test our literal and pragmatic models of generic interpretation against each other and against control models.
+In Experiment 2, we test whether prior beliefs about prevalence are causally related to the interpretation of a novel generic as predicted by the model; to do this, we experimentally manipulate background knowledge and again measure both prior beliefs and generic interpretations. 
+Together, these results provide strong evidence that generics update beliefs in a way sensitive to a listener's prior knowledge and are best modeled as an uncertain threshold function. 
 %We conclude by discussing the broader context of these results and their importance for our understanding of learning and development.
 
 
 
-\begin{figure}
-\centering
-\includegraphics{figs/cartoon3.pdf}
-\caption{\label{fig:cartoon}Cartoon of the pragmatic generic interpretation model. The literal contribution of a generic (e.g., \enquote{Dorbs have yellow crests}) is a threshold function where the listener is uncertain about the threshold. 
-%\ndg{add a creature within the L0 bubble that has no colors except the yellow crest (ie make minimal), and label it "dorb". also maybe replace the arrows from agents to creatures with an eye?} 
-A pragmatic listener (\(L_1\)) interprets the utterance as a communicative act coming from a speaker (\(S_1\)) that decides to produce a generic in order to convey prevalence information to a naive listener (\(L_0\)). 
-The literal listener interprets the utterance (\emph{literal interpretation}) by drawing on their prior knowledge about other categories and properties (\emph{prevalence prior}).}
-%\mht{make this into something more like }
-\end{figure}
+%\begin{enumerate}
+%\item connect ``context'', ``prior beliefs about context'' and ``prior beliefs about prevalence of features''
+%\item introduce uncertain threshold account and fixed-threshold alternatives
+%\item fixed-threshold alternatives are a sort of validation of the cimpian, leslie intuition... no fixed-threshold model is a good model
+%\item uncertain threshold is a systematic relationship between prevalence and generics (just like gradable adjectives)
+%\end{enumerate}
+
+
+
+%\begin{figure}
+%\centering
+%\includegraphics{figs/cartoon3.pdf}
+%\caption{\label{fig:cartoon}Cartoon of the pragmatic generic interpretation model. The literal contribution of a generic (e.g., \enquote{Dorbs have yellow crests}) is a threshold function where the listener is uncertain about the threshold. 
+%%\ndg{add a creature within the L0 bubble that has no colors except the yellow crest (ie make minimal), and label it "dorb". also maybe replace the arrows from agents to creatures with an eye?} 
+%A pragmatic listener (\(L_1\)) interprets the utterance as a communicative act coming from a speaker (\(S_1\)) that decides to produce a generic in order to convey prevalence information to a naive listener (\(L_0\)). 
+%The literal listener interprets the utterance (\emph{literal interpretation}) by drawing on their prior knowledge about other categories and properties (\emph{prevalence prior}).}
+%%\mht{make this into something more like }
+%\end{figure}
 
 \hypertarget{computational-model}{%
 \section{Computational Model}\label{computational-model}}
 
 Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ \cite{Carlson1977, Leslie2008}.
-Given that human generalization from observations can be well described using the language of probability \cite{Shepard1987} and Bayesian belief-updating with (often structured) prior knowledge \cite{Tenenbaum2011}.  \citeA{Tessler2019psychrev} propose that the meaning of generics---which convey generalizations---can also be formalized using the probability calculus \cite<cf.,>{Cohen1999, vanRooij2020generics}.
+Given that human generalization from observations can be well described using the language of probability \cite{Shepard1987} and Bayesian belief-updating with (often structured) prior knowledge \cite{Tenenbaum2011}, \citeA{Tessler2019psychrev} propose that the meaning of generics---which convey generalizations---can also be formalized using the probability calculus \cite<cf.,>{Cohen1999, vanRooij2020generics}.
 Under their model, the literal contribution of a generic sentence is a function on a listener's subjective probability that a future instance of the category $k$ will have the property $f$---$P(f(x){=}\texttt{true} \mid x\in k)$; in the psychological literal on generics, such a probability is often called \emph{prevalence}, though the term \emph{projectibility} \cite{Goodman1955} may also be appropriate (for consistency with the literature, we maintain the term prevalence). %some may call this ``projectibility''). 
 %A reasonable initial hypothesis is that generics convey the same information content as a single observation, interpreted with respect to background knowledge.
 
@@ -313,15 +347,16 @@ P (r_{kf}, \theta \mid \denote{gen}[k][f]) = P (r_{kf}, \theta \mid r_{kf} >  \t
 %\end{align}
 
 Here, the truth-functional meaning of a generic is a threshold-function mandating that the prevalence $r_{kf}$ is greater than the threshold \(\theta\), represented by the Kronecker delta $\delta_{r_{kf} > \theta}$ that returns \(1\) when \(r_{kf} > \theta\) (i.e., when the utterance is true) and \(0\) otherwise.
-$P(\theta)$ is the context-invariant prior distribution over semantic thresholds for the generic sentence and $P_{f}(r^{kf})$ is the learner's property-specific prior beliefs about the prevalence.
-$P(\theta)$ is assumed to be uniform, and hence $P(\theta = \theta') \propto 1; \forall \theta' \in (0, 1)$. 
+$P(\theta)$ is the context-invariant prior distribution over semantic thresholds for the generic sentence and $P_{f}(r_{kf})$ is the learner's property-specific prior beliefs about the prevalence.
+This model is structurally similar to a recently proposed model for gradable adjective interpretation, e.g., \emph{tall} means $\text{height}(x) > \theta$, but $\theta$ is underspecified \cite{Lassiter2015}.
+Following \citeA{Lassiter2015}, $P(\theta)$ is assumed to be uniform, and hence $P(\theta = \theta') \propto 1; \forall \theta' \in (0, 1)$. 
 
-To get some intuition for the model behavior, consider a simplified, discrete scenario where $\theta$ could only take 3 values -- \{0.25, 0.5, 0.75\} -- and $r$ could take 4 values -- \{0.2, 0.4, 0.6, 0.8 \}. Further, assume that the prevalence prior is uniform (i.e., each of the four levels of prevalence is equally likely \emph{a priori}). (Recall that the prior on thresholds $P(\theta)$ is always assumed to be uniform.)
-The belief-updating rule for a generic specified by Eq.\ref{eq:L0} states that the prevalence is greater than $\theta$.
-For $\theta = 0.75$, only the highest level of prevalence $r = 0.8$ will be above the threshold.  
-For $\theta = 0.5$, both the highest level of prevalence and the second highest $r \in \{0.6, 0.8\}$ will be above the threshold.  
-For $\theta = 0.25$, all but the lowest level of prevalence---$r \in \{0.4, 0.6, 0.8\}$---will be above the threshold.  
-To schematically represent the poster, we count, for each level of prevalence, how many times it lies above a threshold; then, the relative (unnormalized) posterior weights for levels \{0.2, 0.4, 0.6, 0.8\} are \{0, 1, 2, 3\}, or after normalization  $\{0, \frac{1}{6}, \frac{1}{3}, \frac{1}{2}\}$.
+To get some intuition for the model behavior, consider a simplified, discrete scenario where prevalence $r$ could take on 4 values corresponding to intervals -- $\{0.01-0.25, 0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$ -- and $\theta$ could take 3 values -- \{0.25, 0.5, 0.75\} (Figure \ref{fig:modelSimulations}A, top). Assume that the prevalence prior is uniform (i.e., each of the four levels of prevalence is equally likely \emph{a priori}). (Recall that the prior on thresholds $P(\theta)$ is always assumed to be uniform.)
+The the thehesold semantics for a generic encoded in Eq. \ref{eq:L0} states that the prevalence is greater than $\theta$.
+For $\theta = 0.75$, only the highest level of prevalence $r = 0.76 - 1$ will be above the threshold.  
+For $\theta = 0.5$, both the highest level of prevalence and the second highest $r \in \{0.51 - 0.75, 0.76 - 1\}$ will be above the threshold.  
+For $\theta = 0.25$, all but the lowest level of prevalence---$r \in \{0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$---will be above the threshold (Figure \ref{fig:modelSimulations}A, middle).  
+To schematically represent the posterior, we count, for each level of prevalence, how many times it lies above a threshold; then, the relative (unnormalized) posterior weights for levels $\{0.01-0.25, 0.26 - 0.50, 0.51 - 0.75, 0.76 - 1 \}$ are \{0, 1, 2, 3\}, or after normalization  $\{0, \frac{1}{6}, \frac{1}{3}, \frac{1}{2}\}$ (Figure \ref{fig:modelSimulations}A, bottom).
 
 
 %If $\theta$ is low, then many prevalence levels $r$ will be consistent with a generic statement that is true.
@@ -347,32 +382,43 @@ To schematically represent the poster, we count, for each level of prevalence, h
 %The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
 
  
- The vague quantifier generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P(r)$. 
+ The uncertain threshold generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P(r)$. 
  Prevalence prior distributions that display more structure (e.g., multimodal distributions) receive interpretations that are highly reflective of that underlying structure.
- This prior-sensitive interpretation is a desirable feature of the model because generics operate over rich intuitive theories about properties \red{(Prasada, Leslie, Gelman, Cimpian, Rhodes)}  and are believed to receive interpretations that are sensitive to those theories \cite{Cimpian2010}. 
- For instance, for biological properties like \emph{flying} (like in ``Ducks fly''), a listener may be assumed to know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}), but is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence, this listener's prior distribution over prevalence would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:tripartite}A, second row).\footnote{
-	Technically, people may have graded degrees of belief about the prevalence and hence the mode at 0\% might not be a Delta distribution at exactly 0\%. That is, such a psychological model can assume that there are categories in which almost no members have the property (e.g., a dog flying), but that the existence of such an individual is not entirely impossible.}
+ This prior-sensitive interpretation is a desirable feature of the model because generics operate over rich intuitive theories about properties and are believed to receive interpretations that are sensitive to those theories \cite{Leslie2007, Gelman2010:essentialist, Cimpian2010theory, Rhodes2012, Prasada2013}. 
+ For instance, for biological properties like \emph{flying} (like in ``Ducks fly''), a listener may be assumed to know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}), but is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence, this listener's prior distribution over prevalence would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:modelSimulations}B, second row).
+ %\footnote{
+%	Technically, people may have graded degrees of belief about the prevalence and hence the mode at 0\% might not be a Delta distribution at exactly 0\%. That is, such a psychological model can assume that there are categories in which almost no members have the property (e.g., a dog flying), but that the existence of such an individual is not entirely impossible.}
 	%Bayesians in general do not like to assign 0 probabilities to outcomes, which is what a mode at 0\% would entail for this cognitive model. 
 	%Instead, the model assigns some low but non-zero probability that an instance of a category having a property which is not in general true of the category  (e.g., a dog flying), because it is not impossible to imagine some intuitive chain of causal events that could give rise to the property (e.g., a genetic mutation or a cross-species cloning experiment). }
-A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which would manifest as a probability distribution with a different bimodal structure, favoring prevalence levels near 0\% and 50\% (Figure~\ref{fig:tripartite}A, third row).  
-Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., \citeNP{Prasada2013}) which would follow a distribution  favoring low prevalence values (Figure \ref{fig:tripartite}A, bottom row). 
+A reproductive property like \emph{laying eggs} can manifest in only one sex of a category, which would manifest as a probability distribution with a different bimodal structure, favoring prevalence levels near 0\% and 50\% (Figure~\ref{fig:modelSimulations}B, third row).  
+Finally, some properties may be expected to be present in only a minority of the category (e.g., because of a weak causal connection between the property and the kind such as \emph{carries malaria}; cf., \citeNP{Prasada2013}) which would follow a distribution  favoring low prevalence values (Figure \ref{fig:modelSimulations}B, bottom row). 
+For each, the generic interpretation is unique (Figure \ref{fig:modelSimulations}B, right-most column) and is most similar to different fixed-threshold quantifiers depending on the property (Figure \ref{fig:modelSimulations}B, other columns).
+%\footnote{
+%Some of the interpretation distributions shown in Figure \ref{fig:modelSimulations}B appear bimodal. In fact, they are all bimodal distributions to some extent given the parameterization of the prior; in many cases, however, the component of the distribution that favors very low prevalence levels has very low probability. 
+%}
 
 The formalization of prior beliefs in this model and the vague semantics has been used to explain human truth judgments (or, endorsements) of generics (e.g., that ``Robins lay eggs'' is intuitively true, while ``Robins are female'' is not) as well as other kinds of linguistic expressions that are thought to convey generalizations \cite<e.g., habituals;  ``Sally runs'' is less felicitous if Sally ran 3 times in the past year than if she ran 3 times in the past week;>{Tessler2019psychrev}.
-Here we ask how well human generic interpretations can be modeled as a function of an uncertain threshold operating over diverse prior beliefs about properties. 
+Here we ask how well belief-updating from generics (i.e., generic interpretations) can be modeled as a function of an uncertain threshold operating over diverse prior beliefs about properties. 
 
 
 \begin{figure}
 \centering
 %\includegraphics{genint_files/figure-latex/modelSimulations-1.pdf}
-\includegraphics{figs/modelSimulations-noPrag.pdf}
-\caption{\label{fig:modelSimulations}Comparison of literal generic interpretation to fixed-threshold models with various thresholds. A: Prevalence priors for four properties. B: Posterior distributions over prevalence (interpretations) given different belief updating rules: fixed-threshold quantifiers and the literal generic meaning as a single positive example.}
+\includegraphics{figs/cartoon-model-sims}
+\caption{\label{fig:modelSimulations}
+Computational model overview.
+A: Cartoon of belief updating in the case of a uniform prior over prevalence levels, according to the fixed-threshold and uncertain threshold models. Fixed-threshold models rule out prevalence levels below the threshold (light grey). The uncertain threshold model can be viewed as a composite of all the fixed-threshold models.
+B: Comparison of uncertain threshold and fixed-threshold models for four different prevalence prior distributions, intuitively corresponding to different types of properties. Priors used for the four properties: $\textit{uniform} \sim \text{Beta}(1, 1); \textit{biological} \sim 0.6 \times \text{Beta}(1, 200) + 0.4 \times \text{Beta}(30, 1); \textit{sexed} \sim 0.6 \times \text{Beta}(1, 200) + 0.4 \times \text{Beta}(10, 10); \textit{accidental} \sim 0.6 \times \text{Beta}(1, 200) + 0.4 \times \text{Beta}(2, 10)$. Lines denote Bayesian 95\% highest density intervals and points denote means of distributions.
+}
 \end{figure}
 
 
 \hypertarget{alternative-semantic-models}{%
 \subsection{Alternative semantic models}\label{alternative-semantic-models}}
 
-We compare the uncertain threshold model to alternative models that update beliefs according to a fixed-threshold semantics (\emph{a la} quantifiers \emph{some} or \emph{most}). 
+%Many empirical studies in psychology treat the ``statistical hypothesis'' about the meaning of a generic to be tantamount to a quantifier with a fixed threshold on prevalence, and consequently report evidence against this ``statistical hypothesis'' \cite{Prasada2006, Leslie2008, Cimpian2010, Khemlani2012, Prasada2013, Brandone2014}.
+Many empirical studies in psychology treat the ``statistical hypothesis'' about the meaning of a generic to be tantamount to a quantifier with a fixed threshold on prevalence \cite{Prasada2006, Leslie2008, Cimpian2010, Khemlani2012, Prasada2013, Brandone2014}.
+We thus compare the uncertain threshold model to alternative models that update beliefs according to a fixed-threshold semantics (\emph{a la} quantifiers \emph{some} or \emph{most}). 
 To isolate the contribution of the semantics model,  we endow the alternative models with the same background knowledge in the form of the prevalence prior distribution \(P(r)\).
 
 Models with a fixed semantics are given by:
@@ -383,21 +429,15 @@ P (r_{kf} \mid r_{kf} >  \theta^*) \propto \delta_{r_{kf} > \theta^*} \cdot P_f(
 If $\theta^* = 0$, then the model is analogous to a literal interpretation for \enquote{some}, which rules out the lowest possible prevalence level ($0\%$).\footnote{Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that \enquote{some} often implies \enquote{not all}). Such a model can be implemented in the same probabilistic modeling framework \cite{Goodman2013} but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.} 
 If $\theta^* = 0.5$, the model would be analogous to \enquote{most}, with a literal meaning meaning \emph{more than half}. 
 Other fixed thresholds are possible as well (e.g., $\theta^* = 0.25$; \enquote{more than a quarter}).
-Predictions of these control models are shown in Figure~\ref{fig:modelSimulations}.
+Predictions of a few of these control models are shown in Figure~\ref{fig:modelSimulations}B.
 
-A model that assumes a fixed threshold $> 0\%$ is a very restricted model; it places zero probability on any response less than the fixed threshold $\theta^*$.
-In case there are ratings in the experimental data sets that are less than  $\theta^*$, we must supplement these models with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, participants respond at random.
-We infer this noise probability parameter from the data for the fixed threshold models.
+A model that assumes a fixed threshold $> 0\%$ places zero probability on any response less than the fixed threshold $\theta^*$.
+In case there are ratings in the experimental data sets that are less than $\theta^*$, we must supplement these models with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, were will assume participants respond at random.
+This noise probability parameter will serve as an additional free parameter for the fixed-threshold control models. 
+%We infer this noise probability parameter from the data for the fixed threshold models.
 
 Finally, we will also compare the generic interpretation models to a model that does not update beliefs, predicting prevalence ratings according to the prior distribution \(P(r)\).
 This comparison informs us as to whether or not participants actually \emph{update} their beliefs when they hear a generic statement.
-
-
-
-
-
-
-
 
 
 %
@@ -455,13 +495,13 @@ This comparison informs us as to whether or not participants actually \emph{upda
 
 Our models of generic interpretation predict that the interpretations of generics should vary with the prevalence prior for the property in question.
 \citeA{Cimpian2010} reported differences in the implied prevalence between biological properties (in particular, body parts with color modifiers e.g., \emph{yellow fur}) and accidental properties (e.g., \emph{fungus-covered claws}).
-Experiment 1 replicates and extends this result; this study serves to validate that the paradigm can elicit fine-grained quantitative variability, which we will build on to test the computational models.
-Experiment 2 is a larger scale version of \citeA{Cimpian2010}'s \emph{implied prevalence} task, with sufficiently dense measurements on the by-item level to reveal graded, quantitative variability among interpretations of generics of different properties. 
-Experiment 3 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors.
+Our Preliminary Experiment replicates and extends this result; this study serves to validate that the paradigm can elicit fine-grained quantitative variability, which we will build on to test the computational models.
+Experiment 1 is a larger scale version of \citeA{Cimpian2010}'s \emph{implied prevalence} task, with sufficiently dense measurements on the by-item level to reveal graded, quantitative variability among interpretations of generics of different properties. 
+Experiment 2 is a test of the causal influence of prevalence priors on generic interpretation, in which we manipulate participants' subjective prevalence priors.
 
-Both of our main experiments (Experiments 2 \& 3) are divided into two parts. 
-In Part A (Expts.~2a, 3a), we measure participants' prior beliefs about the prevalence of the features used in our novel generic statements (e.g., the prior probabilities of different levels of prevalence of the feature \emph{likes to cuddle}); we do this by asking about the prevalence of the feature among a variety of alternative, familiar categories (e.g., \emph{what percentage of \{cats, mice, elephants, ...\} like to cuddle?}).
-In Part B (Expts.~2b, 3b), we measure the prevalence implied by a generic about a novel categories (e.g., ``Dorbs like to cuddle.''). 
+Both of our main experiments (Experiments 1 \& 2) are divided into two parts. 
+In Part A (Expts.~1a, 2a), we measure participants' prior beliefs about the prevalence of the features used in our novel generic statements (e.g., the prior probabilities of different levels of prevalence of the feature \emph{likes to cuddle}); we do this by asking about the prevalence of the feature among a variety of alternative, familiar categories (e.g., \emph{what percentage of \{cats, mice, elephants, ...\} like to cuddle?}).
+In Part B (Expts.~1b, 2b), we measure the prevalence implied by a generic about a novel categories (e.g., ``Dorbs like to cuddle.''). 
 We then perform a series of quantitative analyses aimed at predicting the prevalence implied by the generic (Part B) from the prior distribution of prevalence (Part A) and assuming a particular model of belief-updating from a generic (i.e., a model generic interpretation). 
 The comparison of different formal models of generic interpretation using the same elicited prior knowledge allows us to provide evidence for a particular model of generic interpretation, while completely controlling for the effect of prior knowledge. 
 
@@ -661,8 +701,8 @@ As in the replication of \citeA{Cimpian2010}, we observe a clear gradient in the
 On one end of the continuum, the generic \enquote{Wugs have four legs} is interpreted as a universal (applying to exactly 100\% of wugs) by half of participants (36 out of 70) and which received a mean implied prevalence rating of 0.96 (95\% confidence interval: [0.93, 0.98]).\footnote{Note the novel category term is randomized for each participant and property. We use particular novel category terms in the text for ease of exposition.}
 On the other end of the spectrum is \enquote{Glippets perform in the circus}, which is interpreted as applying to less than 25\% of glippets by over half of participants (35 out of 61) and which receives a mean rating of 0.31 [0.23, 0.39].
 Additionally remarkable is the distribution of responses for individual items: Though \enquote{Feps live in zoos} is taken by many participants to mean that around 25\% of feps live in zoos, others take it to mean that almost 100\% live in zoos; such variability in interpretation is not unreasonable: some animal categories (e.g., Micronesian Kingfishers) exist entirely in zoos, while others do not.
-In addition to the extreme endpoints, we find average ratings at all levels of prevalence in between, even for predicates that have the same main verb (e.g., \emph{live in} \emph{trees}~vs.~\emph{urban areas}~vs.~\emph{high-rise buildings}~vs.~\emph{zoos}; compare also properties involving the verb \emph{eat}; Figure~\ref{fig:genint-empiricalData}).
-This extreme gradience stands in contrast to the results of \citeA{Cimpian2010}, which left open the possibility that were just a few special distinctions of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see Figure \ref{fig:cimpian-modelingResults}). 
+In addition to the extreme endpoints, we find average ratings at all levels of prevalence in between, even for predicates that have the same main verb (e.g., \emph{live in} \emph{trees}~vs.~\emph{urban areas}~vs.~\emph{high-rise buildings}~vs.~\emph{zoos}; compare also properties involving the verb \emph{eat}; Figure~\ref{fig:genint-empiricalData}), arguing against a view that variability can be traced back simply to verbs with different ``generalizing powers'' \cite{Abelson1966, Cimpian2010}.
+This extreme gradience also stands in contrast to the results of \citeA{Cimpian2010}, which left open the possibility that were just a few special distinctions of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see Figure \ref{fig:cimpian-modelingResults}). 
 Explaining the extreme gradience we observe in our data set requires a quantitative model. 
 
 %\ndg{emphasize the gradience, in contrast with cimpian results which left open the possibility that there were just a few categories... this means we really want a quant model.}
@@ -984,7 +1024,7 @@ Finally, we ask whether one model is in fact a better explanation of the data us
 We compute Bayes Factors, which compare the likelihood of the observed data under each of the models, averaging across all values of any free parameters.
 This form of model comparisons penalizes models with extra free parameters if, in fact, the model's predictions are highly sensitive to those parameters.
 We compare our models using a fully Bayesian strategy with uncertainty over the prevalence priors (analogous to what is performed in the model criticism section).
-To approximate the marginal likelihood, we used an Annealed Importance Sampling algorithm \cite{Neal2001} implemented in the probabilistic programming language WebPPL; for each model, we collected 100 samples, each of which was composed of an annealing schedule of 10,000 linearly spaced iterations.
+To approximate the marginal likelihood, we used an Annealed Importance Sampling algorithm \cite{neal2001annealed} implemented in the probabilistic programming language WebPPL; for each model, we collected 100 samples, each of which was composed of an annealing schedule of 10,000 linearly spaced iterations.
 The results are shown in Table 2: The uncertain threshold model is on the order of \(e^{586}\) times better at accounting for the implied prevalence data, than the best-fitting model that uses a fixed-threshold. 
 This is extremely strong evidence that the best model for how generics update beliefs is via un an uncertain threshold semantics.
 
@@ -1314,8 +1354,7 @@ For example, in the \emph{25/75} distribution, most participants interpret  the 
 Generic language is the foremost case study of how abstract, generalizable knowledge is transmitted through language.
 %, and it is commonly believed that generics carry strong interpretations (analogous to the quantifier \enquote{most} or \enquote{all}).
 Despite their ubiquity and relative morphosyntactic simplicity, generics have been examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
-Here, we explored the hypothesis that generics directly use mechanisms for non-linguistic belief updating by conveying a single minimal example to a listener. 
-We further articulated a more elaborate model which interprets generics as intentional utterances, that were chosen purposefully by the speaker.
+Here, we explored the hypothesis proposed by \citeA{Tessler2019psychrev} that generics update beliefs according to an uncertain threshold model. 
 We tested these models using a diverse set of stimuli and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property (Experiment 1).
 Furthermore, we found that this background knowledge was causally responsible for the resulting interpretation (Experiment 2).
 Our data strongly support the conclusion that generics can be thought of as conveying a communicatively relevant minimal example, as opposed to a mere observation. 
