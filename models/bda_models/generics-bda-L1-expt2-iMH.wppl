@@ -1,6 +1,6 @@
-// time ~/tools/webppl-github/webppl models/model_comparison/generics-ais-flexiblePrior-expt2.wppl  --require models/node_modules/utils --require webppl-json pragmatic_unlifted prior uncertain 1
+// time webppl models/bda_models/generics-bda-L1-expt2-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork pragmatic_unlifted prior uncertain 1
 
-var iter = last(process.argv) // load index as last command line index
+var chain = last(process.argv) // load index as last command line index
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
@@ -27,23 +27,26 @@ var dataPath = "data/paper_data/expt2";
 //     d_interpretation = readDataFile(dataPath, "expt1b-interpretation"),
 //     d_interpretation_catch = readCatchFile(dataPath, "expt1b-interpretation"),
 //     d_interpretation_subj = readSubjFile(dataPath, "expt1b-interpretation");
-    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
-    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
-    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
+
+	    // d_endorsement = readDataFile("endorsement", endorsementFilePrefix),
+	    // d_endorsement_catch = readCatchFile("endorsement", endorsementFilePrefix),
+	    // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
+
+// var d_observation = readDataFile("observation-pilots");
 
 // expt 3: Prior manipulation
-var d_prior = readDataFile(dataPath, "expt2a-prior-filtered"),
+var d_prior = readDataFile(dataPath, "expt2a-prior"),
     d_prior_catch = readCatchFile(dataPath, "expt2a-prior"),
     d_prior_subj = readSubjFile(dataPath, "expt2a-prior"),
-    d_interpretation = readDataFile(dataPath, "expt2b-interpretation-filtered"),
+    d_interpretation = readDataFile(dataPath, "expt2b-interpretation"),
     d_interpretation_catch = readCatchFile(dataPath, "expt2b-interpretation"),
     d_interpretation_subj = readSubjFile(dataPath, "expt2b-interpretation");
 
-// var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
-//     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
-//     // endorsementWorkeridsPassed = passCatchTrials(d_endorsement_catch),
-//     priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
-//     interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
+var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
+    interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
+    // endorsementWorkeridsPassed = passCatchTrials(d_endorsement_catch),
+    priorWorkeridsEnglish = nativeEnglish(d_prior_subj),
+    interpretationWorkeridsEnglish = nativeEnglish(d_interpretation_subj);
     // endorsementWorkeridsEnglish = nativeEnglish(d_endorsement_subj);
 
 var data = {
@@ -66,6 +69,14 @@ var data = {
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
 	})}, d_interpretation))//,
+  // observation: filter(function(di){
+  //   return (utils.isNumber(di.response) &&
+  //     di.condition == "firstObs" &&
+  //     di.trial_type == "implied_prevalence")
+  // }, map(function(d){ return extend(d, {
+	// 	binnedResponse:  utils.closest( midBins.slice(1), d.response)
+	// })}, d_observation))
+  //,
   // endorsement: filter(function(di){
   //   return ((endorsementWorkeridsPassed.indexOf(di.workerid) > -1) &&
   //     (endorsementWorkeridsEnglish.indexOf(di.workerid) > -1) &&
@@ -77,18 +88,17 @@ var data = {
 };
 
 
-// var prevalence_levels = map(function(x){ utils.closest(midBins, x) }, [0.1,0.3,0.5,0.7,0.9])
 
 // // // test that removing Ss who failed catch trial works properly (computed in R)
 // assert.ok(levels(data.interpretation, "workerid").length == 132)
-// assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
-
 
 
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
 // assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
-// assert.ok(levels(data.endorsement, "workerid").length == 150) // endorsement 1
+
+// assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
+// assert.ok(_.filter(data.observation, {trial_num: "30"}).length == 36) // prior 3 n200
 
 var utterancePrior = Infer({model: function(){
 	return uniformDraw(["generic", "silence"])
@@ -103,6 +113,8 @@ var meaning = function(utt,state, theta) {
 }
 //
 var properties = levels(data.interpretation, "distribution");
+// var properties = levels(data.observation, "property");
+
 var nullParams = {a:1, b:100}, nullDistribution = Beta(nullParams);
 // properties
 
@@ -111,6 +123,10 @@ var addNoise = function(dist, noise){
     return flip(noise) ? uniformDraw(midBins) : sample(dist)
   }})
 }
+
+var fixedThreshold = (semantics == "some") ?_.min( thetaBins) :
+  (semantics == "most") ? 0.5 :
+  false
 
 var nBins = thetaBins.length;
 var thetaWeights = map(function(s){ return exp(thetaPrior.score(s)) }, thetaBins)
@@ -124,15 +140,15 @@ var kernelFn = function(prevVal){
                       ps: thetaWeights.slice(lower,upper)})
 }
 
+
 var fixed_threshold_options = [
 	"most", "best", "ten", "fifteen", "twenty",
 	"twentyfive", "thirty", "forty", "sixtyfive"
 ]
 
-// display(properties)
 
-var marginalLikelihood = function(){
-	// "uniform" noise label for uncertain or some models --> no noise
+var model = function(){
+
 	var noise = (noise_model == "uniform"  && !(_.includes(fixed_threshold_options, semantics))) ? 0 :
 		uniformDrift({a: 0, b: 1, width:0.2})
 
@@ -148,27 +164,36 @@ var marginalLikelihood = function(){
 		(semantics == "best") ? sample(thetaPrior, {driftKernel: kernelFn}) :
 	  false
 
-  var numberOfComponents = 2;//poisson(1) + 1;
+	var numberOfComponents = 2;//poisson(1) + 1;
+  var speakerOptimality = uniformDrift({a: 0, b: 20, width: 0.2})
+  // var cost = uniformDrift({a: 0, b: 10, width: 0.4})
+  // var cost_uttProb = Math.exp(-cost)
 
-	var speakerOptimality = modelName == "literal" ? 0 : uniformDrift({a: 0, b: 20, width: 0.2})
-	var cost = modelName == "literal" ? 0 : uniformDrift({a: -3, b: 3, width: 0.4})
+	var cost = uniformDrift({a: -3, b: 3, width: 0.4})
 	var cost_fn = function(utterance){
 		return utterance == "silence" ? 0 : cost
 	}
 
-  foreach(properties, function(item){
-    // display(item)
+  foreach(properties, function(itemName){
+
+    // var itemName = item.replace("\'", "&quotechar")
     var propertyData = {
-        prior: _.filter(data.prior, {distribution: item}),
-        interpretation: _.filter(data.interpretation, {distribution: item})
+        prior: _.filter(data.prior, {distribution: itemName}),
+        interpretation: _.filter(data.interpretation, {distribution: itemName})//,
+        // observation: _.filter(data.observation, {property: item})
     };
 
-    var weights = normalize(repeat(numberOfComponents,
-      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    ))
+    assert.ok(propertyData.prior.length > 0)
+    assert.ok(propertyData.interpretation.length > 0)
+    // assert.ok(propertyData.observation.length > 0)
 
-		// var weight = uniformDrift({a: 0, b: 1, width:0.2})
-		// var weights = [weight, 1 - weight]
+    // var weights = normalize(repeat(numberOfComponents,
+    //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    // ))
+
+		var weight = uniformDrift({a: 0, b: 1, width:0.2})
+		var weights = [weight, 1 - weight]
+
 
     var componentParameters = repeat(numberOfComponents,
      function(){
@@ -187,6 +212,21 @@ var marginalLikelihood = function(){
   		factor(scr)
   	})
 
+    foreach(_.range(numberOfComponents), function(i){
+
+      query.add(["componentParameters", itemName, i, "weight"],
+        weights[i]
+      )
+      query.add(["componentParameters", itemName, i, "alpha"],
+        componentParameters[i]["a"]
+      )
+
+      query.add(["componentParameters", itemName, i, "beta"],
+        componentParameters[i]["b"]
+      )
+
+    })
+
   	var statePrior = Infer({model: function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
@@ -196,6 +236,7 @@ var marginalLikelihood = function(){
 				return flip(noise_level) ? sample(statePrior) : sample(dist)
 			}})
 		}
+
   	/// RSA model
   	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
@@ -206,10 +247,11 @@ var marginalLikelihood = function(){
   	    return state
   	 }})}, 10000)
 
-
-		 var speaker1 = cache(function(state) {
+     var speaker1 = cache(function(state) {
       Infer({model: function(){
+        // var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
 				var utterance = categorical({vs: ["generic", "silence"], ps: [1, 1]})
+        // var utterance = sample(utterancePrior);
         var L0 = listener0(utterance);
 				factor(speakerOptimality * (L0.score(state) - cost_fn(utterance)))
         return utterance
@@ -225,40 +267,46 @@ var marginalLikelihood = function(){
 
 
 			/// LIFTED PRAGMATIC
-    	var listener0_forL1 = cache(function(utterance, theta) {
-    	  Infer({model: function(){
-    	    var state = sample(statePrior);
-    	    var m = meaning(utterance, state, theta)
-    	    condition(m)
-    	    return state
-    	 }})}, 10000)
+			var listener0_forL1 = cache(function(utterance, theta) {
+				Infer({model: function(){
+					var state = sample(statePrior);
+					var m = meaning(utterance, state, theta)
+					condition(m)
+					return state
+			 }})}, 10000)
 
 			 var speaker1_lift = cache(function(state, theta) {
-	      Infer({model: function(){
+				Infer({model: function(){
 					var utterance = categorical({vs: ["generic", "silence"], ps: [1, 1]})
-	        var L0 = listener0_forL1(utterance, theta);
+					var L0 = listener0_forL1(utterance, theta);
 					factor(speakerOptimality * (L0.score(state) - cost_fn(utterance)))
-	        return utterance
-	      }})}, 10000)
+					return utterance
+				}})}, 10000)
 
-     var listener1_lift = cache(function(utterance) {
-       Infer({model: function(){
-         var state = sample(statePrior);
+		 var listener1_lift = cache(function(utterance) {
+			 Infer({model: function(){
+				 var state = sample(statePrior);
 				 var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
-         var S1 = speaker1_lift(state, theta)
-         observe(S1, utterance)
-         return state
-       }})}, 10000)
+				 var S1 = speaker1_lift(state, theta)
+				 observe(S1, utterance)
+				 return state
+			 }})}, 10000)
 
 
-  var L0 = semantics == "prior" ? statePrior :
-			modelName == "literal" ? listener0("generic") :
-			modelName == "pragmatic_unlifted" ? listener1("generic") :
-			modelName == "pragmatic" ? listener1_lift("generic") : null
+    // var singleObs = listener0("generic")
 
+    // mapData({data:propertyData.observation}, function(d){
+    //   // display(d)
+    //   var scr = singleObs.score(d.binnedResponse)
+    //   scr == -Infinity ? displayObj(d) : null
+    //   // display(scr)
+    //   observe(singleObs, d.binnedResponse)
+    // })
 
-	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
-		addPriorNoise(L0, noise)
+    var L1 = modelName == "pragmatic_unlifted" ? listener1("generic") :
+						modelName == "pragmatic" ? listener1_lift("generic") : null
+
+    var interpretationPrediction = addNoise(L1, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -268,41 +316,63 @@ var marginalLikelihood = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
+   // query.add(["prediction", itemName, -99, "prior"], expectation(statePrior))
+   // query.add(["prediction", itemName, -99, "posterior"], expectation(interpretationPrediction))
+
+   var supp = sort(statePrior.support())
+
+   foreach(supp, function(s){
+     query.add(["prediction", itemName, "priorDist", s], Math.exp(statePrior.score(s)))
+     // query.add(["prediction", itemName, "literal", s], Math.exp(singleObs.score(s)))
+     query.add(["prediction", itemName, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   })
+
+
  })
 
+   // RECORD PARAMETERS AND PREDICTIVES
+   // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
+   // query.add(["numberOfComponents", item, -99, -99], numberOfComponents)
+   query.add(["parameter", "speakerOptimality", modelName, noise_model], speakerOptimality)
+   query.add(["parameter", "cost", modelName, noise_model], cost)
+
+	 _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "noise", modelName, noise_model], noise) : null
+	_.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "fixed_threshold", modelName, noise_model], fixedThreshold) : null
+
+
+	return query
 }
 
+// var totalIterations = 5000, lag =  5;
+// var totalIterations = 1000, lag =  1;
+var totalIterations = 1000000, lag = 1000;
+// var totalIterations = 400000, lag =  800;
+// var totalIterations = 50000, lag =  50;
+// var totalIterations = 250000, lag = 75;
+var samples = totalIterations/lag, burn = totalIterations / 2;
 
-// steps = 10000, samples = 10 --> 30m
-// samples = 100 --> 5h
-// var steps = 1000
-// var steps = 100
-// var samples = 3
+// var outfile = 'results-genint-unliftedL1wCost-fullDist-int6-prior3-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+// var outfile = 'results-genint-L1liftedrefacCost-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L1-fullDist-expt2-2Components_'+ modelName + "_" +semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
+var header = "iter,type,param,property,category,val,score"
+var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
 
-var steps = 10000
-// var samples = 1
-var samples = 100
+// In practice this would be combined with onlyMAP inference option to
+// avoid holding all samples in memory.
 
-var resultsOutFile = 'results/ais-expt2-2Components_'+ modelName + "_" + semantics +'-semantics_'+
- noise_model + "-noise" + '-steps-' + steps + '-samples-' + samples + '_iter' + iter + '.csv'
+Infer({model,
+      samples: samples, burn: burn, lag: lag,
+       method: 'incrementalMH',
+       onlyMAP: true,
+       verbose: T,
+       verboseLag: totalIterations / 20,
+       callbacks: [callback]
+     });
 
- var file_handle = utils.openFile(resultsOutFile)
+//
 
- var line_to_write = ["model", "semantics", "noise_model", "steps", "iter", "i", "weight"].join(',')
- utils.writeLine(file_handle, line_to_write)
-
- var weights = map(function(i) {
- 	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
- 	 var w = weight.weights[0]
- 	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, w].join(',')
-
- 	 utils.writeLine(file_handle, line_to_write)
- 	 display(w);
- 	 return w;
-
- }, _.range(samples))
-
-// // postOut
-// json.write(resultsOutFile, mll)
-'results written to ' + resultsOutFile
+// data.interpretation
+// d_interpretation
+"written to " + outfile;
+// levels(data.prior, "avoided_endval")
