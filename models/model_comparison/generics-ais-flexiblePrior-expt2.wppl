@@ -1,4 +1,4 @@
-// time ~/tools/webppl-github/webppl models/model_comparison/generics-ais-flexiblePrior-expt2.wppl  --require models/node_modules/utils --require webppl-json pragmatic_unlifted prior uncertain 1
+// time webppl models/model_comparison/generics-ais-flexiblePrior-expt2.wppl  --require models/node_modules/utils --require webppl-json pragmatic_unlifted prior uncertain 1
 
 var iter = last(process.argv) // load index as last command line index
 
@@ -281,7 +281,8 @@ var marginalLikelihood = function(){
 
 
 var steps = 10000
-// var samples = 1
+// var steps = 100
+// var samples = 3
 var samples = 100
 
 var resultsOutFile = 'results/ais-expt2-2Components_'+ modelName + "_" + semantics +'-semantics_'+
@@ -294,12 +295,11 @@ var resultsOutFile = 'results/ais-expt2-2Components_'+ modelName + "_" + semanti
 
  var weights = map(function(i) {
  	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
- 	 var w = weight.weights[0]
- 	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, w].join(',')
+ 	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, weight].join(',')
 
  	 utils.writeLine(file_handle, line_to_write)
- 	 display(w);
- 	 return w;
+ 	 display(weight);
+ 	 return weight;
 
  }, _.range(samples))
 
