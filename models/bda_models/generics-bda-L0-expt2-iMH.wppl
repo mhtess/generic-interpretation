@@ -163,13 +163,15 @@ var model = function(){
 		// var weight = uniformDrift({a: 0, b: 1, width:0.2})
 		// var weights = [weight, 1 - weight]
 
-    var componentParameters = repeat(numberOfComponents,
+		var componentParameters_raw = repeat(numberOfComponents,
      function(){
-      return betaShape({
+      return {
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
 					d: exponential({a: 1})
-        })
+        }
     })
+
+		var componentParameters = map(betaShape, componentParameters_raw)
 
   	mapData({data: propertyData.prior}, function(d){
       var componentLogLikelihood = map2(function(w, params){
@@ -199,6 +201,11 @@ var model = function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
 
+		var higherBetaComponentParams = componentParameters_raw[0].g > componentParameters_raw[1].g ?
+			componentParameters[0] : componentParameters[1];
+
+		var higherBetaComponent = DiscretizedBeta(higherBetaComponentParams);
+
 		var addPriorNoise = function(dist, noise_level){
 			return Infer({model: function(){
 				return flip(noise_level) ? sample(statePrior) : sample(dist)
@@ -214,7 +221,9 @@ var model = function(){
   	    return state
   	 }})}, 10000)
 
-  var L0 = semantics == "prior" ? statePrior : listener0("generic")
+  var L0 = semantics == "prior" ? statePrior :
+					 semantics == "highBeta" ? higherBetaComponent : listener0("generic")
+
 	var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
 		addPriorNoise(L0, noise)
 
@@ -269,8 +278,8 @@ var model = function(){
 
 
 // data.endorsement
-// var totalIterations = 100000, lag =  100;
-var totalIterations = 1000, lag =  1;
+var totalIterations = 100000, lag =  100;
+// var totalIterations = 1000, lag =  1;
 // var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;

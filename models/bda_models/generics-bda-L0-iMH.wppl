@@ -1,6 +1,6 @@
 // time ~/tools/webppl-fork/webppl generics-bda-L0-iMH.wppl --require utils uncertain 1
 // time webppl generics-bda-L0-iMH.wppl --require utils --require ~/tools/webppl-sample-writer-fork/ uncertain 1
-// time webppl bda_models/generics-bda-L0-iMH.wppl  --require ./node_modules/utils --require ~/tools/webppl-sample-writer-fork fifteen 1
+// time webppl models/bda_models/generics-bda-L0-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork uniform highBeta 1
 
 var chain = last(process.argv) // load index as last command line index
 
@@ -8,6 +8,7 @@ var chain = last(process.argv) // load index as last command line index
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
 var semantics = process.argv[process.argv.length - 2]
+var noise_model = process.argv[process.argv.length - 3]
 display(semantics)
 var priorFilePrefix = "prior-3",
     // priorFilePrefix = "prior-manipulation-3",
@@ -16,6 +17,7 @@ var priorFilePrefix = "prior-3",
 
 // var dataPath = "../data/paper_data/expt1";
 var dataPath = "data/paper_data/expt1";
+// var dataPath = "data/paper_data/expt2";
 
 // expt 2: measured priors
 var d_prior = readDataFile(dataPath, "expt1a-prior"),
@@ -29,12 +31,12 @@ var d_prior = readDataFile(dataPath, "expt1a-prior"),
     // d_endorsement_subj = readSubjFile("endorsement", endorsementFilePrefix);
 
 // expt 3: Prior manipulation
-// var d_prior = readDataFile("prior-manipulation", priorFilePrefix),
-//     d_prior_catch = readCatchFile("prior-manipulation", priorFilePrefix),
-//     d_prior_subj = readSubjFile("prior-manipulation", priorFilePrefix),
-//     d_interpretation = readDataFile("prior-manipulation", interpretationFilePrefix),
-//     d_interpretation_catch = readCatchFile("prior-manipulation", interpretationFilePrefix),
-//     d_interpretation_subj = readSubjFile("prior-manipulation", interpretationFilePrefix);
+// var d_prior = readDataFile(dataPath, "expt2a-prior"),
+//     d_prior_catch = readCatchFile(dataPath, "expt2a-prior"),
+//     d_prior_subj = readSubjFile(dataPath, "expt2a-prior"),
+//     d_interpretation = readDataFile(dataPath, "expt2b-interpretation"),
+//     d_interpretation_catch = readCatchFile(dataPath, "expt2b-interpretation"),
+//     d_interpretation_subj = readSubjFile(dataPath, "expt2b-interpretation");
 
 var priorWorkeridsPassed = passCatchTrials(d_prior_catch),
     interpretationWorkeridsPassed = passCatchTrials(d_interpretation_catch),
@@ -56,6 +58,7 @@ var data = {
     return ((interpretationWorkeridsPassed.indexOf(di.workerid) > -1) &&
       (interpretationWorkeridsEnglish.indexOf(di.workerid) > -1) &&
       utils.isNumber(di.response) &&
+			// di.response > 0 &&
       di.trial_type == "implied_prevalence")
   }, map(function(d){ return extend(d, {
 		binnedResponse:  utils.closest( midBins.slice(1), d.response)
@@ -75,10 +78,13 @@ var data = {
 
 // // // test that removing Ss who failed catch trial works properly (computed in R)
 assert.ok(levels(data.interpretation, "workerid").length == 132)
+assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
+
+
+
 // assert.ok(levels(data.interpretation, "workerid").length == 107)
 // assert.ok(levels(data.prior, "workerid").length == 131)
 // assert.ok(levels(data.prior, "workerid").length == 126) // prior 3
-assert.ok(levels(data.prior, "workerid").length == 175) // prior 3 n200
 // assert.ok(levels(data.endorsement, "workerid").length == 150) // endorsement 1
 
 var utterancePrior = Infer({model: function(){
@@ -118,10 +124,12 @@ var kernelFn = function(prevVal){
 var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
 "thirty", "forty", "sixtyfive"]
 
+display(properties)
+
 var model = function(){
 
-  var noise = _.includes(fixed_threshold_options, semantics) ?
-		uniformDrift({a: 0, b: 1, width:0.2}) : 0
+  var noise = (noise_model == "uniform"  && !(_.includes(fixed_threshold_options, semantics))) ? 0 :
+		uniformDrift({a: 0, b: 1, width:0.2})
 
 	var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
 		(semantics == "ten") ? 0.08 :
@@ -144,20 +152,21 @@ var model = function(){
         interpretation: _.filter(data.interpretation, {property: item})
     };
 
-    // var weights = normalize(repeat(numberOfComponents,
-    //   function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
-    // ))
+    var weights = normalize(repeat(numberOfComponents,
+      function(){ return uniformDrift({a: 0, b: 1, width:0.2}) }
+    ))
 
-		var weight = uniformDrift({a: 0, b: 1, width:0.2})
-		var weights = [weight, 1 - weight]
+		// var weight = uniformDrift({a: 0, b: 1, width:0.2})
+		// var weights = [weight, 1 - weight]
 
-    var componentParameters = repeat(numberOfComponents,
+		var componentParameters_raw = repeat(numberOfComponents,
      function(){
-      return betaShape({
+      return {
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
 					d: exponential({a: 1})
-        })
+        }
     })
+		var componentParameters = map(betaShape, componentParameters_raw)
 
   	mapData({data: propertyData.prior}, function(d){
       var componentLogLikelihood = map2(function(w, params){
@@ -187,6 +196,17 @@ var model = function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
 
+		var higherBetaComponentParams = componentParameters_raw[0].g > componentParameters_raw[1].g ?
+			componentParameters[0] : componentParameters[1];
+
+		var higherBetaComponent = DiscretizedBeta(higherBetaComponentParams);
+
+		var addPriorNoise = function(dist, noise_level){
+			return Infer({model: function(){
+				return flip(noise_level) ? sample(statePrior) : sample(dist)
+			}})
+		}
+
   	/// RSA model
   	var listener0 = cache(function(utterance) {
   	  Infer({model: function(){
@@ -197,8 +217,9 @@ var model = function(){
   	    return state
   	 }})}, 10000)
 
-  var L0 = listener0("generic")
-  var interpretationPrediction = addNoise(L0, noise)
+  var L0 = semantics == "highBeta" ? higherBetaComponent : listener0("generic")
+  var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
+		addPriorNoise(L0, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -210,10 +231,13 @@ var model = function(){
 
    var supp = statePrior.support()
 
-   // foreach(supp, function(s){
-   //   query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
-   //   query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
-   // })
+   foreach(supp, function(s){
+     query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
+     query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   })
+
+	 // query.add(["prediction", item, "priorDist", -99], expectation(statePrior))
+   // query.add(["prediction", item, "postDist", -99], expectation(interpretationPrediction))
 
    // var speaker1 = function(state, speakerOptimality) {
    //  Infer({model: function(){
@@ -235,8 +259,7 @@ var model = function(){
 
     // })
 
-   query.add(["prediction", item, "priorDist", -99], expectation(statePrior))
-   query.add(["prediction", item, "postDist", -99], expectation(interpretationPrediction))
+
  })
 
    // RECORD PARAMETERS AND PREDICTIVES
@@ -255,7 +278,8 @@ var totalIterations = 1000000, lag = 1000;
 // var totalIterations = 500000, lag =  250;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-genint-L0-fullDist-int6-prior3n200-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+// var outfile = 'results-genint-L0-fullDist-int6-prior3n200-3Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
+var outfile = 'results-genint-L0-fullDist-expt1-2Components_'+semantics+'-semantics_'+ totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv'
 
 var header = "iter,type,param,property,category,val,score"
 var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
@@ -272,3 +296,4 @@ Infer({model,
        callbacks: [callback]});
 
 "written to " + outfile;
+// data.interpretation
