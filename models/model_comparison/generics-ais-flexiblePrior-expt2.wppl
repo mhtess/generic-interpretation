@@ -151,7 +151,7 @@ var marginalLikelihood = function(){
   var numberOfComponents = 2;//poisson(1) + 1;
 
 	var speakerOptimality = modelName == "literal" ? 0 : uniformDrift({a: 0, b: 20, width: 0.2})
-	var cost = modelName == "literal" ? 0 : uniformDrift({a: -3, b: 3, width: 0.4})
+	var cost = modelName == "literal" ? 0 : uniformDrift({a: 0, b: 3, width: 0.4})
 	var cost_fn = function(utterance){
 		return utterance == "silence" ? 0 : cost
 	}
@@ -294,12 +294,13 @@ var resultsOutFile = 'results/ais-expt2-2Components_'+ modelName + "_" + semanti
  utils.writeLine(file_handle, line_to_write)
 
  var weights = map(function(i) {
- 	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
- 	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, weight].join(',')
+	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
+	 var w = weight.weights[0]
+	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, w].join(',')
 
  	 utils.writeLine(file_handle, line_to_write)
- 	 display(weight);
- 	 return weight;
+ 	 display(w);
+ 	 return w;
 
  }, _.range(samples))
 

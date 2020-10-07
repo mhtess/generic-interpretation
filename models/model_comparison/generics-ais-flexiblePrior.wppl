@@ -1,4 +1,4 @@
-// time ~/tools/webppl-github/webppl models/model_comparison/generics-ais-flexiblePrior.wppl --require models/node_modules/utils --require webppl-json uniform uncertain 2
+// time ~/tools/webppl-github/webppl models/model_comparison/generics-ais-flexiblePrior.wppl --require models/node_modules/utils --require webppl-json pragmatic_unlifted uniform uncertain 2
 
 // modelName: pragmatic, pragmatic_unlifted, literal, lit_thetaPrior
 
@@ -7,12 +7,13 @@
 // fixed = fixed threshold at lowest threshold value
 
 var arguments = process.argv
-// var modelName = arguments[arguments.length - 3]
+var modelName = process.argv[process.argv.length - 4]
 var noise_model = process.argv[process.argv.length - 3]
-
-var semantics = arguments[arguments.length - 2]
+var semantics = process.argv[process.argv.length - 2]
 var iter = arguments[arguments.length - 1]
-
+display(modelName)
+display(noise_model)
+display(semantics)
 var n_obs = 3 // only does something if semantics == n_obs
 
 var priorFilePrefix = "prior-3",
@@ -154,6 +155,12 @@ var marginalLikelihood = function(){
 
   var numberOfComponents = 2;//poisson(1) + 1;
 
+	var speakerOptimality = modelName == "literal" ? 0 : uniformDrift({a: 0, b: 20, width: 0.2})
+	var cost = modelName == "literal" ? 0 : uniformDrift({a: 0, b: 3, width: 0.4})
+	var cost_fn = function(utterance){
+		return utterance == "silence" ? 0 : cost
+	}
+
   foreach(properties, function(item){
     // display(item)
     var propertyData = {
@@ -208,60 +215,55 @@ var marginalLikelihood = function(){
   	 }})}, 10000)
 
 
-     /// LIFTED PRAGMATIC
-   	// var listener0_forL1 = cache(function(utterance, theta) {
-   	//   Infer({model: function(){
-   	//     var state = sample(statePrior);
-   	//     var m = meaning(utterance, state, theta)
-   	//     condition(m)
-   	//     return state
-   	//  }})}, 10000)
-		//
-    //  var speaker1 = cache(function(state, theta) {
-    //   Infer({model: function(){
-    //     var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-    //     var L0 = listener0_forL1(utterance, theta);
-    //     factor(speakerOptimality * L0.score(state))
-    //     return utterance
-    //   }})}, 10000)
-		//
-    // var listener1 = cache(function(utterance) {
-    //   Infer({model: function(){
-    //     var state = sample(statePrior);
-    //     var theta = (semantics == "uncertain") ? sample(thetaPrior) : _.min(thetaBins);
-    //     var S1 = speaker1(state, theta)
-    //     observe(S1, utterance)
-    //     return state
-    //   }})}, 10000)
-		//
-    //   /// UNLIFTED PRAGMATIC
-		//
-    //    var speaker1_unlifted = cache(function(state) {
-    //     Infer({model: function(){
-    //       var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-    //       var L0 = listener0(utterance);
-    //       factor(speakerOptimality * L0.score(state))
-    //       return utterance
-    //     }})}, 10000)
-		//
-    //   var listener1_unlifted = cache(function(utterance) {
-    //     Infer({model: function(){
-    //       var state = sample(statePrior);
-    //       var S1 = speaker1_unlifted(state)
-    //       observe(S1, utterance)
-    //       return state
-    //     }})}, 10000)
-		//
-		//
-    //     var n_obs_update = Infer({model: function(){
-    //   	    var state = sample(statePrior);
-    //         // display(state)
-    //         factor(Binomial({p: state, n: n_obs}).score(n_obs))
-    //   	    return state
-    //   	 }})
+		 var speaker1 = cache(function(state) {
+      Infer({model: function(){
+				var utterance = categorical({vs: ["generic", "silence"], ps: [1, 1]})
+        var L0 = listener0(utterance);
+				factor(speakerOptimality * (L0.score(state) - cost_fn(utterance)))
+        return utterance
+      }})}, 10000)
 
-		var L0 = semantics == "prior" ? statePrior : listener0("generic")
-		var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
+    var listener1 = cache(function(utterance) {
+      Infer({model: function(){
+        var state = sample(statePrior);
+        var S1 = speaker1(state)
+        observe(S1, utterance)
+        return state
+      }})}, 10000)
+
+
+			/// LIFTED PRAGMATIC
+    	var listener0_forL1 = cache(function(utterance, theta) {
+    	  Infer({model: function(){
+    	    var state = sample(statePrior);
+    	    var m = meaning(utterance, state, theta)
+    	    condition(m)
+    	    return state
+    	 }})}, 10000)
+
+			 var speaker1_lift = cache(function(state, theta) {
+	      Infer({model: function(){
+					var utterance = categorical({vs: ["generic", "silence"], ps: [1, 1]})
+	        var L0 = listener0_forL1(utterance, theta);
+					factor(speakerOptimality * (L0.score(state) - cost_fn(utterance)))
+	        return utterance
+	      }})}, 10000)
+
+     var listener1_lift = cache(function(utterance) {
+       Infer({model: function(){
+         var state = sample(statePrior);
+				 var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+         var S1 = speaker1_lift(state, theta)
+         observe(S1, utterance)
+         return state
+       }})}, 10000)
+
+			 var L0 = semantics == "prior" ? statePrior :
+		 			modelName == "literal" ? listener0("generic") :
+		 			modelName == "pragmatic_unlifted" ? listener1("generic") :
+		 			modelName == "pragmatic" ? listener1_lift("generic") : null
+
+			var interpretationPrediction = noise_model == "uniform" ? addNoise(L0, noise) :
 			addPriorNoise(L0, noise)
 
     // var interpretationPrediction = modelName == "literal" ? listener0("generic") :
@@ -295,15 +297,42 @@ var marginalLikelihood = function(){
 
 
 
-// steps = 10000, samples = 10 --> 30m
-// samples = 100 --> 5h
+// ~ 40 min per 10000k_step sample
+// var steps = 10000
+// var samples = 50
+
+
 var steps = 10000
-var samples = 50
+var samples = 100
 
-var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
 
-var resultsOutFile = 'results/ais-expt1-2Components_'+ semantics +'-semantics_'+
- noise_model + "-noise" + '-steps-' + steps + '-samples-' + samples + '_iter' + iter + '.json'
+ var resultsOutFile = 'results/ais-expt1-2Components_'+ modelName + "_" + semantics +'-semantics_'+
+  noise_model + "-noise" + '-steps-' + steps + '-samples-' + samples + '_iter' + iter + '.csv'
+
+
+var file_handle = utils.openFile(resultsOutFile)
+
+var line_to_write = ["model", "semantics", "noise_model", "steps", "iter", "i", "weight"].join(',')
+utils.writeLine(file_handle, line_to_write)
+
+var weights = map(function(i) {
+	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
+	 var w = weight.weights[0]
+	 var line_to_write = [modelName, semantics, noise_model, steps, iter, i, w].join(',')
+
+	 utils.writeLine(file_handle, line_to_write)
+	 display(w);
+	 return w;
+
+}, _.range(samples))
+
+// var weights = repeat(samples, )
+
+// var normConstant = sum(weights) / weights.length;
+// display(normConstant)
+// weights
+// var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
+
 
 
 // data.endorsement
@@ -317,8 +346,9 @@ var resultsOutFile = 'results/ais-expt1-2Components_'+ semantics +'-semantics_'+
 //   "-" + semantics_print +'-flexPriors-steps'+steps +'-iter'+iter+'.json'
 
 // // postOut
-json.write(resultsOutFile, mll)
-'results written to ' + resultsOutFile
+// json.write(resultsOutFile, mll)
+display('results written to ' + resultsOutFile)
+// weights
 
 
 // priors
