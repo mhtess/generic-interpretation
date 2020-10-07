@@ -170,13 +170,15 @@ var marginalLikelihood = function(){
 		// var weight = uniformDrift({a: 0, b: 1, width:0.2})
 		// var weights = [weight, 1 - weight]
 
-    var componentParameters = repeat(numberOfComponents,
+		var componentParameters_raw = repeat(numberOfComponents,
      function(){
-      return betaShape({
+      return {
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
 					d: exponential({a: 1})
-        })
+        }
     })
+
+		var componentParameters = map(betaShape, componentParameters_raw)
 
   	mapData({data: propertyData.prior}, function(d){
       var componentLogLikelihood = map2(function(w, params){
@@ -190,6 +192,12 @@ var marginalLikelihood = function(){
   	var statePrior = Infer({model: function(){
       sample(DiscretizedBeta(componentParameters[discrete(weights)]))
   	}});
+
+		var higherBetaComponentParams = componentParameters_raw[0].g > componentParameters_raw[1].g ?
+			componentParameters[0] : componentParameters[1];
+
+		var higherBetaComponent = DiscretizedBeta(higherBetaComponentParams);
+
 
 		var addPriorNoise = function(dist, noise_level){
 			return Infer({model: function(){
@@ -252,6 +260,7 @@ var marginalLikelihood = function(){
 
 
   var L0 = semantics == "prior" ? statePrior :
+			semantics == "highBeta" ? higherBetaComponent :
 			modelName == "literal" ? listener0("generic") :
 			modelName == "pragmatic_unlifted" ? listener1("generic") :
 			modelName == "pragmatic" ? listener1_lift("generic") : null
