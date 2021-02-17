@@ -987,15 +987,23 @@ With these comparisons, we find that the uncertain threshold model explains roug
 As a sanity check, we see that the model that predicts the implied prevalence ratings based only on the prevalence prior (\emph{Prevalence Prior}) does a poor job at predicting the mean human ratings (MSE = 0.27, $r^2 = 0.61$), with the model predicting lower prevalence values than participants report, consistent with the generic updating a listener's prior beliefs into stronger posterior beliefs (Figure \ref{fig:genint-modelingResults}A). 
 Fixed threshold models exhibit an interesting inability to account for the mean implied prevalence ratings. The lowest threshold (0\% [``some'']) shows a strong correlation with the data, but like the Prior Prevalence model, predicts prevalence ratings that are too low relative to the human data, consistent with the intuition that assigning the semantics of \emph{some} for generics is too weak.
 As the threshold value increases, the fixed-threshold models predict higher levels of implied prevalence, leading to model predictions that are too strong for certain generics (model prediction $>>$ human rating); this overproduction, in turn, leads the data analysis model to infer higher levels of noise as the threshold increases (MAP estimate of noise shown in Table \ref{tab:summary1}). 
-This relationship between threshold and noise is most dramatically exemplified by the ``best threshold'' model, in which both threshold and noise are inferred from the data: this model ends up deciding that the threshold should be very high (MAP estimate = 0.93) as should the amount of noise (MAP estimate = 0.71), resulting in item-invariant predictions. 
+This relationship between threshold and noise is most dramatically exemplified by the ``best threshold'' model, in which both threshold and noise are inferred from the data: this model ends up deciding that the threshold should be very high (MAP estimate = 0.93) as should the amount of noise (MAP estimate = 0.71), resulting in predictions that do not vary considerably by-item (Figure \ref{fig:genint-modelingResults-bars}). 
+
+The control model that performs the best is the \emph{Reified kinds} model, which predicts prevalence ratings based on a categorical (as opposed to continuous) view of the prevalence prior. This model selects the component of the prevalence prior distribution that has the highest mean and uses that to make predictions for generic interpretations (in the case of our 2-component prevalence prior, this model simply selects the component with the higher mean prevalence). 
+This model seems to struggle the most with the ``weak generics'', the statements that receive overall low prevalence interpretations (Figure \ref{fig:genint-modelingResults}A; ``Reified kinds'', items below $y = x$ line).
+By comparing the distribution of responses for \emph{Reified kinds}~vs.~\emph{Uncertain threshold}, we can see that  \emph{Reified kinds} fails to predict certain bi-modalities that the \emph{Uncertain threshold} model predicts.
+For example, the statement \emph{Feps carry Lyme disease} is interpreted by some participants to mean that most or all feps carry Lyme disease, while others interpret it more weakly (some or few feps carry Lyme disease; Figure \ref{fig:genint-modelingResults-bars}). 
+The \emph{Reified kinds} model partitions the prevalence prior into two distinct components and always selects the one with higher mean prevalence, thus only predicting the interpretation that most or all feps carry Lyme disease. 
+By contrast, the \emph{Uncertain threshold} model treats the prevalence prior distribution as a continuous representation of belief about prevalence and is able to predict the bimodal interpretation. 
+Overall, the \emph{Uncertain threshold} model is able to predict key signatures of full distributions of behavioral data, which no other model is able to adequately describe (Figure \ref{fig:genint-modelingResults}B).
 
 
-The strength of the uncertain threshold model can further by seen by examining the model's full distribution of responses on a by-item basis, rather than just the item means.
-For example, the item \emph{Ks carry Lyme disease} exhibits a high entropy empirical distribution: Participants (as a collective) are highly uncertain as to prevalence implied by the statement; it is possible that very few of the kind carries Lyme disease, and it is possible that almost all do as well. 
-The uncertain threshold model captures this diversity in responses, similar to the ``Some'' model in this case. 
-For other items, however, ``Some'' is too weak: For example, for \emph{Ks chase their tails}, the most compelling fixed-threshold model would the ``Most'' model, since responses for this item are predominantly above 50\%. 
-The uncertain threshold thus takes on the interpretations of different fixed-threshold models depending on the item, but this is not a variable that is stipulated in the model. 
-The model infers what is the best threshold by reasoning a variety of thresholds and taking into the prior distribution on prevalence. 
+%The strength of the uncertain threshold model can further by seen by examining the model's full distribution of responses on a by-item basis, rather than just the item means.
+%For example, the item \emph{Ks carry Lyme disease} exhibits a high entropy empirical distribution: Participants (as a collective) are highly uncertain as to prevalence implied by the statement; it is possible that very few of the kind carries Lyme disease, and it is possible that almost all do as well. 
+%The uncertain threshold model captures this diversity in responses, similar to the ``Some'' model in this case. 
+%For other items, however, ``Some'' is too weak: For example, for \emph{Ks chase their tails}, the most compelling fixed-threshold model would the ``Most'' model, since responses for this item are predominantly above 50\%. 
+%The uncertain threshold thus takes on the interpretations of different fixed-threshold models depending on the item, but this is not a variable that is stipulated in the model. 
+%The model infers what is the best threshold by reasoning a variety of thresholds and taking into the prior distribution on prevalence. 
 
 
 %Table \ref{tab:summary1} shows the mean squared errors and proportion of explained variance for predictions from models based on the prevalence prior alone, the uncertain threshold model, and fixed-threshold models for five values of the fixed-threshold (0\% [``some''], 10\%, 30\%, 50\% [``most''], and the best threshold models).
@@ -1039,7 +1047,7 @@ The model infers what is the best threshold by reasoning a variety of thresholds
 \begin{figure}
 \centering
 \includegraphics{figs/genint-fullDistributions-variousFixeds-1.pdf}
-\caption{Distributions of implied prevalence ratings and model predicted distributions of responses for seven items that cover the spectrum of prevalence ratings. Individual fixed-thresholds capture the item distributions for certain items, but only the uncertain threshold captures all of the key features of the distributions for all of these items.
+\caption{Distributions of implied prevalence ratings and model predicted distributions of responses for six items that span the spectrum of prevalence ratings. Individual fixed-thresholds capture the item distributions for certain items, but only the uncertain threshold captures all of the key features of the distributions for all of these items. The Reified kinds model closely tracks the Uncertain threshold model predictions, but comes apart for items where a multimodal distribution of interpretations is predicted (e.g., \emph{carry Lyme disease}).
 }
 \label{fig:genint-modelingResults-bars}
 \end{figure}
