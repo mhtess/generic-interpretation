@@ -1107,8 +1107,8 @@ Overall, the \emph{Uncertain threshold} model is able to predict key signatures 
 \hypertarget{experiment-2-prior-manipulation}{%
 \section{Experiment 2: Prior Manipulation}\label{experiment-2-prior-manipulation}}
 
-In this experiment, we test the causal role of the prevalence prior in generic interpretation.
-In the previous experiment, we saw how participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
+In our second experiment, we test the causal role of the prevalence prior in generic interpretation.
+In the previous experiment, participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
 Though the uncertain threshold model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational.
 Here we manipulate the prevalence prior and measure the resulting influence on interpretation.
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
@@ -1176,7 +1176,7 @@ Then, they completed an attention check survey where they were asked what proper
 Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded ($n=26$), in addition to participants who reported a native language other than English ($n=24$), leaving a total of $n=403$ participants whose data we analyzed.
 Similar to the data from Expt. 1a, a response in this task can be thought of as a sample from a prevalence prior distribution and the distribution of responses as estimates for the whole distribution.
 We visualize the distributions by discretizing the responses so that each response goes into one of twenty equally spaced bins (effectively turning the 101-pt scale into a 20-pt scale).
-Figure~\ref{fig:priorManipulationResults}A (top row) shows the empirically elicited predicted prevalence distributions.
+Figure~\ref{fig:genint-modelingResults2}A (top row) shows the empirically elicited predicted prevalence distributions.
 These distributions clearly reflect the familiarization distributions supplied to participants in the experiment, indicating a successful manipulation, with some idiosyncratic features.
 The distribution that is most different from the familiarization distribution is the uniform distribution; the empirical distribution is more unimodal with a peak at 50\%.
 Many distributions exhibit a regression to the mean in some participants' predictions: In the \emph{rare or deterministic} distribution (which featured prevalence levels either around 0\% or 100\%), some participants guess that the next animal will have 50\% prevalence; a similar phenomenon can be observed in the \emph{weak or strong} distribution (25\% or 75\%) and to a lesser extent in the other bimodal distributions.
@@ -1232,7 +1232,7 @@ As in Expt. 2a, participants then completed an attention check survey where they
 
 \begin{figure}
 \centering
-\includegraphics{figs/expt2_model-results_nozero.pdf}
+\includegraphics{figs/expt2_model-results_nozero2.pdf}
 \caption{\label{fig:genint-modelingResults2}Experiment 2 results. A: Empirical distribution of responses for the generic interpretation task (Expt. 2a; top row), uncertain threshold model predictions, and alternative model predictions. Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Posterior predictive expected values quantitative models in comparison to the human empirical means. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
 \end{figure}
 
@@ -1246,9 +1246,9 @@ Participants who failed to either select the correct property or list a correct 
 In addition, we excluded participants who self-reported a native language other than English (\(n = 33\)).
 Finally, we employed one exclusion criterion which was not pre-registered: Participants who responded 0\% to the generic interpretation task ($n$ = 18; 3\% of participants); this response is literally impossible under all models of generic interpretation and indicates a misunderstanding of the task. 
 A post-hoc analysis of these participants' free-form explanations revealed that the majority of these respondents believed they were responding to a prior elicitation question (predict the next animal); it is likely that these participants were not attending to the generic statement when it was on the screen.
-This left a total of \(n = 514\) participants, with items receiving on average 51 responses (range = {[}40, 62{]}).
+These exclusions left a total of \(n = 514\) participants, with items receiving on average 51 responses (range = {[}40, 62{]}).
 
-Our main qualitative hypothesis is that there would be a difference across conditions in interpretations of the same generic sentence (\enquote{Ks know when earthquakes are about to happen}).
+Our main qualitative hypothesis is that the same generic sentence (\emph{Ks know when earthquakes are about to happen.}) would be interpreted differently across conditions.
 The differences in interpretations are visually evident in the empirical distributions of responses (Figure \ref{fig:genint-modelingResults2}A, top row).
 More specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
 To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 2a).
@@ -1257,7 +1257,7 @@ Furthermore, there was a significant main effect of intercept, indicating that p
 To more directly test that the distributions of responses in this generic interpretation task (Expt.~2b) were indeed different from the distributions elicited in the prior task (Expt.~1a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
 We found that eight of ten generic interpretation distributions were significantly different than the prior distributions (Table \ref{tab:ks}).
 The two which were not significantly different between prior and generic interpretation were the 50/100 and 75/100 distributions. These distributions are also predicted by the uncertain threshold model to be most similar between prior and posterior; since the prior beliefs about prevalence are so strongly skewed towards high prevalence values, the updating power of a generic is more limited.
-In summary, these quantitative results show that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
+In summary, these results demonstrate that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
 
 
 
@@ -1286,9 +1286,9 @@ In summary, these quantitative results show that participants interpret the nove
 From the uncertain threshold model and the prior elicitation data (Expt.~2a), we are able to make a number of \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten distribution conditions.
 These predictions were derived by bootstrapping the prevalence prior data to construct bootstrapped 95\% confidence intervals for the uncertain threshold model prediction; from this procedure, we found pairs of conditions with subtle quantitative differences but for which the bootstrapped 95\% confidence interval around the uncertain threshold model predictions did not overlap.
 With those criteria in mind, we preregistered the following contrast predictions among mean implied prevalences (\{\}s indicate no predicted difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\}.
-To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a \enquote{zero and one inflated beta} linking function to appropriately model the responses of exactly 0\% and 100\%, which are undefined under the beta distribution.
+To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a  zero- and one-inflated Beta linking function.
 The maximum a-posteriori estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table 2.
-Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not different from zero.
+Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not credibly different from zero.
 
 \begin{table}[h]
 \centering
@@ -1317,12 +1317,13 @@ To evaluate the quantitative predictions of the uncertain threshold model and it
 As we did for Experiment 1, we model the prevalence prior data for each distribution condition as a mixture of two Beta distributions (with unknown means, variance, and mixture parameters) and we model the generic interpretation via the uncertain threshold model (or an alternative model) that assumes the prevalence prior inferred from the Expt.~2a data (Figure \ref{fig:bayesnet}).
 As before, fixed-threshold alternative models make an additional use of a noise parameter to accommodate data points that are literally incompatible with the model. 
 To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 4 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
-We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 1,000 samples from Annealed Importance Sampling algorithm with an annealing schedule consisting of 10,000 uniformly spaced increments. 
+We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 1,000 samples from Annealed Importance Sampling algorithm with an annealing schedule consisting of 50,000 uniformly spaced increments. 
 
 Overall, the uncertain threshold model is best able to accommodate the distribution of responses observed in the ten experimental conditions and it is the most parsimonious explanation of the data (Table \ref{tab:summary2}). 
-For example, in the \emph{0/25} distribution, both the model and participants tend to draw very weak interpretations \emph{a la} the ``some'' model, whereas in the \emph{25/100} distribution, the most dominant interpretation is more like ``all'' (Figure \ref{fig:genint-modelingResults2}).
+For example, in the \emph{0/25} distribution, both the model and participants tend to draw very weak interpretations \emph{a la} the \emph{Some} model, whereas in the \emph{25/100} distribution, the most dominant interpretation is more like \emph{All} (Figure \ref{fig:genint-modelingResults2}).
 The model is even able to accommodate subtle shifts in interpretation.
-For example, in the \emph{25/75} distribution, most participants interpret  the generic as implying roughly 75\% of the category have the property, yet others (a minority) interpret the generic as implying only 25\% have the property. This prediction is made by the uncertain threshold model: Higher prevalence levels are more likely under this model, but they are not the only interpretation of the generic; it is plausible that someone could utter this sentence with only in mind that a minority of the category have the property. 
+For example, in the \emph{25/75} distribution, most participants interpret the generic as implying roughly 75\% of the category have the property, yet others (a minority) interpret the generic as implying only 25\% have the property. This prediction is made by the uncertain threshold model: Higher prevalence levels are more likely under this model, but they are not the only interpretation of the generic; it is plausible that someone could utter this sentence with only in mind that a minority of the category have the property. 
+This uncertainty in the interpretation data is also a reason why the \emph{Reified kinds} model falls short; this model always selects the component of the prior distribution with higher prevalence. 
 
 %We conclude that the prevalence prior is causally related to interpretations of novel generics in the way predicted by the generics models.
 
@@ -1360,13 +1361,15 @@ For example, in the \emph{25/75} distribution, most participants interpret  the 
     every head row/.style={before row = \toprule, after row = \midrule},
     every last row/.style={after row = \bottomrule},
     columns/model/.style={string type, column name={Model}, column type = l},
+         columns/threshold/.style={string type, column name={Threshold}, column type = l},
+                   columns/noise/.style={string type, column name={Noise}, column type = l},
     columns/mse/.style={column name={MSE}, fixed relative, dec sep, precision = 2},
     columns/r2/.style={column name={$r^2$}, dec sep, precision = 3},
     columns/log_bf/.style={column name={(log) Bayes Factor}, dec sep, fixed, precision=0}%,
     ]
-    {csv_to_tex/expt2_model_summary_stats.csv}
+    {csv_to_tex/expt2_model_summary_stats2.csv}
 
-    \caption{Summary statistics for models of Experiment 2. Mean Squared Errors and variance explained are calculated at the level of the distribution condition means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses.}
+    \caption{Summary statistics for models of Experiment 2. Mean Squared Errors and variance explained are calculated at the level of the distribution condition means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses for Expt.~2a \& Expt.~2b.}
     \label{tab:summary2}
   \end{table}
 \end{center}
