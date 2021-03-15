@@ -2,13 +2,26 @@
 // time ~/tools/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils pragmatic uncertain 1
 // time ~/tools/webppl-fork/webppl cimpian-bda-L0-iMH.wppl --require utils literal uncertain 1
 
+
+// time webppl models/bda_models/cimpian-bda-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork literal highBeta 1
+// time webppl models/bda_models/cimpian-bda-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork literal most 1
+// time webppl models/bda_models/cimpian-bda-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork literal best 1
+// time webppl models/bda_models/cimpian-bda-iMH.wppl  --require models/node_modules/utils --require ~/tools/webppl-sample-writer-fork 1
+
+var all_semantics = ["most", "best", "ten", "thirty", "some", "highBeta", "uncertain"]
+
 var chain = last(process.argv) // load index as last command line index
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
-var modelName = process.argv[process.argv.length - 3]
-var semantics = process.argv[process.argv.length - 2]
+
+// var modelName = process.argv[process.argv.length - 3]
+var modelName = "literal"
+// var semantics = process.argv[process.argv.length - 2]
+
+var modelIndex = (chain - 1) % all_semantics.length
+var semantics = all_semantics[modelIndex]
 
 var AllNullDistributions = [
   {name: "delta", dist: Delta({v: _.min(midBins)})},
@@ -22,9 +35,9 @@ var NullDistributionName = NullDistributionObj.name;
 
 console.log("model = " + modelName+ " ___ semantics = " + semantics + " ___ null dist = " + NullDistributionName)
 
-var dataPath = "../data/asymmetry/",
-    priorFilePrefix = "asymmetry-prior-4",
-    interpretationFilePrefix = "implied-prevalence-2"
+var dataPath = "data/pilot_data/preliminary/",
+    priorFilePrefix = "cimpian-prior-4",
+    interpretationFilePrefix = "cimpian-implied-prevalence-2"
 
 var priorFile = dataPath + priorFilePrefix+"-trials.csv",
     interpretationFile = dataPath + interpretationFilePrefix+"-trials.csv";
@@ -62,11 +75,6 @@ var meaning = function(utt,state, theta) {
 var properties = levels(data.interpretation, "stim_property");
 
 
-var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
-  (semantics == "most") ? 0.5 :
-  false
-
-
 // properties
 
 var addNoise = function(dist, noise){
@@ -75,18 +83,41 @@ var addNoise = function(dist, noise){
   }})
 }
 
+var nBins = thetaBins.length;
+var thetaWeights = map(function(s){ return exp(thetaPrior.score(s)) }, thetaBins)
+var kernelWidth = 3//nBins / 4;
+
+var kernelFn = function(prevVal){
+  var i = thetaBins.indexOf(prevVal);
+  var upper = (i + kernelWidth) > nBins ? nBins : i + kernelWidth;
+  var lower = (i - kernelWidth) < 0 ? 0 : i - kernelWidth;
+  return Categorical({vs: thetaBins.slice(lower,upper),
+                      ps: thetaWeights.slice(lower,upper)})
+}
+
+var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
+"thirty", "forty", "sixtyfive"]
+
 var model = function(){
 
     // var fixedThreshold = semantics == "fixed" ? uniformDraw(thetaBins) : -99
-    var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
-    var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
-    var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
+    var noise = !(_.includes(fixed_threshold_options, semantics)) ? 0 :
+			uniformDrift({a: 0, b: 1, width:0.2})
 
-    var nullParams = betaShape({
-      g: uniformDrift({a: 0, b: 0.1, width: 0.01}),
-      d: uniformDrift({a: 0, b: 500, width: 50})
-    })
+			var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+				(semantics == "ten") ? 0.08 :
+				(semantics == "fifteen") ? 0.13 :
+				(semantics == "twenty") ? 0.18 :
+				(semantics == "twentyfive") ? 0.23 :
+				(semantics == "thirty") ? 0.28 :
+				(semantics == "forty") ? 0.38 :
+			  (semantics == "most") ? 0.5 :
+				(semantics == "sixtyfive") ? 0.63 :
+				(semantics == "best") ? sample(thetaPrior, {driftKernel: kernelFn}) :
+			  false
 
+    // var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
+    // var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
 
   foreach(properties, function(item){
     // display(item)
@@ -97,7 +128,7 @@ var model = function(){
 
     var mixture_params = betaShape({
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
+					d: exponential({a: 1})
     })
 
     mapData({data: propertyData.prior}, function(d){
@@ -106,7 +137,7 @@ var model = function(){
 
     var prevalence_when_present = betaShape({
           g: uniformDrift({a: 0, b: 1, width: 0.2}),
-          d: uniformDrift({a: 0, b: 100, width: 5})
+					d: exponential({a: 1})
     })
 
     mapData({data: propertyData.prior}, function(d){
@@ -127,6 +158,8 @@ var model = function(){
       )
   	}});
 
+		var higherBetaComponent = DiscretizedBeta(prevalence_when_present)
+
      /// RSA model
    	var listener0 = cache(function(utterance) {
    	  Infer({model: function(){
@@ -138,54 +171,57 @@ var model = function(){
    	 }})}, 10000)
 
       /// LIFTED PRAGMATIC
-    	var listener0_forL1 = cache(function(utterance, theta) {
-    	  Infer({model: function(){
-    	    var state = sample(statePrior);
-    	    var m = meaning(utterance, state, theta)
-    	    condition(m)
-    	    return state
-    	 }})}, 10000)
+    	// var listener0_forL1 = cache(function(utterance, theta) {
+    	//   Infer({model: function(){
+    	//     var state = sample(statePrior);
+    	//     var m = meaning(utterance, state, theta)
+    	//     condition(m)
+    	//     return state
+    	//  }})}, 10000)
+		 //
+     //  var speaker1 = cache(function(state, theta) {
+     //   Infer({model: function(){
+     //     var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+     //     var L0 = listener0_forL1(utterance, theta);
+     //     factor(speakerOptimality * L0.score(state))
+     //     return utterance
+     //   }})}, 10000)
+		 //
+     // var listener1 = cache(function(utterance) {
+     //   Infer({model: function(){
+     //     var state = sample(statePrior);
+     //     var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+     //     var S1 = speaker1(state, theta)
+     //     observe(S1, utterance)
+     //     return state
+     //   }})}, 10000)
+		 //
+     //   /// UNLIFTED PRAGMATIC
+		 //
+     //    var speaker1_unlifted = cache(function(state) {
+     //     Infer({model: function(){
+     //       var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+     //       var L0 = listener0(utterance);
+     //       factor(speakerOptimality * L0.score(state))
+     //       return utterance
+     //     }})}, 10000)
+		 //
+     //   var listener1_unlifted = cache(function(utterance) {
+     //     Infer({model: function(){
+     //       var state = sample(statePrior);
+     //       var S1 = speaker1_unlifted(state)
+     //       observe(S1, utterance)
+     //       return state
+     //     }})}, 10000)
 
-      var speaker1 = cache(function(state, theta) {
-       Infer({model: function(){
-         var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-         var L0 = listener0_forL1(utterance, theta);
-         factor(speakerOptimality * L0.score(state))
-         return utterance
-       }})}, 10000)
+    // var L = modelName == "literal" ? listener0("generic") :
+    // modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
+    // listener1("generic")
 
-     var listener1 = cache(function(utterance) {
-       Infer({model: function(){
-         var state = sample(statePrior);
-         var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
-         var S1 = speaker1(state, theta)
-         observe(S1, utterance)
-         return state
-       }})}, 10000)
+    // var interpretationPrediction = addNoise(L, noise)
 
-       /// UNLIFTED PRAGMATIC
-
-        var speaker1_unlifted = cache(function(state) {
-         Infer({model: function(){
-           var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-           var L0 = listener0(utterance);
-           factor(speakerOptimality * L0.score(state))
-           return utterance
-         }})}, 10000)
-
-       var listener1_unlifted = cache(function(utterance) {
-         Infer({model: function(){
-           var state = sample(statePrior);
-           var S1 = speaker1_unlifted(state)
-           observe(S1, utterance)
-           return state
-         }})}, 10000)
-
-    var L = modelName == "literal" ? listener0("generic") :
-    modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
-    listener1("generic")
-
-    var interpretationPrediction = addNoise(L, noise)
+		var L0 = semantics == "highBeta" ? higherBetaComponent : listener0("generic")
+		var interpretationPrediction = addNoise(L0, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -195,8 +231,19 @@ var model = function(){
      observe(interpretationPrediction, d.binnedResponse)
    })
 
-   query.add(["prediction", item, -99, "prior"], expectation(statePrior))
-   query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+   // query.add(["prediction", item, -99, "prior"], expectation(statePrior))
+   // query.add(["prediction", item, -99, "posterior"], expectation(interpretationPrediction))
+
+	 var supp = statePrior.support()
+
+   foreach(supp, function(s){
+     query.add(["prediction", item, "priorDist", s], Math.exp(statePrior.score(s)))
+     query.add(["prediction", item, "postDist", s], Math.exp(interpretationPrediction.score(s)))
+   })
+
+
+
+
  })
 
   // query.add(["prevPriorParams", -99, "nullParams", "alpha"], nullParams.a)
@@ -204,27 +251,30 @@ var model = function(){
 
    // RECORD PARAMETERS AND PREDICTIVES
    // query.add("numberOfComponents", [-99, -99, -99, numberOfComponents])
-   semantics == "most" ? query.add(["noise", -99, -99, -99], noise) : null
-   modelName == "literal"? null: query.add(["optimality", -99, -99, -99], speakerOptimality)
+	 _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "noise", -99, -99], noise) : null
+	 _.includes(fixed_threshold_options, semantics) ? query.add(["parameter", "fixed_threshold", -99, -99], fixedThreshold) : null
 
 	return query
 }
 
-var totalIterations = 500000, lag =  150;
+// var totalIterations = 500000, lag =  150;
+// var totalIterations = 100000, lag =  100;
+var totalIterations = 1000000, lag =  1000;
 var samples = totalIterations/lag, burn = totalIterations / 2;
 
-var outfile = 'results-cimpian-'+modelName+'-structuredPrior_'+semantics+'-semantics-nullDist_' + NullDistributionName + "_" + totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+var outfile = 'test-results-cimpian-'+modelName+'-structuredPrior_'+semantics+'-semantics-nullDist_' + NullDistributionName + "_" + totalIterations+'_burn'+burn+'_lag'+lag+'_chain'+chain+'.csv';
+var header = "iter,type,param,property,category,val,score"
+var callback = webpplSampleWriter.streamQueryCSV("results/" + outfile, header);
+
 
 var posterior = Infer({
   model: model,
 	method: "incrementalMH",
+	onlyMAP: true,
   samples: samples, burn: burn, lag: lag,
   verbose: T,
   verboseLag: totalIterations / 20,
-	stream: {
-		path: "results/" + outfile,
-		header: ["type", "property", "param", "category", "val"]
-	}
+	callbacks: [callback]
 })
 
 "written to " + outfile;
