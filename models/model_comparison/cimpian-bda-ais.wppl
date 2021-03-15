@@ -2,13 +2,20 @@
 // time webppl cimpian-bda-ais.wppl --require utils --require webppl-json pragmatic uncertain 1
 // time webppl cimpian-bda-ais.wppl --require utils --require webppl-json literal uncertain 1
 
+// time webppl models/model_comparison/cimpian-bda-ais.wppl  --require models/node_modules/utils --require webppl-csv 1
+
 var chain = last(process.argv) // load index as last command line index
+var all_semantics = ["most", "best", "ten", "thirty", "some", "highBeta", "uncertain"]
 
 // penultimate argument is the semantics
 // uncertain = uncertain threshold
 // fixed = fixed threshold at lowest threshold value
-var modelName = process.argv[process.argv.length - 3]
-var semantics = process.argv[process.argv.length - 2]
+// var modelName = process.argv[process.argv.length - 3]
+var modelName = "literal"
+
+// var semantics = process.argv[process.argv.length - 2]
+var modelIndex = (chain - 1) % all_semantics.length
+var semantics = all_semantics[modelIndex]
 
 var AllNullDistributions = [
   {name: "delta", dist: Delta({v: _.min(midBins)})},
@@ -22,9 +29,9 @@ var NullDistributionName = NullDistributionObj.name;
 
 console.log("model = " + modelName+ " ___ semantics = " + semantics + " ___ null dist = " + NullDistributionName)
 
-var dataPath = "../data/asymmetry/",
-    priorFilePrefix = "asymmetry-prior-4",
-    interpretationFilePrefix = "implied-prevalence-2"
+var dataPath = "data/pilot_data/preliminary/",
+    priorFilePrefix = "cimpian-prior-4",
+    interpretationFilePrefix = "cimpian-implied-prevalence-2"
 
 var priorFile = dataPath + priorFilePrefix+"-trials.csv",
     interpretationFile = dataPath + interpretationFilePrefix+"-trials.csv";
@@ -64,9 +71,12 @@ var meaning = function(utt,state, theta) {
 
 var properties = levels(data.interpretation, "stim_property");
 
-var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
-  (semantics == "most") ? 0.5 :
-  false
+// var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+//   (semantics == "most") ? 0.5 :
+//   false
+
+var fixed_threshold_options = ["most", "best", "ten", "fifteen", "twenty", "twentyfive",
+"thirty", "forty", "sixtyfive"]
 
 // properties
 
@@ -76,30 +86,30 @@ var addNoise = function(dist, noise){
   }})
 }
 
-var priors = _.fromPairs(map(function(p){
-  var property_data = _.filter(data.prior, {stim_property: p})
-
-  var distProbs = _.fromPairs(map(function(r){
-    // var response_data = _.map(property_data, r)
-    // return [r, listMean(response_data)]
-
-    return r == "binnedResponse0" ?
-      [r, map(function(b){ _.filter(property_data, {binnedResponse0: b}).length + 1}, midBins)] :
-      [r, map(function(b){ _.filter(property_data, {binnedResponse1: b}).length + 1}, midBins)]
-
-  }, ["binnedResponse0", "binnedResponse1"]))
-
-  return [p, Infer({model: function(){
-    sample(
-      flip(
-        categorical({vs: midBins, ps: distProbs.binnedResponse0})
-      ) ?
-      Categorical({vs: midBins, ps: distProbs.binnedResponse1}) :
-      NullDistribution
-    )
-  }})]
-
-}, properties))
+// var priors = _.fromPairs(map(function(p){
+//   var property_data = _.filter(data.prior, {stim_property: p})
+//
+//   var distProbs = _.fromPairs(map(function(r){
+//     // var response_data = _.map(property_data, r)
+//     // return [r, listMean(response_data)]
+//
+//     return r == "binnedResponse0" ?
+//       [r, map(function(b){ _.filter(property_data, {binnedResponse0: b}).length + 1}, midBins)] :
+//       [r, map(function(b){ _.filter(property_data, {binnedResponse1: b}).length + 1}, midBins)]
+//
+//   }, ["binnedResponse0", "binnedResponse1"]))
+//
+//   return [p, Infer({model: function(){
+//     sample(
+//       flip(
+//         categorical({vs: midBins, ps: distProbs.binnedResponse0})
+//       ) ?
+//       Categorical({vs: midBins, ps: distProbs.binnedResponse1}) :
+//       NullDistribution
+//     )
+//   }})]
+//
+// }, properties))
 
 // priors["big claws"]
 // data.prior
@@ -107,10 +117,20 @@ var priors = _.fromPairs(map(function(p){
 var marginalLikelihood = function(){
 
     // var fixedThreshold = semantics == "fixed" ? uniformDraw(thetaBins) : -99
-    var noise = (semantics == "most") ? uniformDrift({a: 0, b: 1, width:0.2}) : 0
-    var speakerOptimality = (modelName == "literal") ? 1 : uniform(0, 30)
-    var cost_uttProb = 1//uniformDrift({a: 0, b: 1, width: 0.2})
+		var noise = !(_.includes(fixed_threshold_options, semantics)) ? 0 :
+			uniformDrift({a: 0, b: 1, width:0.2})
 
+		var fixedThreshold = (semantics == "some") ?_.min(thetaBins) :
+			(semantics == "ten") ? 0.08 :
+			(semantics == "fifteen") ? 0.13 :
+			(semantics == "twenty") ? 0.18 :
+			(semantics == "twentyfive") ? 0.23 :
+			(semantics == "thirty") ? 0.28 :
+			(semantics == "forty") ? 0.38 :
+		  (semantics == "most") ? 0.5 :
+			(semantics == "sixtyfive") ? 0.63 :
+			(semantics == "best") ? sample(thetaPrior) :
+		  false
 
   foreach(properties, function(item){
     // display(item)
@@ -119,33 +139,34 @@ var marginalLikelihood = function(){
         interpretation: _.filter(data.interpretation, {stim_property: item})
     };
 
-    // var mixture_params = betaShape({
-    //       g: uniformDrift({a: 0, b: 1, width: 0.2}),
-    //       d: uniformDrift({a: 0, b: 100, width: 5})
-    // })
-    //
-    // mapData({data: propertyData.prior}, function(d){
-    //   observe( Beta(mixture_params), d.response0_avoidedEndval )
-    // })
-    //
-    // var prevalence_when_present = betaShape({
-    //       g: uniformDrift({a: 0, b: 1, width: 0.2}),
-    //       d: uniformDrift({a: 0, b: 100, width: 5})
-    // })
-    //
-    // mapData({data: propertyData.prior}, function(d){
-    //   observe( Beta(prevalence_when_present), d.response1_avoidedEndval )
-    // })
-    //
-  	// var statePrior = Infer({model: function(){
-    //   sample(
-    //     flip(sample(DiscretizedBeta(mixture_params))) ?
-    //     DiscretizedBeta(prevalence_when_present) :
-    //     NullDistribution
-    //   )
-  	// }});
+    var mixture_params = betaShape({
+          g: uniformDrift({a: 0, b: 1, width: 0.2}),
+					d: exponential({a: 1})
+    })
 
-    var statePrior = priors[item]
+    mapData({data: propertyData.prior}, function(d){
+      observe( Beta(mixture_params), d.response0_avoidedEndval )
+    })
+
+    var prevalence_when_present = betaShape({
+          g: uniformDrift({a: 0, b: 1, width: 0.2}),
+					d: exponential({a: 1})
+    })
+
+    mapData({data: propertyData.prior}, function(d){
+      observe( Beta(prevalence_when_present), d.response1_avoidedEndval )
+    })
+
+  	var statePrior = Infer({model: function(){
+      sample(
+        flip(sample(DiscretizedBeta(mixture_params))) ?
+        DiscretizedBeta(prevalence_when_present) :
+        NullDistribution
+      )
+  	}});
+		var higherBetaComponent = DiscretizedBeta(prevalence_when_present)
+
+    // var statePrior = priors[item]
 
      /// RSA model
    	var listener0 = cache(function(utterance) {
@@ -158,54 +179,52 @@ var marginalLikelihood = function(){
    	 }})}, 10000)
 
       /// LIFTED PRAGMATIC
-    	var listener0_forL1 = cache(function(utterance, theta) {
-    	  Infer({model: function(){
-    	    var state = sample(statePrior);
-    	    var m = meaning(utterance, state, theta)
-    	    condition(m)
-    	    return state
-    	 }})}, 10000)
+    	// var listener0_forL1 = cache(function(utterance, theta) {
+    	//   Infer({model: function(){
+    	//     var state = sample(statePrior);
+    	//     var m = meaning(utterance, state, theta)
+    	//     condition(m)
+    	//     return state
+    	//  }})}, 10000)
 
-      var speaker1 = cache(function(state, theta) {
-       Infer({model: function(){
-         var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-         var L0 = listener0_forL1(utterance, theta);
-         factor(speakerOptimality * L0.score(state))
-         return utterance
-       }})}, 10000)
+     //  var speaker1 = cache(function(state, theta) {
+     //   Infer({model: function(){
+     //     var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+     //     var L0 = listener0_forL1(utterance, theta);
+     //     factor(speakerOptimality * L0.score(state))
+     //     return utterance
+     //   }})}, 10000)
+		 //
+     // var listener1 = cache(function(utterance) {
+     //   Infer({model: function(){
+     //     var state = sample(statePrior);
+     //     var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
+     //     var S1 = speaker1(state, theta)
+     //     observe(S1, utterance)
+     //     return state
+     //   }})}, 10000)
+		 //
+     //   /// UNLIFTED PRAGMATIC
+		 //
+     //    var speaker1_unlifted = cache(function(state) {
+     //     Infer({model: function(){
+     //       var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
+     //       var L0 = listener0(utterance);
+     //       factor(speakerOptimality * L0.score(state))
+     //       return utterance
+     //     }})}, 10000)
+		 //
+     //   var listener1_unlifted = cache(function(utterance) {
+     //     Infer({model: function(){
+     //       var state = sample(statePrior);
+     //       var S1 = speaker1_unlifted(state)
+     //       observe(S1, utterance)
+     //       return state
+     //     }})}, 10000)
 
-     var listener1 = cache(function(utterance) {
-       Infer({model: function(){
-         var state = sample(statePrior);
-         var theta = (semantics == "uncertain") ? sample(thetaPrior) : fixedThreshold;
-         var S1 = speaker1(state, theta)
-         observe(S1, utterance)
-         return state
-       }})}, 10000)
+		 var L0 = semantics == "highBeta" ? higherBetaComponent : listener0("generic")
 
-       /// UNLIFTED PRAGMATIC
-
-        var speaker1_unlifted = cache(function(state) {
-         Infer({model: function(){
-           var utterance = categorical({vs: ["generic", "silence"], ps: [cost_uttProb, 1]})
-           var L0 = listener0(utterance);
-           factor(speakerOptimality * L0.score(state))
-           return utterance
-         }})}, 10000)
-
-       var listener1_unlifted = cache(function(utterance) {
-         Infer({model: function(){
-           var state = sample(statePrior);
-           var S1 = speaker1_unlifted(state)
-           observe(S1, utterance)
-           return state
-         }})}, 10000)
-
-    var L = modelName == "literal" ? listener0("generic") :
-    modelName == "pragmatic_unlifted" ? listener1_unlifted("generic") :
-    listener1("generic")
-
-    var interpretationPrediction = addNoise(L, noise)
+    var interpretationPrediction = addNoise(L0, noise)
 
    mapData({data:propertyData.interpretation}, function(d){
      // display(d)
@@ -231,13 +250,25 @@ var marginalLikelihood = function(){
 }
 
 var steps = 10000
-var samples = 1
-var mll = AIS(marginalLikelihood, {steps:steps, samples: samples})
+var samples = 50
 
-var resultsOutFile = 'results/marginal_likelihood/ais-cimpian-'+
-modelName+'-empiricalPrior_'+semantics+'-semantics-nullDist_' +
-NullDistributionName + "_steps" + steps+'iter'+chain+'.json';
+var outfile = 'results/mll/ais-cimpian-'+
+	modelName+'-bdaPrior_'+semantics+'-semantics-nullDist_' +
+	NullDistributionName +"_"+ steps + "-steps_" + samples + '-samples_iter' +chain+'.csv';
 
-// // postOut
-json.write(resultsOutFile, mll)
-'results written to ' + resultsOutFile
+var fileHandle = webpplCsv.openFile(outfile)
+var header_to_write = ["modelName", "semantics", "nullDist", "steps", "iter", "weight"].join(",")
+webpplCsv.writeLine(header_to_write, fileHandle)
+
+var weights = map(function(i) {
+
+   display(i)
+	 var weight = AIS(marginalLikelihood, {samples: 1, steps: steps})
+	 var line_to_write = [modelName, semantics, NullDistributionName, steps, i, weight].join(",")
+ 	 webpplCsv.writeLine(line_to_write, fileHandle)
+
+}, _.range(samples))
+
+webpplCsv.closeFile(fileHandle)
+
+"written to " + outfile;
