@@ -1221,7 +1221,28 @@ predictions.}
 \end{figure}
 
 
+\begin{figure}
+\centering
+\includegraphics{figs/cimpian-results}
+\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\emph{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
+\end{figure}
 
+As we did for Expt.~1, we implemented joint Bayesian data analysis models that predict the structured elicitation responses (Expt.~2a) and use the inferred prevalence priors to predict the generic interpretation data (Expt.~2b) assuming different models of generic interpretation (uncertain threshold, fixed-thresholds, reified kinds). 
+
+\begin{figure}
+\centering
+\includegraphics{figs/cimpian-modelingResults-plotgrid-scatters.pdf}
+\caption{\label{fig:cimpian-modelingResults-scatters}Posterior predictive model fits for the Cimpian et al. (2010) replication data. (A) shows item means and (B) full distribution of responses for each individual item. Full distribution plots are created by discretizing the distributions to bins of width 0.05 (20 bins per item). Models are (from left to right): (i) the mean of the prevalence prior, (ii - v) a threshold semantics fixed at 0.01 (\enquote{some}), 0.1, 0.3, and 0.5 (``most''), (vi) a threshold semantics with a threshold inferred from the data (``best threshold''), (vii) the ``reified kinds'' model that picks out the component of the prior distribution with a higher mean, and (viii) the uncertain threshold model. Fixed-threshold models are outfitted with a noise parameter to accommodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics{figs/cimpian-fullDistributions-variousFixeds-1.pdf}
+\caption{Distributions of implied prevalence ratings and model predicted distributions of responses for eight items from Expt.~2.
+}
+\label{fig:cimpian-modelingResults-bars}
+\end{figure}
 
 
 \subsection{Experiment 2b: Generic interpretation}
@@ -1268,19 +1289,30 @@ We replicate this result and extend it to show further gradability among types o
 
 %\mht{add brm results for prevalence $\sim$ property type ?}
 
-\begin{figure}
-\centering
-\includegraphics{figs/cimpian-results}
-\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\emph{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
-\end{figure}
 
-As we did for Expt.~1, we implemented joint Bayesian data analysis models that predict the structured elicitation responses (Expt.~2a) and use the inferred prevalence priors to predict the generic interpretation data (Expt.~2b) assuming different models of generic interpretation (uncertain threshold, fixed-thresholds, reified kinds). 
 
-\begin{figure}
-\centering
-\includegraphics{figs/cimpian-modelingResults-plotgrid-scatters.pdf}
-\caption{\label{fig:cimpian-modelingResults-scatters}Posterior predictive model fits for eight models in terms of their fit for (A) item means and (B) full distribution of responses for each individual item. Full distribution plots are created by discretizing the distributions to bins of width 0.05 (20 bins per item). Models are (from left to right): (i) the mean of the prevalence prior, (ii - v) a threshold semantics fixed at 0.01 (\enquote{some}), 0.1, 0.3, and 0.5 (``most''), (vi) a threshold semantics with a threshold inferred from the data (``best threshold''), (vii) the ``reified kinds'' model that picks out the component of the prior distribution with a higher mean, and (viii) the uncertain threshold model. Fixed-threshold models are outfitted with a noise parameter to accommodate data points that are logically impossible given the fixed semantics. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
-\end{figure}
+\begin{center}
+  \begin{table}[h]
+    \centering
+    \small
+    \pgfplotstabletypeset[fixed zerofill, precision = 2,
+    col sep = comma,
+    every head row/.style={before row = \toprule, after row = \midrule},
+    every last row/.style={after row = \bottomrule},
+    columns/model_name/.style={string type, column name={Model}, column type = l},
+    columns/MSE/.style={column name={MSE}, fixed relative, dec sep, precision = 2},
+      columns/r2/.style={column name={$r^2$}, dec sep},
+    columns/r2_dist/.style={column name={$r^2_{dist}$}, dec sep},
+     columns/MSE_dist/.style={column name={$\text{MSE}_{dist}$}, fixed relative, dec sep, precision = 2},
+    columns/log_bf/.style={column name={(log) BF}, dec sep, fixed, precision=0}%,
+    ]
+    {csv_to_tex/cmp_model_summary_stats.csv}
+    \caption{Summary statistics of models for Expt.~2. Mean Squared Errors and variance explained are calculated both at the level of the item means and over the distribution over responses discretized to bins of width 0.05 ($r^2_{dist}, \text{MSE}_{dist}$) for the generic interpretation data (Expt.~2b). Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model (in log scale) and are computed over the full distribution of responses for both the prior elicitation and generic interpretation tasks (Expts.~2a \& 2b). The Best fixed-threshold model has no variance in its predictions about the item means. log BF values below 0 indicate evidence in support of the Uncertain threshold model.}
+    \label{tab:cmpsummary}
+  \end{table}
+\end{center}
+
+%Threshold value for \emph{Best fixed-threshold} model is the MAP estimate inferred from the data; noise values are also MAP estimates inferred from the data. 
 
 
 
@@ -1295,8 +1327,9 @@ As we did for Expt.~1, we implemented joint Bayesian data analysis models that p
 
 
 
-\hypertarget{experiment-2-prior-manipulation}{%
-\section{Experiment 3: Prior Manipulation}\label{experiment-2-prior-manipulation}}
+
+\hypertarget{experiment-3-prior-manipulation}{%
+\section{Experiment 3: Prior Manipulation}\label{experiment-3-prior-manipulation}}
 
 In our second experiment, we test the causal role of the prevalence prior in generic interpretation.
 In the previous experiment, participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
@@ -1304,8 +1337,8 @@ Though the uncertain threshold model is able to finely track interpretations in 
 Here we manipulate the prevalence prior and measure the resulting influence on interpretation.
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
 
-\hypertarget{experiment-2a-prior-elicitation-manipulation-check}{%
-\subsection{Experiment 2a: Prior elicitation (manipulation check)}\label{experiment-2a-prior-elicitation-manipulation-check}}
+\hypertarget{experiment-3a-prior-elicitation-manipulation-check}{%
+\subsection{Experiment 3a: Prior elicitation (manipulation check)}\label{experiment-3a-prior-elicitation-manipulation-check}}
 
 In this experiment, we elicit participants' beliefs about the prevalence of a property among different categories following a manipulation designed to alter participants' beliefs about a property.
 
