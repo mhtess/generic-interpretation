@@ -683,9 +683,11 @@ Participants were then asked \enquote{Out of all of the \emph{K}s on the planet,
 Participants responded using a slider bar with endpoints labeled 0\% and 100\%, and the exact number corresponding to their slider bar rating was displayed once participants clicked on the slider bar.
 This kind of explicit question about prevalence has been used to reveal differences in the interpretations of generics~vs.~quantified statements in adults and young children \cite{Gelman2002, Brandone2014} as well as differences in interpretations of generics about different properties \cite{Cimpian2010}. 
 It is not a measure of unconscious probabilistic expectations, which can often deviate from this kind of conscious probabilistic judgment \cite<e.g.,>{wu2017asking}.\footnote{
-\citeA{wu2017asking} also found that probabilistic information conveyed using perceptual features (e.g., spatial extent) led to better understanding of probabilities, as measured by performance on a probabilistic search task.  Thus, our use of a perceptually-grounded slider bar could support participants' estimations of probability.
-The \citeA{wu2017asking} task is only indirectly comparable, however, because it concerns the comprehension of probabilistic information whereas we examine the reporting of probabilistic information.
+It has been observed, however, that that probabilistic information conveyed using perceptual features (e.g., spatial extent) can lead to better understanding of probabilities, as measured by performance on a probabilistic search task \cite{wu2017asking}.
+Thus, our use of a perceptually-grounded slider bar could support participants' estimations of probability and bring more alignment between unconscious probabilistic expectations and participants' reported prevalence values.
+%The \citeA{wu2017asking} task is only indirectly comparable, however, because it concerns the comprehension of probabilistic information whereas we examine the reporting of probabilistic information.
 }
+Though the response measure may encourage some amount of gradience in responses \cite<cf.,>{armstrong1983some}, the fact that the numeric rating appears above the slider bar allows participants to provide an exact rating should they desire. 
 
 Novel animal category names were mostly taken from Cimpian et al. (2010) and similar studies on generic language.
 Each participant completed thirty-five trials, corresponding to a random subset of the full stimulus set.
@@ -716,9 +718,15 @@ Explaining the extreme gradience we observe in our data set requires a quantitat
 
 %\ndg{emphasize the gradience, in contrast with cimpian results which left open the possibility that there were just a few categories... this means we really want a quant model.}
 
+To determine whether the variability we observe can be traced back to difference in how individual participants' use the slider bar (e.g., how extreme or moderate a participants is in their usage of the slider bar ratings), we normalized each participant's ratings by subtracting the mean and dividing by the standard deviation of that participant's responses. We then compared the mean normalized ratings by-item to the mean unnormalized (original) ratings by-item. We find an extremely strong correlation between the two (r = 0.9947), which suggests that the gradience in mean ratings we observe by-item is not driven by individuals’ variability in how extreme or moderate their responses are.
+
 To assess the reliability of these data, we ran a replication (\(n=140\)) using a slightly different dependent measure.\footnote{By experimenter error, only seventy-four of the seventy-five items were collected in the replication data set.}
 Instead of being asked a question about percentages (e.g., \enquote{Out of all of the Ks in the world, what percentage F?}), participants were asked a question in terms of frequency: \enquote{Out of 100 Ks, how many do you think F?}.
 The empirical by-item means between these data and the original data are highly correlated (\(r(74) = 0.96\), \(r_{spearman}(74)= 0.96\)), indicating very high data reliability.
+
+We also see evidence of quantization of responses, especially around 50\% prevalence. The quantization can be observed at 5\% increments and is likely due to the fact that the slider bar displayed the exact percentage above the slider bar and that people prefer round numbers. 
+In our model-based analysis below, we discretize the state space to increments of 5\%, and this quantization does not change any of theoretical conclusions we will draw.
+
 
 \begin{figure}
 \centering
@@ -1274,7 +1282,9 @@ Across the forty items in this experiment, we observe a gradient in the implied 
 At the level of property type, \citeA{Cimpian2010} found a difference between the implied prevalence of generics about biological parts described with color adjectives (e.g., \emph{purple feathers}) and accidental properties (e.g., \emph{fungus-covered claws}).
 We replicate this result and extend it to show further gradability among types of properties (Figure~\ref{fig:cimpian-modelingResults}B) as well as within types.
 
-As we did for Expt.~1, we implemented joint Bayesian data analysis models that predict the structured elicitation responses (Expt.~2a) and use the inferred prevalence priors to predict the generic interpretation data (Expt.~2b) assuming different models of generic interpretation (uncertain threshold, fixed-thresholds, reified kinds). 
+ \citeA{Cimpian2010} made the following comment regarding the accidental property generics: \enquote{properties of this type do not lend themselves very well to generic predication \cite{gelman1988development, Cimpian2008}, so generics about broken legs, itchy skin, etc. are infrequent outside the laboratory.} (p.1472). Thus, it is possible that the order of presentation of the trials could influence participants' judgments, with later trials providing more experience to the participant that they are dealing with generic statements.\footnote{We thank an anonymous reviewer for pointing this out to us.} Such an order effect could result in either (a) higher ratings in later trials, as participants impute more of high-prevalence generic interpretation rather than an existential reading of the statement or (b) lower ratings in the later trials, as participants get more experience with the variability in types of properties, they begin to realize that generics about different properties can be variable with respect to the prevalence they imply. Note that explanation (a) is confounded with typical regression-to-the-mean, as items that receive significantly lower than average responses early in the task will tend to receive relatively higher responses later in the task. We investigated this quantitatively by building a Bayesian mixed-effects regression model predicting the response as a function of the property type (biological vs. accidental vs. color vs. vague modifier), the half of the experiment in which the item was rated by the participant, and their interaction. The model additionally included random effects of intercept and split half by item and intercept, split half, property type, and their interaction by participant (the maximal random effects structure). Consistent with explanation (b), we found that participant ratings were slightly higher in the first half than the second half for the accidental items (posterior mean and 95\% Bayesian Credible Intervals: $\beta = 0.06 [0.03, 0.10]$). No difference was observed between first half and second half ratings for the other property type conditions ($\beta_{color} = 0.02 [-0.03, 0.07]; \beta_{vague} = 0 [-0.05, 0.05], \beta_{part} = 0 [-0.04, 0.05]$).
+ 
+To test our quantitative models in their ability to explain the data from Cimpian et al. (2010), we implemented joint Bayesian data analysis models that predict the structured elicitation responses (Expt.~2a) and use the inferred prevalence priors to predict the generic interpretation data (Expt.~2b) assuming different models of generic interpretation (uncertain threshold, fixed-thresholds, reified kinds) in a manner directly analogous to what we did for Expt.~1. 
 The priors on parameters were the same as for the modeling of Expt.~1. 
 To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 3 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
 We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 200 samples from an Annealed Importance Sampling algorithm with an annealing schedule consisting of 10,000 uniformly spaced increments. 
@@ -1461,7 +1471,7 @@ As in Expt. 2a, participants then completed an attention check survey where they
 \begin{figure}
 \centering
 \includegraphics{figs/expt2_model-results_nozero2.pdf}
-\caption{\label{fig:genint-modelingResults2}Experiment 2 results. A: Empirical distribution of responses for the generic interpretation task (Expt. 2a; top row), uncertain threshold model predictions, and alternative model predictions. Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Posterior predictive expected values quantitative models in comparison to the human empirical means. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
+\caption{\label{fig:genint-modelingResults2}Experiment 3 results. A: Empirical distribution of responses for the generic interpretation task (Expt. 3b; top row), uncertain threshold model predictions, and alternative model predictions. Data and model predictions are shown for ten different prior distribution conditions (horizontal facets). B: Posterior predictive expected values quantitative models in comparison to the human empirical means. Error bars denote bootstrapped 95\% confidence intervals for the behavioral data and 95\% highest posterior density intervals for the model predictions.}
 \end{figure}
 
 
@@ -1502,7 +1512,7 @@ In summary, these results demonstrate that participants interpret the novel gene
     ]
     {csv_to_tex/expt2_ks_stats.csv}
 
-    \caption{Kolmogorov-Smirnoff test results testing for the dissimilarity between the priors (Expt.~2a) and the generic interpretation (posterior) response distributions (Expt.~2b). The only distributions to be not significantly different between the prior and posterior were the 50/100 and 75/100 distributions; the uncertain threshold model predicts only subtle shifts for these distributions.}
+    \caption{Kolmogorov-Smirnoff test results testing for the dissimilarity between the priors (Expt.~3a) and the generic interpretation (posterior) response distributions (Expt.~3b). The only distributions to be not significantly different between the prior and posterior were the 50/100 and 75/100 distributions; the uncertain threshold model predicts only subtle shifts for these distributions.}
     \label{tab:ks}
   \end{table}
 \end{center}
@@ -1664,22 +1674,25 @@ Generic language is the foremost case study of how abstract, generalizable knowl
 Despite their ubiquity and relative morphosyntactic simplicity, generics have been examined by few quantitative studies and no quantitative models that make predictions about how generic language updates beliefs.
 Here, we explored the hypothesis proposed by \citeA{Tessler2019psychrev} that generics update beliefs according to an uncertain threshold semantics. 
 We tested these models using a diverse set of stimuli and showed that the generic interpretations can be predicted with high-quantitative accuracy as a function of background knowledge about the property updated by an uncertain threshold rule (Experiment 1).
-Furthermore, we found that this background knowledge was causally responsible for the resulting interpretation (Experiment 2).
+In Experiment 2, we showed how model also explains extant differences observed from the previously published work of Cimpian et al. (2010).
+Furthermore, we found that the background knowledge about the expected prevalence of the feature was causally responsible for how novel generic statements get interpreted (Experiment 3).
 %Our data strongly support the conclusion that generics can be thought of as conveying quantitative information about the prevalence of the property in the category. 
 % The information content, however, is not derivable outside of context; the meaning of generic statement manifests via reasoning about what threshold would be likely to be true given background knowledge about the property.
 % interprets generics pragmatically provides a better explanation of the observed data than a literal interpretation model.
-This work contributes a computational formalism to describe how beliefs are updated from generic language, which appears to be adequate within the domains considered; it represents a first step in understanding how generics serve to convey knowledge between people and generations.
+This work validates a computational formalism to articulate how beliefs are updated from generic language, which appears to be adequate within the domains considered; it represents a first step in understanding how generics serve to convey knowledge between people and generations.
 
 
 %
-The experimental data we present shows that generics can receive a spectrum of prevalence-based interpretations, including being interpreted as only applying to a minority of the category (\emph{weak generics}). 
+The experimental data we present shows that generics can receive a systematic spectrum of prevalence-based interpretations, including being interpreted as only applying to a minority of the category (what we might call \emph{weak generics}). 
 Statements like \emph{Lorches live in zoos}, \emph{Feps perform in the circus}, and \emph{Wugs have seizures} all received average implied prevalence ratings below 50\%, with many individual participants providing ratings of 10\% or less (Expt. 1b).
-When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0\% or around 25\%, participants readily interpret the statement \emph{Ks know when earthquakes are about to happen} to mean about a quarter of them do (Expt. 2b).
+When manipulating the prevalence prior distributions to suggest only prevalence levels of around 0\% or around 25\%, participants readily interpret the statement \emph{Ks know when earthquakes are about to happen} to mean about a quarter of them do (Expt. 3b).
 %These nuanced interpretations are an aspect of generic language understanding often swept under the rug: Generics are believed (in a generic sense) to carry strong implications.
-These results stand in contrast to a common view in the psychological literature on generics that generics (in a generic sense) convey monolithic, strong meanings.\footnote{
-	Gradience in property prevalence interpretations (e.g., how many wugs have seizures), which we examine in this paper, is distinct from gradience in property knowledge (e.g., whether or not an individual episode could be a gradient example of a seizure, such as an event which is a borderline case between a seizure and a non-seizure). Our results cannot speak one another or another as to whether or not property knowledge \emph{per se} is gradient, just that knowledge of prevalence is gradient. It has been shown, for example, that the response measure can elicit gradience from objectively binary properties \cite<e.g., the ``evenness'' of numbers;>{armstrong1983some}.\mht{improve this...}
+These results highlight the variety of generic interpretations, which stand in contrast to a common view in the psychological literature on generics that generics (in a generic sense) convey monolithic, strong meanings.
+Here, we trace the variability of generic interpretations back to prior beliefs, demonstrating how generics can convey strong implications, weak implications, and all shades in-between.\footnote{
+The response measure we use in our paradigm, as in the previous paradigms on generic implications, might encourage gradience even if gradience was limited.
+For example, \citeA{armstrong1983some} showed that one can elicit gradience from objectively binary properties (e.g., the ``evenness'' of numbers).
+Gradience in property prevalence interpretations (e.g., how many wugs have seizures), which we examine in this paper, is distinct, however, from gradience in property knowledge (e.g., whether or not an individual instance or episode could be a gradient exemplar of a property such as a seizure). Our results cannot speak one as to whether or not property knowledge \emph{per se} is gradient, just that knowledge of prevalence is gradient. Prevalence knowledge being gradient is not particularly surprising given that the underlying construct is itself gradient (i.e., prevalence is a probability or frequency, which is a number between 0 - 1). 
 }
-Here, we trace the variability of generic interpretations back to prior beliefs, demonstrating how generics can convey strong implications, weak implications, and all shades in-between.
 
 \citeA{Tessler2019psychrev} showed that the generic endorsement judgments (e.g., do you endorse the statement:  \emph{Mosquitos carry malaria}?) can be predicted by a model of a speaker deciding whether or not to produce the generic to a naive listener, where the naive listener updates its prior beliefs via an uncertain threshold function. 
 We show here that the model of the naive listener---the \emph{Uncertain threshold model}---perfectly tracks with the generic interpretation data (Expt.~1b, 2b), in a manner that closely resembles how the predictions of the  speaker model of \citeA{Tessler2019psychrev} closely tracked with the generic endorsements.
@@ -1886,7 +1899,7 @@ Instead, it is most parsimonious to conclude that from these experiments that ge
 
 An easy way to acquire abstract knowledge is to understand a generic statement produced by a helpful interlocutor. 
 A computational model that understands generics as operating as a vague quantifier is able to predict the large variability in generic interpretations.
-This work opens the door to understanding more precisely how abstract knowledge is learned from language and conveyed through generations.
+This work provides further support for a computational approach to generic language, opening the door to understanding more precisely how abstract knowledge is learned from language and conveyed through generations.
 
 \newpage
 
