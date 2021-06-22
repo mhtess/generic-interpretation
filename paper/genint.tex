@@ -570,7 +570,7 @@ Experiment 3 is a test of the causal influence of prevalence priors on generic i
 Each of our experiments is divided into two parts. 
 In Part A (Expts.~1a, 2a, 3a), we measure participants' prior beliefs about the prevalence of the features used in our stimuli (e.g., the prior probabilities of different levels of prevalence of the feature \emph{likes to cuddle}). %; we do this by asking about the prevalence of the feature among a variety of alternative, familiar categories (e.g., \emph{what percentage of \{cats, mice, elephants, ...\} like to cuddle?}).
 In Part B (Expts.~1b, 2b, 3b), we measure the prevalence implied by a generic about a novel categories (e.g., \emph{Dorbs like to cuddle.}). 
-We then perform a series of quantitative analyses aimed at predicting the prevalence implied by the generic (Part B) from the prior distribution of prevalence (Part A), assuming different models of belief-updating from a generic (i.e., likelihood functions that update a prior distribution into a posterior distribution on prevalence). 
+We then perform a series of quantitative analyses aimed at predicting the prevalence implied by the generic (Part B) from the prior distribution of prevalence (Part A), assuming different models of belief-updating from a generic (i.e., functions that update a prior distribution into a posterior distribution on prevalence given the generic statement). 
 The comparison of different formal models of generic interpretation using the same elicited prior knowledge allows us to provide evidence for a particular model of generic interpretation, while precisely articulating the effect of prior knowledge. 
 
 The sample size, exclusion criteria, and planned statistical contrasts for Expts.~1 \& 3 were pre-registered on the Open Science Framework.
@@ -598,7 +598,7 @@ Because the properties are familiar properties, we can elicit participants' know
 \paragraph{Participants}\label{participants-1}}
 
 We recruited 200 participants from MTurk.
-This number was arrived at with the intention of getting approximately 23 independent sets of ratings for each unique item in the experiment, which corresponds to roughly 115 ratings per item.
+This number was arrived at with the intention of getting approximately 23 independent sets of ratings for each unique item in the experiment, which corresponds to roughly 115 ratings per item. \ndg{prev is hard to follow since we don't know what items or sets of ratings are yet...}
 Participants were restricted to those with U.S. IP addresses and with at least a 95\% MTurk work approval rating (these same criteria apply to all experiments reported).
 The experiment took on average 7 minutes and participants were compensated \$0.80.
 
@@ -635,17 +635,17 @@ The distribution for the property \emph{eats insects} looks similar, though ther
 \emph{Get in fights with other animals} is similar but has substantially less probability mass at 100\% prevalence: It is unlikely that this property is widespread in a category.
 \emph{Live in urban areas} shows a monotonically decreasing probability function; even if this property is present in a category, it is unlikely to be highly prevalent. 
 \emph{Live in zoos} is expected to be even less prevalent, and the property \emph{has seizures} is expected to even more rare.
-Some prevalence prior distribution exhibit unique structure; for instance,  the property \emph{gets erections} is only expected to be present in 50\% of the population when it is present at all because of the fact that this is a property that only male members of categories can possess. In this way, theory-based considerations can influence the structure of these prevalence priors (see also \citeNP{Tessler2019psychrev} for a discussion of this relationship). 
+Some prevalence prior distribution exhibit unique structure; for instance,  the property \emph{gets erections} is only expected to be present in 50\% of the population when it is present at all (presumably because of the fact that this is a property that only male members of categories can possess). In this way, theory-based considerations can influence the structure of these prevalence priors (see also \citeNP{Tessler2019psychrev} for a discussion of this relationship). 
 
 Most of the elicited prevalence prior distributions appear at least bi-modal.
 To visualize all properties simultaneously, we represent each distribution by two statistics: the relative probability mass at 0\%---\(P(\text{feature is present})\), or \(P(r > 0)\)---and the expected value (mean) of the distribution conditional on the prevalence being greater than 0\%---\(\mathbb{E}[P(r \mid r>0)]\) or the property's \emph{prevalence when present}.
 The $P(\text{feature is present})$ is a measure of the (inverse-)distinctiveness of the feature (i.e., among how many animal categories is the property expected to be present). 
 \emph{Prevalence when present} is the average prevalence among the categories for which the property \emph{can} occur. 
 Figure~\ref{fig:genInt-prevPrior}B shows the distributions of these two parameters: The stimulus set covers a wide range of possible values of both of these parameters.
-This suggests we have sampled items with priors that exhibit a lot of quantitative variability, as desired.
+This suggests we have sampled items with priors that exhibit  substantial quantitative variability, as desired.
 
-To confirm the multi-modality of the empirical prior distributions, we conduct a Bayesian analysis where we model the prior elicited data (on a by-item basis) as being generated from some combination of mixtures of Beta distributions.\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.} 
-We compare the likelihood of the prior elicited data, modeling each item independently, under a single Beta distribution as well as  mixtures of 2-, 3-, and 4- Beta distributions; this comparison allows us to determine the best functional form of the priors, which will be useful when we try to model both the prior data and the generic interpretation data simultaneously. 
+To confirm the multi-modality of the empirical prior distributions, we conduct a Bayesian analysis where we model the prior elicited data (on a by-item basis) as being generated from a mixture of some number of Beta distributions.\footnote{We use Beta distributions to match the form of the response variable: a number between 0 - 1.} 
+We compare the likelihood of the elicited data, modeling each item independently, under a single Beta distribution as well as  mixtures of 2-, 3-, and 4- Beta distributions; this comparison allows us to determine the best functional form of the priors, which will be useful when we model the prior data and the generic interpretation data simultaneously, below. 
 The method of model comparison we employ---Bayes Factors---averages across all values of any free parameters of the model (weighted by their prior probabilities) and thus,  penalizes models with extra free parameters if, in fact, the model's predictions are not greatly improved by the addition of free parameters (or, are highly sensitive to the exact values of those parameters).
 Each prevalence prior component (i.e., each Beta distribution) has two parameters governing its shape: a mean \(\gamma\) and variance parameter \(\xi\); in addition, for models that use mixtures of 2-, 3-, or 4-Beta distributions, we have an additional 1, 2, or 3 parameters (respectively) governing the relative contribution (i.e., the weight) of each mixture component. 
 We put uninformative priors over these parameters \(\gamma \sim \text{Uniform}(0, 1)\), \(\xi \sim \text{Exponential}(1)\), \(\phi \sim \text{Dirichlet}([1]^n)\) and compute the marginal likelihood of the data by using an Annealed Importance Sampling algorithm \cite{neal2001annealed} implemented in the probabilistic programming language WebPPL.
@@ -653,7 +653,7 @@ We find that the most parsimonious account of the prior elicited data is that of
 \rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{1}{log_bf}{0}$; 2-~vs.~3-Betas: $\log \text{BF}_{2,3}= 
 \rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{3}{log_bf}{0}$; 2-~vs.~4-Betas: $\log \text{BF}_{2,4}= 
 \rlgetnum{expt1a_mixture_of_betas_bf.csv}{n_components}{4}{log_bf}{0}$).
-Thus, we will assume the prevalence prior data follows a mixture of 2-Beta distributions when we jointly model the generic interpretation data, which we measure in our next experiment.  
+Thus, we will assume the prevalence prior data follows a mixture of 2-Beta distributions in analyses below.  
 
 %Given these priors, our model makes quantitative predictions about the prevalence implied by a novel generic sentence (e.g., \enquote{Lorches live in zoos}), which we test in Experiment 1b.
 
@@ -718,7 +718,7 @@ On one end of the continuum, the generic \emph{Wugs have four legs} is interpret
 On the other end of the spectrum is \emph{Glippets perform in the circus}, which is interpreted as applying to less than 25\% of glippets by over half of participants (35 out of 61) and which receives a mean rating of 0.31 [0.23, 0.39].
 Additionally remarkable is the distribution of responses for individual items: Though \emph{Feps live in zoos} is taken by many participants to mean that around 25\% of feps live in zoos, others take it to mean that almost 100\% live in zoos; such variability in interpretation is not unreasonable: some animal categories (e.g., Micronesian Kingfishers) exist entirely in zoos, while others do not.
 In addition to the extreme endpoints, we find average ratings at all levels of prevalence in between, even for predicates that have the same main verb (e.g., \emph{live in} \emph{trees}~vs.~\emph{live in urban areas}~vs.~\emph{live in high-rise buildings}~vs.~\emph{live in zoos}; compare also properties involving the verb \emph{eat}; Figure~\ref{fig:genint-empiricalData}), arguing against a view that variability can be traced back simply to verbs with different ``generalizing powers'' \cite{Abelson1966, Cimpian2010}.
-This extreme gradience also stands in contrast to the results of \citeA{Cimpian2010}, which left open the possibility that were just a few special distinctions of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see also Figure \ref{fig:cimpian-modelingResults}). 
+This extreme gradience also stands in contrast to the results of \citeA{Cimpian2010}, which left open the possibility that there were just a few special distinctions of properties that had unique implied prevalences (e.g., biological~vs.~accidental properties; see also Figure \ref{fig:cimpian-modelingResults}). 
 Explaining the extreme gradience we observe in our data set requires a quantitative theory. 
 
 %\ndg{emphasize the gradience, in contrast with cimpian results which left open the possibility that there were just a few categories... this means we really want a quant model.}
@@ -977,7 +977,7 @@ Visually, this relationship between threshold value and noise results in a rotat
 \label{fig:genint-modelingResults-bars}
 \end{figure}
 
-The control model that performs the best is the \emph{Reified kinds} model, which predicts prevalence ratings based on a categorical (as opposed to continuous) view of the prevalence prior. This model selects the component of the prevalence prior distribution that has the highest mean and uses that to make predictions for generic interpretations (in the case of our 2-component prevalence prior, this model simply selects the component with the higher mean prevalence). 
+The alternative model that performs the best is the \emph{Reified kinds} model, which predicts prevalence ratings based on a categorical (as opposed to continuous) view of the prevalence prior. This model selects the component of the prevalence prior distribution that has the highest mean and uses that to make predictions for generic interpretations (in the case of our 2-component prevalence prior, this model simply selects the component with the higher mean prevalence). 
 This model seems to struggle the most with the ``weak generics'', the statements that receive overall low prevalence interpretations (Figure \ref{fig:genint-modelingResults}A; ``Reified kinds'', items below $y = x$ line).
 By comparing the distribution of responses for \emph{Reified kinds}~vs.~\emph{Uncertain threshold}, we can see that  \emph{Reified kinds} fails to predict certain bi-modalities that the \emph{Uncertain threshold} model predicts.
 For example, the statement \emph{Feps carry Lyme disease} is interpreted by some participants to mean that most or all feps carry Lyme disease, while others interpret it more weakly (some or few feps carry Lyme disease; Figure \ref{fig:genint-modelingResults-bars}). 
@@ -1071,7 +1071,7 @@ Overall, the \emph{Uncertain threshold} model is able to predict key signatures 
     ]
     {csv_to_tex/expt1_model_summary_stats2.csv}
 
-    \caption{Summary statistics and parameters for models of generic interpretation. Threshold value for \emph{Best fixed-threshold} model is the MAP estimate inferred from the data; noise values are also MAP estimates inferred from the data. Mean Squared Errors and variance explained are calculated both at the level of the item means and over the distribution over responses discretized to bins of width 0.05 ($r^2_{dist}, \text{MSE}_{dist}$) for the generic interpretation data (Expt.~1b). Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model (in log scale) and are computed over the full distribution of responses for both the prior elicitation and generic interpretation tasks (Expts.~1a \& 1b). log BF values below 0 indicate evidence in support of the Uncertain threshold model.}
+    \caption{Summary statistics and parameters for models of generic interpretation. Threshold value for \emph{Best fixed-threshold} model is the MAP estimate inferred from the data; noise values are also MAP estimates inferred from the data. Mean Squared Errors and variance explained are calculated both at the level of the item means and over the distribution over responses discretized to bins of width 0.05 ($r^2_{dist}, \text{MSE}_{dist}$) for the generic interpretation data (Expt.~1b). Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model (in log scale) and are computed over the full distribution of responses for both the prior elicitation and generic interpretation tasks (Expts.~1a \& 1b). log BF values below 0 indicate evidence in support of the Uncertain threshold model. \ndg{why are there dots before the table?}}
     \label{tab:summary1}
   \end{table}
 \end{center}
@@ -1294,7 +1294,7 @@ The priors on parameters were the same as for the modeling of Expt.~1.
 To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 3 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
 We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 200 samples from an Annealed Importance Sampling algorithm with an annealing schedule consisting of 10,000 uniformly spaced increments. 
 
-As we observed in Expt.~1a, the best fitting and most parsimonious model of the data from Cimpian et al. (2010) is the \emph{Uncertain threshold} model, explaining 96\% of the variance in the mean ratings by item in this data set (Table \ref{tab:cmpsummary}).
+As we observed in Expt.~1a, the best fitting and most parsimonious model of the data from Cimpian et al. (2010) \ndg{from our replication of?} is the \emph{Uncertain threshold} model, explaining 96\% of the variance in the mean ratings by item in this data set (Table \ref{tab:cmpsummary}).
 Both the \emph{some} model and the \emph{Reified kinds} model appear to perform similarly well for many items (Figure \ref{fig:cimpian-modelingResults-scatters}), but systematically predict too high of prevalence ratings for items across the scale. 
 Once again, when the data analytic model is allowed to jointly infer the best fixed-threshold and best noise level, the model infers very high levels of noise, washing out any differences one observes across the items (Figure \ref{fig:cimpian-modelingResults-bars}).
 The results show that the differences originally observed by Cimpian et al. (2010) can be accounted for quantitatively by an uncertain threshold model that operates over diverse prior beliefs about properties.
@@ -1350,8 +1350,8 @@ The results show that the differences originally observed by Cimpian et al. (201
 \hypertarget{experiment-3-prior-manipulation}{%
 \section{Experiment 3: Prior Manipulation}\label{experiment-3-prior-manipulation}}
 
-In our second experiment, we test the causal role of the prevalence prior in generic interpretation.
-In the previous experiment, participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
+In our third experiment, we test the causal role of the prevalence prior in generic interpretation.
+In the previous experiments, participants' prior beliefs about the prevalence of the property, measured by asking about alternative categories (Expt. 1a), related to the prevalence implied by a novel generic (Expt. 1b) via the uncertain threshold model.
 Though the uncertain threshold model is able to finely track interpretations in a way that alternative models cannot, the evidence so far for the influence of the prevalence prior on interpretation is merely correlational.
 Here we manipulate the prevalence prior and measure the resulting influence on interpretation.
 To serve as a manipulation check, we first elicit predictions about prevalences following our prior manipulation procedure; these predictions also serve as the measurements of the (manipulated) prevalence priors used in our model.
@@ -1382,9 +1382,9 @@ Hence, in these experiments, nine of our ten distribution were bimodal, with mod
 For the bimodal distributions, the mixture between the two modes was always 50\% (half of samples were from one mode and half from the other, as shown in Figure~\ref{fig:priorManipulationExpt}B).
 
 %\mht{}
-Our cover story involved learning about a single property, so that we could assign credit of differences in interpretations back to the manipulated prior distribution, rather than knowledge about properties (which we studied in Experiment 1). 
+Our cover story involved learning about a single property, so that we could assign credit of differences in interpretations back to the manipulated prior distribution, rather than knowledge about properties (which we studied in Experiments 1 and 2). 
 Pilot testing revealed that using a completely novel property (e.g., \emph{daxing}) made our task highly artificial. 
-Thus, we used a property from Experiment 1 that we though would be particularly amenable to manipulation by selecting a property whose prevalence prior had high entropy (i.e., participants had lots of uncertainty as to what prevalence levels to expect for this property); the property we used was the predicate \emph{know when earthquakes are about to happen}.
+Thus, we used a property from Experiment 1 that we thought would be particularly amenable to manipulation by selecting a property whose prevalence prior had high entropy (i.e., participants had lots of uncertainty as to what prevalence levels to expect for this property); the property we used was the predicate \emph{know when earthquakes are about to happen}.
 
 \hypertarget{procedure}{%
 \paragraph{Procedure}\label{procedure}}
@@ -1428,8 +1428,8 @@ Many distributions exhibit a regression to the mean in some participants' predic
 
 \hypertarget{experiment-2b-generic-interpretation}{%
 \subsection{Experiment 2b: Generic interpretation}\label{experiment-2b-generic-interpretation}}
-
-In this experiment, we measure participants' interpretations of generic statements about novel categories following the same manipulation of Expt.~2a, whited altered participants' beliefs about the prevalence of a property among different categories (i.e., the prevalence prior). 
+\ndg{this is 3b... need to fix expt numbering throughout this section..}
+In this experiment, we measure participants' interpretations of generic statements about novel categories following the same manipulation of Expt.~2a, which altered participants' beliefs about the prevalence of a property among different categories (i.e., the prevalence prior). 
 
 
 %We use the empirically measured prevalence distributions from Expt. 2a to generate \emph{a priori} model predictions about the generic interpretation data from our five models.\footnote{For the pragmatic model, we fix the two parameters to be the maximum a-posteriori inferred values from the Expt. 1 analysis: \(\alpha = 2; c = 3.5\).}
@@ -1497,7 +1497,7 @@ More specifically, we predict that the prevalence implied by the generic sentenc
 To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 2a).
 There was a significant main effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\), \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations (Figure \ref{fig:genint-modelingResults2}B, left-most facet).
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors (\(\beta_0 = 0.16\), \(SE=0.04\), \(t = 4.44\)).
-To more directly test that the distributions of responses in this generic interpretation task (Expt.~2b) were indeed different from the distributions elicited in the prior task (Expt.~1a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
+To more directly test that the distributions of responses in this generic interpretation task \ndg{3b and 3a?} (Expt.~2b) were indeed different from the distributions elicited in the prior task (Expt.~1a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
 We found that eight of ten generic interpretation distributions were significantly different than the prior distributions (Table \ref{tab:ks}).
 The two which were not significantly different between prior and generic interpretation were the 50/100 and 75/100 distributions. These distributions are also predicted by the uncertain threshold model to be most similar between prior and posterior; since the prior beliefs about prevalence are so strongly skewed towards high prevalence values, the updating power of a generic is more limited.
 In summary, these results demonstrate that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
@@ -1526,9 +1526,9 @@ In summary, these results demonstrate that participants interpret the novel gene
 We now rigorously test the uncertain threshold model as a theory of belief updating from generics by asking how it serves the two purposes of a psychological theory: prediction and explanation \cite{shmueli2010explain, yarkoni2017choosing}. 
 To test the predictive power of the uncertain threshold model, we can use it and the prior elicitation data (Expt.~2a) to make a number of parameter-free, \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten distribution conditions.
 These predictions were derived by bootstrapping the prevalence prior data to construct bootstrapped 95\% confidence intervals for the uncertain threshold model prediction; from this procedure, we predicted that two conditions should have different mean prevalence ratings if the bootstrapped 95\% confidence interval of the model's predictions did not overlap one another.
-With those decision rule in mind, we preregistered the following contrast predictions among mean implied prevalences (conditions within \{\}s indicate a prediction of no difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\} (predictions also shown in Table \ref{tab:regResults}).
+With those decision rules in mind, we preregistered the following contrast predictions among mean implied prevalences (conditions within \{\}s indicate a prediction of no difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\} (predictions also shown in Table \ref{tab:regResults}).
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a zero- and one-inflated Beta linking function.
-The maximum A-Posteriori estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table \ref{tab:regResults}.
+The maximum \emph{a posteriori} estimates and 95\% credible intervals of the coefficients of the regression model, as well as the model predicted qualitative differences, are shown in Table \ref{tab:regResults}.
 Each of the five predicted positive differences were estimated to be greater than zero, and each of the four predicted null differences were not credibly different from zero.
 
 \begin{table}[h]
