@@ -365,13 +365,14 @@ Together, these results provide strong quantitative evidence that generics updat
 
 Generic language conveys generalizations about categories by predicating a property $f$ of a category $k$ \cite{Carlson1977, Leslie2008}.
 Given that human generalization from observations can be well described using the language of probability \cite{Shepard1987} and Bayesian belief-updating with (often structured) prior knowledge \cite{Tenenbaum2011}, \citeA{Tessler2019psychrev} propose that the meaning of generics---which convey generalizations---can also be formalized using the probability calculus \cite<cf.,>{Cohen1999, vanRooij2020generics}.
-Under their model, the literal contribution of a generic sentence is a function on a listener's subjective probability that a future instance of the category $k$ will have the property $f$---$P(f(x){=}\texttt{true} \mid x\in k)$; in the psychological literal on generics, such a probability is often called \emph{prevalence}, though the term \emph{projectibility} \cite{Goodman1955} may also be appropriate (for consistency with the literature, we maintain the term prevalence). %some may call this ``projectibility''). 
+Under their model, the literal contribution of a generic sentence is a function on a listener's subjective probability that a future instance of the category $k$ will have the property $f$---$P(f(x){=}\texttt{true} \mid x\in k)$; in the psychological literal on generics, such a probability is often called \emph{prevalence}, though the term \emph{projectibility} \cite{Goodman1955} may also be appropriate (for consistency with the literature, we maintain the term prevalence). 
+For ease of exposition, we denote this probability as $r_{kf}$. %some may call this ``projectibility''). 
 %A reasonable initial hypothesis is that generics convey the same information content as a single observation, interpreted with respect to background knowledge.
 
-We begin by considering a Bayesian learner trying to determine how strongly to expect a feature $f$ in an unfamiliar category $k$. For this category, the learner is ignorant about the prevalence (including, presence or absence) of feature $f$ in $k$; in this situation, the best prior knowledge the learner can use to guide their predictions about the prevalence is their knowledge of other similar categories and/or an abstract intuitive theory of the domain in which the feature is relevant \cite<cf.,>{Nisbett1983}. For the case of unfamiliar categories, we parameterize this prevalence prior to be a function of the feature being predicated in the generic statement: $P_{f}(r)$.\footnote{
+We begin by considering a Bayesian learner trying to determine how strongly to expect a feature $f$ in an unfamiliar category $k$ (i.e., $r_{kf})$. For this category, the learner is ignorant about the prevalence (including, presence or absence) of feature $f$ in $k$; in this situation, the best prior knowledge the learner can use to guide their predictions about the prevalence is their knowledge of other similar categories and/or an abstract intuitive theory of the domain in which the feature is relevant \cite<cf.,>{Nisbett1983}. Thus, for learning about an unfamiliar category, we parameterize the prevalence prior to be a distribution across categories of the feature being predicated in the generic statement: $P_{f}(r_{kf})$.\footnote{
 A more general notion of the prevalence prior would explicitly take into account knowledge of the category. We return to this point in the discussion.}
 %The learner thus enters with prior beliefs about the prevalence of the feature $f$ in $k$, $P(f(x){=}\texttt{true} \mid x\in k)$, being a particular value $r$. This prevalence prior $P_{f}(r)$ is an abstract representation that guides the learner to expect the prevalence levels of a feature $f$ to be low, high, or somewhere in between, contingent on knowledge of the feature and context \cite<cf.,>{Nisbett1983}.
-\ndg{should say what $r$ is, and that this distribution is across categories. below it is written $r_{kf}$ -- make consistent?}
+%\ndg{should say what $r$ is, and that this distribution is across categories. below it is written $r_{kf}$ -- make consistent?}
  
  
 Standard machinery from formal semantics \cite{Montague1973} can be used to formalize the literal meaning of a generic as a threshold-function  (e.g., \(\mbox{ $[\![ gen ]\!][k][f]$} = r_{kf} > \theta\)), and \citeA{Tessler2019psychrev} propose the threshold value for a generic is uncertain and sampled from a uniform prior: $P(\theta) = \text{Uniform}(0, 1)$. Thus, the model of the literal meaning for a generic is much like a model of a quantifier  (e.g., \(\mbox{ $[\![ some ]\!][k][f]$} = r_{kf} > 0\), \(\mbox{ $[\![ most ]\!][k][f]$} = r_{kf} > 0.5\), \(\mbox{ $[\![ all ]\!][k][f]$} = r_{kf} = 1\)), but one in which the threshold is not specified \emph{a priori}. 
@@ -391,11 +392,11 @@ This model is structurally similar to a recently proposed model for gradable adj
 Following \citeA{Lassiter2015}, $P(\theta)$ is assumed to be uniform, and hence $P(\theta = \theta') \propto 1; \forall \theta' \in (0, 1)$. 
 
 
-To gain intuition for the model behavior, consider a simplified, discrete scenario where prevalence $r$ could take on 4 values corresponding to intervals -- $\{0.01-0.25, 0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$ -- and $\theta$ could take 3 values -- \{0.25, 0.5, 0.75\} (Figure \ref{fig:modelSimulations}A, top). Assume that the prevalence prior is uniform (i.e., each of the four levels of prevalence is equally likely \emph{a priori}). (Recall that the prior on thresholds $P(\theta)$ is always assumed to be uniform.)
+To gain intuition for the model behavior, consider a simplified, discrete scenario where prevalence $r_{kf}$ could take on 4 values corresponding to intervals -- $\{0.01-0.25, 0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$ -- and $\theta$ could take 3 values -- \{0.25, 0.5, 0.75\} (Figure \ref{fig:modelSimulations}A, top). Assume that the prevalence prior is uniform (i.e., each of the four levels of prevalence is equally likely \emph{a priori}). (Recall that the prior on thresholds $P(\theta)$ is always assumed to be uniform.)
 Then the thehesold semantics for a generic encoded in Eq. \ref{eq:L0} states that the prevalence is greater than $\theta$.
-For $\theta = 0.75$, only the highest level of prevalence $r = 0.76 - 1$ will be above the threshold.  
-For $\theta = 0.5$, both the highest level of prevalence and the second highest $r \in \{0.51 - 0.75, 0.76 - 1\}$ will be above the threshold.  
-For $\theta = 0.25$, all but the lowest level of prevalence---$r \in \{0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$---will be above the threshold (Figure \ref{fig:modelSimulations}A, middle).  
+For $\theta = 0.75$, only the highest level of prevalence $r_{kf} = 0.76 - 1$ will be above the threshold.  
+For $\theta = 0.5$, both the highest level of prevalence and the second highest $r_{kf} \in \{0.51 - 0.75, 0.76 - 1\}$ will be above the threshold.  
+For $\theta = 0.25$, all but the lowest level of prevalence---$r_{kf} \in \{0.26 - 0.50, 0.51 - 0.75, 0.76 - 1\}$---will be above the threshold (Figure \ref{fig:modelSimulations}A, middle).  
 To schematically represent the posterior, we count, for each level of prevalence, how many times it lies above a threshold; then, the relative (unnormalized) posterior weights for levels $\{0.01-0.25, 0.26 - 0.50, 0.51 - 0.75, 0.76 - 1 \}$ are \{0, 1, 2, 3\}, or after normalization  $\{0, \frac{1}{6}, \frac{1}{3}, \frac{1}{2}\}$ (Figure \ref{fig:modelSimulations}A, bottom).
 We see inferences about prevalence that tilt toward higher values.
 
@@ -422,7 +423,7 @@ We see inferences about prevalence that tilt toward higher values.
 %The explanation that would make the single, heads outcome most likely is that the coin \emph{always} comes up heads (e.g., both sides of the coin are heads), but weaker heads biases also make the observation relatively more likely.
 
  
- The uncertain-threshold generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P(r)$. 
+ The uncertain-threshold generics model produces inference about prevalence that are highly sensitive to prior beliefs about the property $P_f(r_{kf})$. 
  Prevalence prior distributions that display more structure (e.g., multimodal distributions) receive interpretations that are highly reflective of that underlying structure.
  This prior-sensitive interpretation is a desirable feature of the model because generics operate over rich intuitive theories about properties and are believed to receive interpretations that are sensitive to those theories \cite{Leslie2007, Gelman2010:essentialist, Cimpian2010theory, Rhodes2012, Prasada2013}. 
  For instance, for biological properties like \emph{flying} (as in \emph{Ducks fly}), a listener may be assumed to know that such a property manifests in many categories with 0\% prevalence (e.g., 0\% of dogs, rabbits, etc\ldots{} \emph{fly}), but is present in other categories in very high proportions (robins, falcons, pterodactyls, etc\ldots{}); hence, this listener's prior distribution over prevalence would have at least two modes: one around 0\% and another near 100\% (Figure~\ref{fig:modelSimulations}B, second row).
@@ -464,48 +465,71 @@ We compare our uncertain threshold model to two sets of alternative models, whic
 %Many empirical studies in psychology treat the ``statistical hypothesis'' about the meaning of a generic to be tantamount to a quantifier with a fixed threshold on prevalence, and consequently report evidence against this ``statistical hypothesis'' \cite{Prasada2006, Leslie2008, Cimpian2010, Khemlani2012, Prasada2013, Brandone2014}.
 Many empirical studies in psychology consider a ``statistical hypothesis'' about the meaning of a generic, which is tantamount to a quantifier with a fixed threshold on prevalence \cite{Prasada2006, Leslie2008, Cimpian2010, Khemlani2012, Prasada2013, Brandone2014}.
 We thus compare the uncertain threshold model to alternative models that update beliefs according to a fixed-threshold semantics (\emph{a la} quantifiers \emph{some} or \emph{most}). 
-To isolate the contribution of the semantics model,  we endow the alternative models with the same background knowledge in the form of the prevalence prior distribution \(P(r)\).
+To isolate the contribution of the semantics model,  we endow the alternative models with the same background knowledge in the form of the prevalence prior distribution \(P_f(r_{kf}))\).
 Models with a fixed semantics are given by:
 \begin{eqnarray}
 %L_0^{some}(r \mid u) \propto  P(r \mid r > 0)  \label{eq:someModel}
 P (r_{kf} \mid r_{kf} >  \theta^*) \propto \delta_{[r_{kf} > \theta^*]} \cdot P_f(r_{kf})  \label{eq:L0fixed}
 \end{eqnarray}
-If $\theta^* = 0$, then the model is analogous to a literal interpretation for \enquote{some}, which rules out the lowest possible prevalence level ($0\%$).\footnote{Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that \enquote{some} often implies \enquote{not all}). Such a model can be implemented in the same probabilistic modeling framework \cite{Goodman2013} but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.} 
-If $\theta^* = 0.5$, the model would be analogous to \enquote{most}, with a literal meaning meaning \emph{more than half}. 
+If $\theta^* = 0$, then the model is analogous to a literal interpretation for \emph{some}, which rules out the lowest possible prevalence level ($0\%$).\footnote{Note that a full model of quantifier interpretation would include their pragmatic interpretations (e.g., that \enquote{some} often implies \enquote{not all}). Such a model can be implemented in the same probabilistic modeling framework \cite{Goodman2013} but does not directly address our question of whether a fixed-threshold semantics is tenable for generics.} 
+If $\theta^* = 0.5$, the model would be analogous to \emph{most}, with a literal meaning meaning \emph{more than half}. 
 Other fixed thresholds are possible as well (e.g., $\theta^* = 0.25$; \enquote{more than a quarter}).
 Predictions of a few of these control models are shown in Figure~\ref{fig:modelSimulations}B.
-\ndg{might be worth saying here that we'll fit $\theta^*$ to data to give this family of models the best shot?}
+We compare our uncertain threshold model to fixed-threshold models with different threshold values, including the best possible threshold that we determine by fitting $\theta^*$ to the data.
+%\ndg{might be worth saying here that we'll fit $\theta^*$ to data to give this family of models the best shot?}
 
 A model that assumes a fixed threshold of $\theta^*$ places zero probability on any response less than $\theta^*$.
 In case there are ratings in the experimental data sets that are less than $\theta^*$, we must supplement these models with an extrinsic noise process in order for this model to actually generate predictions for those data; that is, with some probability, we will assume participants respond at random.
 This noise probability parameter will serve as an additional free parameter for the fixed-threshold control models. 
 %We infer this noise probability parameter from the data for the fixed threshold models.
 
-We additionally compare the generic interpretation models to a model that does not update beliefs, predicting prevalence ratings according to the prior distribution \(P(r)\).
-This comparison informs us as to whether or not participants actually \emph{update} their beliefs when they hear a generic statement.
-\ndg{maybe this alternative should be in its own little subsection?}
+\subsubsection{Prevalence prior only}
+
+We additionally compare the generic interpretation models to a model that does not update its beliefs from the utterance.
+This model predicts prevalence ratings according to the prior distribution \(P_f(r_{kf})\).
+This comparison informs us as to whether or not participants actually update their beliefs when they hear a generic statement, which is an important validation particularly when we manipulate prior beliefs (Expt.~3). 
+% \ndg{maybe this alternative should be in its own little subsection?}
 
 \subsubsection{Reified kinds}
 
 Conceptual accounts of generics look beyond prevalence to model generic meaning \cite{Leslie2008, Cimpian2010, Khemlani2012, Prasada2013, Csibra2015}. This approach views conceptual knowledge in the mind as the determining factor of the generic truth conditions (what makes them true or false). For the inverse problem --- learning from generic language --- these accounts would say that what is learned from a generic statement like \emph{Dogs bark} is that dogs ``are the kind of thing that bark'', where the property has some interpretation inside of a conceptual model of the world \cite<e.g., as a generic belief; >{Prasada2000}. This approach does not make direct predictions about how implied prevalence should vary as a function of property being predicated, so we take a step to formalize such a ``reified kinds'' view of generics.
 
-If there exists a predictable mapping between the meaning ``X is the kind of thing that Ys'' and prevalence, then the representation of prevalence (i.e., the prevalence prior) must be able to be partitioned into two clusters: the kinds that do possess Y and the kinds that do not possess Y. For example, if a prevalence prior is modeled as a mixture distribution (as in Figure \ref{fig:modelSimulations}B), then a straightforward decision-rule for determining the prevalence implied by the generic would be to select the component of that mixture distribution which has the highest mean value. 
-\ndg{i think we can be a bit clearer: the assumption is that some kinds `have' the property and some don't. this means over all kinds there will be a mixture distribution of those that have it and those that don't. the generic then selects the higher mixture component. then assuming the prevalence of the components are approximated with beta distributions as before...}
-For example, if the prevalence prior can be partitioned into a mixture of two Beta distributions:
+If there exists a predictable mapping between the meaning ``X is the kind of thing that Ys'' and prevalence, then the representation of prevalence (i.e., the prevalence prior) must be able to be partitioned into two clusters: the kinds that do possess Y and the kinds that do not possess Y. 
+Therefore, the distribution over all kinds will be a mixture distribution of those that have Y and those that do not have Y. 
+Under such a model, the generic would select the higher mixture component (i.e., the mixture component that has the higher mean prevalence value).
+For example, if the prevalences from the components are approximated with Beta distributions (as in Figure \ref{fig:modelSimulations}B), the prior would take the following form:
 \begin{eqnarray}
 P_f(r_{kf}) = \phi \cdot \text{Beta}(\gamma_1, \xi_1) + (1-\phi)\cdot \text{Beta}(\gamma_2, \xi_2)
 % P (r_{kf} \mid u) \propto \cdot P_f(r_{kf})  \label{eq:kinds}
 \end{eqnarray}
-\noindent then the interpretation of the generic in terms of prevalence could simply be the Beta  distribution that has the higher mean.
+\noindent where $\gamma$ represents the mean of the Beta distribution and $\xi$ is the dispersion (or inverse variance).
+Assume, without lost of generality, that $\gamma_2 > \gamma_1$. Then, the interpretation of the generic in terms of prevalence would simply be:
+%
 \begin{eqnarray}
-%P_f(r_{kf}) = \phi \cdot \text{Beta}(\gamma_1, \xi_1) + (1-\phi)\cdot \text{Beta}(\gamma_2, \xi_2)
-P (r_{kf} \mid u) \propto  \begin{cases}
-\text{Beta}(\gamma_1, \xi_1) \text{ if } \gamma_1 > \gamma_2 \\
-\text{Beta}(\gamma_2, \xi_2) \text{ if } \gamma_2 > \gamma_1 
- \end{cases} \label{eq:rk}
+P (r_{kf} \mid u) \propto  \text{Beta}(\gamma_2, \xi_2) \label{eq:rk}
 \end{eqnarray}
-\noindent where $\gamma$ represents the mean of the Beta distribution.
-\ndg{maybe for simplicity say, without loss of generality assume $\gamma_2 > \gamma_1$ and then you don't need the cases...?}
+%
+The \emph{Reified kinds} model is a qualitatively different kind of model than the threshold based models, because \emph{Reified kinds} relies upon a particular assumption about the structure of prior knowledge (i.e., that it is a mixture distribution). The threshold models are compatible with such a view of the structure of prior knowledge, but they do not require it and would be compatible with other, unstructured views of prior knowledge. 
+The predictions of the \emph{Reified kinds} model are also only subtly different from those of the \emph{Uncertain threshold} model. 
+Thus, we turn to a series of quantitative experiments designed with the purpose of teasing apart the models. 
+
+%prevalence prior is modeled as a mixture distribution  then a straightforward decision-rule for determining the prevalence implied by the generic would be to select the component of that mixture distribution which has the highest mean value. 
+%\ndg{i think we can be a bit clearer: the assumption is that some kinds `have' the property and some don't. this means over all kinds there will be a mixture distribution of those that have it and those that don't. the generic then selects the higher mixture component. then assuming the prevalence of the components are approximated with beta distributions as before...}
+%For example, if the prevalence prior can be partitioned into a mixture of two Beta distributions:
+%\begin{eqnarray}
+%P_f(r_{kf}) = \phi \cdot \text{Beta}(\gamma_1, \xi_1) + (1-\phi)\cdot \text{Beta}(\gamma_2, \xi_2)
+%% P (r_{kf} \mid u) \propto \cdot P_f(r_{kf})  \label{eq:kinds}
+%\end{eqnarray}
+%\noindent then the interpretation of the generic in terms of prevalence could simply be the Beta  distribution that has the higher mean.
+%\begin{eqnarray}
+%%P_f(r_{kf}) = \phi \cdot \text{Beta}(\gamma_1, \xi_1) + (1-\phi)\cdot \text{Beta}(\gamma_2, \xi_2)
+%P (r_{kf} \mid u) \propto  \begin{cases}
+%\text{Beta}(\gamma_1, \xi_1) \text{ if } \gamma_1 > \gamma_2 \\
+%\text{Beta}(\gamma_2, \xi_2) \text{ if } \gamma_2 > \gamma_1 
+% \end{cases} \label{eq:rk}
+%\end{eqnarray}
+%\noindent where $\gamma$ represents the mean of the Beta distribution.
+%\ndg{maybe for simplicity say, without loss of generality assume $\gamma_2 > \gamma_1$ and then you don't need the cases...?}
 %
 %
 %\hypertarget{pragmatic-enrichment}{%
@@ -598,7 +622,7 @@ Because the properties are familiar properties, we can elicit participants' know
 \paragraph{Participants}\label{participants-1}}
 
 We recruited 200 participants from MTurk.
-This number was arrived at with the intention of getting approximately 23 independent sets of ratings for each unique item in the experiment, which corresponds to roughly 115 ratings per item. \ndg{prev is hard to follow since we don't know what items or sets of ratings are yet...}
+This number was arrived at with the intention of collecting approximately 23 independent ratings for each property in the experiment; each participant provides 5 ratings per property, so this corresponds to roughly 115 ratings per property. 
 Participants were restricted to those with U.S. IP addresses and with at least a 95\% MTurk work approval rating (these same criteria apply to all experiments reported).
 The experiment took on average 7 minutes and participants were compensated \$0.80.
 
@@ -1070,8 +1094,9 @@ Overall, the \emph{Uncertain threshold} model is able to predict key signatures 
     columns/log_bf/.style={column name={(log) BF}, dec sep, fixed, precision=0}%,
     ]
     {csv_to_tex/expt1_model_summary_stats2.csv}
-
-    \caption{Summary statistics and parameters for models of generic interpretation. Threshold value for \emph{Best fixed-threshold} model is the MAP estimate inferred from the data; noise values are also MAP estimates inferred from the data. Mean Squared Errors and variance explained are calculated both at the level of the item means and over the distribution over responses discretized to bins of width 0.05 ($r^2_{dist}, \text{MSE}_{dist}$) for the generic interpretation data (Expt.~1b). Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model (in log scale) and are computed over the full distribution of responses for both the prior elicitation and generic interpretation tasks (Expts.~1a \& 1b). log BF values below 0 indicate evidence in support of the Uncertain threshold model. \ndg{why are there dots before the table?}}
+    \caption{Summary statistics and parameters for models of generic interpretation. Threshold value for \emph{Best fixed-threshold} model is the MAP estimate inferred from the data; noise values are also MAP estimates inferred from the data. Mean Squared Errors and variance explained are calculated both at the level of the item means and over the distribution over responses discretized to bins of width 0.05 ($r^2_{dist}, \text{MSE}_{dist}$) for the generic interpretation data (Expt.~1b). Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model (in log scale) and are computed over the full distribution of responses for both the prior elicitation and generic interpretation tasks (Expts.~1a \& 1b). log BF values below 0 indicate evidence in support of the Uncertain threshold model. 
+    %\ndg{why are there dots before the table?}
+    }
     \label{tab:summary1}
   \end{table}
 \end{center}
@@ -1231,7 +1256,7 @@ predictions.}
 \begin{figure}
 \centering
 \includegraphics{figs/cimpian-results}
-\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\emph{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
+\caption{\label{fig:cimpian-modelingResults}Implied prevalence data for items from replication of Cimpian et al. (2010). A: Implied prevalence ratings for forty body-part stimuli (\emph{Ks have F}). Vertical line denotes mean, horizontal lines denotes bootstrapped 95\% confidence intervals, points are individual responses. B: Implied prevalence collapsed across property type. The original result of Cimpian et al. (2010) showed a difference between \emph{color adj + part} and \emph{accidental}.}
 \end{figure}
 
 % As we did for Expt.~1, we implemented joint Bayesian data analysis models that predict the structured elicitation responses (Expt.~2a) and use the inferred prevalence priors to predict the generic interpretation data (Expt.~2b) assuming different models of generic interpretation (uncertain threshold, fixed-thresholds, reified kinds). 
@@ -1294,7 +1319,7 @@ The priors on parameters were the same as for the modeling of Expt.~1.
 To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 3 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
 We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 200 samples from an Annealed Importance Sampling algorithm with an annealing schedule consisting of 10,000 uniformly spaced increments. 
 
-As we observed in Expt.~1a, the best fitting and most parsimonious model of the data from Cimpian et al. (2010) \ndg{from our replication of?} is the \emph{Uncertain threshold} model, explaining 96\% of the variance in the mean ratings by item in this data set (Table \ref{tab:cmpsummary}).
+As we observed in Expt.~1a, the best fitting and most parsimonious model of the data from our replication of Cimpian et al. (2010) is the \emph{Uncertain threshold} model, explaining 96\% of the variance in the mean ratings by item in this data set (Table \ref{tab:cmpsummary}).
 Both the \emph{some} model and the \emph{Reified kinds} model appear to perform similarly well for many items (Figure \ref{fig:cimpian-modelingResults-scatters}), but systematically predict too high of prevalence ratings for items across the scale. 
 Once again, when the data analytic model is allowed to jointly infer the best fixed-threshold and best noise level, the model infers very high levels of noise, washing out any differences one observes across the items (Figure \ref{fig:cimpian-modelingResults-bars}).
 The results show that the differences originally observed by Cimpian et al. (2010) can be accounted for quantitatively by an uncertain threshold model that operates over diverse prior beliefs about properties.
@@ -1392,7 +1417,7 @@ Thus, we used a property from Experiment 1 that we thought would be particularly
 \begin{figure}
 \centering
 \includegraphics{figs/expt2-overview.pdf}
-\caption{\label{fig:priorManipulationExpt}Overview of Experiment 2. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence. E: Experimentally manipulated prevalence prior distributions. The distribution shown in B is the \emph{25/100} distribution.}
+\caption{\label{fig:priorManipulationExpt}Overview of Experiment 3. A: Prevalences of feature in animals are shown one at a time, described in text and displayed in a table. B: Participants are asked to review previous results once all displayed. C: Prior elicitation task: Participants predict the results of the next five animals. D: Generic interpretation task: Participants rate prevalence after reading generic sentence. E: Experimentally manipulated prevalence prior distributions. The distribution shown in B is the \emph{25/100} distribution.}
 \end{figure}
 %
 In order to avoid participants learning and reasoning about the structure of the task, participants completed only a single trial: Each participant saw only one prevalence distribution.
@@ -1427,9 +1452,9 @@ Many distributions exhibit a regression to the mean in some participants' predic
 
 
 \hypertarget{experiment-2b-generic-interpretation}{%
-\subsection{Experiment 2b: Generic interpretation}\label{experiment-2b-generic-interpretation}}
-\ndg{this is 3b... need to fix expt numbering throughout this section..}
-In this experiment, we measure participants' interpretations of generic statements about novel categories following the same manipulation of Expt.~2a, which altered participants' beliefs about the prevalence of a property among different categories (i.e., the prevalence prior). 
+\subsection{Experiment 3b: Generic interpretation}\label{experiment-2b-generic-interpretation}}
+%\ndg{this is 3b... need to fix expt numbering throughout this section..}
+In this experiment, we measure participants' interpretations of generic statements about novel categories following the same manipulation of Expt.~3a, which altered participants' beliefs about the prevalence of a property among different categories (i.e., the prevalence prior). 
 
 
 %We use the empirically measured prevalence distributions from Expt. 2a to generate \emph{a priori} model predictions about the generic interpretation data from our five models.\footnote{For the pragmatic model, we fix the two parameters to be the maximum a-posteriori inferred values from the Expt. 1 analysis: \(\alpha = 2; c = 3.5\).}
@@ -1454,7 +1479,7 @@ The experiment took on average 2.70 minutes and participants were compensated \$
 \hypertarget{materials-and-procedure}{%
 \paragraph{Materials and procedure}\label{materials-and-procedure}}
 %
-The materials and procedure were almost identical to those of Expt. 2a.
+The materials and procedure were almost identical to those of Expt.~3a.
 The only difference was that following the familiarization period, the data table was removed and participants were provided the following prompt:
 
 \begin{quote}
@@ -1463,7 +1488,7 @@ Your partner tells you: \enquote{Ks know when earthquakes are about to happen.}
 \end{quote}
 
 In order to encourage participants to pay attention to the language, this text is on the screen for five seconds before participants are asked: \enquote{What percentage of Ks do you think know when earthquakes are about to happen?} and provided with a slider bar ranging from 0\%-100\% (Figure~\ref{fig:priorManipulationExpt}D).
-As in Expt. 2a, participants then completed an attention check survey where they were asked what property was being investigated and to input one of the prevalence levels they saw on the familiarization screen.
+As in Expt.~3a, participants then completed an attention check survey where they were asked what property was being investigated and to input one of the prevalence levels they saw on the familiarization screen.
 
 %\begin{figure}
 %\centering
@@ -1484,7 +1509,7 @@ As in Expt. 2a, participants then completed an attention check survey where they
 \hypertarget{results-2}{%
 \subsubsection{Results}\label{results-2}}
 
-We used preregistered exclusion criteria, which were also used for Expt. 2a.
+We used preregistered exclusion criteria, which were also used for Expt.~3a.
 Participants who failed to either select the correct property or list a correct number from the familiarization period were excluded (\(n = 39\)).
 In addition, we excluded participants who self-reported a native language other than English (\(n = 33\)).
 Finally, we employed one exclusion criterion which was not pre-registered: Participants who responded 0\% to the generic interpretation task ($n$ = 18; 3\% of participants); this response is literally impossible under all models of generic interpretation and indicates a misunderstanding of the task. 
@@ -1494,10 +1519,10 @@ These exclusions left a total of \(n = 514\) participants, with items receiving 
 Our main qualitative hypothesis is that the same generic sentence (\emph{Ks know when earthquakes are about to happen.}) would be interpreted differently across conditions.
 The differences in interpretations are visually evident in the empirical distributions of responses (Figure \ref{fig:genint-modelingResults2}A, top row).
 More specifically, we predict that the prevalence implied by the generic sentence will, to a first approximation, track the mean of the prevalence prior distribution.
-To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt. 2a).
+To test this, we ran a linear model predicting responses with a fixed effect of the prior mean (as estimated by the data from Expt.~3a).
 There was a significant main effect of prior mean, with a coefficient close to 1 (\(\beta_1 = 0.94\), \(SE=0.07\), \(t = 12.76\)), indicating a strong linear relationship between the mean of the learned prevalence prior and the resulting interpretations (Figure \ref{fig:genint-modelingResults2}B, left-most facet).
 Furthermore, there was a significant main effect of intercept, indicating that participants' responses were significantly greater than the mean of the corresponding prevalence priors (\(\beta_0 = 0.16\), \(SE=0.04\), \(t = 4.44\)).
-To more directly test that the distributions of responses in this generic interpretation task \ndg{3b and 3a?} (Expt.~2b) were indeed different from the distributions elicited in the prior task (Expt.~1a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
+To more directly test that the distributions of responses in this generic interpretation task (Expt.~3b) were indeed different from the distributions elicited in the prior task (Expt.~3a), we ran exploratory non-parametric Kolmogorov-Smirnoff tests to test for the dissimilarity of the prior and interpretation distributions.  
 We found that eight of ten generic interpretation distributions were significantly different than the prior distributions (Table \ref{tab:ks}).
 The two which were not significantly different between prior and generic interpretation were the 50/100 and 75/100 distributions. These distributions are also predicted by the uncertain threshold model to be most similar between prior and posterior; since the prior beliefs about prevalence are so strongly skewed towards high prevalence values, the updating power of a generic is more limited.
 In summary, these results demonstrate that participants interpret the novel generic sentence in a manner sensitive to the background distribution and that the generic utterance updates participants' beliefs to indicate a prevalence significantly higher than the prior.
@@ -1524,7 +1549,7 @@ In summary, these results demonstrate that participants interpret the novel gene
 
 
 We now rigorously test the uncertain threshold model as a theory of belief updating from generics by asking how it serves the two purposes of a psychological theory: prediction and explanation \cite{shmueli2010explain, yarkoni2017choosing}. 
-To test the predictive power of the uncertain threshold model, we can use it and the prior elicitation data (Expt.~2a) to make a number of parameter-free, \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten distribution conditions.
+To test the predictive power of the uncertain threshold model, we can use it and the prior elicitation data (Expt.~3a) to make a number of parameter-free, \emph{a priori} predictions about quantitative differences in mean implied prevalence ratings across the ten distribution conditions.
 These predictions were derived by bootstrapping the prevalence prior data to construct bootstrapped 95\% confidence intervals for the uncertain threshold model prediction; from this procedure, we predicted that two conditions should have different mean prevalence ratings if the bootstrapped 95\% confidence interval of the model's predictions did not overlap one another.
 With those decision rules in mind, we preregistered the following contrast predictions among mean implied prevalences (conditions within \{\}s indicate a prediction of no difference): 0/25 \(<\) \{25/50, 0/50\} \(<\) \{25/75, \emph{uniform}\} \(<\) 25/75 \(<\) \{25/100, 50/100\} \(<\) \{75/100, 0/100\} (predictions also shown in Table \ref{tab:regResults}).
 To evaluate these predictions, we built a Bayesian regression model with the relevant contrasts using a zero- and one-inflated Beta linking function.
@@ -1555,8 +1580,8 @@ Intercept &  & 0.32 & [ 0.221, 0.418] \\
 \label{tab:regResults}
 \end{table}
 
-To evaluate the uncertain threshold model as an explanation of the data (and in comparison to its its alternatives), we constructed a Bayesian data analysis model to jointly predict the prevalence prior data (Expt.~2a) and the generic interpretation data (Expt.~2b).
-As we did for Experiment 1, we model the prevalence prior data for each distribution condition as a mixture of two Beta distributions (with unknown means, variance, and mixture parameters) and we model the generic interpretation via the uncertain threshold model (or an alternative model) that assumes the prevalence prior inferred from the Expt.~2a data (Figure \ref{fig:bayesnet}).
+To evaluate the uncertain threshold model as an explanation of the data (and in comparison to its its alternatives), we constructed a Bayesian data analysis model to jointly predict the prevalence prior data (Expt.~3a) and the generic interpretation data (Expt.~3b).
+As we did for Experiment 1, we model the prevalence prior data for each distribution condition as a mixture of two Beta distributions (with unknown means, variance, and mixture parameters) and we model the generic interpretation via the uncertain threshold model (or an alternative model) that assumes the prevalence prior inferred from the Expt.~3a data (Figure \ref{fig:bayesnet}).
 As before, fixed-threshold alternative models make an additional use of a noise parameter to accommodate data points that are literally incompatible with the model. 
 To compute the posterior distribution over parameters and generate posterior predictive distributions, we ran for each model 4 MCMC chains consisting of $10^6$ iterations discarding the first $5 \times 10^5$ for burn-in, and checked convergence qualitatively by visual inspection of the parameters and predictions of each chain. 
 We additionally performed a formal Bayesian model comparison by computing the marginal likelihood of the data under each model (in order to compute Bayes Factors); to do this, for each model, we collected 1,000 samples from an Annealed Importance Sampling algorithm with an annealing schedule consisting of 50,000 uniformly spaced increments. 
@@ -1614,7 +1639,7 @@ This uncertainty in the interpretation data is additionally a reason why the \em
     ]
     {csv_to_tex/expt2_model_summary_stats2.csv}
 
-    \caption{Summary statistics for models of Experiment 2. Mean Squared Errors and variance explained are calculated at the level of the distribution condition means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses for Expt.~2a \& Expt.~2b. Numbers below 0 indicate evidence in support of the Uncertain threshold model.}
+    \caption{Summary statistics for models of Experiment 3. Mean Squared Errors and variance explained are calculated at the level of the distribution condition means. Bayes Factors quantify evidence in support of each model relative to the Uncertain threshold model and are computed over the full distribution of responses for Expt.~3a \& Expt.~3b. Numbers below 0 indicate evidence in support of the Uncertain threshold model.}
     \label{tab:summary2}
   \end{table}
 \end{center}
