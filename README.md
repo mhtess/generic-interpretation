@@ -1,12 +1,18 @@
-## Learning from Generic Language
+### Supporting materials for "Learning from Generic Language"
+
+[Preprint](https://psyarxiv.com/hnm8p)
+
+Preprint citation: Tessler, M. H., & Goodman, N. D. (2019). Learning from Generic Language. https://doi.org/10.31234/osf.io/hnm8p
 
 
-### Experiments
+- `analysis`: data analysis, model analysis, visualization
+- `models`: cognitive models and bayesian data analysis models written in WebPPL
+- `experiments`: js/html/css files for all experiments reported in paper, as well as pilot studies
+- `data`
+- `paper`
 
-The following links should direct to the experiments.
 
-- [Preliminary study (Cimpian et al., 2010 replication)](http://www.mit.edu/~tessler/projects/genint/experiments/generics/cimpian.html)
-- [Experiment 1a: Prior elicitation](http://www.mit.edu/~tessler/projects/genint/experiments/generics/prior-3.html)
-- [Experiment 1b: Generic Interpretation](http://www.mit.edu/~tessler/projects/genint/experiments/generics/interpretations-6.html) [[preregistration report](https://osf.io/bwn4t/register/5771ca429ad5a1020de2872e)]
-- [Experiment 2a: Prior elicitation / manipulation check (manipulated prior)](http://www.mit.edu/~tessler/projects/genint/experiments/generics/prior-manipulation-2-prior.html)
-- [Experiment 2b: Generic interpretation (Manipulated prior)](http://www.mit.edu/~tessler/projects/genint/experiments/generics/prior-manipulation-2.html) [[preregistration report](https://osf.io/n342q/register/5771ca429ad5a1020de2872e)]
+#### Preregistration reports
+
+- Experiment 1b: Generic Interpretation: [[preregistration report](https://osf.io/bwn4t/register/5771ca429ad5a1020de2872e)]
+- Experiment 3b: Generic interpretation (Manipulated prior): [[preregistration report](https://osf.io/n342q/register/5771ca429ad5a1020de2872e)]

@@ -6,7 +6,6 @@ mturk/
 *.RData
 models/node_modules/utils/node_modules
 paper/*pdf
-paper/*tex
 packrat/lib*/
 *.DS_Store
 *.aux
@@ -14,7 +13,6 @@ packrat/lib*/
 *.out
 *~
 paper/genint_cache/
-paper/
 *.json
 *.zip
 abstracts/
