@@ -1,5 +1,5 @@
 ---
-title: "Prior manipulation pilots and full sample"
+title: "Analysis of Experiments 3: Prior elicitation and Generic interpretation tasks (manipulated prior)"
 output: github_document
 ---
 
@@ -43,9 +43,9 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, sanitize = T)
 
 
 ```{r}
-df.pm.prior <- read_csv("../data/paper_data/expt2/expt2a-prior-trials.csv")
-df.pm.prior.catch <- read_csv("../data/paper_data/expt2/expt2a-prior-catch_trials.csv")
-df.pm.prior.subj <- read_csv("../data/paper_data/expt2/expt2a-prior-subject_information.csv")
+df.pm.prior <- read_csv("../data/paper_data/expt3/expt3a-prior-trials.csv")
+df.pm.prior.catch <- read_csv("../data/paper_data/expt3/expt3a-prior-catch_trials.csv")
+df.pm.prior.subj <- read_csv("../data/paper_data/expt3/expt3a-prior-subject_information.csv")
 ```
 
 full data collection
@@ -95,6 +95,8 @@ df.pm.prior.filtered <- left_join(
                          select(workerid, pass_both)),
   df.pm.subj.nativeEng)  %>% 
   filter(pass_both == 1, englishNative)
+
+# write_csv(df.pm.prior.filtered, "../data/paper_data/expt3/expt3a-prior-trials-filtered.csv")
 
 df.pm.prior.filtered %>%
   distinct(workerid) %>%
@@ -249,9 +251,9 @@ m.preds.zeroPadded.bins.boostrapped %>%
 # Expt 2b: Interpretation data (prior manipulation)
 
 ```{r load catch data pm int}
-df.pm.int <- read_csv("../data/paper_data/expt2/expt2b-interpretation-interpretation-trials.csv")
-df.pm.int.catch <- read_csv("../data/paper_data/expt2/expt2b-interpretation-catch_trials.csv")
-df.pm.int.subj <- read_csv("../data/paper_data/expt2/expt2b-interpretation-interpretation-subject_information.csv")
+df.pm.int <- read_csv("../data/paper_data/expt3/expt3b-interpretation-trials.csv")
+df.pm.int.catch <- read_csv("../data/paper_data/expt3/expt3b-interpretation-catch_trials.csv")
+df.pm.int.subj <- read_csv("../data/paper_data/expt3/expt3b-interpretation-subject_information.csv")
 
 df.pm.int.catch %>%
   select(pass_both) %>%
@@ -303,6 +305,9 @@ df.pm.int.filtered <- left_join(
   df.pm.int.subj.nativeEng) %>% 
   filter(pass_both == 1, englishNative)
 #  filter(pass_both == 1, englishNative, response > 0) # the last condition is posthoc (see below about 0 responses)
+
+
+write_csv(df.pm.int.filtered, "../data/paper_data/expt3/expt3b-interpretation-trials-filtered.csv")
 
 df.pm.int.filtered %>%
   distinct(workerid) %>%
@@ -361,13 +366,14 @@ expt3.int.n.passCatch.English <- length(unique(df.pm.int.3.filtered$workerid))
 expt3.int.meanTime <- df.pm.int.3 %>%
   distinct(workerid, rt)  %>%
   summarize(mean_time = mean(rt / 60000))
-save(expt3.int.catchFail,
-     expt3.int.nonEnglish,
-     expt3.int.n,
-     expt3.int.n.passCatch.English,
-     expt3.int.meanTime,
-     df.prior_manip.int.filtered.n_subj_per_item,
-  file = "../../paper/cached_results/priorManip_int_metaData.RData")
+
+# save(expt3.int.catchFail,
+#      expt3.int.nonEnglish,
+#      expt3.int.n,
+#      expt3.int.n.passCatch.English,
+#      expt3.int.meanTime,
+#      df.prior_manip.int.filtered.n_subj_per_item,
+#   file = "../../paper/cached_results/priorManip_int_metaData.RData")
 ```
 
 
@@ -395,6 +401,87 @@ df.pm.int.filtered %>%
   select(workerid, distribution, experimentResults, response, explanation) %>%
   kable(.)
 ```
+
+
+### KS tests
+
+#### between prior task and interpretation task
+
+```{r}
+
+all.distributions <- unique(df.pm.int.filtered$distribution)
+
+
+
+map_dfr(all.distributions,
+        function(d){
+          prior.resp <- df.pm.prior.filtered %>% filter(distribution == d) %>% pull(response)
+          int.resp <- df.pm.int.filtered %>% filter(distribution == d) %>% pull(response)
+          ks.rs <- ks.test(x = prior.resp, y = int.resp)
+          data.frame(
+            distribution = d,
+            D = ks.rs$statistic,
+            pval = ks.rs$p.value
+          )}
+        ) -> df.ks.rs 
+
+
+```
+#### model vs. data distributions
+
+```{r}
+
+all.models <- unique(m.preds.zeroPadded.bins.boostrapped$model)
+
+
+map_dfr(all.distributions, function(d){
+  
+  int.resp <- df.pm.int.filtered %>% filter(distribution == d) %>% 
+      rowwise() %>%
+      mutate(binned_response = round_to_bin(response)) %>%
+      pull(binned_response)
+
+  map_dfr(all.models, function(m){  
+  
+    m.preds.zeroPadded.bins.boostrapped %>%
+    filter(model == m, distribution == d) %>%
+    select(-lower, -upper) %>%
+    rename(prob = mean) %>%
+    rwebppl::get_samples(., num_samples = 10000) %>%
+    pull(state) %>%
+    ecdf(.) -> ecdf.test.fn
+  
+  
+  
+    ks.rs <- ks.test(x = int.resp, y = ecdf.test.fn)
+  
+    data.frame(
+      model = m,
+      distribution = d,
+      D = ks.rs$statistic,
+      pval = ks.rs$p.value
+    ) 
+  })
+  
+}) -> df.ks.m
+
+  
+  
+ggplot(df.ks.m, aes( x = model, y = D, fill = model))+
+  geom_col(color = 'black', position = position_dodge())+
+    facet_wrap(~distribution)
+
+
+ggplot(df.ks.m, aes( x = model, y = D, color = model, fill = model))+
+  geom_col(data = df.ks.m %>% group_by(model) %>% summarize(mean_D = mean(D)),
+           position =position_dodge(), aes(y = mean_D), alpha = 0.3)+
+  geom_point(color = 'black', position = position_jitterdodge())
+  #facet_wrap(~distribution)
+
+
+```
+
+
 
 ### Bootstrap expected values
 
