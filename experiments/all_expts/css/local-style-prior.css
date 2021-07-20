@@ -1,0 +1,85 @@
+.slider {
+  /* default is width 400 and margin 10 */
+	width: 400;
+	margin: 10px;
+}
+
+.evidence{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 20px;
+}
+
+.query{
+	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 16px;
+}
+
+.err{
+	color: red;
+	font-size: 16px;
+	margin-left: 0px
+}
+
+.slider_number{
+	font-size:16px;
+}
+.kind{
+	font-size: 16px;
+	font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.vertical_slider {
+	width: 10px;
+	height: 300px;
+	margin-left: 35px;
+	margin-right: 35px
+}
+
+.bin_label{
+	text-align: center;
+}
+
+.animal_list{
+	text-align: left;
+	margin-left: 50px
+}
+
+.class_listname {
+	text-align: left;
+}
+input[type="text"] {
+	width: 150px;
+}
+
+.query{
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+.slider_number{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.slider_table{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.slider{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.left{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+.right{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+table {
+   border-bottom: 2px solid black;
+}
